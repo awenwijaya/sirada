@@ -1,0 +1,6 @@
+io/flutter/plugins/GeneratedPluginRegistrant.java
+ io.flutter.plugins.GeneratedPluginRegistrant
+com/tugasakhir/surat/MainActivity.java
+ com.tugasakhir.surat.MainActivity
+com/tugasakhir/surat/BuildConfig.java
+ com.tugasakhir.surat.BuildConfig
