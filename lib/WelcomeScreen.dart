@@ -10,6 +10,7 @@ class welcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       theme: new ThemeData(scaffoldBackgroundColor: HexColor("#FFFFFF")),
       home: Scaffold(

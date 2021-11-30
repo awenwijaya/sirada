@@ -34,6 +34,10 @@ fake_async
 2.12
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0/
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0/lib/
+flutter_spinkit
+2.12
+file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_spinkit-5.1.0/
+file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_spinkit-5.1.0/lib/
 fluttertoast
 2.12
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.0.8/
@@ -42,6 +46,14 @@ hexcolor
 2.12
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/hexcolor-2.0.5/
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/hexcolor-2.0.5/lib/
+http
+2.12
+file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.3/
+file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.3/lib/
+http_parser
+2.12
+file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/
+file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/lib/
 js
 2.12
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.3/
@@ -66,6 +78,10 @@ path
 2.12
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.0/
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.0/lib/
+pedantic
+2.12
+file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/pedantic-1.11.1/
+file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/pedantic-1.11.1/lib/
 source_span
 2.12
 file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.0/

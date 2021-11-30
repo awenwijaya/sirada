@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:surat/LoginAndRegistration/EmailConfirmation.dart';
+import 'package:http/http.dart' as http;
+import 'package:surat/shared/LoadingAnimation/loading.dart';
 
 class registrationPage extends StatefulWidget {
+  static var nik;
   const registrationPage({Key key}) : super(key: key);
 
   @override
@@ -14,12 +17,14 @@ class registrationPage extends StatefulWidget {
 
 class _registrationPageState extends State<registrationPage> {
   final controllerNIK = TextEditingController();
+  bool Loading = false;
+  var apiURLcekPenduduk = "http://192.168.18.10:8000/api/cek_penduduk";
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: new ThemeData(scaffoldBackgroundColor: HexColor("#FFFFFF")),
-      home: Scaffold(
+      home: Loading ? loading() : Scaffold(
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -105,36 +110,223 @@ class _registrationPageState extends State<registrationPage> {
                     ),
                   ),
                   onPressed: (){
-                    if(controllerNIK.text == '') {
-
-                    } else {
+                    if(controllerNIK.text == "") {
                       showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Konfirmasi Data"),
-                              content: Text(
-                                  "Sebelum melanjutkan pendaftaran, pastikan data Anda dibawah sudah benar"
-                                      "\n\nNama: Awen Hariwijaya"
-                                      "\nAsal desa: Ubung Kaja"
-                                      "\n\nJika data sudah benar, tekan Ya untuk melanjutkan, namun jika data yang ditampilkan bukan Anda tekan Tidak untuk melanjutkan"
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text('Ya'),
-                                  onPressed: (){
-                                    Navigator.of(context).pop();
-                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => enterEmail()));
-                                    },
-                                ),
-                                TextButton(
-                                    onPressed: (){Navigator.of(context).pop();},
-                                    child: Text('Tidak'))
-                              ],
-                            );
-                          }
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(40.0))
+                            ),
+                            content: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Image.asset(
+                                        'images/warning.png',
+                                        height: 50,
+                                        width: 50,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        "Data NIK belum diinputkan",
+                                        style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393"),
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      margin: EdgeInsets.only(top: 10),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        "Isikanlah data NIK terlebih dahulu sebelum melanjutkan",
+                                        style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 15
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      margin: EdgeInsets.only(top: 10),
+                                    )
+                                  ],
+                                )
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('OK', style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor("#025393"),
+                                )),
+                                onPressed: (){Navigator.of(context).pop();},
+                              )
+                            ],
+                          );
+                        }
                       );
+                    }else{
+                      setState(() {
+                        Loading = true;
+                      });
+                      var body = jsonEncode({
+                        "nik" : controllerNIK.text
+                      });
+                      http.post(Uri.parse(apiURLcekPenduduk),
+                        headers: {"Content-Type" : "application/json"},
+                        body: body
+                      ).then((http.Response response) {
+                        var data = response.statusCode;
+                        if(data == 500) {
+                          setState(() {
+                            Loading = false;
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                    ),
+                                    content: Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Container(
+                                              child: Image.asset(
+                                                'images/alert.png',
+                                                height: 50,
+                                                width: 50,
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                "Data NIK tidak ditemukan",
+                                                style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393"),
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              margin: EdgeInsets.only(top: 10),
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                "Pastikan Anda telah menginputkan data NIK yang benar dan coba lagi",
+                                                style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 15
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              margin: EdgeInsets.only(top: 10),
+                                            )
+                                          ],
+                                        )
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text('OK', style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393"),
+                                        )),
+                                        onPressed: (){Navigator.of(context).pop();},
+                                      )
+                                    ],
+                                  );
+                                }
+                            );
+                          });
+                        }else if(data == 200) {
+                          setState(() {
+                            Loading = false;
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context){
+                                return konfirmasiData();
+                              }
+                            );
+                          });
+                        }else{
+                          setState(() {
+                            Loading = false;
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                    ),
+                                    content: Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Container(
+                                              child: Image.asset(
+                                                'images/warning.png',
+                                                height: 50,
+                                                width: 50,
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                "Tidak dapat menghubungi server",
+                                                style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393"),
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              margin: EdgeInsets.only(top: 10),
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                "Mohon maaf sedang ada kendala saat kami berusaha menghubungi server. Silahkan coba lagi",
+                                                style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 15
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              margin: EdgeInsets.only(top: 10),
+                                            )
+                                          ],
+                                        )
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text('OK', style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393"),
+                                        )),
+                                        onPressed: (){Navigator.of(context).pop();},
+                                      )
+                                    ],
+                                  );
+                                }
+                            );
+                          });
+                        }
+                      });
                     }
                   },
                 ),
@@ -160,15 +352,64 @@ class _registrationPageState extends State<registrationPage> {
                           barrierDismissible: true,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("NIK"),
-                              content: Text(
-                                  "NIK dalam aplikasi ini digunakan untuk verifikasi data penduduk yang sudah terdaftar sebelumnya pada sistem. "
-                                      "\n\nSelain itu, NIK juga dapat memudahkan pemerintah desa dalam melakukan verifikasi dan pengurusan surat Anda."
-                                      "\n\nTenang! Data kependudukan Anda akan aman dan kami tidak akan menyalahgunakan data kependudukan Anda 😉"
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(40.0))
+                              ),
+                              content: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Image.asset(
+                                        'images/ktp.png',
+                                        height: 50,
+                                        width: 50,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        "NIK",
+                                        style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393"),
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      margin: EdgeInsets.only(top: 10),
+                                    ),
+                                    Container(
+                                      child: Column(
+                                        children: <Widget>[
+                                          Container(
+                                            child: Text(
+                                              "NIK dalam aplikasi ini digunakan untuk verifikasi data penduduk yang sudah terdaftar sebelumnya pada sistem."
+                                                  "\n\nSelain itu, NIK juga dapat memudahkan pemerintah desa dalam melakukan verifikasi dan pengurusan surat Anda."
+                                                  "\n\nTenang! Data kependudukan Anda akan aman dan kami tidak akan menyalahgunakan data kependudukan Anda 😉",
+                                              style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 15,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            margin: EdgeInsets.only(top: 10),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                )
                               ),
                               actions: <Widget>[
                                 TextButton(
-                                  child: Text('OK'),
+                                  child: Text('OK', style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontWeight: FontWeight.w700,
+                                    color: HexColor("#025393"),
+                                  )),
                                   onPressed: (){Navigator.of(context).pop();},
                                 )
                               ],
@@ -184,6 +425,84 @@ class _registrationPageState extends State<registrationPage> {
           ),
         )
       ),
+    );
+  }
+}
+
+class konfirmasiData extends StatefulWidget {
+  const konfirmasiData({Key key}) : super(key: key);
+
+  @override
+  _konfirmasiDataState createState() => _konfirmasiDataState();
+}
+
+class _konfirmasiDataState extends State<konfirmasiData> {
+  var apiURLDataPenduduk = "http://192.168.18.10:8000/api/getdatabynik";
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(40.0))
+      ),
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            child: Image.asset(
+              'images/person.png',
+              height: 50,
+              width: 50,
+            ),
+          ),
+          Container(
+            child: Text(
+              "Konfirmasi Data Anda",
+              style: TextStyle(
+                fontFamily: "Poppins",
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: HexColor("#025393")
+              ),
+              textAlign: TextAlign.center,
+            ),
+            margin: EdgeInsets.only(top: 10),
+          ),
+          Container(
+            child: Text(
+              "Silahkan konfirmasi data di bawah ini apakah data ini benar milik Anda",
+              style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 15
+              ),
+              textAlign: TextAlign.center,
+            ),
+            margin: EdgeInsets.only(top: 10),
+          )
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: Text('Benar', style: TextStyle(
+            fontFamily: "Poppins",
+            fontWeight: FontWeight.w700,
+            color: HexColor("#025393")
+          )),
+          onPressed: (){Navigator.push(context, CupertinoPageRoute(builder: (context) => enterEmail()));},
+        ),
+        TextButton(
+          child: Text('Tidak', style: TextStyle(
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w700,
+              color: HexColor("#025393")
+          )),
+          onPressed: (){Navigator.of(context).pop();},
+        )
+      ],
     );
   }
 }
