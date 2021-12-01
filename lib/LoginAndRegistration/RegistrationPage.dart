@@ -25,30 +25,23 @@ class _registrationPageState extends State<registrationPage> {
     return MaterialApp(
       theme: new ThemeData(scaffoldBackgroundColor: HexColor("#FFFFFF")),
       home: Loading ? loading() : Scaffold(
+        appBar: AppBar(
+          title: Text("Verifikasi NIK", style: TextStyle(
+            fontFamily: "Poppins",
+            fontWeight: FontWeight.w700,
+            color: HexColor("#025393")
+          )),
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: HexColor("#025393"),
+            onPressed: (){Navigator.of(context).pop();},
+          ),
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              Container(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  icon: Icon(CupertinoIcons.back),
-                  color: Colors.black,
-                  onPressed: (){Navigator.of(context).pop();},
-                ),
-                margin: EdgeInsets.only(top: 60, left: 10),
-              ),
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  "Daftar Akun",
-                  style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 25,
-                      fontWeight: FontWeight.w700,
-                      color: HexColor("#025393")
-                  ),
-                ),
-              ),
               Container(
                 child: Image.asset(
                   'images/regisform.png',
@@ -86,6 +79,7 @@ class _registrationPageState extends State<registrationPage> {
                             hintText: "Contoh: 3313091704330001",
                             prefixIcon: Icon(Icons.person_rounded),
                           ),
+                          keyboardType: TextInputType.number,
                           style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 15
@@ -250,13 +244,159 @@ class _registrationPageState extends State<registrationPage> {
                             );
                           });
                         }else if(data == 200) {
-                          setState(() {
+                          setState((){
                             Loading = false;
+                            var jsonData = response.body;
+                            var parsedJson = json.decode(jsonData);
                             showDialog(
                               context: context,
                               barrierDismissible: false,
                               builder: (BuildContext context){
-                                return konfirmasiData();
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                  ),
+                                  content: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Container(
+                                        child: Image.asset(
+                                          'images/person.png',
+                                          height: 50,
+                                          width: 50,
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          "Konfirmasi Data Anda",
+                                          style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w700,
+                                              color: HexColor("#025393")
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        margin: EdgeInsets.only(top: 10),
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          "Silahkan konfirmasi data di bawah ini apakah data ini benar milik Anda",
+                                          style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 15
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        margin: EdgeInsets.only(top: 10),
+                                      ),
+                                      Container(
+                                        child: Column(
+                                          children: <Widget>[
+                                            Container(
+                                              child: Text(
+                                                "Nama :",
+                                                style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w700
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                parsedJson['nama_lengkap'].toString(),
+                                                style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 15
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        margin: EdgeInsets.only(top: 20),
+                                      ),
+                                      Container(
+                                        child: Column(
+                                          children: <Widget>[
+                                            Container(
+                                              child: Text(
+                                                "Jenis Kelamin :",
+                                                style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w700
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                parsedJson['jenis_kelamin'].toString(),
+                                                style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 15
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        margin: EdgeInsets.only(top: 20),
+                                      ),
+                                      Container(
+                                        child: Column(
+                                          children: <Widget>[
+                                            Container(
+                                              child: Text(
+                                                "Kewarganegaraan :",
+                                                style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w700
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                parsedJson['kewarganegaraan'].toString(),
+                                                style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 15
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        margin: EdgeInsets.only(top: 20),
+                                      )
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('Benar', style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393")
+                                      )),
+                                      onPressed: (){
+                                        setState(() {
+                                          enterEmail.desaId = parsedJson['id_desa'];
+                                          enterEmail.pendudukId = parsedJson['penduduk_id'];
+                                        });
+                                        Navigator.push(context, CupertinoPageRoute(builder: (context) => enterEmail()));
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text('Tidak', style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393")
+                                      )),
+                                      onPressed: (){Navigator.of(context).pop();},
+                                    )
+                                  ],
+                                );
                               }
                             );
                           });
@@ -279,7 +419,7 @@ class _registrationPageState extends State<registrationPage> {
                                           children: <Widget>[
                                             Container(
                                               child: Image.asset(
-                                                'images/warning.png',
+                                                'images/noconnection.png',
                                                 height: 50,
                                                 width: 50,
                                               ),
@@ -429,85 +569,9 @@ class _registrationPageState extends State<registrationPage> {
   }
 }
 
-class konfirmasiData extends StatefulWidget {
-  const konfirmasiData({Key key}) : super(key: key);
-
-  @override
-  _konfirmasiDataState createState() => _konfirmasiDataState();
-}
-
-class _konfirmasiDataState extends State<konfirmasiData> {
-  var apiURLDataPenduduk = "http://192.168.18.10:8000/api/getdatabynik";
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(40.0))
-      ),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Container(
-            child: Image.asset(
-              'images/person.png',
-              height: 50,
-              width: 50,
-            ),
-          ),
-          Container(
-            child: Text(
-              "Konfirmasi Data Anda",
-              style: TextStyle(
-                fontFamily: "Poppins",
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: HexColor("#025393")
-              ),
-              textAlign: TextAlign.center,
-            ),
-            margin: EdgeInsets.only(top: 10),
-          ),
-          Container(
-            child: Text(
-              "Silahkan konfirmasi data di bawah ini apakah data ini benar milik Anda",
-              style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 15
-              ),
-              textAlign: TextAlign.center,
-            ),
-            margin: EdgeInsets.only(top: 10),
-          )
-        ],
-      ),
-      actions: <Widget>[
-        TextButton(
-          child: Text('Benar', style: TextStyle(
-            fontFamily: "Poppins",
-            fontWeight: FontWeight.w700,
-            color: HexColor("#025393")
-          )),
-          onPressed: (){Navigator.push(context, CupertinoPageRoute(builder: (context) => enterEmail()));},
-        ),
-        TextButton(
-          child: Text('Tidak', style: TextStyle(
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w700,
-              color: HexColor("#025393")
-          )),
-          onPressed: (){Navigator.of(context).pop();},
-        )
-      ],
-    );
-  }
-}
-
 class enterEmail extends StatefulWidget {
+  static var pendudukId;
+  static var desaId;
   const enterEmail({Key key}) : super(key: key);
 
   @override
@@ -515,32 +579,36 @@ class enterEmail extends StatefulWidget {
 }
 
 class _enterEmailState extends State<enterEmail> {
+  final controllerUsername = TextEditingController();
+  final controllerPhoneNumber = TextEditingController();
+  final controllerEmail = TextEditingController();
+  final controllerPassword = TextEditingController();
+  final controllerKonfirmasiPassword = TextEditingController();
+  bool Loading = false;
+  var apiURLRegistrasiAkun = "http://192.168.18.10:8000/api/registrasi";
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: new ThemeData(scaffoldBackgroundColor: HexColor("#FFFFFF")),
-      home: Scaffold(
+      home: Loading ? loading() : Scaffold(
+        appBar: AppBar(
+          title: Text("Registrasi Akun", style: TextStyle(
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w700,
+              color: HexColor("#025393")
+          )),
+          backgroundColor: Colors.white,
+          centerTitle: true,
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(
-                alignment: Alignment.center,
-                child: Text(
-                  "Registrasi Akun",
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 25,
-                    fontWeight: FontWeight.w700,
-                    color: HexColor("#025393")
-                  ),
-                ),
-                margin: EdgeInsets.only(top: 70),
-              ),
-              Container(
                 child: Image.asset(
                   'images/security.png',
-                  height: 150,
-                  width: 150,
+                  height: 100,
+                  width: 100,
                 ),
                 margin: EdgeInsets.only(top: 50),
               ),
@@ -549,7 +617,7 @@ class _enterEmailState extends State<enterEmail> {
                   children: <Widget>[
                     Container(
                       child: Text(
-                        "Silahkan masukkan email dan password dari akun Anda",
+                        "Silahkan masukkan data dibawah ini untuk melanjutkan",
                         style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 17,
@@ -567,6 +635,48 @@ class _enterEmailState extends State<enterEmail> {
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                               child: TextField(
+                                controller: controllerUsername,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      borderSide: BorderSide(color: HexColor("#025393")),
+                                    ),
+                                    hintText: "Username",
+                                    prefixIcon: Icon(Icons.person_rounded)
+                                ),
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 15
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                              child: TextField(
+                                controller: controllerPhoneNumber,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      borderSide: BorderSide(color: HexColor("#025393")),
+                                    ),
+                                    hintText: "Nomor Telepon",
+                                    prefixIcon: Icon(Icons.phone)
+                                ),
+                                keyboardType: TextInputType.number,
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 15
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                              child: TextField(
+                                controller: controllerEmail,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(50.0),
@@ -575,6 +685,7 @@ class _enterEmailState extends State<enterEmail> {
                                   hintText: "Email",
                                   prefixIcon: Icon(Icons.email_rounded)
                                 ),
+                                keyboardType: TextInputType.emailAddress,
                                 style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 15
@@ -586,6 +697,7 @@ class _enterEmailState extends State<enterEmail> {
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                               child: TextField(
+                                controller: controllerPassword,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(50.0),
@@ -606,6 +718,7 @@ class _enterEmailState extends State<enterEmail> {
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                               child: TextField(
+                                controller: controllerKonfirmasiPassword,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(50.0),
@@ -625,7 +738,218 @@ class _enterEmailState extends State<enterEmail> {
                           Container(
                             child: FlatButton(
                               onPressed: (){
-                                Navigator.push(context, CupertinoPageRoute(builder: (context) => emailConfirmation()));
+                                if(controllerUsername.text == "" || controllerEmail.text == "" || controllerPhoneNumber.text == "" || controllerPassword.text == "" || controllerKonfirmasiPassword.text == "") {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                        ),
+                                        content: Container(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Container(
+                                                child: Image.asset(
+                                                  'images/warning.png',
+                                                  height: 50,
+                                                  width: 50,
+                                                ),
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                  "Data ada yang belum terisi",
+                                                  style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 17,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: HexColor("#025393")
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                margin: EdgeInsets.only(top: 10),
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                  "Isikanlah semua data yang ada sebelum melanjutkan",
+                                                  style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 15
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                margin: EdgeInsets.only(top: 10),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text('OK', style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontWeight: FontWeight.w700,
+                                              color: HexColor("#025393")
+                                            )),
+                                            onPressed: (){Navigator.of(context).pop();},
+                                          )
+                                        ],
+                                      );
+                                    }
+                                  );
+                                }else if(controllerPassword.text != controllerKonfirmasiPassword.text) {
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                          ),
+                                          content: Container(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Container(
+                                                  child: Image.asset(
+                                                    'images/warning.png',
+                                                    height: 50,
+                                                    width: 50,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  child: Text(
+                                                    "Password tidak sesuai",
+                                                    style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 17,
+                                                        fontWeight: FontWeight.w700,
+                                                        color: HexColor("#025393")
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  margin: EdgeInsets.only(top: 10),
+                                                ),
+                                                Container(
+                                                  child: Text(
+                                                    "Silahkan sesuaikan password dengan konfirmasi password dan coba lagi",
+                                                    style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 15
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  margin: EdgeInsets.only(top: 10),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text('OK', style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393")
+                                              )),
+                                              onPressed: (){Navigator.of(context).pop();},
+                                            )
+                                          ],
+                                        );
+                                      }
+                                  );
+                                }else{
+                                  setState(() {
+                                    Loading = true;
+                                  });
+                                  var body = jsonEncode({
+                                    "username" : controllerUsername.text,
+                                    "nomor_telepon" : controllerPhoneNumber.text,
+                                    "email" : controllerEmail.text,
+                                    "password" : controllerPassword.text,
+                                    "id_desa" : enterEmail.desaId,
+                                    "penduduk_id" : enterEmail.pendudukId
+                                  });
+                                  http.post(Uri.parse(apiURLRegistrasiAkun),
+                                    headers: {"Content-Type" : "application/json"},
+                                    body: body
+                                  ).then((http.Response response) {
+                                    var data = response.statusCode;
+                                    if(data == 200) {
+                                      setState(() {
+                                        Loading = false;
+                                        emailConfirmation.userEmail = controllerEmail.text;
+                                      });
+                                      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => emailConfirmation()));
+                                    } else {
+                                      showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                              ),
+                                              content: Container(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      child: Image.asset(
+                                                        'images/noconnection.png',
+                                                        height: 50,
+                                                        width: 50,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                        "Tidak dapat menghubungi server",
+                                                        style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 17,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: HexColor("#025393")
+                                                        ),
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                      margin: EdgeInsets.only(top: 10),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                        "Mohon maaf sedang ada kendala saat kami berusaha menghubungi server. Silahkan coba lagi",
+                                                        style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 15
+                                                        ),
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                      margin: EdgeInsets.only(top: 10),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text('OK', style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontWeight: FontWeight.w700,
+                                                      color: HexColor("#025393")
+                                                  )),
+                                                  onPressed: (){Navigator.of(context).pop();},
+                                                )
+                                              ],
+                                            );
+                                          }
+                                      );
+                                    }
+                                  });
+                                }
                               },
                               child: Text('Daftar Akun', style: TextStyle(
                                 fontSize: 15,
@@ -639,7 +963,7 @@ class _enterEmailState extends State<enterEmail> {
                               ),
                               padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
                             ),
-                            margin: EdgeInsets.only(top: 20),
+                            margin: EdgeInsets.only(top: 20, bottom: 20),
                           )
                         ],
                       ),
