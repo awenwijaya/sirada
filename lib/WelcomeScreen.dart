@@ -31,7 +31,7 @@ class welcomeScreen extends StatelessWidget {
                   "Selamat Datang di SiRaja!",
                   style: TextStyle(
                     fontFamily: "Poppins",
-                    fontSize: 25,
+                    fontSize: 22,
                     fontWeight: FontWeight.w700,
                     color: HexColor("#025393")
                   ),
@@ -43,7 +43,7 @@ class welcomeScreen extends StatelessWidget {
                   "Kelola berkas administrasi Anda secara online dan mulus",
                   style: TextStyle(
                     fontFamily: "Poppins",
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.w700
                   ),
                   textAlign: TextAlign.center,
@@ -61,7 +61,7 @@ class welcomeScreen extends StatelessWidget {
                           Navigator.push(context, createRouteLoginPage());
                         },
                         child: Text('Login', style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 14,
                           fontFamily: "Poppins",
                           color: HexColor("#025393"),
                           fontWeight: FontWeight.w700
@@ -80,7 +80,7 @@ class welcomeScreen extends StatelessWidget {
                           Navigator.of(context).push(createRouteRegisterPage());
                         },
                         child: Text('Daftar Akun', style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 14,
                           fontFamily: "Poppins",
                           color: HexColor("#025393"),
                           fontWeight: FontWeight.w700

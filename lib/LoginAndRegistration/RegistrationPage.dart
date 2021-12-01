@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:surat/LoginAndRegistration/EmailConfirmation.dart';
 import 'package:http/http.dart' as http;
+import 'package:surat/WelcomeScreen.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 
 class registrationPage extends StatefulWidget {
@@ -45,8 +45,8 @@ class _registrationPageState extends State<registrationPage> {
               Container(
                 child: Image.asset(
                   'images/regisform.png',
-                  height: 200,
-                  width: 200,
+                  height: 150,
+                  width: 150,
                 ),
                 margin: EdgeInsets.only(top: 45),
               ),
@@ -58,7 +58,7 @@ class _registrationPageState extends State<registrationPage> {
                         "Silahkan masukkan NIK yang tertera pada KTP Anda untuk melanjutkan",
                         style: TextStyle(
                             fontFamily: "Poppins",
-                            fontSize: 17,
+                            fontSize: 16,
                             fontWeight: FontWeight.w700
                         ),
                         textAlign: TextAlign.center,
@@ -82,7 +82,7 @@ class _registrationPageState extends State<registrationPage> {
                           keyboardType: TextInputType.number,
                           style: TextStyle(
                               fontFamily: "Poppins",
-                              fontSize: 15
+                              fontSize: 14
                           ),
                         ),
                       ),
@@ -98,7 +98,7 @@ class _registrationPageState extends State<registrationPage> {
                     "Lanjutkan",
                     style: TextStyle(
                         fontFamily: "Poppins",
-                        fontSize: 17,
+                        fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: HexColor("#025393")
                     ),
@@ -131,7 +131,7 @@ class _registrationPageState extends State<registrationPage> {
                                         "Data NIK belum diinputkan",
                                         style: TextStyle(
                                           fontFamily: "Poppins",
-                                          fontSize: 17,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w700,
                                           color: HexColor("#025393"),
                                         ),
@@ -144,7 +144,7 @@ class _registrationPageState extends State<registrationPage> {
                                         "Isikanlah data NIK terlebih dahulu sebelum melanjutkan",
                                         style: TextStyle(
                                           fontFamily: "Poppins",
-                                          fontSize: 15
+                                          fontSize: 14
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -207,7 +207,7 @@ class _registrationPageState extends State<registrationPage> {
                                                 "Data NIK tidak ditemukan",
                                                 style: TextStyle(
                                                   fontFamily: "Poppins",
-                                                  fontSize: 17,
+                                                  fontSize: 16,
                                                   fontWeight: FontWeight.w700,
                                                   color: HexColor("#025393"),
                                                 ),
@@ -220,7 +220,7 @@ class _registrationPageState extends State<registrationPage> {
                                                 "Pastikan Anda telah menginputkan data NIK yang benar dan coba lagi",
                                                 style: TextStyle(
                                                     fontFamily: "Poppins",
-                                                    fontSize: 15
+                                                    fontSize: 14
                                                 ),
                                                 textAlign: TextAlign.center,
                                               ),
@@ -273,7 +273,7 @@ class _registrationPageState extends State<registrationPage> {
                                           "Konfirmasi Data Anda",
                                           style: TextStyle(
                                               fontFamily: "Poppins",
-                                              fontSize: 17,
+                                              fontSize: 16,
                                               fontWeight: FontWeight.w700,
                                               color: HexColor("#025393")
                                           ),
@@ -286,7 +286,7 @@ class _registrationPageState extends State<registrationPage> {
                                           "Silahkan konfirmasi data di bawah ini apakah data ini benar milik Anda",
                                           style: TextStyle(
                                               fontFamily: "Poppins",
-                                              fontSize: 15
+                                              fontSize: 14
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
@@ -300,7 +300,7 @@ class _registrationPageState extends State<registrationPage> {
                                                 "Nama :",
                                                 style: TextStyle(
                                                   fontFamily: "Poppins",
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                   fontWeight: FontWeight.w700
                                                 ),
                                               ),
@@ -310,7 +310,7 @@ class _registrationPageState extends State<registrationPage> {
                                                 parsedJson['nama_lengkap'].toString(),
                                                 style: TextStyle(
                                                     fontFamily: "Poppins",
-                                                    fontSize: 15
+                                                    fontSize: 14
                                                 ),
                                               ),
                                             ),
@@ -326,7 +326,7 @@ class _registrationPageState extends State<registrationPage> {
                                                 "Jenis Kelamin :",
                                                 style: TextStyle(
                                                     fontFamily: "Poppins",
-                                                    fontSize: 15,
+                                                    fontSize: 14,
                                                     fontWeight: FontWeight.w700
                                                 ),
                                               ),
@@ -336,7 +336,7 @@ class _registrationPageState extends State<registrationPage> {
                                                 parsedJson['jenis_kelamin'].toString(),
                                                 style: TextStyle(
                                                     fontFamily: "Poppins",
-                                                    fontSize: 15
+                                                    fontSize: 14
                                                 ),
                                               ),
                                             ),
@@ -352,7 +352,7 @@ class _registrationPageState extends State<registrationPage> {
                                                 "Kewarganegaraan :",
                                                 style: TextStyle(
                                                     fontFamily: "Poppins",
-                                                    fontSize: 15,
+                                                    fontSize: 14,
                                                     fontWeight: FontWeight.w700
                                                 ),
                                               ),
@@ -362,7 +362,7 @@ class _registrationPageState extends State<registrationPage> {
                                                 parsedJson['kewarganegaraan'].toString(),
                                                 style: TextStyle(
                                                     fontFamily: "Poppins",
-                                                    fontSize: 15
+                                                    fontSize: 14
                                                 ),
                                               ),
                                             ),
@@ -429,7 +429,7 @@ class _registrationPageState extends State<registrationPage> {
                                                 "Tidak dapat menghubungi server",
                                                 style: TextStyle(
                                                   fontFamily: "Poppins",
-                                                  fontSize: 17,
+                                                  fontSize: 16,
                                                   fontWeight: FontWeight.w700,
                                                   color: HexColor("#025393"),
                                                 ),
@@ -442,7 +442,7 @@ class _registrationPageState extends State<registrationPage> {
                                                 "Mohon maaf sedang ada kendala saat kami berusaha menghubungi server. Silahkan coba lagi",
                                                 style: TextStyle(
                                                     fontFamily: "Poppins",
-                                                    fontSize: 15
+                                                    fontSize: 14
                                                 ),
                                                 textAlign: TextAlign.center,
                                               ),
@@ -481,7 +481,7 @@ class _registrationPageState extends State<registrationPage> {
                       "Mengapa saya perlu memasukkan NIK saya?",
                       style: TextStyle(
                           fontFamily: "Poppins",
-                          fontSize: 14,
+                          fontSize: 13,
                           color: Colors.black
                       ),
                       textAlign: TextAlign.center,
@@ -513,7 +513,7 @@ class _registrationPageState extends State<registrationPage> {
                                         "NIK",
                                         style: TextStyle(
                                           fontFamily: "Poppins",
-                                          fontSize: 17,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w700,
                                           color: HexColor("#025393"),
                                         ),
@@ -531,7 +531,7 @@ class _registrationPageState extends State<registrationPage> {
                                                   "\n\nTenang! Data kependudukan Anda akan aman dan kami tidak akan menyalahgunakan data kependudukan Anda 😉",
                                               style: TextStyle(
                                                 fontFamily: "Poppins",
-                                                fontSize: 15,
+                                                fontSize: 14,
                                               ),
                                               textAlign: TextAlign.center,
                                             ),
@@ -559,7 +559,7 @@ class _registrationPageState extends State<registrationPage> {
                     },
                   ),
                 ),
-                margin: EdgeInsets.only(top: 40),
+                margin: EdgeInsets.only(top: 20),
               )
             ],
           ),
@@ -586,6 +586,7 @@ class _enterEmailState extends State<enterEmail> {
   final controllerKonfirmasiPassword = TextEditingController();
   bool Loading = false;
   var apiURLRegistrasiAkun = "http://192.168.18.10:8000/api/registrasi";
+  var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/konfirmasiemail";
 
   @override
   Widget build(BuildContext context) {
@@ -620,7 +621,7 @@ class _enterEmailState extends State<enterEmail> {
                         "Silahkan masukkan data dibawah ini untuk melanjutkan",
                         style: TextStyle(
                           fontFamily: "Poppins",
-                          fontSize: 17,
+                          fontSize: 16,
                           fontWeight: FontWeight.w700
                         ),
                         textAlign: TextAlign.center,
@@ -646,7 +647,7 @@ class _enterEmailState extends State<enterEmail> {
                                 ),
                                 style: TextStyle(
                                     fontFamily: "Poppins",
-                                    fontSize: 15
+                                    fontSize: 14
                                 ),
                               ),
                             ),
@@ -667,7 +668,7 @@ class _enterEmailState extends State<enterEmail> {
                                 keyboardType: TextInputType.number,
                                 style: TextStyle(
                                     fontFamily: "Poppins",
-                                    fontSize: 15
+                                    fontSize: 14
                                 ),
                               ),
                             ),
@@ -688,7 +689,7 @@ class _enterEmailState extends State<enterEmail> {
                                 keyboardType: TextInputType.emailAddress,
                                 style: TextStyle(
                                   fontFamily: "Poppins",
-                                  fontSize: 15
+                                  fontSize: 14
                                 ),
                               ),
                             ),
@@ -708,7 +709,7 @@ class _enterEmailState extends State<enterEmail> {
                                 ),
                                 style: TextStyle(
                                   fontFamily: "Poppins",
-                                  fontSize: 15
+                                  fontSize: 14
                                 ),
                                 obscureText: true,
                               ),
@@ -729,7 +730,7 @@ class _enterEmailState extends State<enterEmail> {
                                 ),
                                 style: TextStyle(
                                     fontFamily: "Poppins",
-                                    fontSize: 15
+                                    fontSize: 14
                                 ),
                                 obscureText: true,
                               ),
@@ -765,7 +766,7 @@ class _enterEmailState extends State<enterEmail> {
                                                   "Data ada yang belum terisi",
                                                   style: TextStyle(
                                                     fontFamily: "Poppins",
-                                                    fontSize: 17,
+                                                    fontSize: 16,
                                                     fontWeight: FontWeight.w700,
                                                     color: HexColor("#025393")
                                                   ),
@@ -778,7 +779,7 @@ class _enterEmailState extends State<enterEmail> {
                                                   "Isikanlah semua data yang ada sebelum melanjutkan",
                                                   style: TextStyle(
                                                     fontFamily: "Poppins",
-                                                    fontSize: 15
+                                                    fontSize: 14
                                                   ),
                                                   textAlign: TextAlign.center,
                                                 ),
@@ -827,7 +828,7 @@ class _enterEmailState extends State<enterEmail> {
                                                     "Password tidak sesuai",
                                                     style: TextStyle(
                                                         fontFamily: "Poppins",
-                                                        fontSize: 17,
+                                                        fontSize: 16,
                                                         fontWeight: FontWeight.w700,
                                                         color: HexColor("#025393")
                                                     ),
@@ -840,7 +841,7 @@ class _enterEmailState extends State<enterEmail> {
                                                     "Silahkan sesuaikan password dengan konfirmasi password dan coba lagi",
                                                     style: TextStyle(
                                                         fontFamily: "Poppins",
-                                                        fontSize: 15
+                                                        fontSize: 14
                                                     ),
                                                     textAlign: TextAlign.center,
                                                   ),
@@ -881,10 +882,29 @@ class _enterEmailState extends State<enterEmail> {
                                     var data = response.statusCode;
                                     if(data == 200) {
                                       setState(() {
-                                        Loading = false;
                                         emailConfirmation.userEmail = controllerEmail.text;
                                       });
-                                      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => emailConfirmation()));
+                                      var body = jsonEncode({
+                                        "email" : controllerEmail.text
+                                      });
+                                      http.post(Uri.parse(apiURLKonfirmasiEmail),
+                                        headers: {"Content-Type" : "application/json"},
+                                        body: body
+                                      ).then((http.Response response) {
+                                        var data = response.statusCode;
+                                        if(data == 200) {
+                                          setState(() {
+                                            Loading = false;
+                                            showDialog(
+                                                context: context,
+                                                barrierDismissible: false,
+                                                builder: (BuildContext context) {
+                                                  return emailConfirmation();
+                                                }
+                                            );
+                                          });
+                                        }
+                                      });
                                     } else {
                                       showDialog(
                                           context: context,
@@ -912,7 +932,7 @@ class _enterEmailState extends State<enterEmail> {
                                                         "Tidak dapat menghubungi server",
                                                         style: TextStyle(
                                                             fontFamily: "Poppins",
-                                                            fontSize: 17,
+                                                            fontSize: 16,
                                                             fontWeight: FontWeight.w700,
                                                             color: HexColor("#025393")
                                                         ),
@@ -925,7 +945,7 @@ class _enterEmailState extends State<enterEmail> {
                                                         "Mohon maaf sedang ada kendala saat kami berusaha menghubungi server. Silahkan coba lagi",
                                                         style: TextStyle(
                                                             fontFamily: "Poppins",
-                                                            fontSize: 15
+                                                            fontSize: 14
                                                         ),
                                                         textAlign: TextAlign.center,
                                                       ),
@@ -952,7 +972,7 @@ class _enterEmailState extends State<enterEmail> {
                                 }
                               },
                               child: Text('Daftar Akun', style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontFamily: 'Poppins',
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700
@@ -976,6 +996,77 @@ class _enterEmailState extends State<enterEmail> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class emailConfirmation extends StatefulWidget {
+  static var userEmail;
+  const emailConfirmation({Key key}) : super(key: key);
+
+  @override
+  _emailConfirmationState createState() => _emailConfirmationState();
+}
+
+class _emailConfirmationState extends State<emailConfirmation> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(40.0))
+      ),
+      content: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              child: Image.asset(
+                'images/email.png',
+                height: 50,
+                width: 50,
+              ),
+            ),
+            Container(
+              child: Text(
+                "Konfirmasi Email Anda",
+                style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: HexColor("#025393")
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Container(
+              child: Text(
+                "Email konfirmasi sudah terkirim ke email Anda. Silahkan periksa email anda dan lakukan konfirmasi akun Anda",
+                style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14
+                ),
+                textAlign: TextAlign.center,
+              ),
+              margin: EdgeInsets.only(top: 10),
+            )
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: Text("OK", style: TextStyle(
+            fontFamily: "Poppins",
+            fontWeight: FontWeight.w700,
+            color: HexColor("#025393")
+          )),
+          onPressed: (){
+            Navigator.of(context).pop();
+            Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context)=>welcomeScreen()));
+          },
+        )
+      ],
     );
   }
 }

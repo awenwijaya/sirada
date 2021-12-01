@@ -17,35 +17,28 @@ class _loginPageState extends State<loginPage> {
     return MaterialApp(
       theme: new ThemeData(scaffoldBackgroundColor: HexColor("#FFFFFF")),
       home: Scaffold(
+          appBar: AppBar(
+            title: Text("Login", style: TextStyle(
+                fontFamily: "Poppins",
+                fontWeight: FontWeight.w700,
+                color: HexColor("#025393")
+            )),
+            backgroundColor: Colors.white,
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              color: HexColor("#025393"),
+              onPressed: (){Navigator.of(context).pop();},
+            ),
+          ),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  icon: Icon(CupertinoIcons.back),
-                  color: Colors.black,
-                  onPressed: (){Navigator.of(context).pop();},
-                ),
-                margin: EdgeInsets.only(top: 60, left: 10),
-              ),
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  "Login",
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 25,
-                    fontWeight: FontWeight.w700,
-                    color: HexColor("#025393")
-                  ),
-                ),
-              ),
-              Container(
                 child: Image.asset(
                   'images/login2.jpg',
-                  height: 280,
-                  width: 280,
+                  height: 200,
+                  width: 200,
                 ),
               ),
               Container(
@@ -65,7 +58,7 @@ class _loginPageState extends State<loginPage> {
                           ),
                           style: TextStyle(
                             fontFamily: "Poppins",
-                            fontSize: 15
+                            fontSize: 14
                           ),
                         ),
                       ),
@@ -84,11 +77,12 @@ class _loginPageState extends State<loginPage> {
                           ),
                           style: TextStyle(
                               fontFamily: "Poppins",
-                              fontSize: 15
+                              fontSize: 14
                           ),
                           obscureText: true,
                         ),
                       ),
+                      margin: EdgeInsets.only(top: 10),
                     )
                   ],
                 ),
@@ -104,7 +98,7 @@ class _loginPageState extends State<loginPage> {
                         },
                         child: Text('Login', style: TextStyle(
                             fontFamily: 'Poppins',
-                            fontSize: 15,
+                            fontSize: 14,
                             color: Colors.white,
                             fontWeight: FontWeight.w700
                         )),
@@ -122,7 +116,7 @@ class _loginPageState extends State<loginPage> {
                         },
                         child: Text('Daftar Akun', style: TextStyle(
                             fontFamily: 'Poppins',
-                            fontSize: 15,
+                            fontSize: 14,
                             color: HexColor("#025393"),
                             fontWeight: FontWeight.w700
                         )),
@@ -145,7 +139,7 @@ class _loginPageState extends State<loginPage> {
                     "Lupa Password",
                     style: TextStyle(
                       fontFamily: "Poppins",
-                      fontSize: 15,
+                      fontSize: 14,
                       color: HexColor("#025393"),
                       fontWeight: FontWeight.w700
                     ),
