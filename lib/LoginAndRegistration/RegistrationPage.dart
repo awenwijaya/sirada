@@ -141,7 +141,7 @@ class _registrationPageState extends State<registrationPage> {
                                     ),
                                     Container(
                                       child: Text(
-                                        "Isikanlah data NIK terlebih dahulu sebelum melanjutkan",
+                                        "Silahkan isi data NIK terlebih dahulu sebelum melanjutkan",
                                         style: TextStyle(
                                           fontFamily: "Poppins",
                                           fontSize: 14
@@ -905,67 +905,70 @@ class _enterEmailState extends State<enterEmail> {
                                           });
                                         }
                                       });
-                                    } else {
+                                    } else if(data == 501){
+                                      setState(() {
+                                        Loading = false;
+                                      });
                                       showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                              ),
-                                              content: Container(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: <Widget>[
-                                                    Container(
-                                                      child: Image.asset(
-                                                        'images/noconnection.png',
-                                                        height: 50,
-                                                        width: 50,
-                                                      ),
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                            ),
+                                            content: Container(
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  Container(
+                                                    child: Image.asset(
+                                                      'images/alert.png',
+                                                      height: 50,
+                                                      width: 50,
                                                     ),
-                                                    Container(
-                                                      child: Text(
-                                                        "Tidak dapat menghubungi server",
-                                                        style: TextStyle(
-                                                            fontFamily: "Poppins",
-                                                            fontSize: 16,
-                                                            fontWeight: FontWeight.w700,
-                                                            color: HexColor("#025393")
-                                                        ),
-                                                        textAlign: TextAlign.center,
+                                                  ),
+                                                  Container(
+                                                    child: Text(
+                                                      "Akun sudah terdaftar",
+                                                      style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w700,
+                                                        color: HexColor("#025393")
                                                       ),
-                                                      margin: EdgeInsets.only(top: 10),
+                                                      textAlign: TextAlign.center,
                                                     ),
-                                                    Container(
-                                                      child: Text(
-                                                        "Mohon maaf sedang ada kendala saat kami berusaha menghubungi server. Silahkan coba lagi",
-                                                        style: TextStyle(
-                                                            fontFamily: "Poppins",
-                                                            fontSize: 14
-                                                        ),
-                                                        textAlign: TextAlign.center,
+                                                    margin: EdgeInsets.only(top: 10),
+                                                  ),
+                                                  Container(
+                                                    child: Text(
+                                                      "Data yang Anda masukkan sudah terdaftar sebelumnya. Silahkan gunakan data username/email/nomor telefon yang lain untuk melanjutkan pendaftaran",
+                                                      style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 14
                                                       ),
-                                                      margin: EdgeInsets.only(top: 10),
-                                                    )
-                                                  ],
-                                                ),
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                    margin: EdgeInsets.only(top: 10),
+                                                  )
+                                                ],
                                               ),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: Text('OK', style: TextStyle(
-                                                      fontFamily: "Poppins",
-                                                      fontWeight: FontWeight.w700,
-                                                      color: HexColor("#025393")
-                                                  )),
-                                                  onPressed: (){Navigator.of(context).pop();},
-                                                )
-                                              ],
-                                            );
-                                          }
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text("OK", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393")
+                                                )),
+                                                onPressed: (){Navigator.of(context).pop();},
+                                              )
+                                            ],
+                                          );
+                                        }
                                       );
                                     }
                                   });
