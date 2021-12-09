@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/Penduduk/Profile/UserProfile.dart';
+import 'package:http/http.dart' as http;
+import 'package:surat/shared/LoadingAnimation/loading.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class editProfileUser extends StatefulWidget {
   const editProfileUser({Key key}) : super(key: key);
@@ -16,10 +22,11 @@ class _editProfileUserState extends State<editProfileUser> {
   List<String> agama = ["Hindu", "Buddha", "Kristen Katolik", "Kristen Protestan", "Islam", "Konghucu"];
   List<String> statusPerkawinan = ["Belum Menikah", "Sudah Menikah"];
   List<String> pendidikanTerakhir = ["SD", "SMP", "SMA", "D1", "D2", "D3", "D4/S1", "S2", "S3"];
-
-  String selectedAgama;
-  String selectedStatusPerkawinan;
-  String selectedPendidikanTerakhir;
+  var apiURLEditProfile = "http://192.168.18.10:8000/api/editprofile";
+  String selectedAgama = userProfile.agamaPenduduk;
+  String selectedStatusPerkawinan = userProfile.statusPerkawinan;
+  String selectedPendidikanTerakhir = userProfile.pendidikanTerakhir;
+  bool Loading = false;
 
   @override
   void initState() {
@@ -32,7 +39,7 @@ class _editProfileUserState extends State<editProfileUser> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
+      home: Loading ? loading() : Scaffold(
         appBar: AppBar(
           title: Text("Edit Profil", style: TextStyle(
             fontFamily: "Poppins",
@@ -188,7 +195,7 @@ class _editProfileUserState extends State<editProfileUser> {
                         underline: Container(),
                         hint: Center(
                           child: Text(
-                            userProfile.agamaPenduduk,
+                            selectedAgama,
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: "Poppins",
@@ -211,6 +218,73 @@ class _editProfileUserState extends State<editProfileUser> {
                           value: e,
                         )).toList(),
                         selectedItemBuilder: (BuildContext context) => agama.map((e) => Center(
+                          child: Text(
+                            e, style: TextStyle(
+                              fontFamily: "Poppins",
+                              color: Colors.white,
+                              fontSize: 14),
+                          ),
+                        )).toList(),
+                      ),
+                      margin: EdgeInsets.only(top: 15),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Status Perkawinan",
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 15
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 15, left: 20),
+                    ),
+                    Container(
+                      width: 300,
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                      decoration: BoxDecoration(
+                          color: HexColor("#025393"),
+                          borderRadius: BorderRadius.circular(30)
+                      ),
+                      child: DropdownButton<String>(
+                        onChanged: (value) {
+                          setState(() {
+                            selectedStatusPerkawinan = value;
+                          });
+                        },
+                        value: selectedStatusPerkawinan,
+                        underline: Container(),
+                        hint: Center(
+                          child: Text(
+                            selectedStatusPerkawinan,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            ),
+                          ),
+                        ),
+                        icon: Icon(Icons.arrow_downward, color: Colors.white),
+                        isExpanded: true,
+                        items: statusPerkawinan.map((e) => DropdownMenuItem(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              e, style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 15
+                            ),
+                            ),
+                          ),
+                          value: e,
+                        )).toList(),
+                        selectedItemBuilder: (BuildContext context) => statusPerkawinan.map((e) => Center(
                           child: Text(
                             e, style: TextStyle(
                               fontFamily: "Poppins",
@@ -255,7 +329,7 @@ class _editProfileUserState extends State<editProfileUser> {
                         underline: Container(),
                         hint: Center(
                           child: Text(
-                            userProfile.pendidikanTerakhir,
+                            selectedPendidikanTerakhir,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: "Poppins",
@@ -356,6 +430,31 @@ class _editProfileUserState extends State<editProfileUser> {
                           );
                         }
                       );
+                    }else{
+                      setState(() {
+                        Loading = true;
+                      });
+                      var body = jsonEncode({
+                        "user_id" : loginPage.userId,
+                        "penduduk_id" : loginPage.pendudukId,
+                        "username" : controllerUsername.text,
+                        "alamat" : controllerAlamat.text,
+                        "agama" : selectedAgama,
+                        "status_perkawinan" : selectedStatusPerkawinan,
+                        "pendidikan_terakhir" : selectedPendidikanTerakhir
+                      });
+                      http.post(Uri.parse(apiURLEditProfile),
+                        headers: {"Content-Type" : "application/json"},
+                        body: body
+                      ).then((http.Response response) {
+                        var responseValue = response.statusCode;
+                        if(responseValue == 200) {
+                          setState(() {
+                            Loading = false;
+                          });
+                          Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => dashboardPenduduk()));
+                        }
+                      });
                     }
                   },
                   child: Text("Simpan", style: TextStyle(
