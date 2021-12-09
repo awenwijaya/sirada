@@ -10,6 +10,10 @@ import 'package:http/http.dart' as http;
 
 class loginPage extends StatefulWidget {
   static var userEmail;
+  static var userId;
+  static var desaId;
+  static var pendudukId;
+
   const loginPage({Key key}) : super(key: key);
 
   @override
@@ -253,6 +257,12 @@ class _loginPageState extends State<loginPage> {
                                   var jsonData = response.body;
                                   var parsedJson = json.decode(jsonData);
                                   if(parsedJson['is_verified'] == "Verified") {
+                                    setState(() {
+                                      loginPage.pendudukId = parsedJson['penduduk_id'];
+                                      loginPage.userEmail = parsedJson['email'];
+                                      loginPage.desaId = parsedJson['desa_id'];
+                                      loginPage.userId = parsedJson['user_id'];
+                                    });
                                     Navigator.pushReplacement(context, createRoutePendudukDashboard());
                                   } else {
                                     showDialog(
