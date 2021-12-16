@@ -23,7 +23,6 @@ class userProfile extends StatefulWidget {
   static var agamaPenduduk = "Agama";
   static var pendidikanTerakhir = "Pendidikan Terakhir";
 
-
   @override
   _userProfileState createState() => _userProfileState();
 }

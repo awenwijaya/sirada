@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/LoginAndRegistration/LupaPassword.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
@@ -263,7 +264,7 @@ class _loginPageState extends State<loginPage> {
                                       loginPage.desaId = parsedJson['desa_id'];
                                       loginPage.userId = parsedJson['user_id'];
                                     });
-                                    Navigator.pushReplacement(context, createRoutePendudukDashboard());
+                                    Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
                                   } else {
                                     showDialog(
                                       context: context,
@@ -410,7 +411,9 @@ class _loginPageState extends State<loginPage> {
                       fontWeight: FontWeight.w700
                     ),
                   ),
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => lupaPasswordPage()));
+                  },
                 ),
                 margin: EdgeInsets.only(top: 20),
               )

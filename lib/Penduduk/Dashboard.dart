@@ -47,7 +47,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                         TextButton(
                           child: Text('Ya'),
                           onPressed: (){
-                            Navigator.pushReplacement(context, createRouteWelcomeScreen());
+                            Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => welcomeScreen()), (route) => false);
                           },
                         ),
                         TextButton(
@@ -443,22 +443,4 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
       ),
     );
   }
-}
-
-Route createRouteWelcomeScreen() {
-  return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => const welcomeScreen(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0.0, 1.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      }
-  );
 }
