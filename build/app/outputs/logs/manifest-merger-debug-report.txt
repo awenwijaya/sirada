@@ -6,6 +6,7 @@ INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\an
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml:1:1-42:12
 MERGED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml:1:1-42:12
 MERGED from [:hexcolor] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\hexcolor\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
+MERGED from [:shared_preferences] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:fluttertoast] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\fluttertoast\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\ba80674a1a5fdce2b1b29eea5683af77\fragment-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.activity:activity:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\68865d38a53fb5c240061f062e474515\jetified-activity-1.0.0\AndroidManifest.xml:17:1-24:12
@@ -103,6 +104,8 @@ INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\an
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml
 MERGED from [:hexcolor] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\hexcolor\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:hexcolor] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\hexcolor\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:shared_preferences] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:shared_preferences] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:fluttertoast] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\fluttertoast\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:fluttertoast] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\fluttertoast\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\ba80674a1a5fdce2b1b29eea5683af77\fragment-1.1.0\AndroidManifest.xml:20:5-22:41

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/LoginAndRegistration/LupaPassword.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
@@ -14,6 +15,7 @@ class loginPage extends StatefulWidget {
   static var userId;
   static var desaId;
   static var pendudukId;
+  static var role;
 
   const loginPage({Key key}) : super(key: key);
 
@@ -253,7 +255,7 @@ class _loginPageState extends State<loginPage> {
                                   }
                                 );
                               } else if(data == 200) {
-                                setState(() {
+                                setState(() async {
                                   Loading = false;
                                   var jsonData = response.body;
                                   var parsedJson = json.decode(jsonData);
@@ -263,9 +265,19 @@ class _loginPageState extends State<loginPage> {
                                       loginPage.userEmail = parsedJson['email'];
                                       loginPage.desaId = parsedJson['desa_id'];
                                       loginPage.userId = parsedJson['user_id'];
+                                      loginPage.role = parsedJson['role'];
                                     });
+                                    final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+                                    sharedpref.setInt('userId', loginPage.userId);
+                                    sharedpref.setInt('pendudukId', loginPage.pendudukId);
+                                    sharedpref.setInt('desaId', loginPage.desaId);
+                                    sharedpref.setString('email', loginPage.userEmail);
+                                    sharedpref.setString('role', loginPage.role);
                                     Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
                                   } else {
+                                    setState(() {
+                                      Loading = false;
+                                    });
                                     showDialog(
                                       context: context,
                                       barrierDismissible: false,
