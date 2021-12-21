@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/Penduduk/Profile/UserProfile.dart';
 import 'package:surat/Penduduk/Surat/ListPengajuanSurat.dart';
 import 'package:surat/WelcomeScreen.dart';
@@ -86,7 +87,14 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                       ),
                       actions: <Widget>[
                         TextButton(
-                            onPressed: (){
+                            onPressed: () async {
+                              final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+                              sharedpref.remove('userId');
+                              sharedpref.remove('pendudukId');
+                              sharedpref.remove('desaId');
+                              sharedpref.remove('email');
+                              sharedpref.remove('role');
+                              sharedpref.remove('status');
                               Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => welcomeScreen()), (route) => false);
                             },
                             child: Text("Ya", style: TextStyle(

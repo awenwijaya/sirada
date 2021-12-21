@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surat/KepalaDesa/Dashboard.dart';
 import 'package:surat/LoginAndRegistration/LupaPassword.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
@@ -273,7 +274,76 @@ class _loginPageState extends State<loginPage> {
                                     sharedpref.setInt('desaId', loginPage.desaId);
                                     sharedpref.setString('email', loginPage.userEmail);
                                     sharedpref.setString('role', loginPage.role);
-                                    Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
+                                    sharedpref.setString('status', 'login');
+                                    if(loginPage.role == "Pengguna") {
+                                      Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
+                                    }else if(loginPage.role == "Kepala Desa") {
+                                      Navigator.of(context).pushAndRemoveUntil(createRouteKepalaDesaDashboard(), (route) => false);
+                                    }else{
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                            ),
+                                            content: Container(
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  Container(
+                                                    child: Image.asset(
+                                                      'images/alert.png',
+                                                      height: 50,
+                                                      width: 50,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Text(
+                                                      "Hak Akses Ditolak",
+                                                      style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w700,
+                                                        color: HexColor("#025393")
+                                                      ),
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                    margin: EdgeInsets.only(top: 10),
+                                                  ),
+                                                  Container(
+                                                    child: Text(
+                                                      "Hak akses untuk pengguna ini ditolak. Jika Anda adalah seorang Admin Desa atau Super Admin, silahkan akses versi web dari aplikasi ini.",
+                                                      style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 14
+                                                      ),
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                    margin: EdgeInsets.only(top: 10),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: (){
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text("OK", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393")
+                                                )),
+                                              )
+                                            ],
+                                          );
+                                        }
+                                      );
+                                    }
                                   } else {
                                     setState(() {
                                       Loading = false;
@@ -440,6 +510,24 @@ class _loginPageState extends State<loginPage> {
 Route createRoutePendudukDashboard() {
   return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => const dashboardPenduduk(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      }
+  );
+}
+
+Route createRouteKepalaDesaDashboard() {
+  return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => const dashboardKepalaDesa(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;

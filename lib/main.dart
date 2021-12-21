@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:surat/KepalaDesa/Dashboard.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/WelcomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -65,7 +66,11 @@ class _splashScreenState extends State<splashScreen> {
           loginPage.desaId = desaId;
           loginPage.pendudukId = pendudukId;
         });
-        return Timer(duration, navigatorPendudukHomePage);
+        if(role == "Pengguna") {
+          return Timer(duration, navigatorPendudukHomePage);
+        }else if(role == "Kepala Desa") {
+          return Timer(duration, navigatorKepalaDesaHomePage);
+        }
       }else{
         return Timer(duration, navigatorWelcomeScreen);
       }
@@ -74,6 +79,10 @@ class _splashScreenState extends State<splashScreen> {
 
   void navigatorPendudukHomePage() {
     Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardPenduduk(), type: PageTransitionType.fade), (route) => false);
+  }
+
+  void navigatorKepalaDesaHomePage() {
+    Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardKepalaDesa(), type: PageTransitionType.fade), (route) => false);
   }
 
   void navigatorWelcomeScreen() {
