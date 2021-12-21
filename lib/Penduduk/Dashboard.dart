@@ -41,20 +41,67 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                   barrierDismissible: false,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('Logout'),
-                      content: Text('Apakah Anda ingin logout?'),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(40.0))
+                      ),
+                      content: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Container(
+                              child: Image.asset(
+                                'images/logout.png',
+                                height: 50,
+                                width: 50,
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                "Logout?",
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor("#025393")
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              margin: EdgeInsets.only(top: 10),
+                            ),
+                            Container(
+                              child: Text(
+                                "Apakah Anda yakin ingin logout?",
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              margin: EdgeInsets.only(top: 10),
+                            )
+                          ],
+                        ),
+                      ),
                       actions: <Widget>[
                         TextButton(
-                          child: Text('Ya'),
-                          onPressed: (){
-                            Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => welcomeScreen()), (route) => false);
-                          },
+                            onPressed: (){
+                              Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => welcomeScreen()), (route) => false);
+                            },
+                            child: Text("Ya", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w700,
+                              color: HexColor("#025393")
+                            ))
                         ),
                         TextButton(
-                          child: Text('Tidak'),
-                          onPressed: (){
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: (){Navigator.of(context).pop();},
+                          child: Text("Tidak", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontWeight: FontWeight.w700,
+                            color: HexColor("#025393")
+                          )),
                         )
                       ],
                     );

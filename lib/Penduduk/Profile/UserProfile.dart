@@ -28,9 +28,9 @@ class userProfile extends StatefulWidget {
 }
 
 class _userProfileState extends State<userProfile> {
-  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/getdatapendudukbyid";
-  var apiURLGetDataDesa = "http://192.168.18.10:8000/api/getdatadesabyid";
-  var apiURLGetDataUser = "http://192.168.18.10:8000/api/getdatapenggunabyid";
+  var apiURLGetDataPenduduk = "http://192.168.56.149:8000/api/getdatapendudukbyid";
+  var apiURLGetDataDesa = "http://192.168.56.149:8000/api/getdatadesabyid";
+  var apiURLGetDataUser = "http://192.168.56.149:8000/api/getdatapenggunabyid";
 
   getPendudukInfo() async {
     var body = jsonEncode({
