@@ -22,7 +22,7 @@ class _editProfileUserState extends State<editProfileUser> {
   List<String> agama = ["Hindu", "Buddha", "Kristen Katolik", "Kristen Protestan", "Islam", "Konghucu"];
   List<String> statusPerkawinan = ["Belum Menikah", "Sudah Menikah"];
   List<String> pendidikanTerakhir = ["SD", "SMP", "SMA", "D1", "D2", "D3", "D4/S1", "S2", "S3"];
-  var apiURLEditProfile = "http://192.168.56.149:8000/api/editprofile";
+  var apiURLEditProfile = "http://192.168.18.10:8000/api/editprofile";
   String selectedAgama = userProfile.agamaPenduduk;
   String selectedStatusPerkawinan = userProfile.statusPerkawinan;
   String selectedPendidikanTerakhir = userProfile.pendidikanTerakhir;

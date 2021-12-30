@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/KepalaDesa/Profile/EditProfile.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:http/http.dart' as http;
 
 class kepalaDesaProfile extends StatefulWidget {
   const kepalaDesaProfile({Key key}) : super(key: key);
@@ -23,9 +28,84 @@ class kepalaDesaProfile extends StatefulWidget {
 }
 
 class _kepalaDesaProfileState extends State<kepalaDesaProfile> {
-  var apiURLGetDataPenduduk = "http://192.168.56.149:8000/api/getdatapendudukbyid";
-  var apiURLGetDataDesa = "http://192.168.56.149:8000/api/getdatadesabyid";
-  var apiURLGetDataUser = "http://192.168.56.149:8000/api/getdatapenggunabyid";
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/getdatapendudukbyid";
+  var apiURLGetDataDesa = "http://192.168.18.10:8000/api/getdatadesabyid";
+  var apiURLGetDataUser = "http://192.168.18.10:8000/api/getdatapenggunabyid";
+
+  getKepalaDesaInfo() async {
+    var body = jsonEncode({
+      'penduduk_id' : loginPage.pendudukId
+    });
+    http.post(Uri.parse(apiURLGetDataPenduduk),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          kepalaDesaProfile.nama = parsedJson['nama_lengkap'];
+          kepalaDesaProfile.nik = parsedJson['nik'];
+          kepalaDesaProfile.alamat = parsedJson['alamat'];
+          kepalaDesaProfile.golonganDarah = parsedJson['golongan_darah'];
+          kepalaDesaProfile.kewarganegaraan = parsedJson['kewarganegaraan'];
+          kepalaDesaProfile.jenisKelamin = parsedJson['jenis_kelamin'];
+          kepalaDesaProfile.statusPerkawinan = parsedJson['status_perkawinan'];
+          kepalaDesaProfile.agama = parsedJson['agama'];
+          kepalaDesaProfile.pendidikanTerakhir = parsedJson['pendidikan_terakhir'];
+        });
+      }
+    });
+  }
+
+  getUserInfo() async {
+    var body = jsonEncode({
+      'user_id' : loginPage.userId
+    });
+    http.post(Uri.parse(apiURLGetDataUser),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          kepalaDesaProfile.username = parsedJson['username'];
+          kepalaDesaProfile.nomorTelepon = parsedJson['nomor_telepon'];
+        });
+      }
+    });
+  }
+
+  getDesaInfo() async {
+    var body = jsonEncode({
+      'desa_id' : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLGetDataDesa),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          kepalaDesaProfile.asalDesa = parsedJson['nama_desa'];
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getKepalaDesaInfo();
+    getUserInfo();
+    getDesaInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -365,6 +445,26 @@ class _kepalaDesaProfileState extends State<kepalaDesaProfile> {
                 ),
                 padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
                 margin: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 20),
+              ),
+              Container(
+                child: FlatButton(
+                  onPressed: (){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => kepalaDesaEditProfile()));
+                  },
+                  child: Text("Edit Profil", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    color: HexColor("#025393"),
+                    fontWeight: FontWeight.w700
+                  )),
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    side: BorderSide(color: HexColor("#025393"), width: 2)
+                  ),
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                ),
+                margin: EdgeInsets.only(bottom: 20),
               )
             ],
           ),
