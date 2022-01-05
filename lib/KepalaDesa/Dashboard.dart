@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:surat/KepalaDesa/Profile/EditProfile.dart';
+import 'package:surat/KepalaDesa/DetailDesa.dart';
 import 'package:surat/KepalaDesa/Profile/UserProfile.dart';
 import 'package:surat/WelcomeScreen.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
 
 class dashboardKepalaDesa extends StatefulWidget {
+  static var namaDesa = "Nama Desa";
   const dashboardKepalaDesa({Key key}) : super(key: key);
 
   @override
@@ -15,6 +19,34 @@ class dashboardKepalaDesa extends StatefulWidget {
 }
 
 class _dashboardKepalaDesaState extends State<dashboardKepalaDesa> {
+  var apiURLDataDesa = "http://192.168.18.10:8000/api/getdatadesabyid";
+
+  getDesaInfo() async {
+    var body = jsonEncode({
+      'desa_id' : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLDataDesa),
+      headers : {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          dashboardKepalaDesa.namaDesa = parsedJson['nama_desa'];
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDesaInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -144,7 +176,7 @@ class _dashboardKepalaDesaState extends State<dashboardKepalaDesa> {
                           children: <Widget>[
                             Container(
                               child: Text(
-                                "Ubung Kaja",
+                                dashboardKepalaDesa.namaDesa,
                                 style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 16,
@@ -163,7 +195,9 @@ class _dashboardKepalaDesaState extends State<dashboardKepalaDesa> {
                                   color: Colors.black
                               ),
                             ),
-                            onPressed: (){},
+                            onPressed: (){
+                              Navigator.push(context, CupertinoPageRoute(builder: (context) => detailDesa()));
+                            },
                           )
                       )
                           ],
@@ -193,48 +227,6 @@ class _dashboardKepalaDesaState extends State<dashboardKepalaDesa> {
                     children: <Widget>[
                       Container(
                         child: Image.asset(
-                          'images/person.png',
-                          height: 40,
-                          width: 40,
-                        ),
-                      ),
-                      Container(
-                        child: Text(
-                          "Manajemen Penduduk",
-                          style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700
-                          ),
-                        ),
-                        margin: EdgeInsets.only(left: 20),
-                      )
-                    ],
-                  ),
-                ),
-                margin: EdgeInsets.only(top: 35, left: 20, right: 20),
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                height: 70,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0,3)
-                      )
-                    ]
-                ),
-              ),
-              Container(
-                child: GestureDetector(
-                  onTap: (){},
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        child: Image.asset(
                           'images/paper.png',
                           height: 40,
                           width: 40,
@@ -254,7 +246,7 @@ class _dashboardKepalaDesaState extends State<dashboardKepalaDesa> {
                     ],
                   ),
                 ),
-                margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                margin: EdgeInsets.only(top: 35, left: 20, right: 20),
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 height: 70,
                 decoration: BoxDecoration(

@@ -1,4 +1,4 @@
-#Thu Dec 30 23:17:32 SGT 2021
+#Wed Jan 05 23:27:44 SGT 2022
 base.0=C\:\\Users\\awenh\\Documents\\College Stuffs\\Bahan Skripsi\\app\\surat\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex
