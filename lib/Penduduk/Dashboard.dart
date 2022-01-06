@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/Penduduk/Profile/UserProfile.dart';
+import 'package:surat/Penduduk/Surat/AktaKelahiran/PengajuanSKKelahiran.dart';
 import 'package:surat/Penduduk/Surat/ListPengajuanSurat.dart';
 import 'package:surat/WelcomeScreen.dart';
 
@@ -148,13 +149,13 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                               icon: Image.asset('images/baby.png'),
                               iconSize: 40,
                               onPressed: (){
-                                Navigator.push(context, createRoutePengajuanSurat());
+                                Navigator.push(context, CupertinoPageRoute(builder: (context) => pengajuanSKKelahiran()));
                               }
                             ),
                           ),
                           Container(
                             child: Text(
-                              "Akta Kelahiran",
+                              "SK Kelahiran",
                               style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 13,
@@ -174,9 +175,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             child: IconButton(
                                 icon: Image.asset('images/thumb.png'),
                                 iconSize: 40,
-                                onPressed: (){
-                                  Navigator.push(context, createRoutePengajuanSurat());
-                                }
+                                onPressed: (){}
                             ),
                           ),
                           Container(
@@ -201,14 +200,12 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             child: IconButton(
                                 icon: Image.asset('images/person.png'),
                                 iconSize: 40,
-                                onPressed: (){
-                                  Navigator.push(context, createRoutePengajuanSurat());
-                                }
+                                onPressed: (){}
                             ),
                           ),
                           Container(
                             child: Text(
-                              "Belum Menikah",
+                              "SK Belum Menikah",
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 13,
@@ -228,22 +225,21 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
               Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
                       child: Column(
                         children: <Widget>[
                           Container(
                             child: IconButton(
-                                icon: Image.asset('images/baby.png'),
+                                icon: Image.asset('images/store.png'),
                                 iconSize: 40,
-                                onPressed: (){
-                                  Navigator.push(context, createRoutePengajuanSurat());
-                                }
+                                onPressed: (){}
                             ),
                           ),
                           Container(
                             child: Text(
-                              "Akta Kelahiran",
+                              "SK Tempat Usaha",
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 13,
@@ -261,16 +257,14 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                         children: <Widget>[
                           Container(
                             child: IconButton(
-                                icon: Image.asset('images/thumb.png'),
+                                icon: Image.asset('images/money.png'),
                                 iconSize: 40,
-                                onPressed: (){
-                                  Navigator.push(context, createRoutePengajuanSurat());
-                                }
+                                onPressed: (){}
                             ),
                           ),
                           Container(
                             child: Text(
-                              "Berkelakuan Baik",
+                              "SK Tidak Mampu",
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 13,
@@ -288,16 +282,14 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                         children: <Widget>[
                           Container(
                             child: IconButton(
-                                icon: Image.asset('images/person.png'),
+                                icon: Image.asset('images/scull.png'),
                                 iconSize: 40,
-                                onPressed: (){
-                                  Navigator.push(context, createRoutePengajuanSurat());
-                                }
+                                onPressed: (){}
                             ),
                           ),
                           Container(
                             child: Text(
-                              "Belum Menikah",
+                              "SK Kematian",
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 13,
@@ -330,7 +322,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     children: <Widget>[
                       Container(
                         child: Text(
-                          "Layanan surat lainnya",
+                          "Surat keterangan lainnya",
                           style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 15,
@@ -338,7 +330,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             fontWeight: FontWeight.w700
                           ),
                         ),
-                        margin: EdgeInsets.only(right: 10),
+                        margin: EdgeInsets.only(right: 5),
                       ),
                       Container(
                         child: Icon(Icons.arrow_forward, color: HexColor("#025393")),
@@ -365,79 +357,110 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
               Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Container(
-                            child: Text("0", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 25,
-                              color: HexColor("#ff6d69"),
-                              fontWeight: FontWeight.w700
-                            )),
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  child: Text(
+                                    "0",
+                                    style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Text(
+                                    "Menunggu",
+                                    style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                           Container(
-                            child: Text("Menunggu", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 15,
-                                color: Colors.black
-                            ))
-                          )
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  child: Text(
+                                    "0",
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor("#025393")
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Text(
+                                    "Diproses",
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.only(left: 20, right: 20),
+                          ),
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  child: Text(
+                                    "0",
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor("#025393")
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Text(
+                                    "Sudah Verifikasi",
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                    ),
-                    Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              child: Text("0", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 25,
-                                  color: HexColor("#fecc50"),
-                                  fontWeight: FontWeight.w700
-                              )),
-                            ),
-                            Container(
-                              child: Text("Diproses", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 15,
-                                  color: Colors.black
-                              )),
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
                             )
-                          ],
-                        ),
-                        margin: EdgeInsets.symmetric(horizontal: 10)
-                    ),
-                    Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              child: Text("0", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 25,
-                                  color: HexColor("#528c83"),
-                                  fontWeight: FontWeight.w700
-                              )),
-                            ),
-                            Container(
-                              child: Text("Sudah Verifikasi", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 15,
-                                  color: Colors.black
-                              )),
-                            )
-                          ],
-                        ),
-                        margin: EdgeInsets.symmetric(horizontal: 10)
+                          ]
+                      ),
                     )
                   ],
                 ),
-                margin: EdgeInsets.only(top: 25),
+                margin: EdgeInsets.only(top: 20),
               ),
               Container(
                 child: Column(

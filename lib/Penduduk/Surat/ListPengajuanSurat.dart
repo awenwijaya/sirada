@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:surat/Penduduk/Surat/PengajuanSurat.dart';
+import 'package:surat/Penduduk/Surat/AktaKelahiran/PengajuanSKKelahiran.dart';
 
 class listPengajuanSuratUser extends StatefulWidget {
   const listPengajuanSuratUser({Key key}) : super(key: key);
@@ -16,7 +16,7 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Pengajuan Surat Lainnya", style: TextStyle(
+          title: Text("Surat Keterangan", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
@@ -38,33 +38,33 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                       alignment: Alignment.center,
                       child: Image.asset(
                         'images/email.png',
-                        height: 100,
-                        width: 100,
+                        height: 50,
+                        width: 50,
                       ),
-                      margin: EdgeInsets.only(top: 50),
+                      margin: EdgeInsets.only(top: 30),
                     ),
                     Container(
                       child: Text(
-                        "Pengajuan Surat",
+                        "Surat Keterangan (SK)",
                         style: TextStyle(
                             fontFamily: "Poppins",
-                            fontSize: 20,
+                            fontSize: 16,
                             fontWeight: FontWeight.w700
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      margin: EdgeInsets.only(top: 30),
+                      margin: EdgeInsets.only(top: 20),
                     ),
                     Container(
                       child: Text(
                         "Pilihlah salah satu dari list pengajuan surat dibawah ini",
                         style: TextStyle(
                           fontFamily: "Poppins",
-                          fontSize: 15
+                          fontSize: 14
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      margin: EdgeInsets.only(top: 20),
+                      margin: EdgeInsets.only(top: 10),
                       padding: EdgeInsets.symmetric(horizontal: 20),
                     )
                   ],
@@ -74,43 +74,262 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      child: FlatButton(
+                      child: GestureDetector(
+                        onTap: (){},
                         child: Row(
                           children: <Widget>[
                             Container(
                               child: Image.asset(
-                                'images/baby.png',
+                                'images/thumb.png',
                                 height: 40,
                                 width: 40,
                               ),
-                              margin: EdgeInsets.only(right: 20),
                             ),
                             Container(
                               child: Text(
-                                "Akta Kelahiran",
+                                "SK Berkelakuan Baik",
                                 style: TextStyle(
                                   fontFamily: "Poppins",
-                                  fontSize: 15,
-                                  color: Colors.black,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w700
                                 ),
                               ),
+                              margin: EdgeInsets.only(left: 20),
                             )
                           ],
                         ),
-                        color: HexColor("d3dbdc"),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
-                        onPressed: (){
-                          Navigator.push(context, createRoutePengajuanSurat());
-                        },
                       ),
-                      margin: EdgeInsets.only(top: 30, left: 20, right: 20),
+                      margin: EdgeInsets.only(top: 25, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
                     ),
                     Container(
-                      child: FlatButton(
+                      child: GestureDetector(
+                        onTap: (){},
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Image.asset(
+                                'images/person.png',
+                                height: 40,
+                                width: 40,
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                "SK Belum Menikah",
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700
+                                ),
+                              ),
+                              margin: EdgeInsets.only(left: 20),
+                            )
+                          ],
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
+                    ),
+                    Container(
+                      child: GestureDetector(
+                        onTap: (){},
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Image.asset(
+                                'images/scull.png',
+                                height: 40,
+                                width: 40,
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                "SK Kematian",
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700
+                                ),
+                              ),
+                              margin: EdgeInsets.only(left: 20),
+                            )
+                          ],
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
+                    ),
+                    Container(
+                      child: GestureDetector(
+                        onTap: (){},
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Image.asset(
+                                'images/briefcase.png',
+                                height: 40,
+                                width: 40,
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                "SK Usaha",
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700
+                                ),
+                              ),
+                              margin: EdgeInsets.only(left: 20),
+                            )
+                          ],
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
+                    ),
+                    Container(
+                      child: GestureDetector(
+                        onTap: (){},
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Image.asset(
+                                'images/store.png',
+                                height: 40,
+                                width: 40,
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                "SK Tempat Usaha",
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700
+                                ),
+                              ),
+                              margin: EdgeInsets.only(left: 20),
+                            )
+                          ],
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
+                    ),
+                    Container(
+                      child: GestureDetector(
+                        onTap: (){},
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Image.asset(
+                                'images/money.png',
+                                height: 40,
+                                width: 40,
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                "SK Tidak Mampu",
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700
+                                ),
+                              ),
+                              margin: EdgeInsets.only(left: 20),
+                            )
+                          ],
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
+                    ),
+                    Container(
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => pengajuanSKKelahiran()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -119,174 +338,163 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                                 height: 40,
                                 width: 40,
                               ),
-                              margin: EdgeInsets.only(right: 20),
                             ),
                             Container(
                               child: Text(
-                                "Akta Kelahiran",
+                                "SK Kelahiran",
                                 style: TextStyle(
                                     fontFamily: "Poppins",
-                                    fontSize: 15,
-                                    color: Colors.black,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w700
                                 ),
                               ),
+                              margin: EdgeInsets.only(left: 20),
                             )
                           ],
                         ),
-                        color: HexColor("d3dbdc"),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
-                        onPressed: (){},
                       ),
-                      margin: EdgeInsets.only(top: 30, left: 20, right: 20),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
                     ),
                     Container(
-                      child: FlatButton(
+                      child: GestureDetector(
+                        onTap: (){},
                         child: Row(
                           children: <Widget>[
                             Container(
                               child: Image.asset(
-                                'images/baby.png',
+                                'images/paycheck.png',
                                 height: 40,
                                 width: 40,
                               ),
-                              margin: EdgeInsets.only(right: 20),
                             ),
                             Container(
                               child: Text(
-                                "Akta Kelahiran",
+                                "SK Penghasilan Orang Tua",
                                 style: TextStyle(
                                     fontFamily: "Poppins",
-                                    fontSize: 15,
-                                    color: Colors.black,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w700
                                 ),
                               ),
+                              margin: EdgeInsets.only(left: 20),
                             )
                           ],
                         ),
-                        color: HexColor("d3dbdc"),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
-                        onPressed: (){
-                          Navigator.push(context, createRoutePengajuanSurat());
-                        },
                       ),
-                      margin: EdgeInsets.only(top: 30, left: 20, right: 20),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
                     ),
                     Container(
-                      child: FlatButton(
+                      child: GestureDetector(
+                        onTap: (){},
                         child: Row(
                           children: <Widget>[
                             Container(
                               child: Image.asset(
-                                'images/baby.png',
+                                'images/flag.png',
                                 height: 40,
                                 width: 40,
                               ),
-                              margin: EdgeInsets.only(right: 20),
                             ),
                             Container(
                               child: Text(
-                                "Akta Kelahiran",
+                                "SK Pindah WNI",
                                 style: TextStyle(
                                     fontFamily: "Poppins",
-                                    fontSize: 15,
-                                    color: Colors.black,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w700
                                 ),
                               ),
+                              margin: EdgeInsets.only(left: 20),
                             )
                           ],
                         ),
-                        color: HexColor("d3dbdc"),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
-                        onPressed: (){
-                          Navigator.push(context, createRoutePengajuanSurat());
-                        },
                       ),
-                      margin: EdgeInsets.only(top: 30, left: 20, right: 20),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
                     ),
                     Container(
-                      child: FlatButton(
+                      child: GestureDetector(
+                        onTap: (){},
                         child: Row(
                           children: <Widget>[
                             Container(
                               child: Image.asset(
-                                'images/baby.png',
+                                'images/flag.png',
                                 height: 40,
                                 width: 40,
                               ),
-                              margin: EdgeInsets.only(right: 20),
                             ),
                             Container(
                               child: Text(
-                                "Akta Kelahiran",
+                                "SK Datang WNI",
                                 style: TextStyle(
                                     fontFamily: "Poppins",
-                                    fontSize: 15,
-                                    color: Colors.black,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w700
                                 ),
                               ),
+                              margin: EdgeInsets.only(left: 20),
                             )
                           ],
                         ),
-                        color: HexColor("d3dbdc"),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
-                        onPressed: (){
-                          Navigator.push(context, createRoutePengajuanSurat());
-                        },
                       ),
-                      margin: EdgeInsets.only(top: 30, left: 20, right: 20),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
                     ),
-                    Container(
-                      child: FlatButton(
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              child: Image.asset(
-                                'images/baby.png',
-                                height: 40,
-                                width: 40,
-                              ),
-                              margin: EdgeInsets.only(right: 20),
-                            ),
-                            Container(
-                              child: Text(
-                                "Akta Kelahiran",
-                                style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 15,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        color: HexColor("d3dbdc"),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
-                        onPressed: (){
-                          Navigator.push(context, createRoutePengajuanSurat());
-                        },
-                      ),
-                      margin: EdgeInsets.only(top: 30, left: 20, right: 20),
-                    )
                   ],
                 ),
               )
@@ -296,22 +504,4 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
       ),
     );
   }
-}
-
-Route createRoutePengajuanSurat() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const pengajuanSurat(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    }
-  );
 }

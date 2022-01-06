@@ -4,54 +4,59 @@ import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:surat/Penduduk/Surat/AktaKelahiran/Formulir.dart';
 
-class pengajuanSurat extends StatelessWidget {
-  const pengajuanSurat({Key key}) : super(key: key);
+class pengajuanSKKelahiran extends StatelessWidget {
+  const pengajuanSKKelahiran({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          title: Text("SK Kelahiran", style: TextStyle(
+            fontFamily: "Poppins",
+            fontWeight: FontWeight.w700,
+            color: HexColor("#025393")
+          )),
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: HexColor("#025393"),
+            onPressed: (){Navigator.of(context).pop();},
+          ),
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  icon: Icon(CupertinoIcons.back),
-                  color: Colors.black,
-                  onPressed: (){Navigator.of(context).pop();},
+                alignment: Alignment.center,
+                child: Image.asset(
+                  'images/baby.png',
+                  height: 100,
+                  width: 100,
                 ),
-                margin: EdgeInsets.only(top: 60, left: 10),
-              ),
-              Container(
-                child: Text(
-                  "Pengajuan Surat Akta Kelahiran",
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 25,
-                    fontWeight: FontWeight.w700,
-                    color: HexColor("#025393")
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 20),
-              ),
-              Container(
-                child: Image.asset(('images/baby.png'), height: 150, width: 150),
                 margin: EdgeInsets.only(top: 20),
               ),
               Container(
+                alignment: Alignment.center,
                 child: Text(
-                  "Sebelum melakukan pengurusan surat akta kelahiran, silahkan siapkan dan lengkapi berkas-berkas dibawah ini:",
+                  "Pengajuan SK Kelahiran",
                   style: TextStyle(
                     fontFamily: "Poppins",
-                    fontSize: 15,
-                    color: Colors.black
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700
                   ),
                 ),
-                alignment: Alignment.topLeft,
+              ),
+              Container(
+                child: Text(
+                  "Sebelum melakukan pengurusan SK Kelahiran, silahkan siapkan dan lengkapi berkas-berkas dibawah ini",
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14
+                  ),
+                ),
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                margin: EdgeInsets.only(top: 50),
+                margin: EdgeInsets.only(top: 20),
               ),
               Container(
                 child: Column(
@@ -62,49 +67,25 @@ class pengajuanSurat extends StatelessWidget {
                           Container(
                             child: Image.asset(
                               'images/paper.png',
-                              height: 30,
-                              width: 30,
-                            ),
-                          ),
-                          Container(
-                            child: Text(
-                              "KK Asli",
-                              style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700
-                              ),
+                              height: 40,
+                              width: 40,
                             ),
                             margin: EdgeInsets.only(left: 20),
-                          )
-                        ],
-                      ),
-                      margin: EdgeInsets.only(top: 30, left: 20),
-                    ),
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                            child: Image.asset(
-                                'images/paper.png',
-                              height: 30,
-                              width: 30,
-                            ),
                           ),
                           Container(
                             child: Text(
-                              "Surat Keterangan Lahir",
+                              "Surat keterangan lahir dari dokter/bidan",
                               style: TextStyle(
                                 fontFamily: "Poppins",
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w700
                               ),
                             ),
-                            margin: EdgeInsets.only(left: 20),
+                            margin: EdgeInsets.only(left: 15),
                           )
                         ],
                       ),
-                      margin: EdgeInsets.only(top: 30, left: 20),
+                      margin: EdgeInsets.only(top: 20),
                     ),
                     Container(
                       child: Row(
@@ -112,24 +93,25 @@ class pengajuanSurat extends StatelessWidget {
                           Container(
                             child: Image.asset(
                               'images/paper.png',
-                              height: 30,
-                              width: 30,
+                              height: 40,
+                              width: 40,
                             ),
+                            margin: EdgeInsets.only(left: 20),
                           ),
                           Container(
                             child: Text(
-                              "Fotokopi KTP-EI orang tua",
+                              "Akta Nikah",
                               style: TextStyle(
                                   fontFamily: "Poppins",
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w700
                               ),
                             ),
-                            margin: EdgeInsets.only(left: 20),
+                            margin: EdgeInsets.only(left: 15),
                           )
                         ],
                       ),
-                      margin: EdgeInsets.only(top: 30, left: 20),
+                      margin: EdgeInsets.only(top: 20),
                     ),
                     Container(
                       child: Row(
@@ -137,24 +119,51 @@ class pengajuanSurat extends StatelessWidget {
                           Container(
                             child: Image.asset(
                               'images/paper.png',
-                              height: 30,
-                              width: 30,
+                              height: 40,
+                              width: 40,
                             ),
+                            margin: EdgeInsets.only(left: 20),
                           ),
                           Container(
                             child: Text(
-                              "Fotokopi KTP-EI dua orang saksi",
+                              "KTP Orang Tua",
                               style: TextStyle(
                                   fontFamily: "Poppins",
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w700
                               ),
                             ),
-                            margin: EdgeInsets.only(left: 20),
+                            margin: EdgeInsets.only(left: 15),
                           )
                         ],
                       ),
-                      margin: EdgeInsets.only(top: 30, left: 20),
+                      margin: EdgeInsets.only(top: 20),
+                    ),
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            child: Image.asset(
+                              'images/paper.png',
+                              height: 40,
+                              width: 40,
+                            ),
+                            margin: EdgeInsets.only(left: 20),
+                          ),
+                          Container(
+                            child: Text(
+                              "KTP 2 orang saksi",
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700
+                              ),
+                            ),
+                            margin: EdgeInsets.only(left: 15),
+                          )
+                        ],
+                      ),
+                      margin: EdgeInsets.only(top: 20),
                     ),
                     Container(
                       alignment: Alignment.center,
@@ -163,10 +172,10 @@ class pengajuanSurat extends StatelessWidget {
                           Navigator.push(context, CupertinoPageRoute(builder: (context) => formPendaftaranAktaKelahiran()));
                         },
                         child: Text(
-                          "Ajukan Akta Kelahiran",
+                          "Ajukan SK Kelahiran",
                           style: TextStyle(
                             fontFamily: "Poppins",
-                            fontSize: 15,
+                            fontSize: 14,
                             color: Colors.white,
                             fontWeight: FontWeight.w700
                           ),

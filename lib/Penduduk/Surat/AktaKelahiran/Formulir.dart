@@ -20,12 +20,16 @@ class _formPendaftaranAktaKelahiranState extends State<formPendaftaranAktaKelahi
   String selectedJenisKelahiran;
   String selectedPenolongKelahiran;
 
+  DateTime selectTanggalKelahiran;
+  String tanggalKelahiran = "Tanggal kelahiran belum terpilih";
+  TimeOfDay selectedWaktuKelahiran = TimeOfDay.now();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Formulir Surat Akta Kelahiran", style: TextStyle(
+          title: Text("Formulir SK Kelahiran", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
@@ -241,6 +245,117 @@ class _formPendaftaranAktaKelahiranState extends State<formPendaftaranAktaKelahi
                           )).toList()
                       ),
                       margin: EdgeInsets.only(top: 20),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Tanggal Kelahiran *",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 15
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 20, left: 20),
+                    ),
+                    Container(
+                      child: Text(
+                        tanggalKelahiran,
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 15
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 10),
+                    ),
+                    Container(
+                      child: FlatButton(
+                        onPressed: (){
+                          showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime(2900)
+                          ).then((value) {
+                            setState(() {
+                              selectTanggalKelahiran = value;
+                              var tanggal = DateTime.parse(selectTanggalKelahiran.toString());
+                              tanggalKelahiran = "${tanggal.day} - ${tanggal.month} - ${tanggal.year}";
+                            });
+                          });
+                        },
+                        child: Text("Pilih Tanggal Kelahiran", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700
+                        )),
+                        color: HexColor("#025393"),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25)
+                        ),
+                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                      ),
+                      margin: EdgeInsets.only(top: 10),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Waktu Kelahiran *",
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 15
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 20, left: 20),
+                    ),
+                    Container(
+                      child: Text(
+                        "${selectedWaktuKelahiran.hour} : ${selectedWaktuKelahiran.minute}",
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 15
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 10),
+                    ),
+                    Container(
+                      child: FlatButton(
+                        onPressed: (){
+                          showTimePicker(
+                            context: context,
+                            initialTime: selectedWaktuKelahiran,
+                            initialEntryMode: TimePickerEntryMode.dial
+                          ).then((value) {
+                            setState(() {
+                              selectedWaktuKelahiran = value;
+                            });
+                          });
+                        },
+                        child: Text("Pilih Waktu Kelahiran", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700
+                        )),
+                        color: HexColor("#025393"),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25)
+                        ),
+                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                      ),
+                      margin: EdgeInsets.only(top: 10),
                     )
                   ],
                 ),
@@ -562,6 +677,27 @@ class _formPendaftaranAktaKelahiranState extends State<formPendaftaranAktaKelahi
                   ],
                 ),
               ),
+              Container(
+                child: FlatButton(
+                  onPressed: (){},
+                  child: Text(
+                    "Simpan & Unggah Berkas Persyaratan",
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      color: HexColor("#025393"),
+                      fontWeight: FontWeight.w700
+                    ),
+                  ),
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    side: BorderSide(color: HexColor("#025393"), width: 2)
+                  ),
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                ),
+                margin: EdgeInsets.only(top: 30, bottom: 30),
+              )
             ],
           ),
         ),
