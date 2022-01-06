@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:http/http.dart' as http;
 
 class detailDesa extends StatefulWidget {
   static var namaKecamatan = "Nama Kecamatan";
   static var nomorTelepon = "Nomor Telepon";
   static var alamat = "Alamat";
   static var kodePos = "Kode Pos";
+  static var namaDesa = "Nama Desa";
   static var idKecamatan;
   const detailDesa({Key key}) : super(key: key);
 
@@ -15,6 +20,59 @@ class detailDesa extends StatefulWidget {
 }
 
 class _detailDesaState extends State<detailDesa> {
+  var apiURLGetDesaInfo = "http://192.168.18.10:8000/api/getdatadesabyid";
+  var apiURLGetKecamatanInfo = "http://192.168.18.10:8000/api/getdatakecamatanbyid";
+
+  getDesaInfo() async {
+    var body = jsonEncode({
+      'desa_id' : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLGetDesaInfo),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          detailDesa.idKecamatan = parsedJson['kecamatan_id'];
+          detailDesa.namaDesa = parsedJson['nama_desa'];
+          detailDesa.alamat = parsedJson['alamat_desa'];
+          detailDesa.kodePos = parsedJson['kode_pos'].toString();
+          detailDesa.nomorTelepon = parsedJson['telpon_desa'].toString();
+        });
+      }
+    });
+  }
+
+  getKecamatanInfo() async {
+    var body = jsonEncode({
+      'kecamatan_id' : detailDesa.idKecamatan
+    });
+    http.post(Uri.parse(apiURLGetKecamatanInfo),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          detailDesa.namaKecamatan = parsedJson['nama_kecamatan'];
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDesaInfo();
+    getKecamatanInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -52,7 +110,7 @@ class _detailDesaState extends State<detailDesa> {
                     ),
                     Container(
                       child: Text(
-                        "Peguyangan Kaja",
+                        detailDesa.namaDesa.toString(),
                         style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 16,
@@ -195,7 +253,7 @@ class _detailDesaState extends State<detailDesa> {
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        "Kecamatan",
+                        "Nama Kecamatan",
                         style: TextStyle(
                           fontFamily: "Poppins",
                           fontWeight: FontWeight.w700,
