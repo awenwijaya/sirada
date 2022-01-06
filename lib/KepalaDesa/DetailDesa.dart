@@ -22,6 +22,11 @@ class detailDesa extends StatefulWidget {
 class _detailDesaState extends State<detailDesa> {
   var apiURLGetDesaInfo = "http://192.168.18.10:8000/api/getdatadesabyid";
   var apiURLGetKecamatanInfo = "http://192.168.18.10:8000/api/getdatakecamatanbyid";
+  var apiURLCountPenduduk = "http://192.168.18.10:8000/api/countpenduduk";
+  var apiURLCountDusun = "http://192.168.18.10:8000/api/countdusun";
+
+  String jumlahPenduduk = "0";
+  String jumlahDusun = "0";
 
   getDesaInfo() async {
     var body = jsonEncode({
@@ -65,12 +70,52 @@ class _detailDesaState extends State<detailDesa> {
     });
   }
 
+  countPenduduk() async {
+    var body = jsonEncode({
+      'desa_id' : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLCountPenduduk),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          jumlahPenduduk = parsedJson.toString();
+        });
+      }
+    });
+  }
+
+  countDusun() async {
+    var body = jsonEncode({
+      'desa_id' : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLCountDusun),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          jumlahDusun = parsedJson.toString();
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getDesaInfo();
     getKecamatanInfo();
+    countPenduduk();
+    countDusun();
   }
 
   @override
@@ -145,7 +190,7 @@ class _detailDesaState extends State<detailDesa> {
                               children: <Widget>[
                                 Container(
                                   child: Text(
-                                    "100",
+                                    jumlahPenduduk,
                                     style: TextStyle(
                                       fontFamily: "Poppins",
                                       fontSize: 16,
@@ -202,7 +247,7 @@ class _detailDesaState extends State<detailDesa> {
                                     children: <Widget>[
                                       Container(
                                         child: Text(
-                                          "100",
+                                          jumlahDusun.toString(),
                                           style: TextStyle(
                                             fontFamily: "Poppins",
                                             fontSize: 16,
