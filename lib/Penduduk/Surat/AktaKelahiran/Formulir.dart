@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/Penduduk/Surat/AktaKelahiran/UploadBerkasPersyaratan.dart';
 
 class formPendaftaranAktaKelahiran extends StatefulWidget {
   const formPendaftaranAktaKelahiran({Key key}) : super(key: key);
@@ -48,31 +49,41 @@ class _formPendaftaranAktaKelahiranState extends State<formPendaftaranAktaKelahi
                 child: Column(
                   children: <Widget>[
                     Container(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Formulir Surat Akta Kelahiran",
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: "Poppins"
-                        ),
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        'images/baby.png',
+                        height: 100,
+                        width: 100,
                       ),
+                      margin: EdgeInsets.only(top: 20),
                     ),
                     Container(
-                      alignment: Alignment.topLeft,
                       child: Text(
-                        "* = dibutuhkan",
+                        "Pengajuan SK Kelahiran",
                         style: TextStyle(
-                          fontSize: 15,
                           fontFamily: "Poppins",
-                          color: Colors.redAccent
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: HexColor("#025393")
                         ),
+                        textAlign: TextAlign.center,
                       ),
-                      margin: EdgeInsets.only(top: 15),
+                      margin: EdgeInsets.only(top: 10),
+                    ),
+                    Container(
+                      child: Text(
+                        "* = diperlukan",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      margin: EdgeInsets.only(top: 10),
                     )
                   ],
                 ),
-                margin: EdgeInsets.only(top: 20, left: 20),
               ),
               Container(
                 child: Column(
@@ -679,7 +690,9 @@ class _formPendaftaranAktaKelahiranState extends State<formPendaftaranAktaKelahi
               ),
               Container(
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => uploadBerkasPersyaratan()));
+                  },
                   child: Text(
                     "Simpan & Unggah Berkas Persyaratan",
                     style: TextStyle(

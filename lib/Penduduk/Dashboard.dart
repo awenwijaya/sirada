@@ -4,6 +4,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/Penduduk/Profile/UserProfile.dart';
 import 'package:surat/Penduduk/Surat/AktaKelahiran/PengajuanSKKelahiran.dart';
+import 'package:surat/Penduduk/Surat/DetailSuratMasyarakat.dart';
 import 'package:surat/Penduduk/Surat/ListPengajuanSurat.dart';
 import 'package:surat/WelcomeScreen.dart';
 
@@ -496,8 +497,89 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             child: TabBarView(
                               children: <Widget>[
                                 Container(
-                                  child: Center(
-                                    child: Text("Sedang Diproses"),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                        alignment: Alignment.topLeft,
+                                        child: GestureDetector(
+                                          onTap: (){
+                                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSurat()));
+                                          },
+                                          child: Row(
+                                            children: <Widget>[
+                                              Container(
+                                                child: Image.asset(
+                                                  'images/email.png',
+                                                  height: 50,
+                                                  width: 50,
+                                                ),
+                                              ),
+                                              Container(
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      child: Text(
+                                                        "Sedang Menunggu",
+                                                        style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: Colors.white
+                                                        ),
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                                                          color: HexColor("#fab73d")
+                                                      ),
+                                                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                                      margin: EdgeInsets.only(top: 15),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                        "SK Belum Menikah",
+                                                        style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: HexColor("#025393")
+                                                        ),
+                                                      ),
+                                                      margin: EdgeInsets.only(top: 5),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                        "68/SP.TGK/V/2022",
+                                                        style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 14,
+                                                            color: Colors.black26
+                                                        ),
+                                                      ),
+                                                      margin: EdgeInsets.only(top: 5, bottom: 10),
+                                                    )
+                                                  ],
+                                                ),
+                                                margin: EdgeInsets.only(left: 30),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        margin: EdgeInsets.only(top: 25, left: 20, right: 20),
+                                        padding: EdgeInsets.symmetric(horizontal: 20),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.grey.withOpacity(0.2),
+                                                  spreadRadius: 5,
+                                                  blurRadius: 7,
+                                                  offset: Offset(0,3)
+                                              )
+                                            ]
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Container(

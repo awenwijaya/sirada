@@ -42,10 +42,12 @@ class pengajuanSKKelahiran extends StatelessWidget {
                   "Pengajuan SK Kelahiran",
                   style: TextStyle(
                     fontFamily: "Poppins",
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("#025393")
                   ),
                 ),
+                margin: EdgeInsets.only(top: 10),
               ),
               Container(
                 child: Text(
