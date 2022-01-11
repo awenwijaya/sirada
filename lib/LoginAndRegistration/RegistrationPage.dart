@@ -381,7 +381,7 @@ class _registrationPageState extends State<registrationPage> {
                                       )),
                                       onPressed: (){
                                         setState(() {
-                                          enterEmail.desaId = parsedJson['id_desa'];
+                                          enterEmail.desaId = parsedJson['desa_id'];
                                           enterEmail.pendudukId = parsedJson['penduduk_id'];
                                         });
                                         Navigator.push(context, CupertinoPageRoute(builder: (context) => enterEmail()));
@@ -880,6 +880,7 @@ class _enterEmailState extends State<enterEmail> {
                                     body: body
                                   ).then((http.Response response) {
                                     var data = response.statusCode;
+                                    print(response.statusCode.toString());
                                     if(data == 200) {
                                       setState(() {
                                         emailConfirmation.userEmail = controllerEmail.text;

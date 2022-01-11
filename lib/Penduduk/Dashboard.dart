@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/Penduduk/Profile/UserProfile.dart';
-import 'package:surat/Penduduk/Surat/AktaKelahiran/PengajuanSKKelahiran.dart';
+import 'package:surat/Penduduk/Surat/AktaKelahiran/Formulir.dart';
+import 'package:surat/Penduduk/Surat/BelumMenikah/Formulir.dart';
 import 'package:surat/Penduduk/Surat/DetailSuratMasyarakat.dart';
+import 'package:surat/Penduduk/Surat/KelakuanBaik/Formulir.dart';
+import 'package:surat/Penduduk/Surat/Kematian/Formulir.dart';
 import 'package:surat/Penduduk/Surat/ListPengajuanSurat.dart';
+import 'package:surat/Penduduk/Surat/TempatUsaha/Formulir.dart';
+import 'package:surat/Penduduk/Surat/TidakMampu/Formulir.dart';
 import 'package:surat/WelcomeScreen.dart';
 
 class dashboardPenduduk extends StatefulWidget {
@@ -150,7 +155,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                               icon: Image.asset('images/baby.png'),
                               iconSize: 40,
                               onPressed: (){
-                                Navigator.push(context, CupertinoPageRoute(builder: (context) => pengajuanSKKelahiran()));
+                                Navigator.push(context, CupertinoPageRoute(builder: (context) => formPendaftaranAktaKelahiran()));
                               }
                             ),
                           ),
@@ -176,7 +181,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             child: IconButton(
                                 icon: Image.asset('images/thumb.png'),
                                 iconSize: 40,
-                                onPressed: (){}
+                                onPressed: (){
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKKelakuanBaik()));
+                                }
                             ),
                           ),
                           Container(
@@ -201,7 +208,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             child: IconButton(
                                 icon: Image.asset('images/person.png'),
                                 iconSize: 40,
-                                onPressed: (){}
+                                onPressed: (){
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKBelumMenikah()));
+                                }
                             ),
                           ),
                           Container(
@@ -235,7 +244,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             child: IconButton(
                                 icon: Image.asset('images/store.png'),
                                 iconSize: 40,
-                                onPressed: (){}
+                                onPressed: (){
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKTempatUsaha()));
+                                }
                             ),
                           ),
                           Container(
@@ -260,7 +271,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             child: IconButton(
                                 icon: Image.asset('images/money.png'),
                                 iconSize: 40,
-                                onPressed: (){}
+                                onPressed: (){
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKTidakMampu()));
+                                }
                             ),
                           ),
                           Container(
@@ -285,7 +298,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             child: IconButton(
                                 icon: Image.asset('images/scull.png'),
                                 iconSize: 40,
-                                onPressed: (){}
+                                onPressed: (){
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKKematian()));
+                                }
                             ),
                           ),
                           Container(

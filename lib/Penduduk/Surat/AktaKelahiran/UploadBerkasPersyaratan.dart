@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:surat/Penduduk/Surat/AktaKelahiran/PengajuanBerhasil.dart';
+import 'package:surat/Penduduk/Surat/PengajuanBerhasil.dart';
 
 class uploadBerkasPersyaratan extends StatefulWidget {
   const uploadBerkasPersyaratan({Key key}) : super(key: key);

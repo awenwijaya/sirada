@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
 

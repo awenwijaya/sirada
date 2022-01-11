@@ -1,7 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:surat/Penduduk/Surat/AktaKelahiran/PengajuanSKKelahiran.dart';
+import 'package:surat/Penduduk/Surat/AktaKelahiran/Formulir.dart';
+import 'package:surat/Penduduk/Surat/BelumMenikah/Formulir.dart';
+import 'package:surat/Penduduk/Surat/Berpergian/Formulir.dart';
+import 'package:surat/Penduduk/Surat/DatangWNI/Formulir.dart';
+import 'package:surat/Penduduk/Surat/KelakuanBaik/Formulir.dart';
+import 'package:surat/Penduduk/Surat/Kematian/Formulir.dart';
+import 'package:surat/Penduduk/Surat/LainLain/Formulir.dart';
+import 'package:surat/Penduduk/Surat/PenghasilanOrangTua/Formulir.dart';
+import 'package:surat/Penduduk/Surat/PindahWNI/Formulir.dart';
+import 'package:surat/Penduduk/Surat/TempatUsaha/Formulir.dart';
+import 'package:surat/Penduduk/Surat/TidakMampu/Formulir.dart';
+import 'package:surat/Penduduk/Surat/Usaha/Formulir.dart';
 
 class listPengajuanSuratUser extends StatefulWidget {
   const listPengajuanSuratUser({Key key}) : super(key: key);
@@ -75,7 +86,9 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                   children: <Widget>[
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKKelakuanBaik()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -117,7 +130,9 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKBelumMenikah()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -159,7 +174,9 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKKematian()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -201,7 +218,9 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKUsaha()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -243,7 +262,9 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKTempatUsaha()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -285,7 +306,9 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKTidakMampu()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -328,7 +351,7 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                     Container(
                       child: GestureDetector(
                         onTap: (){
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => pengajuanSKKelahiran()));
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formPendaftaranAktaKelahiran()));
                         },
                         child: Row(
                           children: <Widget>[
@@ -371,7 +394,9 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSPPenghasilanOrangTua()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -383,7 +408,7 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                             ),
                             Container(
                               child: Text(
-                                "SK Penghasilan Orang Tua",
+                                "SP Penghasilan Orang Tua",
                                 style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14,
@@ -413,7 +438,9 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKPindahWNI()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -455,7 +482,9 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKDatangWNI()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -479,7 +508,95 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                           ],
                         ),
                       ),
-                      margin: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
+                    ),
+                    Container(
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKLainLain()));
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Image.asset(
+                                'images/gear.png',
+                                height: 40,
+                                width: 40,
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                "SK Lain-Lain",
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700
+                                ),
+                              ),
+                              margin: EdgeInsets.only(left: 20),
+                            )
+                          ],
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
+                    ),
+                    Container(
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKBerpergian()));
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Image.asset(
+                                'images/airplane.png',
+                                height: 40,
+                                width: 40,
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                "SK Berpergian",
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700
+                                ),
+                              ),
+                              margin: EdgeInsets.only(left: 20),
+                            )
+                          ],
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       height: 70,
                       decoration: BoxDecoration(
