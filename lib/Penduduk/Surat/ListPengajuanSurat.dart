@@ -10,7 +10,7 @@ import 'package:surat/Penduduk/Surat/Kematian/Formulir.dart';
 import 'package:surat/Penduduk/Surat/LainLain/Formulir.dart';
 import 'package:surat/Penduduk/Surat/PenghasilanOrangTua/Formulir.dart';
 import 'package:surat/Penduduk/Surat/PindahWNI/Formulir.dart';
-import 'package:surat/Penduduk/Surat/TempatUsaha/Formulir.dart';
+import 'package:surat/Penduduk/Surat/TempatUsaha/DataTempatUsaha.dart';
 import 'package:surat/Penduduk/Surat/TidakMampu/Formulir.dart';
 import 'package:surat/Penduduk/Surat/Usaha/Formulir.dart';
 
@@ -263,7 +263,7 @@ class _listPengajuanSuratUserState extends State<listPengajuanSuratUser> {
                     Container(
                       child: GestureDetector(
                         onTap: (){
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKTempatUsaha()));
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => formDataTempatUsaha()));
                         },
                         child: Row(
                           children: <Widget>[

@@ -9,7 +9,7 @@ import 'package:surat/Penduduk/Surat/DetailSuratMasyarakat.dart';
 import 'package:surat/Penduduk/Surat/KelakuanBaik/Formulir.dart';
 import 'package:surat/Penduduk/Surat/Kematian/Formulir.dart';
 import 'package:surat/Penduduk/Surat/ListPengajuanSurat.dart';
-import 'package:surat/Penduduk/Surat/TempatUsaha/Formulir.dart';
+import 'package:surat/Penduduk/Surat/TempatUsaha/DataTempatUsaha.dart';
 import 'package:surat/Penduduk/Surat/TidakMampu/Formulir.dart';
 import 'package:surat/WelcomeScreen.dart';
 
@@ -245,7 +245,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                                 icon: Image.asset('images/store.png'),
                                 iconSize: 40,
                                 onPressed: (){
-                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKTempatUsaha()));
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => formDataTempatUsaha()));
                                 }
                             ),
                           ),

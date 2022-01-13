@@ -15,7 +15,7 @@ class _formSKLainLainState extends State<formSKLainLain> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Formulir SK Lain-Lain", style: TextStyle(
+          title: Text("SK Lain-Lain", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")

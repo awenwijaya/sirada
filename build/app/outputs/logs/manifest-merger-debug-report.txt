@@ -5,13 +5,16 @@ INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\an
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml:1:1-42:12
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml:1:1-42:12
 MERGED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml:1:1-42:12
+MERGED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-19:12
+MERGED from [:flutter_plugin_android_lifecycle] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:hexcolor] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\hexcolor\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:shared_preferences] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:fluttertoast] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\fluttertoast\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.exifinterface:exifinterface:1.3.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\edc8758795abf1ce73a47930e4eca79c\exifinterface-1.3.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\ba80674a1a5fdce2b1b29eea5683af77\fragment-1.1.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.activity:activity:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\68865d38a53fb5c240061f062e474515\jetified-activity-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\2f70304b103eacfab05dbe55739e869f\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\49dee3543bc65746b6bba9f83aa0b18a\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\68865d38a53fb5c240061f062e474515\jetified-activity-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.customview:customview:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\86cf751735e9e9dd0416cce35c4a71a1\customview-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.core:core:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\d67cd79abd1ca209502f51c69d23182b\core-1.1.0\AndroidManifest.xml:17:1-26:12
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\b37a656be7da34e79d326523a32fbcaa\lifecycle-runtime-2.2.0\AndroidManifest.xml:17:1-24:12
@@ -21,9 +24,9 @@ MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\awenh\.g
 MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\943631e3c5a6dfa67bece88add1d3fe3\core-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\af9af86a2035b10a0514f89f66cf8a9a\versionedparcelable-1.1.0\AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\2b6a4e71d38d3b36d0c903aac26cfd25\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:17:1-22:12
-INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:1:1-8:12
-INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:1:1-8:12
-INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:1:1-8:12
+INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:1:1-10:12
+INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:1:1-10:12
+INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:1:1-10:12
 	package
 		ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml:2:5-35
 		INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml
@@ -42,6 +45,8 @@ application
 ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml:3:4-41:19
 MERGED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml:3:4-41:19
 MERGED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml:3:4-41:19
+MERGED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-17:19
+MERGED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-17:19
 MERGED from [androidx.core:core:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\d67cd79abd1ca209502f51c69d23182b\core-1.1.0\AndroidManifest.xml:24:5-89
 MERGED from [androidx.core:core:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\d67cd79abd1ca209502f51c69d23182b\core-1.1.0\AndroidManifest.xml:24:5-89
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\af9af86a2035b10a0514f89f66cf8a9a\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
@@ -102,20 +107,26 @@ uses-sdk
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\main\AndroidManifest.xml
+MERGED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:flutter_plugin_android_lifecycle] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:flutter_plugin_android_lifecycle] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:hexcolor] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\hexcolor\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:hexcolor] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\hexcolor\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:shared_preferences] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:shared_preferences] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:fluttertoast] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\fluttertoast\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:fluttertoast] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\fluttertoast\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [androidx.exifinterface:exifinterface:1.3.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\edc8758795abf1ce73a47930e4eca79c\exifinterface-1.3.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.exifinterface:exifinterface:1.3.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\edc8758795abf1ce73a47930e4eca79c\exifinterface-1.3.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\ba80674a1a5fdce2b1b29eea5683af77\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\ba80674a1a5fdce2b1b29eea5683af77\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.activity:activity:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\68865d38a53fb5c240061f062e474515\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.activity:activity:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\68865d38a53fb5c240061f062e474515\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\2f70304b103eacfab05dbe55739e869f\viewpager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\2f70304b103eacfab05dbe55739e869f\viewpager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\49dee3543bc65746b6bba9f83aa0b18a\loader-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\49dee3543bc65746b6bba9f83aa0b18a\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\68865d38a53fb5c240061f062e474515\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\68865d38a53fb5c240061f062e474515\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.customview:customview:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\86cf751735e9e9dd0416cce35c4a71a1\customview-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.customview:customview:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\86cf751735e9e9dd0416cce35c4a71a1\customview-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.core:core:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\d67cd79abd1ca209502f51c69d23182b\core-1.1.0\AndroidManifest.xml:20:5-22:41
@@ -146,3 +157,27 @@ uses-permission#android.permission.INTERNET
 ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:6:5-66
 	android:name
 		ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:6:22-64
+uses-permission#android.permission.CAMERA
+ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:7:5-65
+	android:name
+		ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:7:22-62
+uses-permission#android.permission.FLASHLIGHT
+ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:8:5-69
+	android:name
+		ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\android\app\src\debug\AndroidManifest.xml:8:22-66
+provider#io.flutter.plugins.imagepicker.ImagePickerFileProvider
+ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:8:9-16:20
+	android:grantUriPermissions
+		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:12:13-47
+	android:authorities
+		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:10:13-74
+	android:exported
+		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:13-37
+	android:name
+		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-82
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-15:75
+	android:resource
+		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:15:17-72
+	android:name
+		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:14:17-67

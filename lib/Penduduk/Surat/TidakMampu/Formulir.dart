@@ -15,7 +15,7 @@ class _formSKTidakMampuState extends State<formSKTidakMampu> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Formulir SK Tidak Mampu", style: TextStyle(
+          title: Text("SK Tidak Mampu", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")

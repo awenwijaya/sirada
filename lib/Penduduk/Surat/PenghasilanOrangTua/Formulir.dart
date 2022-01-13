@@ -10,7 +10,6 @@ import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 
 class formSPPenghasilanOrangTua extends StatefulWidget {
-  static var namaOrangTua = "Data orang tua belum terpilih";
   const formSPPenghasilanOrangTua({Key key}) : super(key: key);
 
   @override
@@ -20,6 +19,7 @@ class formSPPenghasilanOrangTua extends StatefulWidget {
 class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
   var apiURLUpSPPenghasilanOrangTua = "http://192.168.18.10:8000/api/sp/penghasilanortu/up";
   bool Loading = false;
+  var namaOrangTua = "Data orang tua belum terpilih";
   final controllerGaji = TextEditingController();
   final controllerKeperluan = TextEditingController();
 
@@ -28,7 +28,7 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
     return MaterialApp(
       home: Loading ? loading() : Scaffold(
         appBar: AppBar(
-          title: Text("Formulir SP Penghasilan Orang Tua", style: TextStyle(
+          title: Text("SP Penghasilan Orang Tua", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
@@ -92,7 +92,7 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  formSPPenghasilanOrangTua.namaOrangTua,
+                  namaOrangTua,
                   style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,
@@ -194,7 +194,7 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
               Container(
                 child: FlatButton(
                   onPressed: (){
-                    if(formSPPenghasilanOrangTua.namaOrangTua == "Data orang tua belum terpilih" || controllerKeperluan.text == "" || controllerGaji.text ==  "") {
+                    if(namaOrangTua == "Data orang tua belum terpilih" || controllerKeperluan.text == "" || controllerGaji.text ==  "") {
                       showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -261,7 +261,7 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
                         Loading = true;
                       });
                       var body = jsonEncode({
-                        "nama_orang_tua" : formSPPenghasilanOrangTua.namaOrangTua,
+                        "nama_orang_tua" : namaOrangTua,
                         'penduduk_id' : loginPage.pendudukId,
                         'jumlah_penghasilan' : controllerGaji.text,
                         'keperluan' : controllerKeperluan.text,
@@ -309,10 +309,10 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
   void navigatePilihDataOrangTua(BuildContext context) async {
     final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => pilihDataOrangTua()));
     if(result == null) {
-      formSPPenghasilanOrangTua.namaOrangTua = formSPPenghasilanOrangTua.namaOrangTua;
+      namaOrangTua = namaOrangTua;
     }else{
       setState(() {
-        formSPPenghasilanOrangTua.namaOrangTua = result;
+        namaOrangTua = result;
       });
     }
   }

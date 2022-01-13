@@ -30,7 +30,7 @@ class _formPendaftaranAktaKelahiranState extends State<formPendaftaranAktaKelahi
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Formulir SK Kelahiran", style: TextStyle(
+          title: Text("SK Kelahiran", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")

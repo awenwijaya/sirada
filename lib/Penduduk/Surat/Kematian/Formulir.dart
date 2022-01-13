@@ -15,7 +15,7 @@ class _formSKKematianState extends State<formSKKematian> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Formulir SK Kematian", style: TextStyle(
+          title: Text("SK Kematian", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")

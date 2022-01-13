@@ -15,7 +15,7 @@ class _formSKUsahaState extends State<formSKUsaha> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Formulir SK Usaha", style: TextStyle(
+          title: Text("SK Usaha", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")

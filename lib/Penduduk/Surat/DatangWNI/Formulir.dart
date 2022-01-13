@@ -15,7 +15,7 @@ class _formSKDatangWNIState extends State<formSKDatangWNI> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Formulir SK Datang WNI", style: TextStyle(
+          title: Text("SK Datang WNI", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")

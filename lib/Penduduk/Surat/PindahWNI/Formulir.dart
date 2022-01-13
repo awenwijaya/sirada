@@ -15,7 +15,7 @@ class _formSKPindahWNIState extends State<formSKPindahWNI> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Formulir SK Pindah WNI", style: TextStyle(
+          title: Text("SK Pindah WNI", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
