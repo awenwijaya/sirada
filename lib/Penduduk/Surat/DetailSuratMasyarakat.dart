@@ -10,6 +10,7 @@ class detailSurat extends StatefulWidget {
 }
 
 class _detailSuratState extends State<detailSurat> {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

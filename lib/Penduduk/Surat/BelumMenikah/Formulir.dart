@@ -26,7 +26,7 @@ class _formSKBelumMenikahState extends State<formSKBelumMenikah> {
     return MaterialApp(
       home: Loading ? loading() : Scaffold(
         appBar: AppBar(
-          title: Text("SK Belum Menikah", style: TextStyle(
+          title: Text("Pengajuan SK", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
