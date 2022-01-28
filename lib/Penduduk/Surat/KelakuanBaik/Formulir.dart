@@ -25,7 +25,7 @@ class _formSKKelakuanBaikState extends State<formSKKelakuanBaik> {
     return MaterialApp(
       home: Loading ? loading() : Scaffold(
         appBar: AppBar(
-          title: Text("SK Kelakuan Baik", style: TextStyle(
+          title: Text("Pengajuan SK", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
@@ -48,19 +48,6 @@ class _formSKKelakuanBaikState extends State<formSKKelakuanBaik> {
                   width: 100,
                 ),
                 margin: EdgeInsets.only(top: 20),
-              ),
-              Container(
-                child: Text(
-                  "Pengajuan SK Kelakuan Baik",
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: HexColor("#025393")
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                margin: EdgeInsets.only(top: 10),
               ),
               Container(
                 child: Text(

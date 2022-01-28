@@ -15,7 +15,7 @@ class _formSKBerpergianState extends State<formSKBerpergian> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("SK Berpergian", style: TextStyle(
+          title: Text("Pengajuan SK", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")

@@ -6,8 +6,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:surat/Penduduk/Surat/BelumMenikah/DetailSK.dart';
 import 'package:surat/Penduduk/Surat/BelumMenikah/Formulir.dart';
 import 'package:http/http.dart' as http;
-import 'package:surat/shared/API/Models/SKBelumMenikah.dart';
-import 'package:surat/shared/API/Models/SKBelumMenikahSelesai.dart';
+import 'package:surat/shared/API/Models/SKPenduduk/SKBelumMenikah/SKBelumMenikah.dart';
+import 'package:surat/shared/API/Models/SKPenduduk/SKBelumMenikah/SKBelumMenikahSelesai.dart';
 
 class SKBelumMenikah extends StatefulWidget {
   const SKBelumMenikah({Key key}) : super(key: key);
@@ -306,13 +306,11 @@ class _SKBelumMenikahState extends State<SKBelumMenikah> {
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop();},
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              color: HexColor("#025393"),
-              onPressed: (){Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKBelumMenikah()));},
-            )
-          ],
+          title: Text("SK Belum Menikah", style: TextStyle(
+            fontFamily: "Poppins",
+            fontWeight: FontWeight.w700,
+            color: HexColor("#025393")
+          )),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -327,16 +325,24 @@ class _SKBelumMenikahState extends State<SKBelumMenikah> {
                 margin: EdgeInsets.only(top: 20),
               ),
               Container(
-                child: Text(
-                  "SK Belum Menikah",
-                  style: TextStyle(
+                child: FlatButton(
+                  onPressed: (){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => formSKBelumMenikah()));
+                  },
+                  child: Text('Ajukan SK Belum Menikah', style: TextStyle(
                     fontFamily: "Poppins",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: HexColor("#025393")
+                    fontSize: 14,
+                    color: HexColor("#025393"),
+                    fontWeight: FontWeight.w700
+                  )),
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    side: BorderSide(color: HexColor("#025393"), width: 2)
                   ),
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
                 ),
-                margin: EdgeInsets.only(top: 10),
+                margin: EdgeInsets.only(top: 20),
               ),
               Container(
                 alignment: Alignment.topLeft,

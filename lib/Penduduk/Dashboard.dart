@@ -1,10 +1,25 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surat/Penduduk/DetailDesa/DetailDesa.dart';
 import 'package:surat/Penduduk/Profile/UserProfile.dart';
+import 'package:surat/Penduduk/Surat/AktaKelahiran/SKKelahiran.dart';
 import 'package:surat/Penduduk/Surat/BelumMenikah/SKBelumMenikah.dart';
+import 'package:surat/Penduduk/Surat/Berpergian/SKBerpergian.dart';
+import 'package:surat/Penduduk/Surat/DatangWNI/SKDatangWNI.dart';
+import 'package:surat/Penduduk/Surat/KelakuanBaik/SKKelakuanBaik.dart';
+import 'package:surat/Penduduk/Surat/Kematian/SKKematian.dart';
+import 'package:surat/Penduduk/Surat/LainLain/SKLainLain.dart';
+import 'package:surat/Penduduk/Surat/PenghasilanOrangTua/SPPenghasilanOrangTua.dart';
+import 'package:surat/Penduduk/Surat/PindahWNI/SKPindahWNI.dart';
+import 'package:surat/Penduduk/Surat/TempatUsaha/SKTempatUsaha.dart';
+import 'package:surat/Penduduk/Surat/TidakMampu/SKTidakMampu.dart';
+import 'package:surat/Penduduk/Surat/Usaha/SKUsaha.dart';
 import 'package:surat/WelcomeScreen.dart';
+import 'package:http/http.dart' as http;
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class dashboardPenduduk extends StatefulWidget {
   const dashboardPenduduk({Key key}) : super(key: key);
@@ -14,6 +29,57 @@ class dashboardPenduduk extends StatefulWidget {
 }
 
 class _dashboardPendudukState extends State<dashboardPenduduk> {
+  var namaDesa = "Desa";
+  var namaPenduduk = "Pengguna";
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/getdatapendudukbyid";
+  var apiURLGetDataDesa = "http://192.168.18.10:8000/api/getdatadesabyid";
+
+  getDesaInfo() async {
+    var body = jsonEncode({
+      'desa_id' : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLGetDataDesa),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          namaDesa = parsedJson['nama_desa'];
+        });
+      }
+    });
+  }
+
+  getPendudukInfo() async {
+    var body = jsonEncode({
+      'penduduk_id' : loginPage.pendudukId
+    });
+    http.post(Uri.parse(apiURLGetDataPenduduk),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          namaPenduduk = parsedJson['nama_lengkap'];
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDesaInfo();
+    getPendudukInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -98,17 +164,17 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => welcomeScreen()), (route) => false);
                           },
                           child: Text("Ya", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontWeight: FontWeight.w700,
-                            color: HexColor("#025393")
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w700,
+                              color: HexColor("#025393")
                           )),
                         ),
                         TextButton(
                           onPressed: (){Navigator.of(context).pop();},
                           child: Text("Tidak", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontWeight: FontWeight.w700,
-                            color: HexColor("#025393")
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w700,
+                              color: HexColor("#025393")
                           )),
                         )
                       ],
@@ -123,42 +189,133 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
           child: Column(
             children: <Widget>[
               Container(
-                child: Row(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Container(
-                      child: Icon(
-                        Icons.person_rounded,
-                        size: 40,
-                        color: HexColor("#025393")
+                      child: Text(
+                        "Selamat datang kembali,",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold
+                        ),
                       ),
                     ),
                     Container(
                       child: Text(
-                        "Halo awenwjy!",
+                        "${namaPenduduk} !",
                         style: TextStyle(
                           fontFamily: "Poppins",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700
+                          fontSize: 16
                         ),
                       ),
-                      margin: EdgeInsets.only(left: 10),
+                    )
+                  ],
+                ),
+                margin: EdgeInsets.only(top: 20, left: 15),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Desa Anda",
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 20, left: 15),
+              ),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(right: 20),
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: NetworkImage('https://googleflutter.com/sample_image.jpg'),
+                          fit: BoxFit.fill
+                        )
+                      ),
+                    ),
+                    Container(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            child: Text(
+                              "${namaDesa}",
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: TextButton(
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: Text(
+                                      "Lihat Detail Desa",
+                                      style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393"),
+                                          fontSize: 14
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Icon(
+                                      Icons.chevron_right,
+                                      color: HexColor("#025393"),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              onPressed: (){
+                                Navigator.push(context, CupertinoPageRoute(builder: (context) => detailDesaPenduduk()));
+                              },
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                margin: EdgeInsets.only(top: 20, left: 20),
+                margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+                padding: EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0,3)
+                    )
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10))
+                ),
               ),
               Container(
-                alignment: Alignment.center,
+                alignment: Alignment.topLeft,
                 child: Text(
-                  "Silahkan pilih salah satu kategori pengurusan administrasi berikut",
+                  "Layanan Pengurusan Administrasi",
                   style: TextStyle(
+                    fontFamily: "Poppins",
                     fontSize: 14,
-                    fontFamily: "Poppins"
+                    fontWeight: FontWeight.bold
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                margin: EdgeInsets.only(top: 20),
-                padding: EdgeInsets.only(left: 30, right: 30),
+                margin: EdgeInsets.only(top: 20, left: 15),
               ),
               Container(
                 child: Column(
@@ -181,9 +338,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                               child: Text(
                                 "SK Belum Menikah",
                                 style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700
                                 ),
                               ),
                               margin: EdgeInsets.only(left: 20),
@@ -195,21 +352,23 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       height: 70,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0,3)
-                          )
-                        ]
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
                       ),
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => SKBerpergian()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -251,7 +410,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => SKKematian()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -293,7 +454,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => SKLainLain()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -335,7 +498,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => SKTidakMampu()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -377,7 +542,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => SKTempatUsaha()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -419,7 +586,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => SKUsaha()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -461,7 +630,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => SPPenghasilanOrangTua()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -473,7 +644,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             ),
                             Container(
                               child: Text(
-                                "SK Penghasilan Orang Tua",
+                                "SP Penghasilan Orang Tua",
                                 style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14,
@@ -503,7 +674,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => SKKelahiran()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -545,7 +718,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => SKDatangWNI()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -587,7 +762,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => SKPindahWNI()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -629,7 +806,9 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => SKKelakuanBaik()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(

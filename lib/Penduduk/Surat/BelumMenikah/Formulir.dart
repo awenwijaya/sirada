@@ -54,19 +54,6 @@ class _formSKBelumMenikahState extends State<formSKBelumMenikah> {
                       margin: EdgeInsets.only(top: 20),
                     ),
                     Container(
-                      child: Text(
-                        "Pengajuan SK Belum Menikah",
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: HexColor("#025393")
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      margin: EdgeInsets.only(top: 10),
-                    ),
-                    Container(
                       alignment: Alignment.center,
                       child: Text(
                         "Silahkan masukkan keperluan Anda dalam mengurus surat ini.\n\nKeperluan Anda nantinya akan otomatis dimasukkan ke dalam berkas surat ketika berkas surat sudah di verifikasi.",

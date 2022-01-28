@@ -5,25 +5,63 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ae2c7e7b-ad51-4daf-a323-df3f297432d6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/.filecache" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/.filecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/app.dill" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/app.dill" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/debug_android_application.stamp" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/debug_android_application.stamp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/flutter_assets.d" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/flutter_assets.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/kernel_snapshot.d" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/kernel_snapshot.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/kernel_snapshot.stamp" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/kernel_snapshot.stamp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/outputs.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/4300a4c4ecb399746f48112c9a7d540e/outputs.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/.packages" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/6.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/6.7/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/6.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/6.7/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/6.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/6.7/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/6.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/6.7/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/6.7/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/6.7/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gradle/6.7/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/6.7/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/AssetManifest.json.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/AssetManifest.json.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/AssetManifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/AssetManifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_build.d" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_build.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/intermediates/incremental/debug-mergeJavaRes/merge-state" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/incremental/debug-mergeJavaRes/merge-state" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/intermediates/incremental/debug-mergeNativeLibs/merge-state" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/incremental/debug-mergeNativeLibs/merge-state" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/AssetManifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/AssetManifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/outputs/apk/debug/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/outputs/apk/debug/app-debug.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app-debug.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app.apk" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app.apk.sha1" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app.apk.sha1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/f872507f30e2ff2523f0f1d19160266e.cache.dill.track.dill" beforeDir="false" afterPath="$PROJECT_DIR$/build/f872507f30e2ff2523f0f1d19160266e.cache.dill.track.dill" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Penduduk/Dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Dashboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/BelumMenikah/DetailSK.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/BelumMenikah/DetailSK.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/BelumMenikah/Formulir.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/BelumMenikah/Formulir.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/DetailSuratMasyarakat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/DetailSuratMasyarakat.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/BelumMenikah/SKBelumMenikah.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/BelumMenikah/SKBelumMenikah.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/Berpergian/Formulir.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/Berpergian/Formulir.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/DetailSuratMasyarakat.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/KelakuanBaik/Formulir.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/KelakuanBaik/Formulir.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/Kematian/Formulir.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/Kematian/Formulir.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/LainLain/Formulir.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/LainLain/Formulir.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/ListPengajuanSurat.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/PenghasilanOrangTua/Formulir.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/PenghasilanOrangTua/Formulir.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/TempatUsaha/DataTempatUsaha.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/TempatUsaha/DataTempatUsaha.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/TidakMampu/Formulir.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/TidakMampu/Formulir.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Surat/Usaha/Formulir.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Surat/Usaha/Formulir.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/shared/API/Models/SKBelumMenikah.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/shared/API/Models/SKPenduduk/SKBelumMenikah/SKBelumMenikah.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/shared/API/Models/SKBelumMenikahSelesai.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/shared/API/Models/SKPenduduk/SKBelumMenikah/SKBelumMenikahSelesai.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/surat.iml" beforeDir="false" afterPath="$PROJECT_DIR$/surat.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\awenh\.android\avd\Pixel_5_API_30.avd]" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -53,7 +91,9 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="cidr.known.project.marker" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Kerja Praktek Dimata/Testing Dimata Logbook" />
@@ -65,6 +105,7 @@
       <recent name="C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\images" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\lib\shared\API\Models\SKPenduduk\SKBelumMenikah" />
       <recent name="C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\lib\Penduduk\Surat" />
       <recent name="C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\images" />
       <recent name="C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\surat\lib\Penduduk\profile" />

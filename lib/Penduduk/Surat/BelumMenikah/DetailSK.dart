@@ -34,6 +34,11 @@ class _detailSKBelumMenikahState extends State<detailSKBelumMenikah> {
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop();},
           ),
+          title: Text("Detail SK", style: TextStyle(
+            fontFamily: "Poppins",
+            fontWeight: FontWeight.w700,
+            color: HexColor("#025393")
+          )),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -46,18 +51,6 @@ class _detailSKBelumMenikahState extends State<detailSKBelumMenikah> {
                   width: 100,
                 ),
                 margin: EdgeInsets.only(top: 20),
-              ),
-              Container(
-                child: Text(
-                  "Detail SK Belum Menikah",
-                  style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: HexColor("#025393")
-                  ),
-                ),
-                margin: EdgeInsets.only(top: 10),
               ),
               Container(
                 child: Text(
@@ -195,7 +188,7 @@ class _detailSKBelumMenikahState extends State<detailSKBelumMenikah> {
                                   ),
                                   Container(
                                     child: Text(
-                                      "Maaf! Anda tidak dapat mengajukan pembatalan SK karena SK ini sedang diproses",
+                                      "Maaf! Anda tidak dapat mengajukan pembatalan SK",
                                       style: TextStyle(
                                         fontFamily: "Poppins",
                                         fontSize: 14
