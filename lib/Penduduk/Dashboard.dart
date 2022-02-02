@@ -31,8 +31,9 @@ class dashboardPenduduk extends StatefulWidget {
 class _dashboardPendudukState extends State<dashboardPenduduk> {
   var namaDesa = "Desa";
   var namaPenduduk = "Pengguna";
-  var apiURLGetDataPenduduk = "http://192.168.100.28:8000/api/getdatapendudukbyid";
-  var apiURLGetDataDesa = "http://192.168.100.28:8000/api/getdatadesabyid";
+  var logoDesa;
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/getdatapendudukbyid";
+  var apiURLGetDataDesa = "http://192.168.18.10:8000/api/getdatadesabyid";
 
   getDesaInfo() async {
     var body = jsonEncode({
@@ -48,6 +49,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
         var parsedJson = json.decode(jsonData);
         setState(() {
           namaDesa = parsedJson['nama_desa'];
+          logoDesa = parsedJson['logo_desa'];
         });
       }
     });
@@ -239,7 +241,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage('https://googleflutter.com/sample_image.jpg'),
+                          image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${logoDesa}'),
                           fit: BoxFit.fill
                         )
                       ),
