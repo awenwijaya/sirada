@@ -103,7 +103,7 @@ class _splashScreenState extends State<splashScreen> {
         body: Container(
           alignment: Alignment.center,
           child: Image(
-            image: AssetImage('images/email.png'),
+            image: AssetImage('images/logo.png'),
             height: 250,
             width: 250,
           ),

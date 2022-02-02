@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -134,36 +134,59 @@ class _detailDesaPendudukState extends State<detailDesaPenduduk> {
                             margin: EdgeInsets.only(top: 15, left: 25)
                           ),
                           Container(
-                            child: Row(
+                            child: Column(
                               children: <Widget>[
                                 Container(
-                                  child: Icon(
-                                    Icons.phone,
-                                    color: HexColor("#025393"),
-                                    size: 30,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Icon(
+                                          Icons.phone,
+                                          color: HexColor("#025393"),
+                                          size: 30,
+                                        ),
+                                        margin: EdgeInsets.only(left: 20),
+                                      ),
+                                      Container(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Container(child: Text("Nomor Telepon", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393")
+                                              )),
+                                              ),
+                                              Container(
+                                                child: Text(teleponKantorDesa.toString(), style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14
+                                                )),
+                                              )
+                                            ],
+                                          ), margin: EdgeInsets.only(left: 15))
+                                    ],
                                   ),
-                                  margin: EdgeInsets.only(left: 20),
                                 ),
                                 Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(child: Text("Nomor Telepon", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: HexColor("#025393")
-                                      )),
-                                    ),
-                                    Container(
-                                      child: Text(teleponKantorDesa.toString(), style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                      )),
-                                    )
-                                  ],
-                                ), margin: EdgeInsets.only(left: 15))
+                                  alignment: Alignment.center,
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      final url = 'tel:$teleponKantorDesa';
+                                      if(await canLaunch(url)) {
+                                        await launch(url);
+                                      }
+                                    },
+                                    child: Text("Hubungi Kantor Desa", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    )),
+                                  ),
+                                )
                               ],
                             ),
                             margin: EdgeInsets.only(top: 15, left: 20, right: 20),
@@ -182,36 +205,55 @@ class _detailDesaPendudukState extends State<detailDesaPenduduk> {
                             ),
                           ),
                           Container(
-                            child: Row(
+                            child: Column(
                               children: <Widget>[
                                 Container(
-                                  child: Icon(
-                                    Icons.phone,
-                                    color: HexColor("#025393"),
-                                    size: 30,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Icon(
+                                          Icons.phone,
+                                          color: HexColor("#025393"),
+                                          size: 30,
+                                        ),
+                                        margin: EdgeInsets.only(left: 20),
+                                      ),
+                                      Container(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Container(child: Text("Kontak WhatsApp", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393")
+                                              ))),
+                                              Container(
+                                                child: Text(kontakWADesa.toString(), style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14
+                                                )),
+                                              )
+                                            ],
+                                          ), margin: EdgeInsets.only(left: 15))
+                                    ],
                                   ),
-                                  margin: EdgeInsets.only(left: 20),
                                 ),
                                 Container(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(child: Text("Kontak WhatsApp", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: HexColor("#025393")
-                                        )),
-                                        ),
-                                        Container(
-                                          child: Text(kontakWADesa.toString(), style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14
-                                          )),
-                                        )
-                                      ],
-                                    ), margin: EdgeInsets.only(left: 15))
+                                  child: TextButton(
+                                    onPressed: () async{
+                                      String url = "whatsapp://send?phone=$kontakWADesa";
+                                      await canLaunch(url) ? launch(url) : print("Can't open WhatsApp");
+                                    },
+                                    child: Text("Hubungin Kantor Desa", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    )),
+                                  ),
+                                )
                               ],
                             ),
                             margin: EdgeInsets.only(top: 15, left: 20, right: 20),
@@ -281,36 +323,60 @@ class _detailDesaPendudukState extends State<detailDesaPenduduk> {
                             ),
                           ),
                           Container(
-                            child: Row(
+                            child: Column(
                               children: <Widget>[
                                 Container(
-                                  child: Icon(
-                                    Icons.email,
-                                    color: HexColor("#025393"),
-                                    size: 30,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Icon(
+                                          Icons.email,
+                                          color: HexColor("#025393"),
+                                          size: 30,
+                                        ),
+                                        margin: EdgeInsets.only(left: 20),
+                                      ),
+                                      Container(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Container(child: Text("Email", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393")
+                                              )),
+                                              ),
+                                              Container(
+                                                child: Text(emailDesa.toString(), style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14
+                                                )),
+                                              )
+                                            ],
+                                          ), margin: EdgeInsets.only(left: 15))
+                                    ],
                                   ),
-                                  margin: EdgeInsets.only(left: 20),
                                 ),
                                 Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(child: Text("Email", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: HexColor("#025393")
-                                      )),
-                                    ),
-                                    Container(
-                                      child: Text(emailDesa.toString(), style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                      )),
-                                    )
-                                  ],
-                                ), margin: EdgeInsets.only(left: 15))
+                                  alignment: Alignment.center,
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      final url = 'mailto:$emailDesa';
+
+                                      if(await canLaunch(url)) {
+                                        await launch(url);
+                                      }
+                                    },
+                                    child: Text("Hubungi Kantor Desa", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    )),
+                                  ),
+                                )
                               ],
                             ),
                             margin: EdgeInsets.only(top: 15, left: 20, right: 20),
@@ -329,36 +395,60 @@ class _detailDesaPendudukState extends State<detailDesaPenduduk> {
                             ),
                           ),
                           Container(
-                            child: Row(
+                            child: Column(
                               children: <Widget>[
                                 Container(
-                                  child: Icon(
-                                    Icons.web,
-                                    color: HexColor("#025393"),
-                                    size: 30,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Icon(
+                                          Icons.web,
+                                          color: HexColor("#025393"),
+                                          size: 30,
+                                        ),
+                                        margin: EdgeInsets.only(left: 20),
+                                      ),
+                                      Container(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Container(child: Text("Website", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393")
+                                              )),
+                                              ),
+                                              Container(
+                                                child: Text(webDesa.toString(), style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14
+                                                )),
+                                              )
+                                            ],
+                                          ), margin: EdgeInsets.only(left: 15))
+                                    ],
                                   ),
-                                  margin: EdgeInsets.only(left: 20),
                                 ),
                                 Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(child: Text("Website", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: HexColor("#025393")
-                                      )),
-                                    ),
-                                    Container(
-                                      child: Text(webDesa.toString(), style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                      )),
-                                    )
-                                  ],
-                                ), margin: EdgeInsets.only(left: 15))
+                                  alignment: Alignment.center,
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      final url = webDesa;
+
+                                      if (await canLaunch(url)) {
+                                        await launch(url);
+                                      }
+                                    },
+                                    child: Text("Buka Website Desa", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    )),
+                                  ),
+                                )
                               ],
                             ),
                             margin: EdgeInsets.only(top: 15, left: 20, right: 20),
