@@ -54,6 +54,132 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
                 margin: EdgeInsets.only(top: 20),
               ),
               Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "1. Data Orang Tua",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 30, left: 20),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Silahkan pilih data orang tua yang akan dibuat pernyataan gajinya. Bisa data Ibu ataupun data Ayah yang Anda masukkan.\n\nData orang tua ini nantinya akan otomatis dimasukkan ke dalam berkas surat ketika berkas surat sudah di verifikasi.",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                  ),
+                ),
+                padding: EdgeInsets.only(left: 30, right: 30),
+                margin: EdgeInsets.only(top: 10),
+              ),
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  namaOrangTua,
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 20),
+              ),
+              Container(
+                child: FlatButton(
+                  onPressed: (){
+                    navigatePilihDataOrangTua(context);
+                  },
+                  child: Text(
+                    "Pilih Data Orang Tua",
+                    style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        color: HexColor("#025393"),
+                        fontWeight: FontWeight.w700
+                    ),
+                  ),
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      side: BorderSide(color: HexColor("#025393"), width: 2)
+                  ),
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                ),
+                margin: EdgeInsets.only(top: 10),
+              ),
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                  child: TextField(
+                    controller: controllerGaji,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                            borderSide: BorderSide(color: HexColor("#025393"))
+                        ),
+                        hintText: "Gaji Orang Tua (Dalam Rupiah)",
+                        prefixIcon: Icon(Icons.attach_money)
+                    ),
+                    keyboardType: TextInputType.number,
+                    style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                    ),
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 20),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "2. Keperluan",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 30, left: 20),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Silahkan masukkan keperluan Anda dalam mengurus surat ini.\n\nKeperluan Anda nantinya akan otomatis dimasukkan ke dalam berkas surat ketika berkas surat sudah di verifikasi",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                  ),
+                ),
+                padding: EdgeInsets.only(left: 30, right: 30),
+                margin: EdgeInsets.only(top: 10),
+              ),
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                  child: TextField(
+                    controller: controllerKeperluan,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(color: HexColor("#025393"))
+                        ),
+                        hintText: "Keperluan Anda"
+                    ),
+                    style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                    ),
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 20),
+              ),
+              Container(
                 child: FlatButton(
                   onPressed: (){
                     if(namaOrangTua == "Data orang tua belum terpilih" || controllerKeperluan.text == "" || controllerGaji.text ==  "") {
@@ -63,7 +189,7 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
                               ),
                               content: Container(
                                 child: Column(
@@ -82,10 +208,10 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
                                       child: Text(
                                         "Data ada yang belum terisi",
                                         style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                          color: HexColor("#025393")
+                                            fontFamily: "Poppins",
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                            color: HexColor("#025393")
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -95,8 +221,8 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
                                       child: Text(
                                         "Isikanlah semua data yang ada sebelum melanjutkan",
                                         style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -108,9 +234,9 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
                               actions: <Widget>[
                                 TextButton(
                                   child: Text("OK", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontWeight: FontWeight.w700,
-                                    color: HexColor("#025393")
+                                      fontFamily: "Poppins",
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
                                   )),
                                   onPressed: (){Navigator.of(context).pop();},
                                 )
@@ -130,8 +256,8 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
                         'desa_id' : loginPage.desaId
                       });
                       http.post(Uri.parse(apiURLUpSPPenghasilanOrangTua),
-                        headers: {"Content-Type" : "application/json"},
-                        body: body
+                          headers: {"Content-Type" : "application/json"},
+                          body: body
                       ).then((http.Response response) {
                         var responseValue = response.statusCode;
                         if(responseValue == 200) {
@@ -146,16 +272,16 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
                   child: Text(
                     "Ajukan SP Penghasilan Orang Tua",
                     style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14,
-                      color: HexColor("#025393"),
-                      fontWeight: FontWeight.w700
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        color: HexColor("#025393"),
+                        fontWeight: FontWeight.w700
                     ),
                   ),
                   color: Colors.transparent,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    side: BorderSide(color: HexColor("#025393"), width: 2)
+                      borderRadius: BorderRadius.circular(25),
+                      side: BorderSide(color: HexColor("#025393"), width: 2)
                   ),
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
                 ),

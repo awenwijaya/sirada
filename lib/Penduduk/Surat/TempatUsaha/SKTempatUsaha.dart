@@ -384,7 +384,7 @@ class _SKTempatUsahaState extends State<SKTempatUsaha> {
                                   ),
                                 ),
                                 Container(
-                                  height: 400,
+                                  height: MediaQuery.of(context).size.height,
                                   decoration: BoxDecoration(
                                     border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
                                   ),

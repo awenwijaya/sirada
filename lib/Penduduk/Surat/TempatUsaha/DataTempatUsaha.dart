@@ -83,6 +83,227 @@ class _formDataTempatUsahaState extends State<formDataTempatUsaha> {
                 margin: EdgeInsets.only(top: 20),
               ),
               Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "1. Data Tempat Usaha",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 30, left: 20),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Silahkan isi data tempat usaha pada form dibawah selengkap mungkin dan sebenar-benarnya.",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                  ),
+                ),
+                padding: EdgeInsets.only(left: 30, right: 30),
+                margin: EdgeInsets.only(top: 10),
+              ),
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Nama Tempat Usaha *",
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 20, left: 20),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                        child: TextField(
+                          controller: controllerNamaUsaha,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  borderSide: BorderSide(color: HexColor("#025393"))
+                              ),
+                              hintText: "Nama Tempat Usaha"
+                          ),
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Jenis Nama Tempat Usaha *",
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 20, left: 20),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                        child: TextField(
+                          controller: controllerJenisUsaha,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  borderSide: BorderSide(color: HexColor("#025393"))
+                              ),
+                              hintText: "Jenis Usaha"
+                          ),
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Alamat Tempat Usaha *",
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 20, left: 20),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                        child: TextField(
+                          controller: controllerAlamat,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  borderSide: BorderSide(color: HexColor("#025393"))
+                              ),
+                              hintText: "Alamat Tempat Usaha"
+                          ),
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Dusun Tempat Usaha *",
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 20, left: 20),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        namaDusun,
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 20),
+                    ),
+                    Container(
+                      child: FlatButton(
+                        onPressed: (){
+                          navigatePilihDataDusun(context);
+                        },
+                        child: Text(
+                          "Pilih Dusun Tempat Usaha",
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              color: HexColor("#025393"),
+                              fontWeight: FontWeight.w700
+                          ),
+                        ),
+                        color: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            side: BorderSide(color: HexColor("#025393"), width: 2)
+                        ),
+                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                      ),
+                      margin: EdgeInsets.only(top: 10),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "2. Gambar Lokasi Tempat Usaha",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 30, left: 20),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Silahkan lakukan upload gambar tempat usaha Anda. Usahakan gambar yang Anda unggah jelas dan tidak blur untuk mempermudah proses verifikasi",
+                  style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                  ),
+                ),
+                padding: EdgeInsets.only(left: 30, right: 30),
+                margin: EdgeInsets.only(top: 10),
+              ),
+              Container(
+                child: image == null ? Text('Gambar tempat usaha belum terpilih', style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700
+                ),) : Image.file(image, height: 100, width: 100),
+                margin: EdgeInsets.only(top: 20),
+              ),
+              Container(
+                child: FlatButton(
+                  onPressed: () async{
+                    await choiceImage();
+                  },
+                  child: Text(
+                    "Unggah Gambar Lokasi Usaha",
+                    style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        color: HexColor("#025393"),
+                        fontWeight: FontWeight.w700
+                    ),
+                  ),
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      side: BorderSide(color: HexColor("#025393"), width: 2)
+                  ),
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                ),
+                margin: EdgeInsets.only(top: 10, bottom: 30),
+              ),
+              Container(
                 child: FlatButton(
                   onPressed: (){
                     if(namaDusun == "Data dusun belum terpilih" || controllerAlamat.text == "" || controllerNamaUsaha.text == "" || controllerJenisUsaha.text == "" || image == null) {
