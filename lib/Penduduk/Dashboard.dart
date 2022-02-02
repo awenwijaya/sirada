@@ -31,8 +31,8 @@ class dashboardPenduduk extends StatefulWidget {
 class _dashboardPendudukState extends State<dashboardPenduduk> {
   var namaDesa = "Desa";
   var namaPenduduk = "Pengguna";
-  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/getdatapendudukbyid";
-  var apiURLGetDataDesa = "http://192.168.18.10:8000/api/getdatadesabyid";
+  var apiURLGetDataPenduduk = "http://192.168.100.28:8000/api/getdatapendudukbyid";
+  var apiURLGetDataDesa = "http://192.168.100.28:8000/api/getdatadesabyid";
 
   getDesaInfo() async {
     var body = jsonEncode({
