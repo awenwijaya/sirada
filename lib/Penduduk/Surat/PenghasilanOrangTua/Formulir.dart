@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -181,96 +182,9 @@ class _formSPPenghasilanOrangTuaState extends State<formSPPenghasilanOrangTua> {
               ),
               Container(
                 child: FlatButton(
-                  onPressed: (){
-                    if(namaOrangTua == "Data orang tua belum terpilih" || controllerKeperluan.text == "" || controllerGaji.text ==  "") {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
-                              ),
-                              content: Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Container(
-                                      child: Image.asset(
-                                        'images/warning.png',
-                                        height: 50,
-                                        width: 50,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        "Data ada yang belum terisi",
-                                        style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: HexColor("#025393")
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      margin: EdgeInsets.only(top: 10),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        "Isikanlah semua data yang ada sebelum melanjutkan",
-                                        style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 14
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      margin: EdgeInsets.only(top: 10),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text("OK", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontWeight: FontWeight.w700,
-                                      color: HexColor("#025393")
-                                  )),
-                                  onPressed: (){Navigator.of(context).pop();},
-                                )
-                              ],
-                            );
-                          }
-                      );
-                    }else{
-                      setState(() {
-                        Loading = true;
-                      });
-                      var body = jsonEncode({
-                        "nama_orang_tua" : namaOrangTua,
-                        'penduduk_id' : loginPage.pendudukId,
-                        'jumlah_penghasilan' : controllerGaji.text,
-                        'keperluan' : controllerKeperluan.text,
-                        'desa_id' : loginPage.desaId
-                      });
-                      http.post(Uri.parse(apiURLUpSPPenghasilanOrangTua),
-                          headers: {"Content-Type" : "application/json"},
-                          body: body
-                      ).then((http.Response response) {
-                        var responseValue = response.statusCode;
-                        if(responseValue == 200) {
-                          setState(() {
-                            Loading = false;
-                          });
-                          Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => pengajuanSKKelahiranBerhasil()));
-                        }
-                      });
-                    }
-                  },
+                  onPressed: (){},
                   child: Text(
-                    "Ajukan SP Penghasilan Orang Tua",
+                    "Unggah Berkas Persyaratan",
                     style: TextStyle(
                         fontFamily: "Poppins",
                         fontSize: 14,

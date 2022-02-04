@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/Penduduk/Surat/KelakuanBaik/BerkasPersyaratan.dart';
 import 'package:surat/Penduduk/Surat/PengajuanBerhasil.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:http/http.dart' as http;
@@ -85,94 +86,10 @@ class _formSKKelakuanBaikState extends State<formSKKelakuanBaik> {
               Container(
                 child: FlatButton(
                   onPressed: (){
-                    if(controllerKeperluan.text == "") {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                        builder: (BuildContext context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(40.0))
-                              ),
-                              content: Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Container(
-                                      child: Image.asset(
-                                        'images/warning.png',
-                                        height: 50,
-                                        width: 50,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        "Data keperluan masih kosong",
-                                        style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                          color: HexColor("#025393")
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      margin: EdgeInsets.only(top: 10),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        "Data keperluan masih kosong. Silahkan isi data keperluan terlebih dahulu sebelum melanjutkan ke proses pengurusan SK Kelakuan Baik.",
-                                        style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      margin: EdgeInsets.only(top: 10),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text("OK", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: HexColor("#025393")
-                                  )),
-                                  onPressed: (){Navigator.of(context).pop();},
-                                )
-                              ],
-                            );
-                        }
-                      );
-                    }else{
-                      setState(() {
-                        Loading = true;
-                      });
-                      var body = jsonEncode({
-                        'penduduk_id' : loginPage.pendudukId,
-                        'keperluan' : controllerKeperluan.text,
-                        'desa_id' : loginPage.desaId
-                      });
-                      http.post(Uri.parse(apiURLSKKelakuanBaik),
-                        headers: {"Content-Type" : "application/json"},
-                        body: body
-                      ).then((http.Response response) {
-                        var responseValue = response.statusCode;
-                        if(responseValue == 200) {
-                          setState(() {
-                            Loading = false;
-                          });
-                          Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => pengajuanSKKelahiranBerhasil()));
-                        }
-                      });
-                    }
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => berkasPersyaratanKelakuanBaik()));
                   },
                   child: Text(
-                    "Ajukan SK Kelakuan Baik",
+                    "Simpan & Unggah Berkas Persyaratan",
                     style: TextStyle(
                       fontFamily: "Poppins",
                       fontSize: 14,

@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surat/AdminDesa/Dashboard.dart';
 import 'package:surat/KepalaDesa/Dashboard.dart';
+import 'package:surat/KepalaDusun/Dashboard.dart';
 import 'package:surat/LoginAndRegistration/LupaPassword.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
@@ -279,6 +281,10 @@ class _loginPageState extends State<loginPage> {
                                       Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
                                     }else if(loginPage.role == "Kepala Desa") {
                                       Navigator.of(context).pushAndRemoveUntil(createRouteKepalaDesaDashboard(), (route) => false);
+                                    }else if(loginPage.role == "Admin") {
+                                      Navigator.of(context).pushAndRemoveUntil(createRouteAdminDesaDashboard(), (route) => false);
+                                    }else if(loginPage.role == "Kepala Dusun") {
+                                      Navigator.of(context).pushAndRemoveUntil(createRouteKepalaDusunDashboard(), (route) => false);
                                     }else{
                                       showDialog(
                                         context: context,
@@ -291,8 +297,7 @@ class _loginPageState extends State<loginPage> {
                                             content: Container(
                                               child: Column(
                                                 mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                                 children: <Widget>[
                                                   Container(
                                                     child: Image.asset(
@@ -302,27 +307,19 @@ class _loginPageState extends State<loginPage> {
                                                     ),
                                                   ),
                                                   Container(
-                                                    child: Text(
-                                                      "Hak Akses Ditolak",
-                                                      style: TextStyle(
-                                                        fontFamily: "Poppins",
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.w700,
-                                                        color: HexColor("#025393")
-                                                      ),
-                                                      textAlign: TextAlign.center,
-                                                    ),
+                                                    child: Text("Hak Akses Ditolak", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: HexColor("#025393")
+                                                    ), textAlign: TextAlign.center),
                                                     margin: EdgeInsets.only(top: 10),
                                                   ),
                                                   Container(
-                                                    child: Text(
-                                                      "Hak akses untuk pengguna ini ditolak. Jika Anda adalah seorang Admin Desa atau Super Admin, silahkan akses versi web dari aplikasi ini.",
-                                                      style: TextStyle(
-                                                        fontFamily: "Poppins",
-                                                        fontSize: 14
-                                                      ),
-                                                      textAlign: TextAlign.center,
-                                                    ),
+                                                    child: Text("Hak akses untuk pengguna ini ditolak. Silahkan akses versi web dari aplikasi ini", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14
+                                                    ), textAlign: TextAlign.center),
                                                     margin: EdgeInsets.only(top: 10),
                                                   )
                                                 ],
@@ -330,9 +327,7 @@ class _loginPageState extends State<loginPage> {
                                             ),
                                             actions: <Widget>[
                                               TextButton(
-                                                onPressed: (){
-                                                  Navigator.of(context).pop();
-                                                },
+                                                onPressed: (){Navigator.of(context).pop();},
                                                 child: Text("OK", style: TextStyle(
                                                   fontFamily: "Poppins",
                                                   fontWeight: FontWeight.w700,
@@ -540,5 +535,41 @@ Route createRouteKepalaDesaDashboard() {
           child: child,
         );
       }
+  );
+}
+
+Route createRouteAdminDesaDashboard() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => const dashboardAdminDesa(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    }
+  );
+}
+
+Route createRouteKepalaDusunDashboard() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => const dashboardKepalaDusun(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    }
   );
 }

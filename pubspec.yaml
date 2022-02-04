@@ -89,6 +89,8 @@ flutter:
     - images/question.png
     - images/info.png
     - images/logo.png
+    - images/staff.png
+    - images/archive.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

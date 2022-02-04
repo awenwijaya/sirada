@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:surat/AdminDesa/Dashboard.dart';
 import 'package:surat/KepalaDesa/Dashboard.dart';
+import 'package:surat/KepalaDusun/Dashboard.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/WelcomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,6 +72,10 @@ class _splashScreenState extends State<splashScreen> {
           return Timer(duration, navigatorPendudukHomePage);
         }else if(role == "Kepala Desa") {
           return Timer(duration, navigatorKepalaDesaHomePage);
+        }else if(role == "Admin") {
+          return Timer(duration, navigatorAdminDesaHomePage);
+        }else if(role == "Kepala Dusun") {
+          return Timer(duration, navigatorKepalaDusunHomePage);
         }
       }else{
         return Timer(duration, navigatorWelcomeScreen);
@@ -87,6 +93,14 @@ class _splashScreenState extends State<splashScreen> {
 
   void navigatorWelcomeScreen() {
     Navigator.pushAndRemoveUntil(context, PageTransition(child: welcomeScreen(), type: PageTransitionType.fade), (route) => false);
+  }
+
+  void navigatorAdminDesaHomePage() {
+    Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardAdminDesa(), type: PageTransitionType.fade), (route) => false);
+  }
+
+  void navigatorKepalaDusunHomePage() {
+    Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardKepalaDusun(), type: PageTransitionType.fade), (route) => false);
   }
 
   @override
