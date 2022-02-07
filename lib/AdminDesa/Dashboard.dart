@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surat/AdminDesa/Profile/AdminProfile.dart';
 import 'package:surat/WelcomeScreen.dart';
 
 class dashboardAdminDesa extends StatefulWidget {
@@ -45,7 +46,9 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
             IconButton(
               icon: Icon(Icons.person_outline_rounded),
               color: HexColor("#025393"),
-              onPressed: (){},
+              onPressed: (){
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => adminProfile()));
+              },
             ),
             IconButton(
               icon: Icon(Icons.logout),
@@ -129,28 +132,26 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
           child: Column(
             children: <Widget>[
               Container(
-                child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Container(
-                        child: Text("Selamat datang kembali,", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold
-                        )),
-                      ),
-                      Container(
-                        child: Text("Admin Desa !", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 16
-                        )),
-                      )
-                    ],
-                  ),
-                  margin: EdgeInsets.only(top: 20, left: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Container(
+                      child: Text("Selamat datang kembali", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold
+                      )),
+                    ),
+                    Container(
+                      child: Text("Admin Desa !", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 16
+                      )),
+                    )
+                  ],
                 ),
+                margin: EdgeInsets.only(top: 20, left: 15),
               ),
               Container(
                 alignment: Alignment.topLeft,
@@ -162,60 +163,52 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                 margin: EdgeInsets.only(top: 20, left: 15),
               ),
               Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage("https://googleflutter.com/sample_image.jpg"),
-                          fit: BoxFit.fill
-                        )
-                      ),
-                    ),
-                    Container(
-                      child: Column(
+                alignment: Alignment.topLeft,
+                      child: Row(
                         children: <Widget>[
                           Container(
-                            child: Text("Ubung Kaja", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700
-                            )),
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: NetworkImage('https://googleflutter.com/sample_image.jpg'),
+                                fit: BoxFit.fill
+                              )
+                            ),
+                            margin: EdgeInsets.only(left: 20)
                           ),
                           Container(
-                            child: TextButton(
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  child: Text("Ubung Kaja", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700
+                                  )),
+                                  margin: EdgeInsets.only(left: 20),
+                                ),
+                                Container(
+                                  child: TextButton(
                                     child: Text("Lihat Detail Desa", style: TextStyle(
                                       fontFamily: "Poppins",
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w700,
-                                      color: HexColor("#025393"),
-                                      fontSize: 14
+                                      color: HexColor("#025393")
                                     )),
+                                    onPressed: (){},
                                   ),
-                                  Container(
-                                    child: Icon(
-                                      Icons.chevron_right,
-                                      color: HexColor("#025393"),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              onPressed: (){},
+                                  margin: EdgeInsets.only(left: 15),
+                                )
+                              ],
                             ),
                           )
                         ],
                       ),
-                    )
-                  ],
-                ),
-                margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+                      margin: EdgeInsets.only(top: 15, left: 20, right: 20),
                 padding: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                   boxShadow: [
@@ -229,7 +222,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(10))
                 ),
-              ),
+                    ),
               Container(
                 alignment: Alignment.topLeft,
                 child: Text("Manajemen Data Desa", style: TextStyle(
