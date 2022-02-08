@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/Profile/AdminProfile.dart';
 import 'package:surat/WelcomeScreen.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:http/http.dart' as http;
 
 class dashboardAdminDesa extends StatefulWidget {
   const dashboardAdminDesa({Key key}) : super(key: key);
@@ -13,6 +17,36 @@ class dashboardAdminDesa extends StatefulWidget {
 }
 
 class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
+  var profilePicture;
+  var logoDesa;
+  var namaAdmin = "Admin Desa";
+  var namaDesa = "Desa";
+  var apiURLGetDataUser = "http://192.168.18.10:8000/api/profile/${loginPage.pendudukId}";
+
+  getUserInfo() async {
+    http.get(Uri.parse(apiURLGetDataUser),
+      headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          namaAdmin = parsedJson['nama_lengkap'];
+          namaDesa = parsedJson['nama_desa'];
+          profilePicture = parsedJson['profile_picture'];
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -132,26 +166,57 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
           child: Column(
             children: <Widget>[
               Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                child: Row(
                   children: <Widget>[
                     Container(
-                      child: Text("Selamat datang kembali", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold
-                      )),
+                      child: profilePicture == null ? Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage('images/profilepic.png'),
+                            fit: BoxFit.fill
+                          )
+                        ),
+                      ) : Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${profilePicture}'),
+                            fit: BoxFit.fill
+                          )
+                        ),
+                      ),
+                      margin: EdgeInsets.only(left: 15),
                     ),
                     Container(
-                      child: Text("Admin Desa !", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 16
-                      )),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            child: Text("Selamat datang kembali", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold
+                            )),
+                          ),
+                          Container(
+                            child: Text("${namaAdmin.toString()} !", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 16,
+                            )),
+                          )
+                        ],
+                      ),
+                      margin: EdgeInsets.only(left: 20),
                     )
                   ],
                 ),
-                margin: EdgeInsets.only(top: 20, left: 15),
+                margin: EdgeInsets.only(top: 20),
               ),
               Container(
                 alignment: Alignment.topLeft,
@@ -167,16 +232,27 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                       child: Row(
                         children: <Widget>[
                           Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: NetworkImage('https://googleflutter.com/sample_image.jpg'),
-                                fit: BoxFit.fill
-                              )
+                            child: logoDesa == null ? Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: AssetImage('images/noimage.png'),
+                                  fit: BoxFit.fill
+                                )
+                              ),
+                            ) : Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${logoDesa}')
+                                )
+                              ),
                             ),
-                            margin: EdgeInsets.only(left: 20)
+                            margin: EdgeInsets.only(left: 20),
                           ),
                           Container(
                             child: Column(
@@ -184,7 +260,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Container(
-                                  child: Text("Ubung Kaja", style: TextStyle(
+                                  child: Text(namaDesa.toString(), style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700

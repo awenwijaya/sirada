@@ -1,15 +1,71 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/AdminDesa/Profile/EditProfile.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:http/http.dart' as http;
 
 class adminProfile extends StatefulWidget {
   adminProfile({Key key}) : super(key: key);
+  static var namaPenduduk = "Nama Anda";
+  static var nikPenduduk = "NIK";
+  static var alamatPenduduk = "Alamat Anda";
+  static var golonganDarah = "Golongan Darah";
+  static var kewarganegaraanPenduduk = "Kewarganegaraan";
+  static var asalDesaPenduduk = "Asal Desa";
+  static var jenisKelaminPenduduk = "Jenis Kelamin";
+  static var usernamePenduduk = "Username";
+  static var emailPenduduk = "Email";
+  static var nomorTeleponPenduduk = "Nomor Telepon";
+  static var statusPerkawinan = "Status Perkawinan";
+  static var agamaPenduduk = "Agama";
+  static var pendidikanTerakhir = "Pendidikan Terakhir";
+  static var profilePicture;
 
   @override
   State<adminProfile> createState() => _adminProfileState();
 }
 
 class _adminProfileState extends State<adminProfile> {
+  var apiURLUserProfile = "http://192.168.18.10:8000/api/profile/${loginPage.pendudukId}";
+
+  getUserInfo() async {
+    http.get(Uri.parse(apiURLUserProfile),
+      headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          adminProfile.namaPenduduk = parsedJson['nama_lengkap'];
+          adminProfile.usernamePenduduk = parsedJson['username'];
+          adminProfile.profilePicture = parsedJson['profile_picture'];
+          adminProfile.nikPenduduk = parsedJson['penduduk_id'].toString();
+          adminProfile.alamatPenduduk = parsedJson['alamat'];
+          adminProfile.golonganDarah = parsedJson['golongan_darah'];
+          adminProfile.kewarganegaraanPenduduk = parsedJson['kewarganegaraan'];
+          adminProfile.asalDesaPenduduk = parsedJson['nama_desa'];
+          adminProfile.jenisKelaminPenduduk = parsedJson['jenis_kelamin'];
+          adminProfile.emailPenduduk = parsedJson['email'];
+          adminProfile.nomorTeleponPenduduk = parsedJson['nomor_telepon'];
+          adminProfile.statusPerkawinan = parsedJson['status_perkawinan'];
+          adminProfile.agamaPenduduk = parsedJson['agama'];
+          adminProfile.pendidikanTerakhir = parsedJson['pendidikan_terakhir'];
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,16 +87,30 @@ class _adminProfileState extends State<adminProfile> {
           child: Column(
             children: <Widget>[
               Container(
-                alignment: Alignment.center,
-                child: Image.asset(
-                  'images/userprof.png',
-                  height: 100,
+                child: adminProfile.profilePicture == null ? Container(
                   width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage('images/profilepic.png'),
+                      fit: BoxFit.fill
+                    )
                   ),
-                  margin: EdgeInsets.only(top: 30),
+                ) : Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${adminProfile.profilePicture}')
+                    )
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 30),
               ),
               Container(
-                child: Text("Admin Desa", style: TextStyle(
+                child: Text(adminProfile.namaPenduduk.toString(), style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -49,7 +119,7 @@ class _adminProfileState extends State<adminProfile> {
                 margin: EdgeInsets.only(top: 20)
               ),
               Container(
-                child: Text("admindesa", style: TextStyle(
+                child: Text(adminProfile.usernamePenduduk.toString(), style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14
                 ), textAlign: TextAlign.center),
@@ -86,7 +156,7 @@ class _adminProfileState extends State<adminProfile> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "123456789",
+                              adminProfile.nikPenduduk.toString(),
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
@@ -112,7 +182,7 @@ class _adminProfileState extends State<adminProfile> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "Denpasar",
+                              adminProfile.alamatPenduduk.toString(),
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
@@ -138,7 +208,7 @@ class _adminProfileState extends State<adminProfile> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "Sudah Menikah",
+                              adminProfile.statusPerkawinan.toString(),
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
@@ -164,7 +234,7 @@ class _adminProfileState extends State<adminProfile> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "Laki-Laki",
+                              adminProfile.jenisKelaminPenduduk.toString(),
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
@@ -190,7 +260,7 @@ class _adminProfileState extends State<adminProfile> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "A",
+                              adminProfile.golonganDarah.toString(),
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
@@ -216,7 +286,7 @@ class _adminProfileState extends State<adminProfile> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "WNI",
+                              adminProfile.kewarganegaraanPenduduk.toString(),
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
@@ -242,7 +312,7 @@ class _adminProfileState extends State<adminProfile> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "Ubung Kaja",
+                              adminProfile.asalDesaPenduduk.toString(),
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
@@ -268,7 +338,7 @@ class _adminProfileState extends State<adminProfile> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "Buddha",
+                              adminProfile.agamaPenduduk.toString(),
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
@@ -294,7 +364,7 @@ class _adminProfileState extends State<adminProfile> {
                           Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "SMA",
+                              adminProfile.pendidikanTerakhir.toString(),
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
@@ -316,7 +386,9 @@ class _adminProfileState extends State<adminProfile> {
               ),
               Container(
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => editProfileAdmin()));
+                  },
                   child: Text('Edit Profil', style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,
