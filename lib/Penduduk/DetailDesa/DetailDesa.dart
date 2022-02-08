@@ -24,15 +24,11 @@ class _detailDesaPendudukState extends State<detailDesaPenduduk> {
   var luasDesa = "Luas Desa";
   var kontakWADesa = "Kontak WA";
   var namaKecamatan = "Kecamatan";
-  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/getdatadesabyid";
+  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/desa/${loginPage.desaId}";
 
   getDesaInfo() async {
-    var body = jsonEncode({
-      'desa_id' : loginPage.desaId
-    });
     http.post(Uri.parse(apiURLGetDetailDesaById),
       headers: {"Content-Type" : "application/json"},
-      body: body
     ).then((http.Response response) {
       var responseValue = response.statusCode;
       if(responseValue == 200) {

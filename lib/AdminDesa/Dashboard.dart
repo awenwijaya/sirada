@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
 import 'package:surat/AdminDesa/Profile/AdminProfile.dart';
 import 'package:surat/WelcomeScreen.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
@@ -275,7 +276,9 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                                       fontWeight: FontWeight.w700,
                                       color: HexColor("#025393")
                                     )),
-                                    onPressed: (){},
+                                    onPressed: (){
+                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailDesaAdmin()));
+                                    },
                                   ),
                                   margin: EdgeInsets.only(left: 15),
                                 )
