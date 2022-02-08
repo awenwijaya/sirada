@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:surat/AdminDesa/Dashboard.dart';
 import 'package:surat/AdminDesa/Profile/AdminProfile.dart';
+import 'package:http/http.dart' as http;
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:surat/shared/LoadingAnimation/loading.dart';
 
 class editProfileAdmin extends StatefulWidget {
   editProfileAdmin({Key key}) : super(key: key);
@@ -24,12 +28,31 @@ class _editProfileAdminState extends State<editProfileAdmin> {
   String selectedAgama = adminProfile.agamaPenduduk;
   String selectedStatusPerkawinan = adminProfile.statusPerkawinan;
   String selectedPendidikanTerakhir = adminProfile.pendidikanTerakhir;
+  bool Loading = false;
+  var apiURLEditProfile = "http://192.168.18.10:8000/api/editprofile";
 
   Future choiceImage() async {
     var pickedImage = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
       image = File(pickedImage.path);
     });
+  }
+
+  Future uploadImage() async {
+    final uri = Uri.parse("http://192.168.18.10/siraja-api-skripsi/upload-profile-picture.php");
+    var request = http.MultipartRequest('POST', uri);
+    request.fields['user_id'] = loginPage.userId.toString();
+    var pic = await http.MultipartFile.fromPath("image", image.path);
+    request.files.add(pic);
+    var response = await request.send();
+    if(response.statusCode == 200) {
+      setState(() {
+        Loading = false;
+      });
+      Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => dashboardAdminDesa()), (route) => false);
+    }else{
+      print("Gambar gagal diupload");
+    }
   }
 
   @override
@@ -43,7 +66,7 @@ class _editProfileAdminState extends State<editProfileAdmin> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
+      home: Loading ? loading() : Scaffold(
         appBar: AppBar(
           title: Text("Edit Profil", style: TextStyle(
             fontFamily: "Poppins",
@@ -474,6 +497,92 @@ class _editProfileAdminState extends State<editProfileAdmin> {
                             );
                           }
                       );
+                    }else{
+                      setState(() {
+                        Loading = true;
+                      });
+                      var body = jsonEncode({
+                        "user_id" : loginPage.userId,
+                        "penduduk_id" : loginPage.pendudukId,
+                        "username" : controllerUsername.text,
+                        "alamat" : controllerAlamat.text,
+                        "agama" : selectedAgama,
+                        "status_perkawinan" : selectedStatusPerkawinan,
+                        "pendidikan_terakhir" : selectedPendidikanTerakhir
+                      });
+                      http.post(Uri.parse(apiURLEditProfile),
+                          headers: {"Content-Type" : "application/json"},
+                          body: body
+                      ).then((http.Response response) {
+                        var responseValue = response.statusCode;
+                        if(responseValue == 200) {
+                          if(image == null) {
+                            setState(() {
+                              Loading = false;
+                            });
+                            Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => dashboardAdminDesa()), (route) => false);
+                          }else{
+                            uploadImage();
+                          }
+                        }else{
+                          setState(() {
+                            Loading = false;
+                          });
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                ),
+                                content: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Container(
+                                        child: Image.asset(
+                                          'images/alert.png',
+                                          height: 50,
+                                          width: 50,
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Text("Username telah dipakai", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393")
+                                        ), textAlign: TextAlign.center),
+                                        margin: EdgeInsets.only(top: 10),
+                                      ),
+                                      Container(
+                                        child: Text("Username yang Anda masukkan sudah terdaftar sebelumnya. Silahkan gunakan username yang lain", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                        ), textAlign: TextAlign.center),
+                                        margin: EdgeInsets.only(top: 10),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text("OK", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    )),
+                                    onPressed: (){Navigator.of(context).pop();},
+                                  )
+                                ],
+                              );
+                            }
+                          );
+                        }
+                      });
                     }
                   },
                   child: Text("Simpan", style: TextStyle(
