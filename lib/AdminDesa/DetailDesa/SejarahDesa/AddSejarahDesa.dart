@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'package:surat/AdminDesa/Dashboard.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
+import 'package:http/http.dart' as http;
+import 'package:surat/shared/LoadingAnimation/loading.dart';
 
 class addSejarahDesaAdmin extends StatefulWidget {
   const addSejarahDesaAdmin({Key key}) : super(key: key);
@@ -11,10 +16,14 @@ class addSejarahDesaAdmin extends StatefulWidget {
 }
 
 class _addSejarahDesaAdminState extends State<addSejarahDesaAdmin> {
+  final controllerSejarahDesa = TextEditingController();
+  var apiURLSejarahDesa = "http://192.168.18.10:8000/api/data/desa/sejarahdesa/up";
+  bool Loading = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
+      home: Loading ? loading() : Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -64,6 +73,7 @@ class _addSejarahDesaAdminState extends State<addSejarahDesaAdmin> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                   child: TextField(
+                    controller: controllerSejarahDesa,
                     maxLines: 20,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -82,7 +92,83 @@ class _addSejarahDesaAdminState extends State<addSejarahDesaAdmin> {
               ),
               Container(
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    if(controllerSejarahDesa.text == "") {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(40.0))
+                            ),
+                            content: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    child: Image.asset(
+                                      'images/warning.png',
+                                      height: 50,
+                                      width: 50,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Text("Data sejarah desa belum diisi", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    ), textAlign: TextAlign.center),
+                                    margin: EdgeInsets.only(top: 10),
+                                  ),
+                                  Container(
+                                    child: Text("Data sejarah desa masih kosong. Silahkan isi data sejarah desa terlebih dahulu sebelum melanjutkan", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                    ), textAlign: TextAlign.center),
+                                    margin: EdgeInsets.only(top: 10),
+                                  )
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text("OK", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor("#025393")
+                                )),
+                                onPressed: (){Navigator.of(context).pop();},
+                              )
+                            ],
+                          );
+                        }
+                      );
+                    }else{
+                      setState(() {
+                        Loading = true;
+                      });
+                      var body = jsonEncode({
+                        "sejarah_desa" : controllerSejarahDesa.text,
+                        "desa_id" : loginPage.desaId
+                      });
+                      http.post(Uri.parse(apiURLSejarahDesa),
+                        headers: {"Content-Type" : "application/json"},
+                        body: body
+                      ).then((http.Response response) {
+                        var responseValue = response.statusCode;
+                        if(responseValue == 200) {
+                          setState(() {
+                            Loading = false;
+                          });
+                          Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => dashboardAdminDesa()), (route) => false);
+                        }
+                      });
+                    }
+                  },
                   child: Text("Simpan Sejarah Desa", style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,

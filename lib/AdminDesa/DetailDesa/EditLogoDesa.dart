@@ -1,10 +1,13 @@
 import 'dart:io';
-
+import 'package:surat/AdminDesa/Dashboard.dart';
+import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class editLogoDesaAdmin extends StatefulWidget {
   const editLogoDesaAdmin({Key key}) : super(key: key);
@@ -15,11 +18,37 @@ class editLogoDesaAdmin extends StatefulWidget {
 
 class _editLogoDesaAdminState extends State<editLogoDesaAdmin> {
   File image;
+  final picker = ImagePicker();
+  bool Loading = false;
+
+  Future choiceImage() async {
+    var pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      image = File(pickedImage.path);
+    });
+  }
+
+  Future uploadImage() async {
+    final uri = Uri.parse("http://192.168.18.10/siraja-api-skripsi/upload-logo-desa.php");
+    var request = http.MultipartRequest('POST', uri);
+    request.fields['desa_id'] = loginPage.desaId.toString();
+    var pic = await http.MultipartFile.fromPath("image", image.path);
+    request.files.add(pic);
+    var response = await request.send();
+    if(response.statusCode == 200) {
+      setState(() {
+        Loading = false;
+      });
+      Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => dashboardAdminDesa()), (route) => false);
+    }else{
+      print("Gambar gagal diupload");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
+      home: Loading ? loading() : Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -62,25 +91,10 @@ class _editLogoDesaAdminState extends State<editLogoDesaAdmin> {
                 margin: EdgeInsets.only(top: 15),
               ),
               Container(
-                child: image == null ? Text("Logo desa belum terpilih", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold
-                )) : Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: FileImage(image)
-                    ),
-                ),
-                ),
-                margin: EdgeInsets.only(top: 20),
-              ),
-              Container(
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: () async {
+                    await choiceImage();
+                  },
                   child: Text("Pilih Logo Desa", style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,
@@ -98,7 +112,68 @@ class _editLogoDesaAdminState extends State<editLogoDesaAdmin> {
               ),
               Container(
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    if(image == null) {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
+                              ),
+                              content: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Image.asset(
+                                        'images/warning.png',
+                                        height: 50,
+                                        width: 50,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text("Logo desa belum terpilih", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393")
+                                      ), textAlign: TextAlign.center),
+                                      margin: EdgeInsets.only(top: 10),
+                                    ),
+                                    Container(
+                                      child: Text("Logo desa belum terpilih. Silahkan pilih logo desa terlebih dahulu sebelum melanjutkan", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                      ), textAlign: TextAlign.center),
+                                      margin: EdgeInsets.only(top: 10),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text("OK", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                  )),
+                                  onPressed: (){Navigator.of(context).pop();},
+                                )
+                              ],
+                            );
+                          }
+                      );
+                    }else{
+                      setState(() {
+                        Loading = true;
+                      });
+                      uploadImage();
+                    }
+                  },
                   child: Text("Unggah Logo Desa", style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,

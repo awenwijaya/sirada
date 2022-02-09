@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:surat/AdminDesa/DetailDesa/SejarahDesa/AddSejarahDesa.dart';
+import 'package:surat/AdminDesa/DetailDesa/SejarahDesa/EditSejarahDesa.dart';
+import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
 
 class sejarahDesaAdmin extends StatefulWidget {
   static var sejarahDesa;
@@ -39,7 +41,9 @@ class _sejarahDesaAdminState extends State<sejarahDesaAdmin> {
               color: HexColor("#025393"),
             ) : IconButton(
               icon: Icon(Icons.edit),
-              onPressed: (){},
+              onPressed: (){
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => editSejarahDesaAdmin()));
+              },
               color: HexColor("#025393"),
             )
           ],
@@ -79,21 +83,44 @@ class _sejarahDesaAdminState extends State<sejarahDesaAdmin> {
             ),
           ),
           alignment: Alignment(0.0, 0.0),
-        ) : Container(
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  child: Icon(
-                    Icons.add,
-                    size: 50,
-                    color: Colors.black26,
+        ) : SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.18.10/siraja-api-skripsi/${detailDesaAdmin.logoDesa}')
+                      )
                   ),
-                )
-              ],
-            ),
+                ),
+                margin: EdgeInsets.only(top: 30),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text("Sejarah Desa", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700
+                )),
+                margin: EdgeInsets.only(top: 15, left: 25),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text(sejarahDesaAdmin.sejarahDesa.toString(), style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14
+                )),
+                margin: EdgeInsets.only(top: 10, bottom: 10),
+                padding: EdgeInsets.symmetric(horizontal: 30),
+              )
+            ],
           ),
-        ),
+        )
       ),
     );
   }

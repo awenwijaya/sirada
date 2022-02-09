@@ -36,6 +36,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
           namaAdmin = parsedJson['nama_lengkap'];
           namaDesa = parsedJson['nama_desa'];
           profilePicture = parsedJson['profile_picture'];
+          logoDesa = parsedJson['logo_desa'];
         });
       }
     });
@@ -187,7 +188,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${profilePicture}'),
-                            fit: BoxFit.fill
+                            fit: BoxFit.fill,
                           )
                         ),
                       ),
@@ -244,8 +245,8 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                                 )
                               ),
                             ) : Container(
-                              width: 100,
-                              height: 100,
+                              width: 50,
+                              height: 50,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(

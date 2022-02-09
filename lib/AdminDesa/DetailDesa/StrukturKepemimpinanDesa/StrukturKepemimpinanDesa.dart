@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/AdminDesa/DetailDesa/StrukturKepemimpinanDesa/AddStrukturKepemimpinanDesa.dart';
+import 'package:surat/AdminDesa/DetailDesa/StrukturKepemimpinanDesa/EditStrukturKepemimpinanDesa.dart';
 
 class strukturKepemimpinanDesaAdmin extends StatefulWidget {
   static var strukturKepemimpinan;
@@ -32,11 +34,15 @@ class _strukturKepemimpinanDesaAdminState extends State<strukturKepemimpinanDesa
           actions: <Widget>[
             strukturKepemimpinanDesaAdmin.strukturKepemimpinan == null ? IconButton(
               icon: Icon(Icons.add),
-              onPressed: (){},
+              onPressed: (){
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => addStrukturKepemimpinanDesa()));
+              },
               color: HexColor("#025393"),
             ) : IconButton(
               icon: Icon(Icons.edit),
-              onPressed: (){},
+              onPressed: (){
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => editStrukturKepemimpinanDesaAdmin()));
+              },
               color: HexColor("#025393"),
             )
           ],
@@ -78,16 +84,14 @@ class _strukturKepemimpinanDesaAdminState extends State<strukturKepemimpinanDesa
           alignment: Alignment(0.0, 0.0),
         ) : Container(
           child: Center(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  child: Icon(
-                    Icons.add,
-                    size: 50,
-                    color: Colors.black26,
-                  ),
-                )
-              ],
+            child: InteractiveViewer(
+              clipBehavior: Clip.none,
+              child: ClipRRect(
+                child: Image.network(
+                  'http://192.168.18.10/siraja-api-skripsi/${strukturKepemimpinanDesaAdmin.strukturKepemimpinan}',
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
         ),
