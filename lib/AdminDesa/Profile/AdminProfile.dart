@@ -131,7 +131,7 @@ class _adminProfileState extends State<adminProfile> {
                   "Data Anda",
                   style: TextStyle(
                     fontFamily: "Poppins",
-                    fontSize: 15,
+                    fontSize: 14,
                     color: Colors.black,
                     fontWeight: FontWeight.w700
                   ),

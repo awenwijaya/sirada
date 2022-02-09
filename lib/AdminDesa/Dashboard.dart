@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
+import 'package:surat/AdminDesa/ManajemenStaff/ManajemenStaff.dart';
 import 'package:surat/AdminDesa/Profile/AdminProfile.dart';
 import 'package:surat/WelcomeScreen.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
@@ -317,7 +318,9 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                   children: <Widget>[
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => staffManagementAdmin()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
