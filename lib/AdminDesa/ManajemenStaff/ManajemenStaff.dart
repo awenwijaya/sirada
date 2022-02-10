@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:surat/AdminDesa/ManajemenStaff/AddStaff.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/DetailStaff.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:surat/shared/API/Models/Staff.dart';
@@ -269,7 +270,9 @@ class _staffManagementAdminState extends State<staffManagementAdmin> {
               ),
               Container(
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => addStaffAdmin()));
+                  },
                   child: Text("Tambah Data Staff", style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,

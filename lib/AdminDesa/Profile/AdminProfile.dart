@@ -23,6 +23,7 @@ class adminProfile extends StatefulWidget {
   static var agamaPenduduk = "Agama";
   static var pendidikanTerakhir = "Pendidikan Terakhir";
   static var profilePicture;
+  static var namaPekerjaan = "Nama Pekerjaan";
 
   @override
   State<adminProfile> createState() => _adminProfileState();
@@ -54,6 +55,7 @@ class _adminProfileState extends State<adminProfile> {
           adminProfile.statusPerkawinan = parsedJson['status_perkawinan'];
           adminProfile.agamaPenduduk = parsedJson['agama'];
           adminProfile.pendidikanTerakhir = parsedJson['pendidikan_terakhir'];
+          adminProfile.namaPekerjaan = parsedJson['nama_pekerjaan'];
         });
       }
     });
@@ -209,6 +211,32 @@ class _adminProfileState extends State<adminProfile> {
                             alignment: Alignment.topLeft,
                             child: Text(
                               adminProfile.statusPerkawinan.toString(),
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              ),
+                            ),
+                            margin: EdgeInsets.only(top: 5),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Pekerjaan", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14
+                            ), textAlign: TextAlign.left),
+                            margin: EdgeInsets.only(top: 15),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              adminProfile.namaPekerjaan.toString(),
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
