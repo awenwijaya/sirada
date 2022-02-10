@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
+import 'package:surat/AdminDesa/LayananSuratMasyarakat/SuratMasyarakat.dart';
+import 'package:surat/AdminDesa/ManajemenDusun/ManajemenDusun.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenStaff.dart';
 import 'package:surat/AdminDesa/Profile/AdminProfile.dart';
 import 'package:surat/WelcomeScreen.dart';
@@ -12,6 +14,7 @@ import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
 
 class dashboardAdminDesa extends StatefulWidget {
+  static var logoDesa;
   const dashboardAdminDesa({Key key}) : super(key: key);
 
   @override
@@ -20,7 +23,6 @@ class dashboardAdminDesa extends StatefulWidget {
 
 class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var profilePicture;
-  var logoDesa;
   var namaAdmin = "Admin Desa";
   var namaDesa = "Desa";
   var apiURLGetDataUser = "http://192.168.18.10:8000/api/profile/${loginPage.pendudukId}";
@@ -37,7 +39,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
           namaAdmin = parsedJson['nama_lengkap'];
           namaDesa = parsedJson['nama_desa'];
           profilePicture = parsedJson['profile_picture'];
-          logoDesa = parsedJson['logo_desa'];
+          dashboardAdminDesa.logoDesa = parsedJson['logo_desa'];
         });
       }
     });
@@ -235,7 +237,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                       child: Row(
                         children: <Widget>[
                           Container(
-                            child: logoDesa == null ? Container(
+                            child: dashboardAdminDesa.logoDesa == null ? Container(
                               width: 50,
                               height: 50,
                               decoration: BoxDecoration(
@@ -251,7 +253,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                  image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${logoDesa}')
+                                  image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${dashboardAdminDesa.logoDesa}')
                                 )
                               ),
                             ),
@@ -359,7 +361,9 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => manajemenDusunAdmin()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -572,7 +576,9 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
               ),
               Container(
                 child: GestureDetector(
-                  onTap: (){},
+                  onTap: (){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => layananSuratMasyarakatAdmin()));
+                  },
                   child: Row(
                     children: <Widget>[
                       Container(
