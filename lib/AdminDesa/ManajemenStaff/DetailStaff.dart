@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/AdminDesa/ManajemenStaff/EditStaff.dart';
 
 class detailStaffAdmin extends StatefulWidget {
   static var status;
@@ -14,6 +15,7 @@ class detailStaffAdmin extends StatefulWidget {
   static var pendidikanTerakhir;
   static var namaUnit;
   static var jabatan;
+  static var staffId;
   const detailStaffAdmin({Key key}) : super(key: key);
 
   @override
@@ -314,7 +316,9 @@ class _detailStaffAdminState extends State<detailStaffAdmin> {
               ),
               Container(
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => editStaffAdmin()));
+                  },
                   child: Text("Edit Staff", style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,

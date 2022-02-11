@@ -74,6 +74,7 @@ class _staffManagementAdminState extends State<staffManagementAdmin> {
                     detailStaffAdmin.pendidikanTerakhir = staff.pendidikanTerakhir;
                     detailStaffAdmin.namaUnit = staff.namaUnit;
                     detailStaffAdmin.jabatan = staff.namaJabatan;
+                    detailStaffAdmin.staffId = staff.staffId;
                   });
                   Navigator.push(context, CupertinoPageRoute(builder: (context) => detailStaffAdmin()));
                 },
@@ -167,6 +168,7 @@ class _staffManagementAdminState extends State<staffManagementAdmin> {
                     detailStaffAdmin.namaUnit = staff.namaUnit;
                     detailStaffAdmin.jabatan = staff.namaJabatan;
                     detailStaffAdmin.masaBerakhir = staff.masaBerakhir;
+                    detailStaffAdmin.staffId = staff.staffId;
                   });
                   Navigator.push(context, CupertinoPageRoute(builder: (context) => detailStaffAdmin()));
                 },

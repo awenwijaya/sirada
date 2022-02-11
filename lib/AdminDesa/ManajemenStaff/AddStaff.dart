@@ -674,7 +674,7 @@ class _inputDataStaffState extends State<inputDataStaff> {
                           setState(() {
                             Loading = false;
                           });
-                          Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => dashboardAdminDesa()), (route) => false);
+                          Navigator.of(context).push(CupertinoPageRoute(builder: (context) => addStaffBerhasil()));
                         }
                       });
                     }
@@ -946,6 +946,82 @@ class _pilihDataUnitState extends State<pilihDataUnit> {
           ),
         ),
         body: listUnit(),
+      ),
+    );
+  }
+}
+
+class addStaffBerhasil extends StatelessWidget {
+  const addStaffBerhasil({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                child: Image.asset(
+                  'images/done.png',
+                  height: 50,
+                  width: 50,
+                ),
+                margin: EdgeInsets.only(top: 100),
+              ),
+              Container(
+                child: Text(
+                  "Tambah Staff Berhasil",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: HexColor("#025393")
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 20),
+              ),
+              Container(
+                child: Text(
+                  "Proses tambah staff telah berhasil. Silahkan akses menu Manajemen Staff yang terdapat pada Dashboard untuk melihat data staff",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                margin: EdgeInsets.only(top: 30),
+              ),
+              Container(
+                child: FlatButton(
+                  onPressed: (){
+                    Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => dashboardAdminDesa()), (route) => false);
+                  },
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      side: BorderSide(color: HexColor("#025393"))
+                  ),
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                  child: Container(
+                    child: Text(
+                      "Kembali ke Halaman Utama",
+                      style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 15,
+                          color: HexColor("#025393"),
+                          fontWeight: FontWeight.w700
+                      ),
+                    ),
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 30),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
