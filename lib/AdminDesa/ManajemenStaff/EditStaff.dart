@@ -42,15 +42,14 @@ class _editStaffAdminState extends State<editStaffAdmin> {
         jabatanItemList = jsonData;
       });
     }
-    print(jabatanItemList);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getAllUnit();
     getAllJabatan();
+    getAllUnit();
   }
 
   @override

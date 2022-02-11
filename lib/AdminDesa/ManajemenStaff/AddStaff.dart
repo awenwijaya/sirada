@@ -452,8 +452,40 @@ class inputDataStaff extends StatefulWidget {
 class _inputDataStaffState extends State<inputDataStaff> {
   var selectedJabatan;
   var selectedUnit;
+  List unitItemList = List();
+  List jabatanItemList = List();
   var apiURLUpDataStaff = "http://192.168.18.10:8000/api/admin/addstaff/post";
   bool Loading = false;
+
+  Future getAllUnit() async {
+    var url = "http://192.168.18.10:8000/api/admin/addstaff/list_unit";
+    var response = await http.get(Uri.parse(url));
+    if(response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        unitItemList = jsonData;
+      });
+    }
+  }
+
+  Future getAllJabatan() async {
+    var url = "http://192.168.18.10:8000/api/admin/addstaff/list_jabatan";
+    var response = await http.get(Uri.parse(url));
+    if(response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        jabatanItemList = jsonData;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAllJabatan();
+    getAllUnit();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -516,37 +548,53 @@ class _inputDataStaffState extends State<inputDataStaff> {
                       margin: EdgeInsets.only(top: 30, left: 20),
                     ),
                     Container(
-                      alignment: Alignment.center,
-                      child: selectedUnit == null ? Text("Unit belum terpilih", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14
-                      )) : Text(selectedUnit, style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14
-                      )),
-                      margin: EdgeInsets.only(top: 10),
-                    ),
-                    Container(
-                      child: FlatButton(
-                        onPressed: (){
-                          navigatePilihUnit(context);
-                        },
-                        child: Text("Pilih Unit", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: HexColor("#025393")
-                        )),
-                        color: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          side: BorderSide(color: HexColor("#025393"), width: 2)
-                        ),
-                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                      width: 300,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 5),
+                      decoration: BoxDecoration(
+                          color: HexColor("#025393"),
+                          borderRadius: BorderRadius.circular(30)
                       ),
-                      margin: EdgeInsets.only(top: 15, bottom: 10),
+                      child: DropdownButton(
+                        isExpanded: true,
+                        hint: Center(
+                          child: Text("Pilih Unit", style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                        ),
+                        value: selectedUnit,
+                        underline: Container(),
+                        icon: Icon(Icons.arrow_downward, color: Colors.white),
+                        items: unitItemList.map((unit) {
+                          return DropdownMenuItem(
+                            value: unit['nama_unit'],
+                            child: Text(
+                                unit['nama_unit'].toString(), style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                          );
+                        }).toList(),
+                        selectedItemBuilder: (BuildContext context) =>
+                            unitItemList.map((unit) =>
+                                Center(
+                                  child: Text(
+                                    unit['nama_unit'].toString(),
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        color: Colors.white,
+                                        fontSize: 14),
+                                  ),
+                                )).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedUnit = value;
+                          });
+                        },
+                      ),
+                      margin: EdgeInsets.only(top: 15),
                     )
                   ],
                 ),
@@ -564,37 +612,53 @@ class _inputDataStaffState extends State<inputDataStaff> {
                       margin: EdgeInsets.only(top: 30, left: 20),
                     ),
                     Container(
-                      alignment: Alignment.center,
-                      child: selectedJabatan == null ? Text("Jabatan belum terpilih", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14
-                      )) : Text(selectedJabatan, style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14
-                      )),
-                      margin: EdgeInsets.only(top: 10),
-                    ),
-                    Container(
-                      child: FlatButton(
-                        onPressed: (){
-                          navigatePilihJabatan(context);
-                        },
-                        child: Text("Pilih Jabatan", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: HexColor("#025393")
-                        )),
-                        color: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            side: BorderSide(color: HexColor("#025393"), width: 2)
-                        ),
-                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                      width: 300,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 5),
+                      decoration: BoxDecoration(
+                          color: HexColor("#025393"),
+                          borderRadius: BorderRadius.circular(30)
                       ),
-                      margin: EdgeInsets.only(top: 15, bottom: 30),
+                      child: DropdownButton(
+                        isExpanded: true,
+                        hint: Center(
+                          child: Text("Pilih Jabatan", style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                        ),
+                        value: selectedJabatan,
+                        underline: Container(),
+                        icon: Icon(Icons.arrow_downward, color: Colors.white),
+                        items: jabatanItemList.map((jabatan) {
+                          return DropdownMenuItem(
+                            value: jabatan['nama_jabatan'],
+                            child: Text(jabatan['nama_jabatan'].toString(),
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                )),
+                          );
+                        }).toList(),
+                        selectedItemBuilder: (BuildContext context) =>
+                            jabatanItemList.map((jabatan) =>
+                                Center(
+                                  child: Text(
+                                      jabatan['nama_jabatan'].toString(),
+                                      style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          color: Colors.white,
+                                          fontSize: 14
+                                      )),
+                                )).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedJabatan = value;
+                          });
+                        },
+                      ),
+                      margin: EdgeInsets.only(top: 15),
                     )
                   ],
                 ),
@@ -696,256 +760,6 @@ class _inputDataStaffState extends State<inputDataStaff> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  void navigatePilihJabatan(BuildContext context) async {
-    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => pilihJabatan()));
-    if(result == null) {
-      selectedJabatan = selectedJabatan;
-    }else{
-      setState(() {
-        selectedJabatan = result;
-      });
-    }
-  }
-
-  void navigatePilihUnit(BuildContext context) async {
-    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => pilihDataUnit()));
-    if(result == null) {
-      selectedUnit = selectedUnit;
-    }else{
-      setState(() {
-        selectedUnit = result;
-      });
-    }
-  }
-}
-
-class pilihJabatan extends StatefulWidget {
-  const pilihJabatan({Key key}) : super(key: key);
-
-  @override
-  _pilihJabatanState createState() => _pilihJabatanState();
-}
-
-class _pilihJabatanState extends State<pilihJabatan> {
-  var apiURLGetDataJabatan = "http://192.168.18.10:8000/api/admin/addstaff/list_jabatan";
-
-  Future<Jabatan> functionListJabatan() async {
-    return http.get(Uri.parse(apiURLGetDataJabatan),
-      headers: {"Content-Type" : "application/json"}
-    ).then((http.Response response) {
-      if(response.statusCode == 200) {
-        final body = response.body;
-        final jabatanData = jabatanFromJson(body);
-        return jabatanData;
-      }else{
-        final body = response.body;
-        final error = jabatanFromJson(body);
-        return error;
-      }
-    });
-  }
-
-  Widget listJabatan() {
-    return FutureBuilder<Jabatan>(
-      future: functionListJabatan(),
-      builder: (context, snapshot) {
-        final data = snapshot.data;
-        if(snapshot.hasData) {
-          final jabatanData = data.data;
-          return ListView.builder(
-            itemCount: jabatanData.length,
-            itemBuilder: (context, index) {
-              final jabatan = jabatanData[index];
-              return GestureDetector(
-                onTap: (){
-                  Navigator.of(context, rootNavigator: true).pop(jabatan.namaJabatan);
-                },
-                child: Container(
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        child: Image.asset(
-                          'images/person.png',
-                          height: 50,
-                          width: 50,
-                        ),
-                      ),
-                      Container(
-                        child: Text(jabatan.namaJabatan.toString(), style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black
-                        )),
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.only(left: 10),
-                      )
-                    ],
-                  ),
-                  margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  height: 70,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0,3)
-                      )
-                    ]
-                  ),
-                )
-              );
-            },
-          );
-        }else{
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Pilih Jabatan", style: TextStyle(
-            fontFamily: "Poppins",
-            fontWeight: FontWeight.w700,
-            color: HexColor("#025393")
-          )),
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: (){Navigator.of(context, rootNavigator: true).pop();},
-            color: HexColor("#025393"),
-          ),
-        ),
-        body: listJabatan(),
-      ),
-    );
-  }
-}
-
-class pilihDataUnit extends StatefulWidget {
-  const pilihDataUnit({Key key}) : super(key: key);
-
-  @override
-  _pilihDataUnitState createState() => _pilihDataUnitState();
-}
-
-class _pilihDataUnitState extends State<pilihDataUnit> {
-  var apiURLGetDataUnit = "http://192.168.18.10:8000/api/admin/addstaff/list_unit";
-
-  Future<Unit> functionListUnit() async {
-    return http.get(Uri.parse(apiURLGetDataUnit),
-      headers: {"Content-Type" : "application/json"}
-    ).then((http.Response response) {
-      if(response.statusCode == 200) {
-        final body = response.body;
-        final unitData = unitFromJson(body);
-        return unitData;
-      }else{
-        final body = response.body;
-        final error = unitFromJson(body);
-        return error;
-      }
-    });
-  }
-
-  Widget listUnit() {
-    return FutureBuilder<Unit>(
-      future: functionListUnit(),
-      builder: (context, snapshot) {
-        final data = snapshot.data;
-        if(snapshot.hasData) {
-          final unitData = data.data;
-          return ListView.builder(
-            itemCount: unitData.length,
-            itemBuilder: (context, index) {
-              final unit = unitData[index];
-              return GestureDetector(
-                onTap: (){
-                  Navigator.of(context, rootNavigator: true).pop(unit.namaUnit);
-                },
-                child: Container(
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        child: Image.asset(
-                          'images/briefcase.png',
-                          height: 50,
-                          width: 50,
-                        ),
-                      ),
-                      Container(
-                        child: Text(unit.namaUnit.toString(), style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black
-                        )),
-                        margin: EdgeInsets.only(left: 10),
-                        alignment: Alignment.centerLeft,
-                      )
-                    ],
-                  ),
-                  margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  height: 70,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0,3)
-                        )
-                      ]
-                  ),
-                ),
-              );
-            },
-          );
-        }else{
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Pilih Unit", style: TextStyle(
-            fontFamily: "Poppins",
-            fontWeight: FontWeight.w700,
-            color: HexColor("#025393")
-          )),
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: (){Navigator.of(context, rootNavigator: true).pop();},
-            color: HexColor("#025393"),
-          ),
-        ),
-        body: listUnit(),
       ),
     );
   }

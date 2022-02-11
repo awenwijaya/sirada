@@ -327,7 +327,7 @@ class _staffManagementAdminState extends State<staffManagementAdmin> {
                             margin: EdgeInsets.only(bottom: 10),
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height,
+                            height: 400,
                             child: TabBarView(
                               children: <Widget>[
                                 Container(
