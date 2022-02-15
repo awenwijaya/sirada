@@ -4,7 +4,7 @@
             "outputFile": "C:\\Users\\awenh\\Documents\\College Stuffs\\Bahan Skripsi\\app\\siraja-skripsi\\build\\image_picker\\intermediates\\res\\merged\\debug\\values-uz\\values-uz.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\awenh\\.gradle\\caches\\transforms-2\\files-2.1\\67ff0aaf930f65024e6c37d99bc9e852\\core-1.6.0\\res\\values-uz\\values-uz.xml",
+                    "source": "C:\\Users\\awenh\\.gradle\\caches\\transforms-2\\files-2.1\\d67cd79abd1ca209502f51c69d23182b\\core-1.1.0\\res\\values-uz\\values-uz.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -19,7 +19,7 @@
             "outputFile": "C:\\Users\\awenh\\Documents\\College Stuffs\\Bahan Skripsi\\app\\siraja-skripsi\\build\\image_picker\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-uz\\values-uz.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\awenh\\.gradle\\caches\\transforms-2\\files-2.1\\67ff0aaf930f65024e6c37d99bc9e852\\core-1.6.0\\res\\values-uz\\values-uz.xml",
+                    "source": "C:\\Users\\awenh\\.gradle\\caches\\transforms-2\\files-2.1\\d67cd79abd1ca209502f51c69d23182b\\core-1.1.0\\res\\values-uz\\values-uz.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:surat/AdminDesa/ManajemenDusun/AddDusun.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:surat/shared/API/Models/Dusun.dart';
 
@@ -120,7 +121,9 @@ class _manajemenDusunAdminState extends State<manajemenDusunAdmin> {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.add),
-              onPressed: (){},
+              onPressed: (){
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => addDusunAdmin()));
+              },
               color: HexColor("#025393"),
             )
           ],
