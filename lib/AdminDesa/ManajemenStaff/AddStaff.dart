@@ -7,8 +7,9 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:path/path.dart';
-import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:async/async.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class addStaffAdmin extends StatefulWidget {
   const addStaffAdmin({Key key}) : super(key: key);
@@ -25,6 +26,7 @@ class _addStaffAdminState extends State<addStaffAdmin> {
   var nikPegawai;
   var selectedJabatan;
   var selectedUnit;
+  var apiURLAddStaff = "http://192.168.18.10:8000/api/admin/addstaff/post";
   List unitItemList = List();
   List jabatanItemList = List();
   File file;
@@ -152,7 +154,7 @@ class _addStaffAdminState extends State<addStaffAdmin> {
                 child: statusPegawai == null ? Container() : statusPegawai == true ? Text("Nama pegawai: ${namaPegawai.toString()}", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14
-                )) : Text("NIK tidak terdaftar", style: TextStyle(
+                )) : Text("NIK tidak terdaftar atau staff sudah terdaftar", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -475,7 +477,156 @@ class _addStaffAdminState extends State<addStaffAdmin> {
               ),
               Container(
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: () async {
+                    if(namaPegawai == null || selectedJabatan == null || selectedUnit == null || valueMasaMulai == null) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(40.0))
+                            ),
+                            content: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    child: Image.asset(
+                                      'images/warning.png',
+                                      height: 50,
+                                      width: 50,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Text("Masih terdapat data yang kosong", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    ), textAlign: TextAlign.center),
+                                    margin: EdgeInsets.only(top: 10),
+                                  ),
+                                  Container(
+                                    child: Text("Masih terdapat data yang kosong atau data yang belum diverifikasi. Silahkan isi semua data yang ditampilkan pada form ini atau lakukan verifikasi pada data yang sudah Anda inputkan dan coba lagi", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                    ), textAlign: TextAlign.center),
+                                    margin: EdgeInsets.only(top: 10),
+                                  )
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text("OK", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor("#025393")
+                                )),
+                                onPressed: (){
+                                  Navigator.of(context).pop();
+                                },
+                              )
+                            ],
+                          );
+                        }
+                      );
+                    }else if(nikPegawai != controllerNIKPegawai.text) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(40.0))
+                            ),
+                            content: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    child: Image.asset(
+                                      'images/alert.png',
+                                      height: 50,
+                                      width: 50,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Text("Data belum diverifikasi", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    ), textAlign: TextAlign.center),
+                                    margin: EdgeInsets.only(top: 10),
+                                  ),
+                                  Container(
+                                    child: Text("Data NIK pegawai belum di verifikasi. Silahkan lakukan verifikasi data NIK pegawai dengan cara menekan tombol Periksa Staff dan coba lagi", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                    ), textAlign: TextAlign.center),
+                                    margin: EdgeInsets.only(top: 10),
+                                  )
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text("OK", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor("#025393")
+                                )),
+                                onPressed: (){Navigator.of(context).pop();},
+                              )
+                            ],
+                          );
+                        }
+                      );
+                    }else{
+                      setState(() {
+                        Loading = true;
+                      });
+                      var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
+                      var length = await file.length();
+                      var url = Uri.parse("http://192.168.18.10/siraja-api-skripsi/upload-file-sk-staff.php");
+                      var request = http.MultipartRequest("POST", url);
+                      var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
+                      request.files.add(multipartFile);
+                      var response = await request.send();
+                      if(response.statusCode == 200) {
+                        var body = jsonEncode({
+                          "penduduk_id" : nikPegawai,
+                          "nama_jabatan" : selectedJabatan,
+                          "nama_unit" : selectedUnit,
+                          "masa_mulai" : valueMasaMulai,
+                          "file_sk" : namaFile,
+                          "desa_id" : loginPage.desaId
+                        });
+                        http.post(Uri.parse(apiURLAddStaff),
+                          headers: {"Content-Type" : "application/json"},
+                          body: body
+                        ).then((http.Response response) {
+                          var responseValue = response.statusCode;
+                          if(responseValue == 200) {
+                            setState(() {
+                              Loading = false;
+                            });
+                            Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => addStaffBerhasil()), (route) => false);
+                          }else{
+                            print("Staff gagal ditambahkan");
+                          }
+                        });
+                      }else{
+                        print("File gagal diupload");
+                      }
+                    }
+                  },
                   child: Text("Simpan", style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,
@@ -497,7 +648,6 @@ class _addStaffAdminState extends State<addStaffAdmin> {
     );
   }
 }
-
 
 class addStaffBerhasil extends StatelessWidget {
   const addStaffBerhasil({Key key}) : super(key: key);

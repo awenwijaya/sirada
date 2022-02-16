@@ -75,6 +75,8 @@ class _staffManagementAdminState extends State<staffManagementAdmin> {
                     detailStaffAdmin.namaUnit = staff.namaUnit;
                     detailStaffAdmin.jabatan = staff.namaJabatan;
                     detailStaffAdmin.staffId = staff.staffId;
+                    detailStaffAdmin.masaMulai = staff.masaMulai;
+                    detailStaffAdmin.masaBerakhir = null;
                   });
                   Navigator.push(context, CupertinoPageRoute(builder: (context) => detailStaffAdmin()));
                 },
@@ -169,6 +171,7 @@ class _staffManagementAdminState extends State<staffManagementAdmin> {
                     detailStaffAdmin.jabatan = staff.namaJabatan;
                     detailStaffAdmin.masaBerakhir = staff.masaBerakhir;
                     detailStaffAdmin.staffId = staff.staffId;
+                    detailStaffAdmin.masaMulai = staff.masaMulai;
                   });
                   Navigator.push(context, CupertinoPageRoute(builder: (context) => detailStaffAdmin()));
                 },
@@ -203,7 +206,7 @@ class _staffManagementAdminState extends State<staffManagementAdmin> {
                               )),
                             ),
                             Container(
-                              child: Text("Masa berakhir: ${staff.masaBerakhir.day.toString()}-${staff.masaBerakhir.month.toString()}-${staff.masaBerakhir.year.toString()}", style: TextStyle(
+                              child: Text("Masa berakhir: ${staff.masaBerakhir.toString()}", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14,
                                 color: Colors.black26
@@ -327,7 +330,7 @@ class _staffManagementAdminState extends State<staffManagementAdmin> {
                             margin: EdgeInsets.only(bottom: 10),
                           ),
                           Container(
-                            height: 400,
+                            height: 450,
                             child: TabBarView(
                               children: <Widget>[
                                 Container(

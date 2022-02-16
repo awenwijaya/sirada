@@ -40,6 +40,9 @@ class Datum {
     this.status,
     this.pendudukId,
     this.masaBerakhir,
+    this.masaMulai,
+    this.fileSk,
+    this.desaId,
     this.namaLengkap,
     this.tempatLahir,
     this.tanggalLahir,
@@ -52,7 +55,6 @@ class Datum {
     this.jenisKelamin,
     this.pendidikanTerakhir,
     this.statusPenduduk,
-    this.desaId,
     this.namaUnit,
     this.namaJabatan,
     this.kecamatanId,
@@ -82,20 +84,22 @@ class Datum {
   int unitId;
   String status;
   int pendudukId;
-  DateTime masaBerakhir;
+  String masaBerakhir;
+  String masaMulai;
+  String fileSk;
+  int desaId;
   String namaLengkap;
   String tempatLahir;
-  DateTime tanggalLahir;
+  String tanggalLahir;
   String alamat;
   String agama;
   String statusPerkawinan;
-  dynamic pekerjaanId;
+  int pekerjaanId;
   String kewarganegaraan;
   String golonganDarah;
   String jenisKelamin;
   String pendidikanTerakhir;
   String statusPenduduk;
-  int desaId;
   String namaUnit;
   String namaJabatan;
   int kecamatanId;
@@ -115,7 +119,7 @@ class Datum {
   String kontakWaDesa;
   String desaJenis;
   String statusDesa;
-  DateTime createdAt;
+  String createdAt;
   dynamic updatedAt;
   dynamic deletedAt;
 
@@ -125,20 +129,22 @@ class Datum {
     unitId: json["unit_id"],
     status: json["status"],
     pendudukId: json["penduduk_id"],
-    masaBerakhir: json["masa_berakhir"] == null ? null : DateTime.parse(json["masa_berakhir"]),
+    masaBerakhir: json["masa_berakhir"] == null ? null : json["masa_berakhir"],
+    masaMulai: json["masa_mulai"],
+    fileSk: json["file_sk"] == null ? null : json["file_sk"],
+    desaId: json["desa_id"],
     namaLengkap: json["nama_lengkap"],
     tempatLahir: json["tempat_lahir"],
-    tanggalLahir: DateTime.parse(json["tanggal_lahir"]),
+    tanggalLahir: json["tanggal_lahir"],
     alamat: json["alamat"],
     agama: json["agama"],
     statusPerkawinan: json["status_perkawinan"],
-    pekerjaanId: json["pekerjaan_id"],
+    pekerjaanId: json["pekerjaan_id"] == null ? null : json["pekerjaan_id"],
     kewarganegaraan: json["kewarganegaraan"],
     golonganDarah: json["golongan_darah"],
     jenisKelamin: json["jenis_kelamin"],
     pendidikanTerakhir: json["pendidikan_terakhir"],
     statusPenduduk: json["status_penduduk"],
-    desaId: json["desa_id"],
     namaUnit: json["nama_unit"],
     namaJabatan: json["nama_jabatan"],
     kecamatanId: json["kecamatan_id"],
@@ -158,7 +164,7 @@ class Datum {
     kontakWaDesa: json["kontak_wa_desa"],
     desaJenis: json["desa_jenis"],
     statusDesa: json["status_desa"],
-    createdAt: DateTime.parse(json["created_at"]),
+    createdAt: json["created_at"],
     updatedAt: json["updated_at"],
     deletedAt: json["deleted_at"],
   );
@@ -169,20 +175,22 @@ class Datum {
     "unit_id": unitId,
     "status": status,
     "penduduk_id": pendudukId,
-    "masa_berakhir": masaBerakhir == null ? null : "${masaBerakhir.year.toString().padLeft(4, '0')}-${masaBerakhir.month.toString().padLeft(2, '0')}-${masaBerakhir.day.toString().padLeft(2, '0')}",
+    "masa_berakhir": masaBerakhir == null ? null : masaBerakhir,
+    "masa_mulai": masaMulai,
+    "file_sk": fileSk == null ? null : fileSk,
+    "desa_id": desaId,
     "nama_lengkap": namaLengkap,
     "tempat_lahir": tempatLahir,
-    "tanggal_lahir": "${tanggalLahir.year.toString().padLeft(4, '0')}-${tanggalLahir.month.toString().padLeft(2, '0')}-${tanggalLahir.day.toString().padLeft(2, '0')}",
+    "tanggal_lahir": tanggalLahir,
     "alamat": alamat,
     "agama": agama,
     "status_perkawinan": statusPerkawinan,
-    "pekerjaan_id": pekerjaanId,
+    "pekerjaan_id": pekerjaanId == null ? null : pekerjaanId,
     "kewarganegaraan": kewarganegaraan,
     "golongan_darah": golonganDarah,
     "jenis_kelamin": jenisKelamin,
     "pendidikan_terakhir": pendidikanTerakhir,
     "status_penduduk": statusPenduduk,
-    "desa_id": desaId,
     "nama_unit": namaUnit,
     "nama_jabatan": namaJabatan,
     "kecamatan_id": kecamatanId,
@@ -202,7 +210,7 @@ class Datum {
     "kontak_wa_desa": kontakWaDesa,
     "desa_jenis": desaJenis,
     "status_desa": statusDesa,
-    "created_at": createdAt.toIso8601String(),
+    "created_at": createdAt,
     "updated_at": updatedAt,
     "deleted_at": deletedAt,
   };
