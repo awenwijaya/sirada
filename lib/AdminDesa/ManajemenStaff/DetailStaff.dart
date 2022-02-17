@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/EditStaff.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +25,7 @@ class detailStaffAdmin extends StatefulWidget {
   static var jabatan;
   static var staffId;
   static var masaMulai;
+  static var fileSK;
   const detailStaffAdmin({Key key}) : super(key: key);
 
   @override
@@ -423,6 +427,28 @@ class liatFileSKPegawaiAdmin extends StatefulWidget {
 }
 
 class _liatFileSKPegawaiAdminState extends State<liatFileSKPegawaiAdmin> {
+  static final String PDF_URL = "http://192.168.18.10/siraja-api-skripsi/sk/${detailStaffAdmin.fileSK}";
+  String localFile;
+
+  static Future<String> loadPDF() async {
+    var data = await http.get(Uri.parse(PDF_URL));
+    var dir = await getTemporaryDirectory();
+    File file = new File(dir.path + "/data.pdf");
+    await file.writeAsBytes(data.bodyBytes, flush: true);
+    return file.path;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadPDF().then((value) {
+      setState(() {
+        localFile = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -438,6 +464,11 @@ class _liatFileSKPegawaiAdminState extends State<liatFileSKPegawaiAdmin> {
             icon: Icon(Icons.arrow_back),
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop();},
+          ),
+        ),
+        body: localFile == null ? loading() : Container(
+          child: PDFView(
+            filePath: localFile,
           ),
         ),
       ),
