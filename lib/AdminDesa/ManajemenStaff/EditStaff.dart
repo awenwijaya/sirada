@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/DetailStaff.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
+import 'package:async/async.dart';
+import 'package:path/path.dart';
 
 class editStaffAdmin extends StatefulWidget {
   const editStaffAdmin({Key key}) : super(key: key);
@@ -21,6 +25,9 @@ class _editStaffAdminState extends State<editStaffAdmin> {
   List jabatanItemList = List();
   var apiURLSimpanDataStaff = "http://192.168.18.10:8000/api/admin/staff/update";
   bool Loading = false;
+  File file;
+  String namaFile;
+  String filePath;
 
   Future getAllUnit() async {
     var url = "http://192.168.18.10:8000/api/admin/addstaff/list_unit";
@@ -41,6 +48,23 @@ class _editStaffAdminState extends State<editStaffAdmin> {
       setState(() {
         jabatanItemList = jsonData;
       });
+    }
+  }
+
+  Future getFile() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        allowMultiple: false
+    );
+    if(result != null) {
+      setState(() {
+        filePath = result.files.first.path;
+        namaFile = result.files.first.name;
+        file = File(result.files.single.path);
+      });
+      print(filePath);
+      print(namaFile);
     }
   }
 
@@ -212,7 +236,52 @@ class _editStaffAdminState extends State<editStaffAdmin> {
                         },
                       ),
                       margin: EdgeInsets.only(top: 15),
-                    )
+                    ),
+                    Container(
+                      child: Text("File SK", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14
+                      )),
+                      margin: EdgeInsets.only(top: 15, left: 20),
+                      alignment: Alignment.topLeft,
+                    ),
+                    Container(
+                      child: Text("Silahkan unggah berkas SK pegawai dalam bentuk format PDF. Kosongkan jika tidak ingin diubah.", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14
+                      )),
+                      padding: EdgeInsets.only(left: 30, right: 30),
+                      margin: EdgeInsets.only(top: 10),
+                    ),
+                    Container(
+                        child: file == null ? Container() : Text("Nama file: ${namaFile}", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        ), textAlign: TextAlign.center),
+                        margin: EdgeInsets.only(top: 20),
+                        padding: EdgeInsets.only(left: 30, right: 30)
+                    ),
+                    Container(
+                      child: FlatButton(
+                        onPressed: (){
+                          getFile();
+                        },
+                        child: Text("Pilih SK Pegawai", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: HexColor("#025393")
+                        )),
+                        color: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            side: BorderSide(color: HexColor("#025393"), width: 2)
+                        ),
+                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                      ),
+                      margin: EdgeInsets.only(top: 15),
+                    ),
                   ],
                 ),
               ),
@@ -225,18 +294,36 @@ class _editStaffAdminState extends State<editStaffAdmin> {
                     var body = jsonEncode({
                       "staff_id" : detailStaffAdmin.staffId,
                       "nama_jabatan" : selectedJabatan,
-                      "nama_unit" : selectedUnit
+                      "nama_unit" : selectedUnit,
+                      'file_sk' : file == null ? detailStaffAdmin.fileSK : namaFile
                     });
                     http.post(Uri.parse(apiURLSimpanDataStaff),
                       headers: {"Content-Type" : "application/json"},
                       body: body
-                    ).then((http.Response response) {
+                    ).then((http.Response response) async {
                       var responseValue = response.statusCode;
                       if(response.statusCode == 200) {
-                        setState(() {
-                          Loading = false;
-                        });
-                        Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => dashboardAdminDesa()), (route) => false);
+                        if(file == null) {
+                          setState(() {
+                            Loading = false;
+                          });
+                          Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => dashboardAdminDesa()), (route) => false);
+                        }else{
+                          var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
+                          var length = await file.length();
+                          var url = Uri.parse("http://192.168.18.10/siraja-api-skripsi/upload-file-sk-staff.php");
+                          var request = http.MultipartRequest("POST", url);
+                          var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
+                          request.files.add(multipartFile);
+                          var response = await request.send();
+                          if(response.statusCode == 200) {
+                            Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => dashboardAdminDesa()), (route) => false);
+                          }else{
+                            print("File gagal diupload");
+                          }
+                        }
+                      }else{
+                        print("Staff gagal diperbaharui");
                       }
                     });
                   },

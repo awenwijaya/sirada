@@ -2,6 +2,12 @@
   "configVersion": 2,
   "packages": [
     {
+      "name": "archive",
+      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/archive-3.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "async",
       "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.8.1",
       "packageUri": "lib/",
@@ -40,6 +46,12 @@
     {
       "name": "cross_file",
       "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/cross_file-0.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "crypto",
+      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-3.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -88,12 +100,6 @@
     {
       "name": "flutter",
       "rootUri": "file:///C:/flutter/packages/flutter",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "flutter_pdfview",
-      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_pdfview-1.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -182,6 +188,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "lottie",
+      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/lottie-1.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "matcher",
       "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.10",
       "packageUri": "lib/",
@@ -212,32 +224,8 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "path_provider",
-      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.9",
-      "packageUri": "lib/",
-      "languageVersion": "2.14"
-    },
-    {
-      "name": "path_provider_android",
-      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.11",
-      "packageUri": "lib/",
-      "languageVersion": "2.14"
-    },
-    {
-      "name": "path_provider_ios",
-      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_ios-2.0.7",
-      "packageUri": "lib/",
-      "languageVersion": "2.14"
-    },
-    {
       "name": "path_provider_linux",
       "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.5",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "path_provider_macos",
-      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-2.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -310,6 +298,12 @@
     {
       "name": "shared_preferences_windows",
       "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_windows-2.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "skeleton_animation",
+      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/skeleton_animation-0.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -434,7 +428,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2022-02-17T02:43:57.762533Z",
+  "generated": "2022-02-19T16:18:09.446198Z",
   "generator": "pub",
   "generatorVersion": "2.14.0"
 }

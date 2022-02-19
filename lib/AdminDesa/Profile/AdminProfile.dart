@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:lottie/lottie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -9,21 +9,21 @@ import 'package:http/http.dart' as http;
 
 class adminProfile extends StatefulWidget {
   adminProfile({Key key}) : super(key: key);
-  static var namaPenduduk = "Nama Anda";
-  static var nikPenduduk = "NIK";
-  static var alamatPenduduk = "Alamat Anda";
-  static var golonganDarah = "Golongan Darah";
-  static var kewarganegaraanPenduduk = "Kewarganegaraan";
-  static var asalDesaPenduduk = "Asal Desa";
-  static var jenisKelaminPenduduk = "Jenis Kelamin";
-  static var usernamePenduduk = "Username";
-  static var emailPenduduk = "Email";
-  static var nomorTeleponPenduduk = "Nomor Telepon";
-  static var statusPerkawinan = "Status Perkawinan";
-  static var agamaPenduduk = "Agama";
-  static var pendidikanTerakhir = "Pendidikan Terakhir";
+  static var namaPenduduk;
+  static var nikPenduduk;
+  static var alamatPenduduk;
+  static var golonganDarah;
+  static var kewarganegaraanPenduduk;
+  static var asalDesaPenduduk;
+  static var jenisKelaminPenduduk;
+  static var usernamePenduduk;
+  static var emailPenduduk;
+  static var nomorTeleponPenduduk;
+  static var statusPerkawinan;
+  static var agamaPenduduk;
+  static var pendidikanTerakhir;
   static var profilePicture;
-  static var namaPekerjaan = "Nama Pekerjaan";
+  static var namaPekerjaan;
 
   @override
   State<adminProfile> createState() => _adminProfileState();
@@ -82,10 +82,12 @@ class _adminProfileState extends State<adminProfile> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             color: HexColor("#025393"),
-            onPressed: (){Navigator.of(context).pop();},
+            onPressed: (){Navigator.of(context).pop(true);},
           ),
         ),
-        body: SingleChildScrollView(
+        body: adminProfile.namaPenduduk == null ? Center(
+          child: Lottie.asset('assets/loading-circle.json')
+        ) : SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(
@@ -415,7 +417,9 @@ class _adminProfileState extends State<adminProfile> {
               Container(
                 child: FlatButton(
                   onPressed: (){
-                    Navigator.push(context, CupertinoPageRoute(builder: (context) => editProfileAdmin()));
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => editProfileAdmin())).then((value) {
+                      getUserInfo();
+                    });
                   },
                   child: Text('Edit Profil', style: TextStyle(
                     fontFamily: "Poppins",

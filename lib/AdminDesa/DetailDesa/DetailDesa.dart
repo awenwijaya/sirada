@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:surat/shared/LoadingAnimation/loading.dart';
 
 class detailDesaAdmin extends StatefulWidget {
   static var logoDesa;
@@ -19,16 +20,16 @@ class detailDesaAdmin extends StatefulWidget {
 
 class _detailDesaAdminState extends State<detailDesaAdmin> {
   var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/desa/${loginPage.desaId}";
-  var namaDesa = "Desa";
-  var status = "Terdaftar";
-  var kodePos = "Kode Pos";
+  var namaDesa;
+  var status;
+  var kodePos;
   var alamatKantorDesa;
   var teleponKantorDesa;
   var emailDesa;
   var webDesa;
-  var luasDesa = "Luas Desa";
+  var luasDesa;
   var kontakWADesa;
-  var namaKecamatan = "Kecamatan";
+  var namaKecamatan;
 
   getDesaInfo() async {
     http.get(Uri.parse(apiURLGetDetailDesaById),
@@ -92,7 +93,7 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
             )
           ],
         ),
-        body: SingleChildScrollView(
+        body: namaDesa == null ? loading() : SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(
@@ -510,7 +511,7 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
                                   await launch(url);
                                 }
                               },
-                              child: Text("Hubungi Kantor Desa", style: TextStyle(
+                              child: Text("Kunjungi Website Desa", style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,

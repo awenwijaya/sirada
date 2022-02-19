@@ -42,8 +42,8 @@ dependencies:
   file_picker: ^4.4.0
   path: ^1.8.0
   intl: ^0.17.0
-  flutter_pdfview: ^1.2.1
-  path_provider: ^2.0.9
+  skeleton_animation: ^0.1.4
+  lottie: ^1.2.2
 
 dev_dependencies:
   flutter_test:
@@ -99,6 +99,8 @@ flutter:
     - images/archive.png
     - images/profilepic.png
     - images/noimage.png
+    - assets/loading-circle.json
+    - assets/loading-hourglass.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

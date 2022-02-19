@@ -86,7 +86,9 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
               icon: Icon(Icons.person_outline_rounded),
               color: HexColor("#025393"),
               onPressed: (){
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => adminProfile()));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => adminProfile())).then((value) {
+                  getUserInfo();
+                });
               },
             ),
             IconButton(

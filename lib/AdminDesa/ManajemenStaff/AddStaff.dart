@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:surat/shared/API/Models/ListPenduduk.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:path/path.dart';
 import 'package:file_picker/file_picker.dart';
@@ -19,11 +20,9 @@ class addStaffAdmin extends StatefulWidget {
 }
 
 class _addStaffAdminState extends State<addStaffAdmin> {
-  bool statusPegawai;
   bool Loading = false;
   final controllerNIKPegawai = TextEditingController();
-  var namaPegawai;
-  var nikPegawai;
+  var selectedPegawai;
   var selectedJabatan;
   var selectedUnit;
   var apiURLAddStaff = "http://192.168.18.10:8000/api/admin/addstaff/post";
@@ -122,130 +121,30 @@ class _addStaffAdminState extends State<addStaffAdmin> {
                 margin: EdgeInsets.only(top: 30, left: 20),
               ),
               Container(
-                child: Text("Silahkan masukkan NIK dari pegawai pada form dibawah. Setelah Anda memasukkan NIK dari pegawai, silahkan tekan tombol Periksa Staff untuk memeriksa apakah data NIK benar atau tidak", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14
-                )),
-                padding: EdgeInsets.only(left: 30, right: 30),
-                margin: EdgeInsets.only(top: 10),
-              ),
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                  child: TextField(
-                    controller: controllerNIKPegawai,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                        borderSide: BorderSide(color: HexColor("#025393"))
-                      ),
-                      hintText: "NIK Pegawai"
-                    ),
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14
-                    ),
-                  ),
-                ),
-                margin: EdgeInsets.only(top: 20),
-              ),
-              Container(
-                child: statusPegawai == null ? Container() : statusPegawai == true ? Text("Nama pegawai: ${namaPegawai.toString()}", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14
-                )) : Text("NIK tidak terdaftar atau staff sudah terdaftar", style: TextStyle(
+                child: Text("Silahkan pilih data karyawan yang akan Anda tambahkan dengan menekan tombol Pilih Staff", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: HexColor("B33030")
+                )),
+                alignment: Alignment.topLeft,
+                padding: EdgeInsets.only(right: 30, left: 30),
+                margin: EdgeInsets.only(top: 10)
+              ),
+              Container(
+                child: selectedPegawai == null ? Text("Pegawai belum terpilih", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14
+                )) : Text("Nama pegawai: ${selectedPegawai}", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14
                 )),
                 margin: EdgeInsets.only(top: 10),
               ),
               Container(
                 child: FlatButton(
                   onPressed: (){
-                    if(controllerNIKPegawai.text == "") {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(40.0))
-                            ),
-                            content: Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Container(
-                                    child: Image.asset(
-                                      'images/warning.png',
-                                      height: 50,
-                                      width: 50,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Text("Data NIK pegawai belum diisi", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: HexColor("#025393")
-                                    ), textAlign: TextAlign.center),
-                                    margin: EdgeInsets.only(top: 10),
-                                  ),
-                                  Container(
-                                    child: Text("Data NIK pegawai masih kosong. Silahkan isi data NIK pegawai terlebih dahulu sebelum melanjutkan", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14
-                                    ), textAlign: TextAlign.center),
-                                    margin: EdgeInsets.only(top: 10),
-                                  )
-                                ],
-                              ),
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text("OK", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w700,
-                                  color: HexColor("#025393")
-                                )),
-                                onPressed: (){Navigator.of(context).pop();},
-                              )
-                            ],
-                          );
-                        }
-                      );
-                    }else{
-                      setState(() {
-                        Loading = true;
-                      });
-                      http.get(Uri.parse("http://192.168.18.10:8000/api/admin/addstaff/cek/${controllerNIKPegawai.text}"),
-                        headers: {"Content-Type" : "application/json"},
-                      ).then((http.Response response) {
-                        var responseValue = response.statusCode;
-                        if(response.statusCode == 200) {
-                          setState(() {
-                            Loading = false;
-                            var jsonData = response.body;
-                            var parsedJson = json.decode(jsonData);
-                            nikPegawai = controllerNIKPegawai.text;
-                            statusPegawai = true;
-                            namaPegawai = parsedJson['nama_lengkap'].toString();
-                          });
-                        }else{
-                          setState(() {
-                            Loading = false;
-                            statusPegawai = false;
-                          });
-                        }
-                      });
-                    }
+                    navigatePilihKaryawan(context);
                   },
-                  child: Text("Periksa Staff", style: TextStyle(
+                  child: Text("Pilih Pegawai", style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -478,7 +377,7 @@ class _addStaffAdminState extends State<addStaffAdmin> {
               Container(
                 child: FlatButton(
                   onPressed: () async {
-                    if(namaPegawai == null || selectedJabatan == null || selectedUnit == null || valueMasaMulai == null) {
+                    if(selectedPegawai == null || selectedJabatan == null || selectedUnit == null || valueMasaMulai == null) {
                       showDialog(
                         context: context,
                         barrierDismissible: false,
@@ -534,60 +433,6 @@ class _addStaffAdminState extends State<addStaffAdmin> {
                           );
                         }
                       );
-                    }else if(nikPegawai != controllerNIKPegawai.text) {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(40.0))
-                            ),
-                            content: Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Container(
-                                    child: Image.asset(
-                                      'images/alert.png',
-                                      height: 50,
-                                      width: 50,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Text("Data belum diverifikasi", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: HexColor("#025393")
-                                    ), textAlign: TextAlign.center),
-                                    margin: EdgeInsets.only(top: 10),
-                                  ),
-                                  Container(
-                                    child: Text("Data NIK pegawai belum di verifikasi. Silahkan lakukan verifikasi data NIK pegawai dengan cara menekan tombol Periksa Staff dan coba lagi", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14
-                                    ), textAlign: TextAlign.center),
-                                    margin: EdgeInsets.only(top: 10),
-                                  )
-                                ],
-                              ),
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text("OK", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w700,
-                                  color: HexColor("#025393")
-                                )),
-                                onPressed: (){Navigator.of(context).pop();},
-                              )
-                            ],
-                          );
-                        }
-                      );
                     }else{
                       setState(() {
                         Loading = true;
@@ -601,7 +446,7 @@ class _addStaffAdminState extends State<addStaffAdmin> {
                       var response = await request.send();
                       if(response.statusCode == 200) {
                         var body = jsonEncode({
-                          "penduduk_id" : nikPegawai,
+                          "nama_staff" : selectedPegawai,
                           "nama_jabatan" : selectedJabatan,
                           "nama_unit" : selectedUnit,
                           "masa_mulai" : valueMasaMulai,
@@ -647,6 +492,18 @@ class _addStaffAdminState extends State<addStaffAdmin> {
       ),
     );
   }
+
+  void navigatePilihKaryawan(BuildContext context) async {
+    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => selectStaff()));
+    if(result == null) {
+      selectedPegawai = selectedPegawai;
+    }else{
+      setState(() {
+        selectedPegawai = result;
+      });
+    }
+  }
+
 }
 
 class addStaffBerhasil extends StatelessWidget {
@@ -721,6 +578,139 @@ class addStaffBerhasil extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class selectStaff extends StatefulWidget {
+  const selectStaff({Key key}) : super(key: key);
+
+  @override
+  _selectStaffState createState() => _selectStaffState();
+}
+
+class _selectStaffState extends State<selectStaff> {
+  List<Penduduk> penduduk = [];
+  List<Penduduk> searchResult = [];
+  var url = "http://192.168.18.10:8000/api/data/penduduk/${loginPage.desaId}";
+
+  Future<Penduduk> list() async {
+    return http.get(Uri.parse(url),
+      headers : {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      if(response.statusCode == 200) {
+        final body = response.body;
+        final pendudukData = pendudukFromJson(body);
+        return pendudukData;
+      }else{
+        final body = response.body;
+        final error = pendudukFromJson(body);
+        return error;
+      }
+    });
+  }
+
+  Widget listPenduduk() {
+    return FutureBuilder<Penduduk>(
+      future: list(),
+      builder: (context, snapshot) {
+        final data = snapshot.data;
+        if(snapshot.hasData) {
+          final pendudukData = data.data;
+          return ListView.builder(
+            itemCount: pendudukData.length,
+            itemBuilder: (context, index) {
+              final penduduk = pendudukData[index];
+              return GestureDetector(
+                onTap: (){
+                  Navigator.of(context, rootNavigator: true).pop(penduduk.namaLengkap);
+                },
+                child: Container(
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        child: Image.asset(
+                          'images/person.png',
+                          height: 40,
+                          width: 40
+                        )
+                      ),
+                      Container(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                    child: Text(penduduk.namaLengkap.toString(), style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black
+                                    )),
+                                    margin: EdgeInsets.only(left: 20)
+                                ),
+                                Container(
+                                    child: Text(penduduk.pendudukId.toString(), style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        color: Colors.black
+                                    )),
+                                    margin: EdgeInsets.only(left: 20)
+                                )
+                              ]
+                          )
+                      )
+                    ]
+                  ),
+                  margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  height: 70,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0,3)
+                        )
+                      ]
+                  ),
+                )
+              );
+            }
+          );
+        }else{
+          return Center(
+            child: CircularProgressIndicator()
+          );
+        }
+      }
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Pilih Staff", style: TextStyle(
+            fontFamily: "Poppins",
+            fontWeight: FontWeight.w700,
+            color: HexColor("#025393")
+          )),
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: HexColor("#025393"),
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+          )
+        ),
+        body: listPenduduk()
+      )
     );
   }
 }
