@@ -17,7 +17,7 @@ class addSejarahDesaAdmin extends StatefulWidget {
 
 class _addSejarahDesaAdminState extends State<addSejarahDesaAdmin> {
   final controllerSejarahDesa = TextEditingController();
-  var apiURLSejarahDesa = "http://192.168.18.10:8000/api/data/desa/sejarahdesa/up";
+  var apiURLSejarahDesa = "http://192.168.18.10:8000/api/admin/desa/up_sejarah_desa";
   bool Loading = false;
 
   @override

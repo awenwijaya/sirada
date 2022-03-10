@@ -8,10 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:surat/shared/LoadingAnimation/loading.dart';
+import 'package:lottie/lottie.dart';
 
 class detailDesaAdmin extends StatefulWidget {
   static var logoDesa;
+  static var kontakWADesa1;
+  static var kontakWADesa2;
   const detailDesaAdmin({Key key}) : super(key: key);
 
   @override
@@ -19,7 +21,7 @@ class detailDesaAdmin extends StatefulWidget {
 }
 
 class _detailDesaAdminState extends State<detailDesaAdmin> {
-  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/desa/${loginPage.desaId}";
+  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/userdata/desa/${loginPage.desaId}";
   var namaDesa;
   var status;
   var kodePos;
@@ -28,7 +30,6 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
   var emailDesa;
   var webDesa;
   var luasDesa;
-  var kontakWADesa;
   var namaKecamatan;
 
   getDesaInfo() async {
@@ -40,19 +41,18 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
         var jsonData = response.body;
         var parsedJson = json.decode(jsonData);
         setState(() {
-          namaDesa = parsedJson['nama_desa'];
-          status = parsedJson['status_register_desa'];
-          kodePos = parsedJson['kode_pos'];
-          detailDesaAdmin.logoDesa = parsedJson['logo_desa'];
-          alamatKantorDesa = parsedJson['alamat_kantor_desa'];
-          teleponKantorDesa = parsedJson['telepon_kantor_desa'];
-          emailDesa = parsedJson['email_desa'];
-          webDesa = parsedJson['web_desa'];
-          luasDesa = parsedJson['luas_desa'].toString();
-          kontakWADesa = parsedJson['kontak_wa_desa'];
-          namaKecamatan = parsedJson['nama_kecamatan'];
-          sejarahDesaAdmin.sejarahDesa = parsedJson['sejarah_desa'];
-          strukturKepemimpinanDesaAdmin.strukturKepemimpinan = parsedJson['file_struktur_pem'];
+          namaDesa = parsedJson['desadat_nama'];
+          status = parsedJson['desadat_status_aktif'].toString();
+          alamatKantorDesa = parsedJson['desadat_alamat_kantor'];
+          teleponKantorDesa = parsedJson['desadat_telpon_kantor'];
+          emailDesa = parsedJson['desadat_email'];
+          webDesa = parsedJson['desadat_web'];
+          luasDesa = parsedJson['desadat_luas'].toString();
+          namaKecamatan = parsedJson['name'];
+          detailDesaAdmin.kontakWADesa1 = parsedJson['desadat_wa_kontak_1'];
+          detailDesaAdmin.kontakWADesa2 = parsedJson['desadat_wa_kontak_2'];
+          sejarahDesaAdmin.sejarahDesa = parsedJson['desadat_sejarah'];
+          strukturKepemimpinanDesaAdmin.strukturKepemimpinan = parsedJson['desadat_file_struktur_pem'];
         });
       }
     });
@@ -93,7 +93,9 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
             )
           ],
         ),
-        body: namaDesa == null ? loading() : SingleChildScrollView(
+        body: namaDesa == null ? Center(
+          child: Lottie.asset('assets/loading-circle.json')
+        ) : SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(
@@ -124,14 +126,7 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
                             margin: EdgeInsets.only(top: 15),
                           ),
                           Container(
-                            child: Text("Kode Pos : ${kodePos.toString()}", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                            )),
-                            margin: EdgeInsets.only(top: 10),
-                          ),
-                          Container(
-                            child: Text(status.toString().toUpperCase(), style: TextStyle(
+                            child: Text(status == "1" ? "Aktif" : "Tidak Aktif", style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
@@ -241,64 +236,31 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
                       ),
                     ),
                     Container(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  child: Icon(
-                                    Icons.phone,
-                                    color: HexColor("#025393"),
-                                    size: 30,
-                                  ),
-                                  margin: EdgeInsets.only(left: 20),
-                                ),
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(
-                                        child: Text("Kontak WhatsApp", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: HexColor("#025393")
-                                        )),
-                                      ),
-                                      Container(
-                                          child: kontakWADesa == null ? Text("Kontak WhatsApp belum diinputkan", style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14
-                                          )) : Text(kontakWADesa.toString(), style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14
-                                          ))
-                                      )
-                                    ],
-                                  ),
-                                  margin: EdgeInsets.only(left: 15),
-                                ),
-                              ],
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => kontakWADesaAdmin()));
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Icon(
+                                Icons.phone,
+                                color: HexColor("#025393"),
+                                size: 30
+                              ),
+                              margin: EdgeInsets.only(left: 20)
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: kontakWADesa == null ? Container() : TextButton(
-                              onPressed: () async{
-                                String url = "whatsapp://send?phone=$kontakWADesa";
-                                await canLaunch(url) ? launch(url) : print("Can't open WhatsApp");
-                              },
-                              child: Text("Hubungi Kantor Desa", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: HexColor("#025393")
+                            Container(
+                              child: Text("Kontak WhatsApp Desa", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: HexColor("#025393")
                               )),
-                            ),
-                          )
-                        ],
+                              margin: EdgeInsets.only(left: 15)
+                            )
+                          ]
+                        )
                       ),
                       margin: EdgeInsets.only(top: 15, left: 20, right: 20),
                       padding: EdgeInsets.symmetric(vertical: 10),
@@ -744,6 +706,132 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class kontakWADesaAdmin extends StatefulWidget {
+  const kontakWADesaAdmin({Key key}) : super(key: key);
+
+  @override
+  _kontakWADesaAdminState createState() => _kontakWADesaAdminState();
+}
+
+class _kontakWADesaAdminState extends State<kontakWADesaAdmin> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Kontak WhatsApp Desa", style: TextStyle(
+            fontFamily: "Poppins",
+            fontWeight: FontWeight.w700,
+            color: HexColor("#025393")
+          )),
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: HexColor("#025393"),
+            onPressed: (){
+              Navigator.of(context).pop();
+            }
+          )
+        ),
+        body: SingleChildScrollView(
+            child: Column(
+                children: <Widget>[
+                  Container(
+                    child: detailDesaAdmin.kontakWADesa1 == null ? Container() : Container(
+                      child: GestureDetector(
+                        onTap: (){},
+                        child: Container(
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                    child: Icon(
+                                        Icons.phone,
+                                        color: HexColor("#025393"),
+                                        size: 30
+                                    ),
+                                    margin: EdgeInsets.only(left: 20)
+                                ),
+                                Container(
+                                  child: Text(detailDesaAdmin.kontakWADesa1.toString(), style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                  )),
+                                  margin: EdgeInsets.only(left: 15),
+                                )
+                              ],
+                            )
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 15, left: 20, right: 20, bottom: 15),
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: detailDesaAdmin.kontakWADesa2 == null ? Container() : Container(
+                      child: GestureDetector(
+                        onTap: (){},
+                        child: Container(
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                    child: Icon(
+                                        Icons.phone,
+                                        color: HexColor("#025393"),
+                                        size: 30
+                                    ),
+                                    margin: EdgeInsets.only(left: 20)
+                                ),
+                                Container(
+                                  child: Text(detailDesaAdmin.kontakWADesa2.toString(), style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                  )),
+                                  margin: EdgeInsets.only(left: 15),
+                                )
+                              ],
+                            )
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 15, left: 20, right: 20, bottom: 15),
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
+                    ),
+                  )
+                ]
+            )
+        ),
+      )
     );
   }
 }

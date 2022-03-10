@@ -18,7 +18,7 @@ class registrationPage extends StatefulWidget {
 class _registrationPageState extends State<registrationPage> {
   final controllerNIK = TextEditingController();
   bool Loading = false;
-  var apiURLcekPenduduk = "http://192.168.18.10:8000/api/cek_penduduk";
+  var apiURLcekPenduduk = "http://192.168.18.10:8000/api/autentikasi/registrasi/cek_nik";
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +307,7 @@ class _registrationPageState extends State<registrationPage> {
                                             ),
                                             Container(
                                               child: Text(
-                                                parsedJson['nama_lengkap'].toString(),
+                                                parsedJson['nama'].toString(),
                                                 style: TextStyle(
                                                     fontFamily: "Poppins",
                                                     fontSize: 14
@@ -344,32 +344,6 @@ class _registrationPageState extends State<registrationPage> {
                                         ),
                                         margin: EdgeInsets.only(top: 20),
                                       ),
-                                      Container(
-                                        child: Column(
-                                          children: <Widget>[
-                                            Container(
-                                              child: Text(
-                                                "Kewarganegaraan :",
-                                                style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w700
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                parsedJson['kewarganegaraan'].toString(),
-                                                style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        margin: EdgeInsets.only(top: 20),
-                                      )
                                     ],
                                   ),
                                   actions: <Widget>[
@@ -398,71 +372,6 @@ class _registrationPageState extends State<registrationPage> {
                                   ],
                                 );
                               }
-                            );
-                          });
-                        }else{
-                          setState(() {
-                            Loading = false;
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                    ),
-                                    content: Container(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Container(
-                                              child: Image.asset(
-                                                'images/noconnection.png',
-                                                height: 50,
-                                                width: 50,
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                "Tidak dapat menghubungi server",
-                                                style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: HexColor("#025393"),
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              margin: EdgeInsets.only(top: 10),
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                "Mohon maaf sedang ada kendala saat kami berusaha menghubungi server. Silahkan coba lagi",
-                                                style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              margin: EdgeInsets.only(top: 10),
-                                            )
-                                          ],
-                                        )
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: Text('OK', style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontWeight: FontWeight.w700,
-                                          color: HexColor("#025393"),
-                                        )),
-                                        onPressed: (){Navigator.of(context).pop();},
-                                      )
-                                    ],
-                                  );
-                                }
                             );
                           });
                         }
@@ -585,8 +494,8 @@ class _enterEmailState extends State<enterEmail> {
   final controllerPassword = TextEditingController();
   final controllerKonfirmasiPassword = TextEditingController();
   bool Loading = false;
-  var apiURLRegistrasiAkun = "http://192.168.18.10:8000/api/registrasi";
-  var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/konfirmasiemail";
+  var apiURLRegistrasiAkun = "http://192.168.18.10:8000/api/autentikasi/registrasi/post";
+  var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
 
   @override
   Widget build(BuildContext context) {
@@ -872,7 +781,7 @@ class _enterEmailState extends State<enterEmail> {
                                     "nomor_telepon" : controllerPhoneNumber.text,
                                     "email" : controllerEmail.text,
                                     "password" : controllerPassword.text,
-                                    "id_desa" : enterEmail.desaId,
+                                    "desa_id" : enterEmail.desaId,
                                     "penduduk_id" : enterEmail.pendudukId
                                   });
                                   http.post(Uri.parse(apiURLRegistrasiAkun),

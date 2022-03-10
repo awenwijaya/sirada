@@ -6,8 +6,10 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
 import 'package:surat/AdminDesa/LayananSuratMasyarakat/SuratMasyarakat.dart';
-import 'package:surat/AdminDesa/ManajemenDusun/ManajemenDusun.dart';
-import 'package:surat/AdminDesa/ManajemenStaff/ManajemenStaff.dart';
+import 'package:surat/AdminDesa/ManajemenBanjarAdat/ManajemenBanjarAdat.dart';
+import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/PrajuruBanjarAdat.dart';
+import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/PrajuruDesaAdat.dart';
+import 'package:surat/AdminDesa/NomorSurat/NomorSurat.dart';
 import 'package:surat/AdminDesa/Profile/AdminProfile.dart';
 import 'package:surat/WelcomeScreen.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
@@ -25,7 +27,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var profilePicture;
   var namaAdmin = "Admin Desa";
   var namaDesa = "Desa";
-  var apiURLGetDataUser = "http://192.168.18.10:8000/api/profile/${loginPage.pendudukId}";
+  var apiURLGetDataUser = "http://192.168.18.10:8000/api/data/userdata/${loginPage.pendudukId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -36,10 +38,9 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
         var jsonData = response.body;
         var parsedJson = json.decode(jsonData);
         setState(() {
-          namaAdmin = parsedJson['nama_lengkap'];
-          namaDesa = parsedJson['nama_desa'];
-          profilePicture = parsedJson['profile_picture'];
-          dashboardAdminDesa.logoDesa = parsedJson['logo_desa'];
+          namaAdmin = parsedJson['nama'];
+          namaDesa = parsedJson['desadat_nama'];
+          profilePicture = parsedJson['foto'];
         });
       }
     });
@@ -192,7 +193,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${profilePicture}'),
+                            image: NetworkImage('http://192.168.18.10/siraja-api-skripsi-new/${profilePicture}'),
                             fit: BoxFit.fill,
                           )
                         ),
@@ -323,7 +324,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                     Container(
                       child: GestureDetector(
                         onTap: (){
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => staffManagementAdmin()));
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => prajuruDesaAdatAdmin()));
                         },
                         child: Row(
                           children: <Widget>[
@@ -335,7 +336,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                               ),
                             ),
                             Container(
-                              child: Text("Data Staff", style: TextStyle(
+                              child: Text("Data Pegawai Desa Adat", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700
@@ -364,7 +365,48 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                     Container(
                       child: GestureDetector(
                         onTap: (){
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => manajemenDusunAdmin()));
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => prajuruBanjarAdatAdmin()));
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Image.asset(
+                                'images/staff.png',
+                                height: 40,
+                                width: 40,
+                              ),
+                            ),
+                            Container(
+                              child: Text("Data Pegawai Banjar Adat", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700
+                              )),
+                              margin: EdgeInsets.only(left: 20),
+                            ),
+                          ],
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
+                    ),
+                    Container(
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => manajemenBanjarAdatAdmin()));
                         },
                         child: Row(
                           children: <Widget>[
@@ -376,7 +418,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                               ),
                             ),
                             Container(
-                              child: Text("Data Dusun", style: TextStyle(
+                              child: Text("Banjar Adat", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700
@@ -536,7 +578,9 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => nomorSuratAdmin()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(

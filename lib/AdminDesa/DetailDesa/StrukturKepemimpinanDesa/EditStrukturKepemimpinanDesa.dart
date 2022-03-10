@@ -29,7 +29,7 @@ class _editStrukturKepemimpinanDesaAdminState extends State<editStrukturKepemimp
   }
 
   Future uploadImage() async {
-    final uri = Uri.parse("http://192.168.18.10/siraja-api-skripsi/upload-struktur-desa.php");
+    final uri = Uri.parse("http://192.168.18.10/siraja-api-skripsi-new/upload-struktur-desa.php");
     var request = http.MultipartRequest('POST', uri);
     request.fields['desa_id'] = loginPage.desaId.toString();
     var pic = await http.MultipartFile.fromPath("image", image.path);

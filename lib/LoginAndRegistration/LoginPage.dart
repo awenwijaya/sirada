@@ -27,8 +27,8 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
-  var apiURLLogin = "http://192.168.18.10:8000/api/login";
-  var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/konfirmasiemail";
+  var apiURLLogin = "http://192.168.18.10:8000/api/autentikasi/login";
+  var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   bool Loading = false;
@@ -266,7 +266,7 @@ class _loginPageState extends State<loginPage> {
                                     setState(() {
                                       loginPage.pendudukId = parsedJson['penduduk_id'];
                                       loginPage.userEmail = parsedJson['email'];
-                                      loginPage.desaId = parsedJson['desa_id'];
+                                      loginPage.desaId = parsedJson['desa_adat_id'];
                                       loginPage.userId = parsedJson['user_id'];
                                       loginPage.role = parsedJson['role'];
                                     });

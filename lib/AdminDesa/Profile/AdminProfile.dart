@@ -13,7 +13,6 @@ class adminProfile extends StatefulWidget {
   static var nikPenduduk;
   static var alamatPenduduk;
   static var golonganDarah;
-  static var kewarganegaraanPenduduk;
   static var asalDesaPenduduk;
   static var jenisKelaminPenduduk;
   static var usernamePenduduk;
@@ -24,13 +23,14 @@ class adminProfile extends StatefulWidget {
   static var pendidikanTerakhir;
   static var profilePicture;
   static var namaPekerjaan;
+  static var pendudukId;
 
   @override
   State<adminProfile> createState() => _adminProfileState();
 }
 
 class _adminProfileState extends State<adminProfile> {
-  var apiURLUserProfile = "http://192.168.18.10:8000/api/profile/${loginPage.pendudukId}";
+  var apiURLUserProfile = "http://192.168.18.10:8000/api/data/userdata/${loginPage.pendudukId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLUserProfile),
@@ -41,21 +41,21 @@ class _adminProfileState extends State<adminProfile> {
         var jsonData = response.body;
         var parsedJson = json.decode(jsonData);
         setState(() {
-          adminProfile.namaPenduduk = parsedJson['nama_lengkap'];
+          adminProfile.namaPenduduk = parsedJson['nama'];
           adminProfile.usernamePenduduk = parsedJson['username'];
-          adminProfile.profilePicture = parsedJson['profile_picture'];
-          adminProfile.nikPenduduk = parsedJson['penduduk_id'].toString();
+          adminProfile.profilePicture = parsedJson['foto'];
+          adminProfile.pendudukId = parsedJson['penduduk_id'].toString();
+          adminProfile.nikPenduduk = parsedJson['nik'].toString();
           adminProfile.alamatPenduduk = parsedJson['alamat'];
           adminProfile.golonganDarah = parsedJson['golongan_darah'];
-          adminProfile.kewarganegaraanPenduduk = parsedJson['kewarganegaraan'];
-          adminProfile.asalDesaPenduduk = parsedJson['nama_desa'];
+          adminProfile.asalDesaPenduduk = parsedJson['desadat_nama'];
           adminProfile.jenisKelaminPenduduk = parsedJson['jenis_kelamin'];
           adminProfile.emailPenduduk = parsedJson['email'];
-          adminProfile.nomorTeleponPenduduk = parsedJson['nomor_telepon'];
+          adminProfile.nomorTeleponPenduduk = parsedJson['telepon'];
           adminProfile.statusPerkawinan = parsedJson['status_perkawinan'];
           adminProfile.agamaPenduduk = parsedJson['agama'];
           adminProfile.pendidikanTerakhir = parsedJson['pendidikan_terakhir'];
-          adminProfile.namaPekerjaan = parsedJson['nama_pekerjaan'];
+          adminProfile.namaPekerjaan = parsedJson['profesi'];
         });
       }
     });
@@ -107,7 +107,7 @@ class _adminProfileState extends State<adminProfile> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${adminProfile.profilePicture}')
+                      image: NetworkImage('http://192.168.18.10/siraja-api-skripsi-new/${adminProfile.profilePicture}')
                     )
                   ),
                 ),
@@ -291,32 +291,6 @@ class _adminProfileState extends State<adminProfile> {
                             alignment: Alignment.topLeft,
                             child: Text(
                               adminProfile.golonganDarah.toString(),
-                              style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14
-                              ),
-                            ),
-                            margin: EdgeInsets.only(top: 5),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Text("Kewarganegaraan", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14
-                            ), textAlign: TextAlign.left),
-                            margin: EdgeInsets.only(top: 15),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              adminProfile.kewarganegaraanPenduduk.toString(),
                               style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
