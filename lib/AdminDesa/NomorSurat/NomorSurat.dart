@@ -293,7 +293,6 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                                       prefixIcon: Icon(CupertinoIcons.number),
                                       hintText: "Kode Surat"
                                     ),
-                                    keyboardType: TextInputType.number,
                                     style: TextStyle(
                                       fontFamily: "Poppins",
                                       fontSize: 14

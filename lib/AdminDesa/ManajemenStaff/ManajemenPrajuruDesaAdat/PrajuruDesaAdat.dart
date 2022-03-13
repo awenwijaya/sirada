@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
+import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/TambahPrajuruDesaAdat.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/DetailPrajuruDesaAdat.dart';
 
@@ -230,7 +231,9 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
             alignment: Alignment(0.0, 0.0)
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: (){},
+          onPressed: (){
+            Navigator.push(context, CupertinoPageRoute(builder: (context) => tambahPrajuruDesaAdatAdmin()));
+          },
           child: Icon(Icons.add),
           backgroundColor: HexColor("#025393")
         )
