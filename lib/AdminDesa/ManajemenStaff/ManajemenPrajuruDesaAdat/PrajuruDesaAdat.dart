@@ -21,10 +21,12 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
   var prajuruDesaAdatID = [];
   var jabatan = [];
   var namaPrajuru = [];
+  var pendudukId = [];
   bool Loading = true;
   bool LoadingProses = false;
   bool availableData = false;
   var selectedIdPrajuruDesaAdat;
+  var selectedIdPenduduk;
   var apiURLShowListPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/${loginPage.desaId}";
   var apiURLDeletePrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/delete";
 
@@ -36,6 +38,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
       this.prajuruDesaAdatID = [];
       this.jabatan = [];
       this.namaPrajuru = [];
+      this.pendudukId = [];
       setState(() {
         Loading = false;
         availableData = true;
@@ -43,6 +46,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
           this.prajuruDesaAdatID.add(data[i]['prajuru_desa_adat_id']);
           this.jabatan.add(data[i]['jabatan']);
           this.namaPrajuru.add(data[i]['nama']);
+          this.pendudukId.add(data[i]['penduduk_id']);
         }
       });
     }else{
@@ -139,6 +143,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                           onSelected: (item) {
                             setState(() {
                               selectedIdPrajuruDesaAdat = prajuruDesaAdatID[index];
+                              selectedIdPenduduk = pendudukId[index];
                             });
                             onSelected(context, item);
                           },
@@ -258,6 +263,9 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
   void onSelected(BuildContext context, int item) {
     switch (item) {
       case 0:
+        setState(() {
+          editPrajuruDesaAdatAdmin.idPegawai = selectedIdPrajuruDesaAdat;
+        });
         Navigator.push(context, CupertinoPageRoute(builder: (context) => editPrajuruDesaAdatAdmin())).then((value) {
           refreshListPrajuruDesaAdat();
         });
@@ -308,7 +316,8 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                 TextButton(
                   onPressed: (){
                     var body = jsonEncode({
-                      "prajuru_desa_adat_id" : selectedIdPrajuruDesaAdat
+                      "prajuru_desa_adat_id" : selectedIdPrajuruDesaAdat,
+                      "penduduk_id" : selectedIdPenduduk
                     });
                     http.post(Uri.parse(apiURLDeletePrajuruDesaAdat),
                       headers: {"Content-Type" : "application/json"},

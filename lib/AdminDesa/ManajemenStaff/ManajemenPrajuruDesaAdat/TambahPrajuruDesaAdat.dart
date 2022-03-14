@@ -669,7 +669,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                   Loading = false;
                                 });
                                 Fluttertoast.showToast(
-                                  msg: "Pegawai Desa Adat berhasil ditambahkan!",
+                                  msg: "Pegawai Desa Adat berhasil ditambahkan",
                                   fontSize: 14,
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER
