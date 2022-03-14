@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
+import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/EditPrajuruDesaAdat.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/TambahPrajuruDesaAdat.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/DetailPrajuruDesaAdat.dart';
@@ -22,7 +24,9 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
   bool Loading = true;
   bool LoadingProses = false;
   bool availableData = false;
+  var selectedIdPrajuruDesaAdat;
   var apiURLShowListPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/${loginPage.desaId}";
+  var apiURLDeletePrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/delete";
 
   Future refreshListPrajuruDesaAdat() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruDesaAdat);
@@ -132,8 +136,15 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                       Container(
                         alignment: Alignment.centerRight,
                         child: PopupMenuButton<int>(
+                          onSelected: (item) {
+                            setState(() {
+                              selectedIdPrajuruDesaAdat = prajuruDesaAdatID[index];
+                            });
+                            onSelected(context, item);
+                          },
                           itemBuilder: (context) => [
-                            PopupMenuItem(
+                            PopupMenuItem<int>(
+                              value: 0,
                               child: Row(
                                 children: <Widget>[
                                   Container(
@@ -152,7 +163,8 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                 ]
                               )
                             ),
-                            PopupMenuItem(
+                            PopupMenuItem<int>(
+                              value: 1,
                               child: Row(
                                 children: <Widget>[
                                   Container(
@@ -241,5 +253,99 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
         )
       )
     );
+  }
+
+  void onSelected(BuildContext context, int item) {
+    switch (item) {
+      case 0:
+        Navigator.push(context, CupertinoPageRoute(builder: (context) => editPrajuruDesaAdatAdmin())).then((value) {
+          refreshListPrajuruDesaAdat();
+        });
+        break;
+
+      case 1:
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(40.0))
+              ),
+              content: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      child: Image.asset(
+                        'images/question.png',
+                        height: 50,
+                        width: 50,
+                      )
+                    ),
+                    Container(
+                      child: Text("Hapus Data Pegawai", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: HexColor("#025393")
+                      ), textAlign: TextAlign.center),
+                      margin: EdgeInsets.only(top: 10)
+                    ),
+                    Container(
+                      child: Text("Apakah Anda yakin ingin menghapus data pegawai?", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                      ), textAlign: TextAlign.center),
+                      margin: EdgeInsets.only(top: 10),
+                    )
+                  ],
+                )
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: (){
+                    var body = jsonEncode({
+                      "prajuru_desa_adat_id" : selectedIdPrajuruDesaAdat
+                    });
+                    http.post(Uri.parse(apiURLDeletePrajuruDesaAdat),
+                      headers: {"Content-Type" : "application/json"},
+                      body: body
+                    ).then((http.Response response) {
+                      var responseValue = response.statusCode;
+                      if(responseValue == 200) {
+                        refreshListPrajuruDesaAdat();
+                        Fluttertoast.showToast(
+                          msg: "Data pegawai berhasil dihapus",
+                          fontSize: 14,
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER
+                        );
+                        Navigator.of(context).pop();
+                      }
+                    });
+                  },
+                  child: Text("Ya", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("#025393")
+                  )),
+                ),
+                TextButton(
+                  onPressed: (){Navigator.of(context).pop();},
+                  child: Text("Tidak", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("#025393")
+                  ))
+                )
+              ],
+            );
+          }
+        );
+        break;
+    }
   }
 }
