@@ -22,7 +22,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
   bool Loading = true;
   bool LoadingProses = false;
   bool availableData = false;
-  var apiURLShowListPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/325";
+  var apiURLShowListPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/${loginPage.desaId}";
 
   Future refreshListPrajuruDesaAdat() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruDesaAdat);
@@ -232,7 +232,9 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
-            Navigator.push(context, CupertinoPageRoute(builder: (context) => tambahPrajuruDesaAdatAdmin()));
+            Navigator.push(context, CupertinoPageRoute(builder: (context) => tambahPrajuruDesaAdatAdmin())).then((value) {
+              refreshListPrajuruDesaAdat();
+            });
           },
           child: Icon(Icons.add),
           backgroundColor: HexColor("#025393")

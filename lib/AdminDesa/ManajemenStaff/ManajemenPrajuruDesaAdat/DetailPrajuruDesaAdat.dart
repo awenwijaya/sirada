@@ -185,28 +185,28 @@ class _detailPrajuruDesaAdatAdminState extends State<detailPrajuruDesaAdatAdmin>
                     ),
                     Container(
                       alignment: Alignment.topLeft,
-                      child: statusPrajuruDesaAdat == 1 ? Container() : Container(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              alignment: Alignment.topLeft,
-                              child: Text("Tanggal Akhir Menjabat", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700
-                              )),
-                              margin: EdgeInsets.only(top: 15)
-                            ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              child: Text(tanggalAkhirMenjabat, style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                              )),
-                              margin: EdgeInsets.only(top: 5)
-                            )
-                          ]
-                        )
+                      child: Container(
+                          child: Column(
+                              children: <Widget>[
+                                Container(
+                                    alignment: Alignment.topLeft,
+                                    child: Text("Tanggal Akhir Menjabat", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700
+                                    )),
+                                    margin: EdgeInsets.only(top: 15)
+                                ),
+                                Container(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(tanggalAkhirMenjabat, style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    )),
+                                    margin: EdgeInsets.only(top: 5)
+                                )
+                              ]
+                          )
                       )
                     ),
                     Container(
