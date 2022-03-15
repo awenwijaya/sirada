@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/DetailPrajuruBanjarAdat.dart';
+import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/EditPrajuruBanjarAdat.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/TambahPrajuruBanjarAdat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,15 +21,19 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
   var namaPrajuruAktif = [];
   var namaBanjarAktif = [];
   var jabatanAktif = [];
+  var pendudukIdAktif = [];
   var prajuruBanjarAdatIDTidakAktif = [];
   var namaPrajuruTidakAktif = [];
   var namaBanjarTidakAktif = [];
   var jabatanTidakAktif = [];
+  var pendudukIdTidakAktif = [];
   bool LoadingAktif = true;
   bool LoadingTidakAktif = true;
   bool LoadingProses = false;
   bool availableDataTidakAktif = false;
   bool availableDataAktif = false;
+  var selectedIdPrajuruBanjarAdat;
+  var selectedIdPenduduk;
   var apiURLShowListPrajuruBanjarAdatAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/aktif/${loginPage.desaId}";
   var apiURLShowListPrajuruBanjarAdatTidakAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
 
@@ -41,6 +46,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
       this.namaPrajuruAktif = [];
       this.jabatanAktif = [];
       this.namaBanjarAktif = [];
+      this.pendudukIdAktif = [];
       setState(() {
         LoadingAktif = false;
         availableDataAktif = true;
@@ -49,6 +55,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
           this.namaPrajuruAktif.add(data[i]['nama']);
           this.jabatanAktif.add(data[i]['jabatan']);
           this.namaBanjarAktif.add(data[i]['nama_banjar_adat']);
+          this.pendudukIdAktif.add(data[i]['penduduk_id']);
         }
       });
     }else{
@@ -68,6 +75,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
       this.namaPrajuruTidakAktif = [];
       this.jabatanTidakAktif = [];
       this.namaBanjarTidakAktif = [];
+      this.pendudukIdTidakAktif = [];
       setState(() {
         LoadingAktif = false;
         availableDataAktif = true;
@@ -76,6 +84,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
           this.namaPrajuruTidakAktif.add(data[i]['nama']);
           this.jabatanTidakAktif.add(data[i]['jabatan']);
           this.namaBanjarTidakAktif.add(data[i]['nama_banjar_adat']);
+          this.pendudukIdTidakAktif.add(data[i]['penduduk_id']);
         }
       });
     }else{
@@ -255,46 +264,75 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                           Container(
                                                               alignment: Alignment.centerRight,
                                                               child: PopupMenuButton<int>(
-                                                                  itemBuilder: (context) => [
-                                                                    PopupMenuItem(
-                                                                        child: Row(
-                                                                            children: <Widget>[
-                                                                              Container(
-                                                                                  child: Icon(
-                                                                                      Icons.edit,
-                                                                                      color: HexColor("#025393")
-                                                                                  )
-                                                                              ),
-                                                                              Container(
-                                                                                  child: Text("Edit", style: TextStyle(
-                                                                                      fontFamily: "Poppins",
-                                                                                      fontSize: 14
-                                                                                  )),
-                                                                                  margin: EdgeInsets.only(left: 10)
-                                                                              )
-                                                                            ]
+                                                                onSelected: (item) {
+                                                                  setState(() {
+                                                                    selectedIdPrajuruBanjarAdat = prajuruBanjarAdatIDAktif[index];
+                                                                    selectedIdPenduduk = pendudukIdAktif[index];
+                                                                  });
+                                                                  onSelected(context, item);
+                                                                },
+                                                                itemBuilder: (context) => [
+                                                                  PopupMenuItem<int>(
+                                                                    value: 0,
+                                                                    child: Row(
+                                                                      children: <Widget>[
+                                                                        Container(
+                                                                          child: Icon(
+                                                                            Icons.edit,
+                                                                            color: HexColor("#025393")
+                                                                          )
+                                                                        ),
+                                                                        Container(
+                                                                          child: Text("Edit", style: TextStyle(
+                                                                            fontFamily: "Poppins",
+                                                                            fontSize: 14
+                                                                          )),
+                                                                          margin: EdgeInsets.only(left: 10)
                                                                         )
-                                                                    ),
-                                                                    PopupMenuItem(
-                                                                        child: Row(
-                                                                            children: <Widget>[
-                                                                              Container(
-                                                                                  child: Icon(
-                                                                                      Icons.delete,
-                                                                                      color: HexColor("#025393")
-                                                                                  )
-                                                                              ),
-                                                                              Container(
-                                                                                  child: Text("Hapus", style: TextStyle(
-                                                                                      fontFamily: "Poppins",
-                                                                                      fontSize: 14
-                                                                                  )),
-                                                                                  margin: EdgeInsets.only(left: 10)
-                                                                              )
-                                                                            ]
-                                                                        )
+                                                                      ]
                                                                     )
-                                                                  ]
+                                                                  ),
+                                                                  PopupMenuItem<int>(
+                                                                      value: 0,
+                                                                      child: Row(
+                                                                          children: <Widget>[
+                                                                            Container(
+                                                                                child: Icon(
+                                                                                    Icons.delete,
+                                                                                    color: HexColor("#025393")
+                                                                                )
+                                                                            ),
+                                                                            Container(
+                                                                                child: Text("Hapus", style: TextStyle(
+                                                                                    fontFamily: "Poppins",
+                                                                                    fontSize: 14
+                                                                                )),
+                                                                                margin: EdgeInsets.only(left: 10)
+                                                                            )
+                                                                          ]
+                                                                      )
+                                                                  ),
+                                                                  PopupMenuItem<int>(
+                                                                      value: 0,
+                                                                      child: Row(
+                                                                          children: <Widget>[
+                                                                            Container(
+                                                                                child: Icon(
+                                                                                    Icons.close,
+                                                                                    color: HexColor("#025393")
+                                                                                )
+                                                                            ),
+                                                                            Container(
+                                                                                child: Text("Atur Menjadi Tidak Aktif", style: TextStyle(
+                                                                                    fontFamily: "Poppins",
+                                                                                    fontSize: 14
+                                                                                )),
+                                                                                margin: EdgeInsets.only(left: 10)
+                                                                            )
+                                                                          ]
+                                                                      )
+                                                                  ),
+                                                                ]
                                                               )
                                                           )
                                                         ]
@@ -419,8 +457,16 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                           Container(
                                                               alignment: Alignment.centerRight,
                                                               child: PopupMenuButton<int>(
+                                                                  onSelected: (item) {
+                                                                    setState(() {
+                                                                      selectedIdPrajuruBanjarAdat = prajuruBanjarAdatIDAktif[index];
+                                                                      selectedIdPenduduk = pendudukIdAktif[index];
+                                                                    });
+                                                                    onSelected(context, item);
+                                                                  },
                                                                   itemBuilder: (context) => [
-                                                                    PopupMenuItem(
+                                                                    PopupMenuItem<int>(
+                                                                        value: 0,
                                                                         child: Row(
                                                                             children: <Widget>[
                                                                               Container(
@@ -438,7 +484,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                                               )
                                                                             ]
                                                                         )
-                                                                    )
+                                                                    ),
                                                                   ]
                                                               )
                                                           )
@@ -504,5 +550,19 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
         )
       )
     );
+  }
+
+  void onSelected(BuildContext context, int item) {
+    switch (item) {
+      case 0:
+        setState(() {
+          editPrajuruBanjarAdatAdmin.idPegawai = selectedIdPrajuruBanjarAdat;
+        });
+        Navigator.push(context, CupertinoPageRoute(builder: (context) => editPrajuruBanjarAdatAdmin())).then((value) {
+          refreshListPrajuruBanjarAdatAktif();
+          refreshListPrajuruBanjarAdatTidakAktif();
+        });
+        break;
+    }
   }
 }

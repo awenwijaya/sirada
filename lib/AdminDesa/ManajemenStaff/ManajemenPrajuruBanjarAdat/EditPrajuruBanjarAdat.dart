@@ -9,16 +9,16 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 
-class editPrajuruDesaAdatAdmin extends StatefulWidget {
+class editPrajuruBanjarAdatAdmin extends StatefulWidget {
   static var idPegawai;
-  const editPrajuruDesaAdatAdmin({Key key}) : super(key: key);
+  const editPrajuruBanjarAdatAdmin({Key key}) : super(key: key);
 
   @override
-  State<editPrajuruDesaAdatAdmin> createState() => _editPrajuruDesaAdatAdminState();
+  State<editPrajuruBanjarAdatAdmin> createState() => _editPrajuruBanjarAdatAdminState();
 }
 
-class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
-  List<String> jabatan = ["bendesa", "pangliman", "penyarikan", "patengen"];
+class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin> {
+  List<String> jabatan = ['kelihan_adat','pangliman_banjar','penyarikan_banjar','patengen_banjar'];
   String selectedJabatan;
   String selectedMasaMulai;
   String selectedMasaMulaiValue;
@@ -26,13 +26,13 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   String selectedMasaBerakhirValue;
   DateTime masaMulai;
   DateTime masaBerakhir;
-  var apiURLShowDetailPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/edit/up";
+  var apiURLShowDetailPrajuruBanjarAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/edit/up";
   bool Loading = false;
 
-  getPrajuruDesaAdatInfo() async {
-    http.get(Uri.parse(apiURLShowDetailPrajuruDesaAdat),
-      headers: {"Content-Type" : "application/json"}
+  getPrajuruBanjarAdatInfo() async {
+    http.get(Uri.parse(apiURLShowDetailPrajuruBanjarAdat),
+      headers: {"Content-Type" : "application/json"},
     ).then((http.Response response) {
       var responseValue = response.statusCode;
       if(responseValue == 200) {
@@ -53,7 +53,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPrajuruDesaAdatInfo();
+    getPrajuruBanjarAdatInfo();
   }
 
   @override
@@ -61,7 +61,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
     return MaterialApp(
       home: Loading ? loading() : Scaffold(
         appBar: AppBar(
-          title: Text("Edit Pegawai Desa Adat", style: TextStyle(
+          title: Text("Edit Pegawai Banjar Adat", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
@@ -71,7 +71,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
             icon: Icon(Icons.arrow_back),
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop(true);},
-          ),
+          )
         ),
         body: masaMulai == null ? Center(
           child: Lottie.asset('assets/loading-circle.json')
@@ -83,7 +83,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                 child: Image.asset(
                   'images/person.png',
                   height: 100,
-                  width: 100,
+                  width: 100
                 ),
                 margin: EdgeInsets.only(top: 30)
               ),
@@ -93,65 +93,65 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                   fontSize: 14,
                   fontWeight: FontWeight.w700
                 ), textAlign: TextAlign.center),
-                margin: EdgeInsets.only(top: 20),
+                margin: EdgeInsets.only(top: 20)
               ),
               Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: Text("Jabatan *", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 14
-                      )),
-                      margin: EdgeInsets.only(top: 20, left: 20)
-                    ),
-                    Container(
-                      width: 300,
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                      decoration: BoxDecoration(
-                        color: HexColor("#025393"),
-                        borderRadius: BorderRadius.circular(30)
-                      ),
-                      child: DropdownButton<String>(
-                        onChanged: (value) {
-                          setState(() {
-                            selectedJabatan = value;
-                          });
-                        },
-                        value: selectedJabatan,
-                        underline: Container(),
-                        hint: Center(
-                          child: Text("Pilih Jabatan", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14,
-                            color: Colors.white
-                          ))
-                        ),
-                        icon: Icon(Icons.arrow_downward, color: Colors.white),
-                        isExpanded: true,
-                        items: jabatan.map((e) => DropdownMenuItem(
-                          child: Container(
+                  child: Column(
+                      children: <Widget>[
+                        Container(
                             alignment: Alignment.topLeft,
-                            child: Text(e, style: TextStyle(
+                            child: Text("Jabatan *", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14
                             )),
-                          ),
-                          value: e,
-                        )).toList(),
-                        selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
-                            child: Text(e, style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontFamily: "Poppins"
-                            ))
-                        )).toList(),
-                      ),
-                      margin: EdgeInsets.only(top: 20)
-                    )
-                  ]
-                )
+                            margin: EdgeInsets.only(top: 20, left: 20)
+                        ),
+                        Container(
+                            width: 300,
+                            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                            decoration: BoxDecoration(
+                                color: HexColor("#025393"),
+                                borderRadius: BorderRadius.circular(30)
+                            ),
+                            child: DropdownButton<String>(
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedJabatan = value;
+                                });
+                              },
+                              value: selectedJabatan,
+                              underline: Container(),
+                              hint: Center(
+                                  child: Text("Pilih Jabatan", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      color: Colors.white
+                                  ))
+                              ),
+                              icon: Icon(Icons.arrow_downward, color: Colors.white),
+                              isExpanded: true,
+                              items: jabatan.map((e) => DropdownMenuItem(
+                                child: Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(e, style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  )),
+                                ),
+                                value: e,
+                              )).toList(),
+                              selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
+                                  child: Text(e, style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                      fontFamily: "Poppins"
+                                  ))
+                              )).toList(),
+                            ),
+                            margin: EdgeInsets.only(top: 20)
+                        )
+                      ]
+                  )
               ),
               Container(
                   child: Column(
@@ -321,14 +321,14 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                         Loading = true;
                       });
                       var body = jsonEncode({
-                        "prajuru_desa_adat_id" : editPrajuruDesaAdatAdmin.idPegawai,
+                        "prajuru_banjar_adat_id" : editPrajuruBanjarAdatAdmin.idPegawai,
                         "jabatan" : selectedJabatan,
                         "masa_mulai_menjabat" : selectedMasaMulaiValue,
                         "masa_akhir_menjabat" : selectedMasaBerakhirValue
                       });
-                      http.post(Uri.parse(apiURLSimpanPrajuruDesaAdat),
+                      http.post(Uri.parse(apiURLSimpanPrajuruBanjarAdat),
                         headers : {"Content-Type" : "application/json"},
-                        body : body
+                        body: body
                       ).then((http.Response response) {
                         var responseValue = response.statusCode;
                         if(responseValue == 200) {
@@ -354,12 +354,12 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                   )),
                   color: Colors.transparent,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                      side: BorderSide(color: HexColor("#025393"), width: 2)
+                    borderRadius: BorderRadius.circular(25),
+                    side: BorderSide(color: HexColor("#025393"), width: 2)
                   ),
-                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
                 ),
-                margin: EdgeInsets.only(top: 20, bottom: 20),
+                margin: EdgeInsets.only(top: 20, bottom: 20)
               )
             ]
           )
