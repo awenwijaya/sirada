@@ -8,6 +8,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class prajuruBanjarAdatAdmin extends StatefulWidget {
   const prajuruBanjarAdatAdmin({Key key}) : super(key: key);
@@ -36,6 +37,8 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
   var selectedIdPenduduk;
   var apiURLShowListPrajuruBanjarAdatAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/aktif/${loginPage.desaId}";
   var apiURLShowListPrajuruBanjarAdatTidakAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
+  var apiURLDeletePrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/delete";
+  var apiURLSetPrajuruBanjarTidakAktif = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/set_tidak_aktif";
 
   Future refreshListPrajuruBanjarAdatAktif() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruBanjarAdatAktif);
@@ -77,8 +80,8 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
       this.namaBanjarTidakAktif = [];
       this.pendudukIdTidakAktif = [];
       setState(() {
-        LoadingAktif = false;
-        availableDataAktif = true;
+        LoadingTidakAktif = false;
+        availableDataTidakAktif = true;
         for(var i = 0; i < data.length; i++) {
           this.prajuruBanjarAdatIDTidakAktif.add(data[i]['prajuru_banjar_adat_id']);
           this.namaPrajuruTidakAktif.add(data[i]['nama']);
@@ -293,7 +296,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                                     )
                                                                   ),
                                                                   PopupMenuItem<int>(
-                                                                      value: 0,
+                                                                      value: 1,
                                                                       child: Row(
                                                                           children: <Widget>[
                                                                             Container(
@@ -313,7 +316,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                                       )
                                                                   ),
                                                                   PopupMenuItem<int>(
-                                                                      value: 0,
+                                                                      value: 2,
                                                                       child: Row(
                                                                           children: <Widget>[
                                                                             Container(
@@ -459,14 +462,14 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                               child: PopupMenuButton<int>(
                                                                   onSelected: (item) {
                                                                     setState(() {
-                                                                      selectedIdPrajuruBanjarAdat = prajuruBanjarAdatIDAktif[index];
-                                                                      selectedIdPenduduk = pendudukIdAktif[index];
+                                                                      selectedIdPrajuruBanjarAdat = prajuruBanjarAdatIDTidakAktif[index];
+                                                                      selectedIdPenduduk = pendudukIdTidakAktif[index];
                                                                     });
                                                                     onSelected(context, item);
                                                                   },
                                                                   itemBuilder: (context) => [
                                                                     PopupMenuItem<int>(
-                                                                        value: 0,
+                                                                        value: 1,
                                                                         child: Row(
                                                                             children: <Widget>[
                                                                               Container(
@@ -562,6 +565,178 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
           refreshListPrajuruBanjarAdatAktif();
           refreshListPrajuruBanjarAdatTidakAktif();
         });
+        break;
+
+      case 1:
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(40.0))
+              ),
+              content: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                        child: Image.asset(
+                          'images/question.png',
+                          height: 50,
+                          width: 50,
+                        )
+                    ),
+                    Container(
+                        child: Text("Hapus Data Pegawai", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: HexColor("#025393")
+                        ), textAlign: TextAlign.center),
+                        margin: EdgeInsets.only(top: 10)
+                    ),
+                    Container(
+                      child: Text("Apakah Anda yakin ingin menghapus data pegawai?", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14
+                      ), textAlign: TextAlign.center),
+                      margin: EdgeInsets.only(top: 10),
+                    )
+                  ]
+                )
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: (){
+                    var body = jsonEncode({
+                      "prajuru_banjar_adat_id" : selectedIdPrajuruBanjarAdat,
+                      "penduduk_id" : selectedIdPenduduk
+                    });
+                    http.post(Uri.parse(apiURLDeletePrajuruBanjarAdat),
+                      headers : {"Content-Type" : "application/json"},
+                      body: body
+                    ).then((http.Response response) {
+                      var responseValue = response.statusCode;
+                      if(responseValue == 200) {
+                        refreshListPrajuruBanjarAdatAktif();
+                        refreshListPrajuruBanjarAdatTidakAktif();
+                        Fluttertoast.showToast(
+                          msg: "Data pegawai berhasil dihapus",
+                          fontSize: 14,
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER
+                        );
+                        Navigator.of(context).pop();
+                      }
+                    });
+                  },
+                  child: Text("Ya", style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.w700,
+                      color: HexColor("#025393")
+                  )),
+                ),
+                TextButton(
+                  onPressed: (){Navigator.of(context).pop();},
+                  child: Text("Tidak", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("#025393")
+                  ))
+                )
+              ]
+            );
+          }
+        );
+        break;
+
+      case 2:
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(40.0))
+              ),
+              content: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                        child: Image.asset(
+                          'images/question.png',
+                          height: 50,
+                          width: 50,
+                        )
+                    ),
+                    Container(
+                        child: Text("Atur Staff Menjadi Tidak Aktif", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: HexColor("#025393")
+                        ), textAlign: TextAlign.center),
+                        margin: EdgeInsets.only(top: 10)
+                    ),
+                    Container(
+                      child: Text("Apakah Anda yakin ingin menonaktifkan staff ini? Setelah staff di non-aktifkan maka ia akan kehilangan hak akses login dan tindakan ini tidak dapat dikembalikan", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14
+                      ), textAlign: TextAlign.center),
+                      margin: EdgeInsets.only(top: 10),
+                    )
+                  ]
+                )
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: (){
+                    var body = jsonEncode({
+                      "prajuru_banjar_adat_id" : selectedIdPrajuruBanjarAdat,
+                      "penduduk_id" : selectedIdPenduduk
+                    });
+                    http.post(Uri.parse(apiURLSetPrajuruBanjarTidakAktif),
+                      headers: {"Content-Type" : "application/json"},
+                      body: body
+                    ).then((http.Response response) {
+                      var responseValue = response.statusCode;
+                      if(responseValue == 200) {
+                        refreshListPrajuruBanjarAdatAktif();
+                        refreshListPrajuruBanjarAdatTidakAktif();
+                        Fluttertoast.showToast(
+                          msg: "Pegawai berhasil dinonaktifkan!",
+                          fontSize: 14,
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER
+                        );
+                        Navigator.of(context).pop();
+                      }
+                    });
+                  },
+                  child: Text("Ya", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("#025393")
+                  ))
+                ),
+                TextButton(
+                  onPressed: (){Navigator.of(context).pop();},
+                  child: Text("Tidak", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("#025393")
+                  ))
+                )
+              ]
+            );
+          }
+        );
         break;
     }
   }

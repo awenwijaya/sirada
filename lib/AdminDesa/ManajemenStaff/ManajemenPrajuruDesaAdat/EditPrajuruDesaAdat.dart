@@ -26,6 +26,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   String selectedMasaBerakhirValue;
   DateTime masaMulai;
   DateTime masaBerakhir;
+  DateTime sekarang = DateTime.now();
   var apiURLShowDetailPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
   var apiURLSimpanPrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/edit/up";
   bool Loading = false;
@@ -316,6 +317,60 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                             );
                           }
                       );
+                    }else if(masaBerakhir.isBefore(sekarang)){
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context){
+                            return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                ),
+                                content: Container(
+                                  child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Container(
+                                            child: Image.asset(
+                                              'images/alert.png',
+                                              height: 50,
+                                              width: 50,
+                                            )
+                                        ),
+                                        Container(
+                                            child: Text("Tanggal masa berakhir tidak valid", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                color: HexColor("#025393")
+                                            ), textAlign: TextAlign.center),
+                                            margin: EdgeInsets.only(top: 10)
+                                        ),
+                                        Container(
+                                            child: Text("Tanggal masa berakhir tidak valid. Silahkan masukkan tanggal masa berakhir karyawan di hari setelah tanggal hari ini dan coba lagi", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14
+                                            ), textAlign: TextAlign.center),
+                                            margin: EdgeInsets.only(top: 10)
+                                        )
+                                      ]
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text("OK", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor("#025393")
+                                    )),
+                                    onPressed: (){Navigator.of(context).pop();},
+                                  )
+                                ]
+                            );
+                          }
+                      );
                     }else{
                       setState(() {
                         Loading = true;
@@ -327,8 +382,8 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                         "masa_akhir_menjabat" : selectedMasaBerakhirValue
                       });
                       http.post(Uri.parse(apiURLSimpanPrajuruDesaAdat),
-                        headers : {"Content-Type" : "application/json"},
-                        body : body
+                          headers : {"Content-Type" : "application/json"},
+                          body : body
                       ).then((http.Response response) {
                         var responseValue = response.statusCode;
                         if(responseValue == 200) {
@@ -336,10 +391,10 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                             Loading = false;
                           });
                           Fluttertoast.showToast(
-                            msg: "Data pegawai berhasil diperbaharui",
-                            fontSize: 14,
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER
+                              msg: "Data pegawai berhasil diperbaharui",
+                              fontSize: 14,
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER
                           );
                           Navigator.of(context).pop(true);
                         }
