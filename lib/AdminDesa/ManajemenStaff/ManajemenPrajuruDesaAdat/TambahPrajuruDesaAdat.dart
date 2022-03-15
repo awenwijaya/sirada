@@ -300,7 +300,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                       child: Column(
                         children: <Widget>[
                           Container(
-                            child: Text("Masa Berakhir Menjabat", style: TextStyle(
+                            child: Text("Masa Berakhir Menjabat *", style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 14
                             )),

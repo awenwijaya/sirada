@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
-import 'package:surat/AdminDesa/LayananSuratMasyarakat/SuratMasyarakat.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/PrajuruBanjarAdat.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/PrajuruDesaAdat.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluar.dart';
 import 'package:surat/AdminDesa/NomorSurat/NomorSurat.dart';
 import 'package:surat/AdminDesa/Profile/AdminProfile.dart';
 import 'package:surat/WelcomeScreen.dart';
@@ -458,7 +458,9 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => suratKeluarAdmin()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(
@@ -576,47 +578,6 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                       ),
                     ),
                   ],
-                ),
-              ),
-              Container(
-                child: GestureDetector(
-                  onTap: (){
-                    Navigator.push(context, CupertinoPageRoute(builder: (context) => layananSuratMasyarakatAdmin()));
-                  },
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        child: Image.asset(
-                          'images/paper.png',
-                          height: 40,
-                          width: 40,
-                        ),
-                      ),
-                      Container(
-                        child: Text("Surat Layanan Masyarakat", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700
-                        )),
-                        margin: EdgeInsets.only(left: 20),
-                      )
-                    ],
-                  ),
-                ),
-                margin: EdgeInsets.only(top: 25, left: 20, right: 20),
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                height: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0,3)
-                    )
-                  ]
                 ),
               ),
               Container(
