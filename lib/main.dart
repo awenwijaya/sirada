@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
@@ -10,6 +9,7 @@ import 'package:surat/WelcomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -25,6 +25,23 @@ void main() {
   SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]
   );
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 2000)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false;
 }
 
 class splashScreen extends StatefulWidget {
@@ -48,7 +65,7 @@ class _splashScreenState extends State<splashScreen> {
     final SharedPreferences sharedpref = await SharedPreferences.getInstance();
     userEmail = sharedpref.getString('userEmail');
     userId = sharedpref.getInt('userId');
-    desaId = sharedpref.getInt('desaId');
+    desaId = sharedpref.getString('desaId');
     pendudukId = sharedpref.getInt('pendudukId');
     userStatus = sharedpref.getString('status');
     role = sharedpref.getString('role');

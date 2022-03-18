@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/cupertino.dart';
@@ -442,7 +443,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                                             ),
                                           ),
                                           Container(
-                                            child: Text("Nomor Surat Tidak Tersedia", style: TextStyle(
+                                            child: Text("Nomor Surat atau Keterangan Tidak Tersedia", style: TextStyle(
                                               fontFamily: "Poppins",
                                               fontSize: 16,
                                               fontWeight: FontWeight.w700,
@@ -451,7 +452,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                                             margin: EdgeInsets.only(top: 10),
                                           ),
                                           Container(
-                                            child: Text("Data nomor surat yang Anda inputkan sudah diinputkan sebelumnya. Silahkan input data nomor surat yang lain dan coba lagi", style: TextStyle(
+                                            child: Text("Data nomor surat atau keterangan yang Anda inputkan sudah diinputkan sebelumnya. Silahkan input data nomor surat yang lain dan coba lagi", style: TextStyle(
                                               fontFamily: "Poppins",
                                               fontSize: 14
                                             ), textAlign: TextAlign.center),
@@ -500,7 +501,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
           child: Icon(Icons.add),
           backgroundColor: HexColor("#025393"),
         ),
-      )
+      ),
     );
   }
 
@@ -593,8 +594,8 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                 )
               ),
               actions: <Widget>[
-                LoadingProses ? Container() : TextButton(
-                  child: Text("Simpan", style: TextStyle(
+                TextButton(
+                  child: LoadingProses ? CircularProgressIndicator(color: HexColor("#025393")) : Text("Simpan", style: TextStyle(
                     fontFamily: "Poppins",
                     fontWeight: FontWeight.w700,
                     color: HexColor("#025393")
@@ -680,6 +681,63 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                             gravity: ToastGravity.CENTER
                           );
                           Navigator.of(context).pop();
+                        }else if(responseValue == 501) {
+                          setState(() {
+                            LoadingProses = false;
+                          });
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                  ),
+                                  content: Container(
+                                      child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Container(
+                                              child: Image.asset(
+                                                'images/alert.png',
+                                                height: 50,
+                                                width: 50,
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Text("Nomor Surat atau Keterangan Tidak Tersedia", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393")
+                                              ), textAlign: TextAlign.center),
+                                              margin: EdgeInsets.only(top: 10),
+                                            ),
+                                            Container(
+                                              child: Text("Data nomor surat atau keterangan yang Anda inputkan sudah diinputkan sebelumnya. Silahkan input data nomor surat yang lain dan coba lagi", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14
+                                              ), textAlign: TextAlign.center),
+                                              margin: EdgeInsets.only(top: 10),
+                                            )
+                                          ]
+                                      )
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text("OK", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393")
+                                      )),
+                                      onPressed: (){Navigator.of(context).pop();},
+                                    )
+                                  ],
+                                );
+                              }
+                          );
                         }
                       });
                     }

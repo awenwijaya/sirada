@@ -42,6 +42,24 @@ class _suratKeluarAdminState extends State<suratKeluarAdmin> {
                 margin: EdgeInsets.only(top: 20),
               ),
               Container(
+                child: FlatButton(
+                  onPressed: (){},
+                  child: Text("Tambah Data Surat Keluar", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("#025393")
+                  )),
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    side: BorderSide(color: HexColor("#025393"), width: 2)
+                  ),
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
+                ),
+                margin: EdgeInsets.only(top: 20)
+              ),
+              Container(
                 alignment: Alignment.topLeft,
                 child: Text("Status Surat Keluar", style: TextStyle(
                   fontFamily: "Poppins",
@@ -108,11 +126,6 @@ class _suratKeluarAdminState extends State<suratKeluarAdmin> {
             ]
           )
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: (){},
-          child: Icon(Icons.add),
-          backgroundColor: HexColor("#025393")
-        )
       )
     );
   }

@@ -27,7 +27,7 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
-  var apiURLLogin = "http://192.168.18.10:8000/api/autentikasi/login";
+  var apiURLLogin = "http://172.16.58.194:8000/api/autentikasi/login";
   var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
@@ -262,42 +262,23 @@ class _loginPageState extends State<loginPage> {
                                   Loading = false;
                                   var jsonData = response.body;
                                   var parsedJson = json.decode(jsonData);
-                                  if(parsedJson['is_verified'] == "Verified") {
+                                  if(parsedJson['role'] == "Super Admin") {
                                     setState(() {
-                                      loginPage.pendudukId = parsedJson['penduduk_id'];
-                                      loginPage.userEmail = parsedJson['email'];
-                                      loginPage.desaId = parsedJson['desa_adat_id'];
-                                      loginPage.userId = parsedJson['user_id'];
-                                      loginPage.role = parsedJson['role'];
+                                      Loading = false;
                                     });
-                                    final SharedPreferences sharedpref = await SharedPreferences.getInstance();
-                                    sharedpref.setInt('userId', loginPage.userId);
-                                    sharedpref.setInt('pendudukId', loginPage.pendudukId);
-                                    sharedpref.setInt('desaId', loginPage.desaId);
-                                    sharedpref.setString('email', loginPage.userEmail);
-                                    sharedpref.setString('role', loginPage.role);
-                                    sharedpref.setString('status', 'login');
-                                    if(loginPage.role == "Pengguna") {
-                                      Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
-                                    }else if(loginPage.role == "Kepala Desa") {
-                                      Navigator.of(context).pushAndRemoveUntil(createRouteKepalaDesaDashboard(), (route) => false);
-                                    }else if(loginPage.role == "Admin") {
-                                      Navigator.of(context).pushAndRemoveUntil(createRouteAdminDesaDashboard(), (route) => false);
-                                    }else if(loginPage.role == "Kepala Dusun") {
-                                      Navigator.of(context).pushAndRemoveUntil(createRouteKepalaDusunDashboard(), (route) => false);
-                                    }else{
-                                      showDialog(
+                                    showDialog(
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                                borderRadius: BorderRadius.all(Radius.circular(40.0))
                                             ),
                                             content: Container(
                                               child: Column(
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                mainAxisSize: MainAxisSize.min,
                                                 children: <Widget>[
                                                   Container(
                                                     child: Image.asset(
@@ -308,17 +289,17 @@ class _loginPageState extends State<loginPage> {
                                                   ),
                                                   Container(
                                                     child: Text("Hak Akses Ditolak", style: TextStyle(
-                                                      fontFamily: "Poppins",
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.w700,
-                                                      color: HexColor("#025393")
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w700,
+                                                        color: HexColor("#025393")
                                                     ), textAlign: TextAlign.center),
                                                     margin: EdgeInsets.only(top: 10),
                                                   ),
                                                   Container(
                                                     child: Text("Hak akses untuk pengguna ini ditolak. Silahkan akses versi web dari aplikasi ini", style: TextStyle(
-                                                      fontFamily: "Poppins",
-                                                      fontSize: 14
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 14
                                                     ), textAlign: TextAlign.center),
                                                     margin: EdgeInsets.only(top: 10),
                                                   )
@@ -329,112 +310,207 @@ class _loginPageState extends State<loginPage> {
                                               TextButton(
                                                 onPressed: (){Navigator.of(context).pop();},
                                                 child: Text("OK", style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontWeight: FontWeight.w700,
-                                                  color: HexColor("#025393")
+                                                    fontFamily: "Poppins",
+                                                    fontWeight: FontWeight.w700,
+                                                    color: HexColor("#025393")
                                                 )),
                                               )
                                             ],
                                           );
                                         }
-                                      );
-                                    }
-                                  } else {
-                                    setState(() {
-                                      Loading = false;
-                                    });
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                          ),
-                                          content: Container(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                Container(
-                                                  child: Image.asset(
-                                                    'images/alert.png',
-                                                    height: 50,
-                                                    width: 50,
-                                                  ),
-                                                  alignment: Alignment.center,
+                                    );
+                                  }else{
+                                    if(parsedJson['is_verified'] == "Verified") {
+                                      if(parsedJson['desadat_status_aktif'] == 1) {
+                                        setState(() {
+                                          loginPage.pendudukId = parsedJson['penduduk_id'];
+                                          loginPage.userEmail = parsedJson['email'];
+                                          loginPage.desaId = parsedJson['desa_adat_id'];
+                                          loginPage.userId = parsedJson['user_id'];
+                                          loginPage.role = parsedJson['role'];
+                                        });
+                                        final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+                                        sharedpref.setInt('userId', loginPage.userId);
+                                        sharedpref.setInt('pendudukId', loginPage.pendudukId);
+                                        sharedpref.setString('desaId', loginPage.desaId);
+                                        sharedpref.setString('email', loginPage.userEmail);
+                                        sharedpref.setString('role', loginPage.role);
+                                        sharedpref.setString('status', 'login');
+                                        if(loginPage.role == "Pengguna") {
+                                          Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
+                                        }else if(loginPage.role == "Kepala Desa") {
+                                          Navigator.of(context).pushAndRemoveUntil(createRouteKepalaDesaDashboard(), (route) => false);
+                                        }else if(loginPage.role == "Admin") {
+                                          Navigator.of(context).pushAndRemoveUntil(createRouteAdminDesaDashboard(), (route) => false);
+                                        }else if(loginPage.role == "Kepala Dusun") {
+                                          Navigator.of(context).pushAndRemoveUntil(createRouteKepalaDusunDashboard(), (route) => false);
+                                        }
+                                      }else{
+                                        setState(() {
+                                          Loading = false;
+                                        });
+                                        showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
                                                 ),
-                                                Container(
-                                                  child: Text(
-                                                    "Akun belum diverifikasi",
-                                                    style: TextStyle(
-                                                      fontFamily: "Poppins",
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.w700,
-                                                      color: HexColor("#025393")
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  margin: EdgeInsets.only(top: 10),
-                                                  alignment: Alignment.center,
+                                                content: Container(
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: <Widget>[
+                                                        Container(
+                                                          child: Image.asset(
+                                                            'images/alert.png',
+                                                            height: 50,
+                                                            width: 50,
+                                                          ),
+                                                          alignment: Alignment.center,
+                                                        ),
+                                                        Container(
+                                                          child: Text(
+                                                            "Desa belum terdaftar",
+                                                            style: TextStyle(
+                                                                fontFamily: "Poppins",
+                                                                fontSize: 16,
+                                                                fontWeight: FontWeight.w700,
+                                                                color: HexColor("#025393")
+                                                            ),
+                                                            textAlign: TextAlign.center,
+                                                          ),
+                                                          margin: EdgeInsets.only(top: 10),
+                                                          alignment: Alignment.center,
+                                                        ),
+                                                        Container(
+                                                          child: Text(
+                                                            "Anda tidak bisa login karena desa belum terdaftar. Silahkan hubungi admin desa untuk informasi lebih lanjut",
+                                                            style: TextStyle(
+                                                                fontFamily: "Poppins",
+                                                                fontSize: 14
+                                                            ),
+                                                            textAlign: TextAlign.center,
+                                                          ),
+                                                          margin: EdgeInsets.only(top: 10),
+                                                        )
+                                                      ],
+                                                    )
                                                 ),
-                                                Container(
-                                                  child: Text(
-                                                    "Akun Anda belum terverifikasi. Silahkan periksa email verifikasi yang telah dikirimkan. Jika tidak ada email verifikasi, tekan tombol Kirim Ulang Email Verifikasi.",
-                                                    style: TextStyle(
-                                                      fontFamily: "Poppins",
-                                                      fontSize: 14
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  margin: EdgeInsets.only(top: 10),
-                                                )
-                                              ],
-                                            )
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text("OK", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("#025393")
-                                              )),
-                                              onPressed: (){Navigator.of(context).pop();},
-                                            ),
-                                            TextButton(
-                                              child: Text("Kirim Ulang Email Verifikasi", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("#025393")
-                                              )),
-                                              onPressed: (){
-                                                Navigator.of(context).pop();
-                                                setState(() {
-                                                  loginPage.userEmail = controllerEmail.text;
-                                                  Loading = true;
-                                                });
-                                                var body = jsonEncode({
-                                                  "email" : controllerEmail.text
-                                                });
-                                                http.post(Uri.parse(apiURLKonfirmasiEmail),
-                                                    headers : {"Content-Type" : "application/json"},
-                                                    body: body
-                                                ).then((http.Response response) {
-                                                  var data = response.statusCode;
-                                                  if(data == 200) {
-                                                    setState(() {
-                                                      Loading = false;
-                                                    });
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ],
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text("OK", style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontWeight: FontWeight.w700,
+                                                        color: HexColor("#025393")
+                                                    )),
+                                                    onPressed: (){Navigator.of(context).pop();},
+                                                  )
+                                                ],
+                                              );
+                                            }
                                         );
                                       }
-                                    );
+                                    } else {
+                                      setState(() {
+                                        Loading = false;
+                                      });
+                                      showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                              ),
+                                              content: Container(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Container(
+                                                        child: Image.asset(
+                                                          'images/alert.png',
+                                                          height: 50,
+                                                          width: 50,
+                                                        ),
+                                                        alignment: Alignment.center,
+                                                      ),
+                                                      Container(
+                                                        child: Text(
+                                                          "Akun belum diverifikasi",
+                                                          style: TextStyle(
+                                                              fontFamily: "Poppins",
+                                                              fontSize: 16,
+                                                              fontWeight: FontWeight.w700,
+                                                              color: HexColor("#025393")
+                                                          ),
+                                                          textAlign: TextAlign.center,
+                                                        ),
+                                                        margin: EdgeInsets.only(top: 10),
+                                                        alignment: Alignment.center,
+                                                      ),
+                                                      Container(
+                                                        child: Text(
+                                                          "Akun Anda belum terverifikasi. Silahkan periksa email verifikasi yang telah dikirimkan. Jika tidak ada email verifikasi, tekan tombol Kirim Ulang Email Verifikasi.",
+                                                          style: TextStyle(
+                                                              fontFamily: "Poppins",
+                                                              fontSize: 14
+                                                          ),
+                                                          textAlign: TextAlign.center,
+                                                        ),
+                                                        margin: EdgeInsets.only(top: 10),
+                                                      )
+                                                    ],
+                                                  )
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text("OK", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontWeight: FontWeight.w700,
+                                                      color: HexColor("#025393")
+                                                  )),
+                                                  onPressed: (){Navigator.of(context).pop();},
+                                                ),
+                                                TextButton(
+                                                  child: Text("Kirim Ulang Email Verifikasi", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontWeight: FontWeight.w700,
+                                                      color: HexColor("#025393")
+                                                  )),
+                                                  onPressed: (){
+                                                    Navigator.of(context).pop();
+                                                    setState(() {
+                                                      loginPage.userEmail = controllerEmail.text;
+                                                      Loading = true;
+                                                    });
+                                                    var body = jsonEncode({
+                                                      "email" : controllerEmail.text
+                                                    });
+                                                    http.post(Uri.parse(apiURLKonfirmasiEmail),
+                                                        headers : {"Content-Type" : "application/json"},
+                                                        body: body
+                                                    ).then((http.Response response) {
+                                                      var data = response.statusCode;
+                                                      if(data == 200) {
+                                                        setState(() {
+                                                          Loading = false;
+                                                        });
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ],
+                                            );
+                                          }
+                                      );
+                                    }
                                   }
+
                                 });
                               }
                             });

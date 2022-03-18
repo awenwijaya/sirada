@@ -8,6 +8,7 @@ import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/PrajuruBanjarAdat.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/PrajuruDesaAdat.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluar.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratMasuk/SuratMasuk.dart';
 import 'package:surat/AdminDesa/NomorSurat/NomorSurat.dart';
 import 'package:surat/AdminDesa/Profile/AdminProfile.dart';
 import 'package:surat/WelcomeScreen.dart';
@@ -419,7 +420,9 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                   children: <Widget>[
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => suratMasukAdmin()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(

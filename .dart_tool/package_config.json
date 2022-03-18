@@ -104,6 +104,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_easyloading",
+      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_easyloading-3.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_plugin_android_lifecycle",
       "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.5",
       "packageUri": "lib/",
@@ -428,7 +434,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2022-02-19T16:18:09.446198Z",
+  "generated": "2022-03-17T08:00:16.392565Z",
   "generator": "pub",
   "generatorVersion": "2.14.0"
 }

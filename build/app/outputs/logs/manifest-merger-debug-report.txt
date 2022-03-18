@@ -43,6 +43,12 @@ INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-s
 		INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\debug\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:1:11-69
+uses-permission#android.permission.INTERNET
+ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:3:5-66
+MERGED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:3:5-66
+MERGED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:3:5-66
+	android:name
+		ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:3:22-64
 queries
 ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:4:5-29:15
 MERGED from [:file_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:9:5-15:15
@@ -195,10 +201,6 @@ INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-s
 	android:minSdkVersion
 		INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\debug\AndroidManifest.xml
-uses-permission#android.permission.INTERNET
-ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\debug\AndroidManifest.xml:6:5-66
-	android:name
-		ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\debug\AndroidManifest.xml:6:22-64
 uses-permission#android.permission.CAMERA
 ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\debug\AndroidManifest.xml:7:5-65
 	android:name
