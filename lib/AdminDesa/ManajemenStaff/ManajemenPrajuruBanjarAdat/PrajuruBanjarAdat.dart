@@ -35,10 +35,10 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
   bool availableDataAktif = false;
   var selectedIdPrajuruBanjarAdat;
   var selectedIdPenduduk;
-  var apiURLShowListPrajuruBanjarAdatAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/aktif/${loginPage.desaId}";
-  var apiURLShowListPrajuruBanjarAdatTidakAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
-  var apiURLDeletePrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/delete";
-  var apiURLSetPrajuruBanjarTidakAktif = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/set_tidak_aktif";
+  var apiURLShowListPrajuruBanjarAdatAktif = "http://192.168.137.57:8000/api/data/staff/prajuru_banjar_adat/aktif/${loginPage.desaId}";
+  var apiURLShowListPrajuruBanjarAdatTidakAktif = "http://192.168.137.57:8000/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
+  var apiURLDeletePrajuruBanjarAdat = "http://192.168.137.57:8000/api/admin/prajuru/banjar_adat/delete";
+  var apiURLSetPrajuruBanjarTidakAktif = "http://192.168.137.57:8000/api/admin/prajuru/banjar_adat/set_tidak_aktif";
 
   Future refreshListPrajuruBanjarAdatAktif() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruBanjarAdatAktif);
@@ -381,7 +381,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                     margin: EdgeInsets.only(top: 10)
                                                 ),
                                                 Container(
-                                                    child: Text("Tidak ada data pegawai Banjar Adat. Anda bisa menambahkannya dengan cara menekan tombol + dan isi data pegawai Banjar Adat pada form yang telah disediakan", style: TextStyle(
+                                                    child: Text("Tidak ada data pegawai Banjar Adat. Anda bisa menambahkannya dengan cara menekan tombol Tambah Data Pegawai dan isi data pegawai Banjar Adat pada form yang telah disediakan", style: TextStyle(
                                                         fontFamily: "Poppins",
                                                         fontSize: 14,
                                                         color: Colors.black26

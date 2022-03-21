@@ -27,7 +27,7 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
-  var apiURLLogin = "http://172.16.58.194:8000/api/autentikasi/login";
+  var apiURLLogin = "http://192.168.18.10:8000/api/autentikasi/login";
   var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();

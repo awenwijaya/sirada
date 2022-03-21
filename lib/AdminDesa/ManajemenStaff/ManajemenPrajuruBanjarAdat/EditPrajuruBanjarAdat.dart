@@ -26,9 +26,11 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
   String selectedMasaBerakhirValue;
   DateTime masaMulai;
   DateTime masaBerakhir;
-  var apiURLShowDetailPrajuruBanjarAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/edit/up";
+  var apiURLShowDetailPrajuruBanjarAdat = "http://192.168.137.57:8000/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruBanjarAdat = "http://192.168.137.57:8000/api/admin/prajuru/banjar_adat/edit/up";
+  var selectedIdPenduduk;
   bool Loading = false;
+  final controllerEmail = TextEditingController();
 
   getPrajuruBanjarAdatInfo() async {
     http.get(Uri.parse(apiURLShowDetailPrajuruBanjarAdat),
@@ -44,6 +46,8 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
           masaMulai = new DateFormat("yyyy-mm-dd").parse(selectedMasaMulaiValue);
           selectedMasaBerakhirValue = parsedJson['tanggal_akhir_menjabat'];
           masaBerakhir = new DateFormat("yyyy-mm-dd").parse(selectedMasaBerakhirValue);
+          controllerEmail.text = parsedJson['email'];
+          selectedIdPenduduk = parsedJson['penduduk_id'];
         });
       }
     });
@@ -260,6 +264,41 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
                   )
               ),
               Container(
+                  child: Column(
+                      children: <Widget>[
+                        Container(
+                            child: Text("Email *", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                            alignment: Alignment.topLeft,
+                            margin: EdgeInsets.only(top: 20, left: 20)
+                        ),
+                        Container(
+                            child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                child: TextField(
+                                  controller: controllerEmail,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(50.0),
+                                          borderSide: BorderSide(color: HexColor("#025393"))
+                                      ),
+                                      hintText: "Email",
+                                      prefixIcon: Icon(Icons.alternate_email)
+                                  ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ),
+                                )
+                            )
+                        )
+                      ]
+                  )
+              ),
+              Container(
                 child: FlatButton(
                   onPressed: (){
                     if(masaBerakhir.isBefore(masaMulai)) {
@@ -324,7 +363,9 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
                         "prajuru_banjar_adat_id" : editPrajuruBanjarAdatAdmin.idPegawai,
                         "jabatan" : selectedJabatan,
                         "masa_mulai_menjabat" : selectedMasaMulaiValue,
-                        "masa_akhir_menjabat" : selectedMasaBerakhirValue
+                        "masa_akhir_menjabat" : selectedMasaBerakhirValue,
+                        'penduduk_id' : selectedIdPenduduk,
+                        'email' : controllerEmail.text
                       });
                       http.post(Uri.parse(apiURLSimpanPrajuruBanjarAdat),
                         headers : {"Content-Type" : "application/json"},

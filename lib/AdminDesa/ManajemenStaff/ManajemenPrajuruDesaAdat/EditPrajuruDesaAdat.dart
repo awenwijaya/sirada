@@ -27,9 +27,11 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   DateTime masaMulai;
   DateTime masaBerakhir;
   DateTime sekarang = DateTime.now();
-  var apiURLShowDetailPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/edit/up";
+  var apiURLShowDetailPrajuruDesaAdat = "http://192.168.137.57:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruDesaAdat = "http://192.168.137.57:8000/api/admin/prajuru/desa_adat/edit/up";
+  var selectedIdPenduduk;
   bool Loading = false;
+  final controllerEmail = TextEditingController();
 
   getPrajuruDesaAdatInfo() async {
     http.get(Uri.parse(apiURLShowDetailPrajuruDesaAdat),
@@ -45,6 +47,8 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
           masaMulai = new DateFormat("yyyy-mm-dd").parse(selectedMasaMulaiValue);
           selectedMasaBerakhirValue = parsedJson['tanggal_akhir_menjabat'];
           masaBerakhir = new DateFormat("yyyy-mm-dd").parse(selectedMasaBerakhirValue);
+          controllerEmail.text = parsedJson['email'];
+          selectedIdPenduduk = parsedJson['penduduk_id'];
         });
       }
     });
@@ -89,7 +93,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                 margin: EdgeInsets.only(top: 30)
               ),
               Container(
-                child: Text("* = diperlukan", style: TextStyle(
+                child: Text("* = diperlukan ${selectedIdPenduduk}", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
@@ -261,6 +265,41 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                   )
               ),
               Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      child: Text("Email *", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                      )),
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(top: 20, left: 20)
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                        child: TextField(
+                          controller: controllerEmail,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                              borderSide: BorderSide(color: HexColor("#025393"))
+                            ),
+                            hintText: "Email",
+                            prefixIcon: Icon(Icons.alternate_email)
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          ),
+                        )
+                      )
+                    )
+                  ]
+                )
+              ),
+              Container(
                 child: FlatButton(
                   onPressed: (){
                     if(masaBerakhir.isBefore(masaMulai)) {
@@ -379,7 +418,9 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                         "prajuru_desa_adat_id" : editPrajuruDesaAdatAdmin.idPegawai,
                         "jabatan" : selectedJabatan,
                         "masa_mulai_menjabat" : selectedMasaMulaiValue,
-                        "masa_akhir_menjabat" : selectedMasaBerakhirValue
+                        "masa_akhir_menjabat" : selectedMasaBerakhirValue,
+                        'penduduk_id' : selectedIdPenduduk,
+                        'email' : controllerEmail.text
                       });
                       http.post(Uri.parse(apiURLSimpanPrajuruDesaAdat),
                           headers : {"Content-Type" : "application/json"},

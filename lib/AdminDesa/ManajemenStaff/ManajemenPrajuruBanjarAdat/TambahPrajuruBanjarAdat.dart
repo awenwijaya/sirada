@@ -36,7 +36,7 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
   var pegawaiID;
   var banjarID;
   var namaBanjar;
-  var apiURLUpDataPrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/up";
+  var apiURLUpDataPrajuruBanjarAdat = "http://192.168.137.57:8000/api/admin/prajuru/banjar_adat/up";
 
   @override
   Widget build(BuildContext context) {
@@ -522,7 +522,7 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
                         Container(
                           child: FlatButton(
                             onPressed: (){
-                              if(selectedStatus == null || selectedJabatan == null || selectedMasaBerakhirValue == null || selectedMasaMulaiValue == null || kramaMipilID == null || banjarID == null) {
+                              if(selectedStatus == null || selectedJabatan == null || selectedMasaBerakhirValue == null || selectedMasaMulaiValue == null || kramaMipilID == null || banjarID == null || controllerEmail.text == "") {
                                 showDialog(
                                     context: context,
                                     barrierDismissible: false,
@@ -631,61 +631,7 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
                                     }
                                 );
                               }else if(selectedStatus == "Aktif") { //status pegawai aktif
-                                if(controllerEmail.text == "") {
-                                  showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                          ),
-                                          content: Container(
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  Container(
-                                                      child: Image.asset(
-                                                        'images/warning.png',
-                                                        height: 50,
-                                                        width: 50,
-                                                      )
-                                                  ),
-                                                  Container(
-                                                      child: Text("Masih ada data yang kosong", style: TextStyle(
-                                                          fontFamily: "Poppins",
-                                                          fontSize: 16,
-                                                          fontWeight: FontWeight.w700,
-                                                          color: HexColor("#025393")
-                                                      ), textAlign: TextAlign.center),
-                                                      margin: EdgeInsets.only(top: 10)
-                                                  ),
-                                                  Container(
-                                                    child: Text("Masih ada data yang kosong. Silahkan lengkapi form yang telah disediakan dan coba lagi", style: TextStyle(
-                                                        fontFamily: "Poppins",
-                                                        fontSize: 14
-                                                    ), textAlign: TextAlign.center),
-                                                    margin: EdgeInsets.only(top: 10),
-                                                  )
-                                                ],
-                                              )
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text("OK", style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontWeight: FontWeight.w700,
-                                                  color: HexColor("#025393")
-                                              )),
-                                              onPressed: (){Navigator.of(context).pop();},
-                                            )
-                                          ],
-                                        );
-                                      }
-                                  );
-                                }else if(selectMasaBerakhir.isBefore(sekarang)){
+                                if(selectMasaBerakhir.isBefore(sekarang)){
                                   showDialog(
                                       context: context,
                                       barrierDismissible: false,
@@ -956,7 +902,7 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
                                     "jabatan" : selectedJabatan,
                                     "tanggal_mulai_menjabat" : selectedMasaMulaiValue,
                                     "tanggal_akhir_menjabat" : selectedMasaBerakhirValue,
-                                    "email" : "email",
+                                    "email" : controllerEmail.text,
                                     "password" : controllerPassword.text,
                                     "desa_adat_id" : loginPage.desaId,
                                     "penduduk_id" : pegawaiID
@@ -1103,7 +1049,7 @@ class pilihDataPrajuruBanjarAdat extends StatefulWidget {
 }
 
 class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat> {
-  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/banjar_adat/${pilihDataPrajuruBanjarAdat.banjarId}";
+  var apiURLGetDataPenduduk = "http://192.168.137.57:8000/api/data/penduduk/banjar_adat/${pilihDataPrajuruBanjarAdat.banjarId}";
   var nikPegawai = [];
   var namaPegawai = [];
   var kramaMipilID = [];
@@ -1248,7 +1194,7 @@ class pilihDataBanjar extends StatefulWidget {
 }
 
 class _pilihDataBanjarState extends State<pilihDataBanjar> {
-  var apiURLGetDataBanjar = "http://192.168.18.10:8000/api/data/banjar/${loginPage.desaId}";
+  var apiURLGetDataBanjar = "http://192.168.137.57:8000/api/data/banjar/${loginPage.desaId}";
   var idBanjar = [];
   var namaBanjar = [];
   bool Loading = true;
