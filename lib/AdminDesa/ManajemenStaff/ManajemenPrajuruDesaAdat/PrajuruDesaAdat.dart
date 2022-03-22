@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
@@ -33,10 +34,10 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
   bool availableDataTidakAktif = false;
   var selectedIdPrajuruDesaAdat;
   var selectedIdPenduduk;
-  var apiURLShowListPrajuruDesaAdatAktif = "http://192.168.137.57:8000/api/data/staff/prajuru_desa_adat/aktif/${loginPage.desaId}";
-  var apiURLShowListPrajuruDesaAdatTidakAktif = "http://192.168.137.57:8000/api/data/staff/prajuru_desa_adat/tidak_aktif/${loginPage.desaId}";
-  var apiURLDeletePrajuruDesaAdat = "http://192.168.137.57:8000/api/admin/prajuru/desa_adat/delete";
-  var apiURLSetPrajuruTidakAktif = "http://192.168.137.57:8000/api/admin/prajuru/desa_adat/set_tidak_aktif";
+  var apiURLShowListPrajuruDesaAdatAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/aktif/${loginPage.desaId}";
+  var apiURLShowListPrajuruDesaAdatTidakAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/tidak_aktif/${loginPage.desaId}";
+  var apiURLDeletePrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/delete";
+  var apiURLSetPrajuruTidakAktif = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/set_tidak_aktif";
 
   Future refreshListPrajuruDesaAdatAktif() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruDesaAdatAktif);
@@ -196,9 +197,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                             child: TabBarView(
                               children: <Widget>[
                                 Container(
-                                  child: LoadingAktif ? Center(
-                                    child: Lottie.asset('assets/loading-circle.json')
-                                  ) : availableDataAktif ? RefreshIndicator(
+                                  child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? RefreshIndicator(
                                       onRefresh: refreshListPrajuruDesaAdatAktif,
                                       child: ListView.builder(
                                           itemCount: prajuruDesaAdatIDAktif.length,
@@ -239,8 +238,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                                                             Container(
                                                                                 child: Text("${jabatanAktif[index]}", style: TextStyle(
                                                                                     fontFamily: "Poppins",
-                                                                                    fontSize: 14,
-                                                                                    fontWeight: FontWeight.w700
+                                                                                    fontSize: 14
                                                                                 ))
                                                                             )
                                                                           ]
@@ -380,9 +378,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                   ),
                                 ),
                                 Container(
-                                  child: LoadingTidakAktif ? Center(
-                                    child: Lottie.asset('assets/loading-circle.json')
-                                  ) : availableDataTidakAktif ? RefreshIndicator(
+                                  child: LoadingTidakAktif ? ListTileShimmer() : availableDataTidakAktif ? RefreshIndicator(
                                       onRefresh: refreshListPrajuruDesaAdatTidakAktif,
                                       child: ListView.builder(
                                           itemCount: prajuruDesaAdatIDTidakAktif.length,
@@ -423,8 +419,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                                                             Container(
                                                                                 child: Text("${jabatanTidakAktif[index]}", style: TextStyle(
                                                                                     fontFamily: "Poppins",
-                                                                                    fontSize: 14,
-                                                                                    fontWeight: FontWeight.w700
+                                                                                    fontSize: 14
                                                                                 ))
                                                                             )
                                                                           ]

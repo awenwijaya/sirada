@@ -36,7 +36,7 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
   var pegawaiID;
   var banjarID;
   var namaBanjar;
-  var apiURLUpDataPrajuruBanjarAdat = "http://192.168.137.57:8000/api/admin/prajuru/banjar_adat/up";
+  var apiURLUpDataPrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/up";
 
   @override
   Widget build(BuildContext context) {
@@ -1049,7 +1049,7 @@ class pilihDataPrajuruBanjarAdat extends StatefulWidget {
 }
 
 class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat> {
-  var apiURLGetDataPenduduk = "http://192.168.137.57:8000/api/data/penduduk/banjar_adat/${pilihDataPrajuruBanjarAdat.banjarId}";
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/banjar_adat/${pilihDataPrajuruBanjarAdat.banjarId}";
   var nikPegawai = [];
   var namaPegawai = [];
   var kramaMipilID = [];
@@ -1194,7 +1194,7 @@ class pilihDataBanjar extends StatefulWidget {
 }
 
 class _pilihDataBanjarState extends State<pilihDataBanjar> {
-  var apiURLGetDataBanjar = "http://192.168.137.57:8000/api/data/banjar/${loginPage.desaId}";
+  var apiURLGetDataBanjar = "http://192.168.18.10:8000/api/data/banjar/${loginPage.desaId}";
   var idBanjar = [];
   var namaBanjar = [];
   bool Loading = true;

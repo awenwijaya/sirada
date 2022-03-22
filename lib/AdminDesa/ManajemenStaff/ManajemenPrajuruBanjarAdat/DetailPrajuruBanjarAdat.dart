@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
@@ -84,9 +85,7 @@ class _detailPrajuruBanjarAdatAdminState extends State<detailPrajuruBanjarAdatAd
             onPressed: (){Navigator.of(context).pop();},
           )
         ),
-        body: nama == null ? Center(
-          child: Lottie.asset('assets/loading-circle.json')
-        ) : SingleChildScrollView(
+        body: nama == null ? ProfilePageShimmer() : SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(

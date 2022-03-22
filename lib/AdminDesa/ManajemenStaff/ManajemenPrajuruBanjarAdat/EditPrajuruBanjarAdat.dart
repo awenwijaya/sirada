@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
@@ -26,8 +27,8 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
   String selectedMasaBerakhirValue;
   DateTime masaMulai;
   DateTime masaBerakhir;
-  var apiURLShowDetailPrajuruBanjarAdat = "http://192.168.137.57:8000/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruBanjarAdat = "http://192.168.137.57:8000/api/admin/prajuru/banjar_adat/edit/up";
+  var apiURLShowDetailPrajuruBanjarAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/edit/up";
   var selectedIdPenduduk;
   bool Loading = false;
   final controllerEmail = TextEditingController();
@@ -77,9 +78,7 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
             onPressed: (){Navigator.of(context).pop(true);},
           )
         ),
-        body: masaMulai == null ? Center(
-          child: Lottie.asset('assets/loading-circle.json')
-        ) : SingleChildScrollView(
+        body: masaMulai == null ? ProfilePageShimmer() : SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(

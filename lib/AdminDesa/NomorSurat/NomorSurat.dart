@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -81,9 +82,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
             color: HexColor("#025393")
           )),
         ),
-        body: Loading ? Center(
-          child: Lottie.asset('assets/loading-circle.json'),
-        ) : availableData ? RefreshIndicator(
+        body: Loading ? ListTileShimmer() : availableData ? RefreshIndicator(
           onRefresh: refreshListNomorSurat,
           child: ListView.builder(
             itemCount: idNomorSurat.length,

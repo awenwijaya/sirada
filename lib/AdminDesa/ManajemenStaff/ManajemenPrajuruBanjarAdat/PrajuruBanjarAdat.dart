@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/DetailPrajuruBanjarAdat.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/EditPrajuruBanjarAdat.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/TambahPrajuruBanjarAdat.dart';
@@ -35,10 +36,10 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
   bool availableDataAktif = false;
   var selectedIdPrajuruBanjarAdat;
   var selectedIdPenduduk;
-  var apiURLShowListPrajuruBanjarAdatAktif = "http://192.168.137.57:8000/api/data/staff/prajuru_banjar_adat/aktif/${loginPage.desaId}";
-  var apiURLShowListPrajuruBanjarAdatTidakAktif = "http://192.168.137.57:8000/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
-  var apiURLDeletePrajuruBanjarAdat = "http://192.168.137.57:8000/api/admin/prajuru/banjar_adat/delete";
-  var apiURLSetPrajuruBanjarTidakAktif = "http://192.168.137.57:8000/api/admin/prajuru/banjar_adat/set_tidak_aktif";
+  var apiURLShowListPrajuruBanjarAdatAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/aktif/${loginPage.desaId}";
+  var apiURLShowListPrajuruBanjarAdatTidakAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
+  var apiURLDeletePrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/delete";
+  var apiURLSetPrajuruBanjarTidakAktif = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/set_tidak_aktif";
 
   Future refreshListPrajuruBanjarAdatAktif() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruBanjarAdatAktif);
@@ -203,9 +204,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                             child: TabBarView(
                               children: <Widget>[
                                 Container(
-                                  child: LoadingAktif ? Center(
-                                      child: Lottie.asset('assets/loading-circle.json')
-                                  ) : availableDataAktif ? RefreshIndicator(
+                                  child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? RefreshIndicator(
                                       onRefresh: refreshListPrajuruBanjarAdatAktif,
                                       child: ListView.builder(
                                           itemCount: prajuruBanjarAdatIDAktif.length,
@@ -246,15 +245,13 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                                               Container(
                                                                                   child: Text("${jabatanAktif[index]}", style: TextStyle(
                                                                                       fontFamily: "Poppins",
-                                                                                      fontSize: 14,
-                                                                                      fontWeight: FontWeight.w700
+                                                                                      fontSize: 14
                                                                                   ))
                                                                               ),
                                                                               Container(
                                                                                   child: Text("Banjar: ${namaBanjarAktif[index]}", style: TextStyle(
                                                                                       fontFamily: "Poppins",
-                                                                                      fontSize: 14,
-                                                                                      fontWeight: FontWeight.w700
+                                                                                      fontSize: 14
                                                                                   ))
                                                                               )
                                                                             ]
@@ -396,9 +393,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                   ),
                                 ),
                                 Container(
-                                  child: LoadingTidakAktif ? Center(
-                                      child: Lottie.asset('assets/loading-circle.json')
-                                  ) : availableDataTidakAktif ? RefreshIndicator(
+                                  child: LoadingTidakAktif ? ListTileShimmer() : availableDataTidakAktif ? RefreshIndicator(
                                       onRefresh: refreshListPrajuruBanjarAdatTidakAktif,
                                       child: ListView.builder(
                                           itemCount: prajuruBanjarAdatIDTidakAktif.length,
@@ -439,15 +434,13 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                                               Container(
                                                                                   child: Text("${jabatanTidakAktif[index]}", style: TextStyle(
                                                                                       fontFamily: "Poppins",
-                                                                                      fontSize: 14,
-                                                                                      fontWeight: FontWeight.w700
+                                                                                      fontSize: 14
                                                                                   ))
                                                                               ),
                                                                               Container(
                                                                                   child: Text("Banjar: ${namaBanjarTidakAktif[index]}", style: TextStyle(
                                                                                       fontFamily: "Poppins",
-                                                                                      fontSize: 14,
-                                                                                      fontWeight: FontWeight.w700
+                                                                                      fontSize: 14
                                                                                   ))
                                                                               )
                                                                             ]

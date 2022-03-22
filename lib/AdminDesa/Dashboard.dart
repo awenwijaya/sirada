@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -25,8 +25,8 @@ class dashboardAdminDesa extends StatefulWidget {
 
 class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var profilePicture;
-  var namaAdmin = "Admin Desa";
-  var namaDesa = "Desa";
+  var namaAdmin;
+  var namaDesa;
   var apiURLGetDataUser = "http://192.168.18.10:8000/api/data/userdata/${loginPage.pendudukId}";
 
   getUserInfo() async {
@@ -174,7 +174,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
           child: Column(
             children: <Widget>[
               Container(
-                child: Row(
+                child: namaAdmin == null ? ProfileShimmer() : Row(
                   children: <Widget>[
                     Container(
                       child: profilePicture == null ? Container(
@@ -236,79 +236,81 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                 margin: EdgeInsets.only(top: 20, left: 15),
               ),
               Container(
-                alignment: Alignment.topLeft,
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                            child: dashboardAdminDesa.logoDesa == null ? Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
+                child: namaDesa == null ? ProfileShimmer() : Container(
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        child: dashboardAdminDesa.logoDesa == null ? Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
                                   image: AssetImage('images/noimage.png'),
                                   fit: BoxFit.fill
-                                )
-                              ),
-                            ) : Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${dashboardAdminDesa.logoDesa}')
-                                )
-                              ),
-                            ),
-                            margin: EdgeInsets.only(left: 20),
+                              )
                           ),
-                          Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  child: Text(namaDesa.toString(), style: TextStyle(
+                        ) : Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${dashboardAdminDesa.logoDesa}')
+                              )
+                          ),
+                        ),
+                        margin: EdgeInsets.only(left: 20),
+                      ),
+                      Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              child: Text(namaDesa.toString(), style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700
+                              )),
+                              margin: EdgeInsets.only(left: 20),
+                            ),
+                            Container(
+                              child: TextButton(
+                                child: Text("Lihat Detail Desa", style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w700
-                                  )),
-                                  margin: EdgeInsets.only(left: 20),
-                                ),
-                                Container(
-                                  child: TextButton(
-                                    child: Text("Lihat Detail Desa", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: HexColor("#025393")
-                                    )),
-                                    onPressed: (){
-                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailDesaAdmin()));
-                                    },
-                                  ),
-                                  margin: EdgeInsets.only(left: 15),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      margin: EdgeInsets.only(top: 15, left: 20, right: 20),
-                padding: EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0,3)
-                    )
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10))
+                                    fontWeight: FontWeight.w700,
+                                    color: HexColor("#025393")
+                                )),
+                                onPressed: (){
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => detailDesaAdmin()));
+                                },
+                              ),
+                              margin: EdgeInsets.only(left: 15),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0,3)
+                        )
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                  ),
                 ),
-                    ),
+              ),
               Container(
                 alignment: Alignment.topLeft,
                 child: Text("Manajemen Data Desa", style: TextStyle(

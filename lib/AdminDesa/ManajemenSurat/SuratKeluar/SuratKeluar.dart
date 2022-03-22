@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
@@ -161,9 +162,7 @@ class _suratKeluarAdminState extends State<suratKeluarAdmin> {
                             child: TabBarView(
                               children: <Widget>[
                                 Container(
-                                  child: LoadingDiproses ? Center(
-                                    child: Lottie.asset('assets/loading-circle.json')
-                                  ) : availableDataDiproses ? Container() : Container(
+                                  child: LoadingDiproses ? ListTileShimmer() : availableDataDiproses ? Container() : Container(
                                     child: Center(
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
@@ -230,9 +229,7 @@ class _suratKeluarAdminState extends State<suratKeluarAdmin> {
                                   ),
                                 ),
                                 Container(
-                                  child: LoadingDibatalkan ? Center(
-                                    child: Lottie.asset('assets/loading-circle.json')
-                                  ) : availableDataDibatalkan ? Container() : Container(
+                                  child: LoadingDibatalkan ? ListTileShimmer() : availableDataDibatalkan ? Container() : Container(
                                     child: Center(
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,

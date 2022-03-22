@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -85,9 +86,7 @@ class _adminProfileState extends State<adminProfile> {
             onPressed: (){Navigator.of(context).pop(true);},
           ),
         ),
-        body: adminProfile.namaPenduduk == null ? Center(
-          child: Lottie.asset('assets/loading-circle.json')
-        ) : SingleChildScrollView(
+        body: adminProfile.namaPenduduk == null ? ProfilePageShimmer() : SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(

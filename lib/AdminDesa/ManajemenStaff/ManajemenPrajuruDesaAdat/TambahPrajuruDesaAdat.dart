@@ -34,7 +34,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
   var namaPegawai;
   var kramaMipilID;
   var pegawaiID;
-  var apiURLUpDataPrajuruDesaAdat = "http://172.23.128.1:8000/api/admin/prajuru/desa_adat/up";
+  var apiURLUpDataPrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/up";
   bool Loading = false;
 
   @override
@@ -926,7 +926,7 @@ class pilihDataPegawai extends StatefulWidget {
 }
 
 class _pilihDataPegawaiState extends State<pilihDataPegawai> {
-  var apiURLGetDataPenduduk = "http://172.23.128.1:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
   var nikPegawai = [];
   var namaPegawai = [];
   var kramaMipilID = [];
