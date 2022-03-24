@@ -103,6 +103,9 @@ flutter:
     - images/noimage.png
     - assets/loading-circle.json
     - assets/loading-hourglass.json
+    - images/panitia.png
+    - images/bendesa.png
+    - images/handshake.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -32,7 +32,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
   var apiURLDeleteNomorSurat = "http://192.168.18.10:8000/api/admin/nomor_surat/delete_nomor_surat";
 
   Future refreshListNomorSurat() async {
-    Uri uri = Uri.parse('http://192.168.18.10:8000/api/data/nomorsurat');
+    Uri uri = Uri.parse('http://172.16.59.240:8000/api/data/nomorsurat');
     final response = await http.get(uri);
     if(response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -58,7 +58,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
 
   @override
   void initState() {
-    // TODO: implement initState
+     // TODO: implement initState
     super.initState();
     refreshListNomorSurat();
   }

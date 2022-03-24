@@ -73,7 +73,7 @@ class _detailPrajuruBanjarAdatAdminState extends State<detailPrajuruBanjarAdatAd
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Detail Pegawai", style: TextStyle(
+          title: Text("Detail Prajuru", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
@@ -107,7 +107,7 @@ class _detailPrajuruBanjarAdatAdminState extends State<detailPrajuruBanjarAdatAd
                 margin: EdgeInsets.only(top: 20)
               ),
               Container(
-                child: Text(statusPrajuruBanjarAdat == 1 ? "AKTIF" : "TIDAK AKTIF", style: TextStyle(
+                child: Text(statusPrajuruBanjarAdat == "aktif" ? "AKTIF" : "TIDAK AKTIF", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -121,7 +121,7 @@ class _detailPrajuruBanjarAdatAdminState extends State<detailPrajuruBanjarAdatAd
                 margin: EdgeInsets.only(top: 10)
               ),
               Container(
-                child: Text("Detail Pegawai", style: TextStyle(
+                child: Text("Detail Prajuru", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700

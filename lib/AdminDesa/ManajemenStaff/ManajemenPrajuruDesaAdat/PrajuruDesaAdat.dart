@@ -114,7 +114,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
               Navigator.of(context).pop();
             },
           ),
-          title: Text("Pegawai Desa Adat", style: TextStyle(
+          title: Text("Prajuru Desa Adat", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
@@ -139,7 +139,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                       refreshListPrajuruDesaAdatAktif();
                     });
                   },
-                  child: Text("Tambah Data Pegawai", style: TextStyle(
+                  child: Text("Tambah Data Prajuru", style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -156,7 +156,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
               ),
               Container(
                 alignment: Alignment.topLeft,
-                child: Text("Data Pegawai Desa Adat", style: TextStyle(
+                child: Text("Data Prajuru Desa Adat", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
@@ -228,12 +228,21 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                                           children: <Widget>[
                                                                             Container(
-                                                                                child: Text("${namaPrajuruAktif[index]}", style: TextStyle(
+                                                                              child: SizedBox(
+                                                                                width: MediaQuery.of(context).size.width * 0.55,
+                                                                                child: Text(
+                                                                                    "${namaPrajuruAktif[index]}",
+                                                                                  style: TextStyle(
                                                                                     fontFamily: "Poppins",
                                                                                     fontSize: 16,
                                                                                     fontWeight: FontWeight.w700,
                                                                                     color: HexColor("#025393")
-                                                                                ))
+                                                                                  ),
+                                                                                  maxLines: 1,
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                  softWrap: false
+                                                                                )
+                                                                              )
                                                                             ),
                                                                             Container(
                                                                                 child: Text("${jabatanAktif[index]}", style: TextStyle(
@@ -355,7 +364,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                               )
                                           ),
                                           Container(
-                                            child: Text("Tidak ada Data Pegawai Desa Adat", style: TextStyle(
+                                            child: Text("Tidak ada Data Prajuru Desa Adat", style: TextStyle(
                                                 fontFamily: "Poppins",
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
@@ -365,7 +374,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                             padding: EdgeInsets.symmetric(horizontal: 30),
                                           ),
                                           Container(
-                                            child: Text("Tidak ada data pegawai Desa Adat. Anda bisa menambahkannya dengan cara menekan tombol Tambah Data Pegawai dan isi data nomor surat pada form yang telah disediakan", style: TextStyle(
+                                            child: Text("Tidak ada data prajuru desa adat. Anda bisa menambahkannya dengan cara menekan tombol Tambah Data Prajuru dan isi data nomor surat pada form yang telah disediakan", style: TextStyle(
                                                 fontFamily: "Poppins",
                                                 fontSize: 14,
                                                 color: Colors.black26
@@ -409,12 +418,21 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                                           children: <Widget>[
                                                                             Container(
-                                                                                child: Text("${namaPrajuruTidakAktif[index]}", style: TextStyle(
-                                                                                    fontFamily: "Poppins",
-                                                                                    fontSize: 16,
-                                                                                    fontWeight: FontWeight.w700,
-                                                                                    color: HexColor("#025393")
-                                                                                ))
+                                                                                child: SizedBox(
+                                                                                    width: MediaQuery.of(context).size.width * 0.55,
+                                                                                    child: Text(
+                                                                                        "${namaPrajuruTidakAktif[index]}",
+                                                                                        style: TextStyle(
+                                                                                            fontFamily: "Poppins",
+                                                                                            fontSize: 16,
+                                                                                            fontWeight: FontWeight.w700,
+                                                                                            color: HexColor("#025393")
+                                                                                        ),
+                                                                                        maxLines: 1,
+                                                                                        overflow: TextOverflow.ellipsis,
+                                                                                        softWrap: false
+                                                                                    )
+                                                                                )
                                                                             ),
                                                                             Container(
                                                                                 child: Text("${jabatanTidakAktif[index]}", style: TextStyle(
@@ -562,7 +580,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                       )
                     ),
                     Container(
-                      child: Text("Hapus Data Pegawai", style: TextStyle(
+                      child: Text("Hapus Data Prajuru", style: TextStyle(
                         fontFamily: "Poppins",
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -571,7 +589,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                       margin: EdgeInsets.only(top: 10)
                     ),
                     Container(
-                      child: Text("Apakah Anda yakin ingin menghapus data pegawai?", style: TextStyle(
+                      child: Text("Apakah Anda yakin ingin menghapus data prajuru?", style: TextStyle(
                         fontFamily: "Poppins",
                         fontSize: 14
                       ), textAlign: TextAlign.center),
@@ -596,7 +614,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                         refreshListPrajuruDesaAdatAktif();
                         refreshListPrajuruDesaAdatTidakAktif();
                         Fluttertoast.showToast(
-                          msg: "Data pegawai berhasil dihapus",
+                          msg: "Data prajuru berhasil dihapus",
                           fontSize: 14,
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.CENTER
@@ -648,7 +666,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                             )
                         ),
                         Container(
-                            child: Text("Atur Staff Menjadi Tidak Aktif", style: TextStyle(
+                            child: Text("Atur Prajuru Menjadi Tidak Aktif", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -657,7 +675,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                             margin: EdgeInsets.only(top: 10)
                         ),
                         Container(
-                          child: Text("Apakah Anda yakin ingin menonaktifkan staff ini? Setelah staff di non-aktifkan maka ia akan kehilangan hak akses login dan tindakan ini tidak dapat dikembalikan", style: TextStyle(
+                          child: Text("Apakah Anda yakin ingin menonaktifkan prajuru ini? Setelah prajuru di non-aktifkan maka ia akan kehilangan hak akses login dan tindakan ini tidak dapat dikembalikan", style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 14
                           ), textAlign: TextAlign.center),
@@ -682,7 +700,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                           refreshListPrajuruDesaAdatAktif();
                           refreshListPrajuruDesaAdatTidakAktif();
                           Fluttertoast.showToast(
-                            msg: "Pegawai berhasil dinonaktifkan!",
+                            msg: "Prajuru berhasil dinonaktifkan!",
                             fontSize: 14,
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.CENTER

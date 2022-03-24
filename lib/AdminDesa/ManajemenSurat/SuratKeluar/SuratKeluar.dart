@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:lottie/lottie.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarBendesaAdat/SuratKeluarBendesaAdat.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/SuratKeluarPanitia.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarParumanDesaAdat/SuratKeluarParumanDesaAdat.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratParjuruDesaAdat/SuratPrajuruDesaAdat.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,57 +16,10 @@ class suratKeluarAdmin extends StatefulWidget {
 }
 
 class _suratKeluarAdminState extends State<suratKeluarAdmin> {
-  var apiURLSuratKeluarDiproses = "http://192.168.18.10:8000/api/data/surat/keluar/sedang_diproses/${loginPage.desaId}";
-  var apiURLSuratKeluarDikonfirmasi = "http://192.168.18.10:8000/api/data/surat/keluar/dikonfirmasi/${loginPage.desaId}";
-  var apiURLSuratKeluarDibatalkan = "http://192.168.18.10:8000/api/data/surat/keluar/dibatalkan/${loginPage.desaId}";
-  bool LoadingDiproses = true;
-  bool LoadingDikonfirmasi = true;
-  bool LoadingDibatalkan = true;
-  bool availableDataDiproses = false;
-  bool availableDataDikonfirmasi = false;
-  bool availableDataDibatalkan = false;
-
-  Future refreshListSuratKeluarDiproses() async {
-    Uri uri = Uri.parse(apiURLSuratKeluarDiproses);
-    final response = await http.get(uri);
-    if(response.statusCode == 501) {
-      setState(() {
-        LoadingDiproses = false;
-        availableDataDiproses = false;
-      });
-    }
-  }
-
-  Future refreshListSuratKeluarDikonfirmasi() async {
-    Uri uri = Uri.parse(apiURLSuratKeluarDikonfirmasi);
-    final response = await http.get(uri);
-    if(response.statusCode == 501) {
-      setState(() {
-        LoadingDikonfirmasi = false;
-        availableDataDikonfirmasi = false;
-      });
-    }
-  }
-
-  Future refreshListSuratKeluarDibatalkan() async {
-    Uri uri = Uri.parse(apiURLSuratKeluarDibatalkan);
-    final response = await http.get(uri);
-    if(response.statusCode == 501) {
-      setState(() {
-        LoadingDibatalkan = false;
-        availableDataDibatalkan = false;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    refreshListSuratKeluarDiproses();
-    refreshListSuratKeluarDikonfirmasi();
-    refreshListSuratKeluarDibatalkan();
-  }
+  var jumlahSuratPanitia = "0";
+  var jumlahSuratPrajuruDesaAdat = "0";
+  var jumlahSuratBendesaAdat = "0";
+  var jumlahSuratParumanDesaAdat = "0";
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +38,7 @@ class _suratKeluarAdminState extends State<suratKeluarAdmin> {
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
-          ))
+          )),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -95,180 +50,317 @@ class _suratKeluarAdminState extends State<suratKeluarAdmin> {
                   height: 100,
                   width: 100
                 ),
-                margin: EdgeInsets.only(top: 20),
-              ),
-              Container(
-                child: FlatButton(
-                  onPressed: (){},
-                  child: Text("Tambah Data Surat Keluar", style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: HexColor("#025393")
-                  )),
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    side: BorderSide(color: HexColor("#025393"), width: 2)
-                  ),
-                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
-                ),
                 margin: EdgeInsets.only(top: 20)
               ),
               Container(
                 alignment: Alignment.topLeft,
-                child: Text("Status Surat Keluar", style: TextStyle(
+                child: Text("Kategori Surat Keluar", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
                 )),
-                margin: EdgeInsets.only(top: 20, left: 15, bottom: 20),
+                margin: EdgeInsets.only(top: 20, left: 15)
               ),
               Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    DefaultTabController(
-                      length: 3,
-                      initialIndex: 0,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Container(
-                            child: TabBar(
-                              labelColor: HexColor("#025393"),
-                              unselectedLabelColor: Colors.black,
-                              tabs: [
-                                Tab(child: Text("Sedang Diproses", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w700
-                                ), textAlign: TextAlign.center)),
-                                Tab(child: Text("Telah Dikonfirmasi", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w700
-                                ), textAlign: TextAlign.center)),
-                                Tab(child: Text("Dibatalkan", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w700
-                                ), textAlign: TextAlign.center))
-                              ],
-                            )
-                          ),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.5,
-                            decoration: BoxDecoration(
-                                border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
-                            ),
-                            child: TabBarView(
+                child: Container(
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => suratKeluarPanitiaAdmin()));
+                    },
+                    child: Container(
+                        child: Stack(
+                          alignment: Alignment.centerLeft,
+                          children: <Widget>[
+                            Row(
                               children: <Widget>[
                                 Container(
-                                  child: LoadingDiproses ? ListTileShimmer() : availableDataDiproses ? Container() : Container(
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            child: Icon(
-                                              CupertinoIcons.mail_solid,
-                                              size: 50,
-                                              color: Colors.black26
-                                            )
-                                          ),
-                                          Container(
-                                            child: Text("Tidak ada Data Surat Keluar", style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black26
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10)
-                                          ),
-                                          Container(
-                                            child: Text("Tidak ada data surat keluar. Anda bisa menambahkannya dengan cara menekan tombol Tambah Data Surat Keluar dan isi data surat keluar pada form yang telah disediakan", style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14,
-                                              color: Colors.black26
-                                            ), textAlign: TextAlign.center),
-                                            padding: EdgeInsets.symmetric(horizontal: 30),
-                                            margin: EdgeInsets.only(top: 10)
-                                          )
-                                        ]
-                                      )
+                                    child: Image.asset(
+                                        "images/panitia.png",
+                                        height: 40,
+                                        width: 40
                                     ),
-                                      alignment: Alignment(0.0, 0.0)
-                                  )
+                                    margin: EdgeInsets.only(left: 15)
                                 ),
                                 Container(
-                                  child: LoadingDikonfirmasi ? Center(
-                                    child: Lottie.asset('assets/loading-circle.json')
-                                  ) : availableDataDikonfirmasi ? Container() : Container(
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            child: Icon(
-                                              CupertinoIcons.mail_solid,
-                                              size: 50,
-                                              color: Colors.black26
-                                            )
-                                          ),
-                                          Container(
-                                            child: Text("Tidak ada Data", style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black26
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10)
-                                          )
-                                        ]
+                                  child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Container(
+                                        child: Text(jumlahSuratPanitia, style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393")
+                                        ))
+                                      ),
+                                      Container(
+                                        child: Text("Surat Panitia", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700
+                                        ))
                                       )
-                                    ),
-                                      alignment: Alignment(0.0, 0.0)
+                                    ]
                                   ),
-                                ),
-                                Container(
-                                  child: LoadingDibatalkan ? ListTileShimmer() : availableDataDibatalkan ? Container() : Container(
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            child: Icon(
-                                              CupertinoIcons.mail_solid,
-                                              size: 50,
-                                              color: Colors.black26
-                                            )
-                                          ),
-                                          Container(
-                                            child: Text("Tidak ada Data", style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black26
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10)
-                                          )
-                                        ]
-                                      )
-                                    ),
-                                      alignment: Alignment(0.0, 0.0)
-                                  )
+                                  margin: EdgeInsets.only(left: 15)
                                 )
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                    )
-                  ]
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: Icon(
+                                CupertinoIcons.right_chevron,
+                                color: HexColor("#025393")
+                              ),
+                              margin: EdgeInsets.only(right: 10)
+                            )
+                          ]
+                        )
+                    ),
+                  ),
+                  margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0,3)
+                        )
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                  ),
                 ),
-              )
+              ),
+              Container(
+                child: Container(
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => suratKeluarPrajuruDesaAdatAdmin()));
+                    },
+                    child: Container(
+                        child: Stack(
+                            alignment: Alignment.centerLeft,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                      child: Image.asset(
+                                          "images/staff.png",
+                                          height: 40,
+                                          width: 40
+                                      ),
+                                      margin: EdgeInsets.only(left: 15)
+                                  ),
+                                  Container(
+                                      child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Container(
+                                                child: Text(jumlahSuratPrajuruDesaAdat, style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: HexColor("#025393")
+                                                ))
+                                            ),
+                                            Container(
+                                                child: Text("Surat Prajuru Desa Adat", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w700
+                                                ))
+                                            )
+                                          ]
+                                      ),
+                                      margin: EdgeInsets.only(left: 15)
+                                  )
+                                ],
+                              ),
+                              Container(
+                                  alignment: Alignment.centerRight,
+                                  child: Icon(
+                                      CupertinoIcons.right_chevron,
+                                      color: HexColor("#025393")
+                                  ),
+                                  margin: EdgeInsets.only(right: 10)
+                              )
+                            ]
+                        )
+                    ),
+                  ),
+                  margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0,3)
+                        )
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                  ),
+                ),
+              ),
+              Container(
+                child: Container(
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => suratKeluarBendesaAdatAdmin()));
+                    },
+                    child: Container(
+                        child: Stack(
+                            alignment: Alignment.centerLeft,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                      child: Image.asset(
+                                          "images/bendesa.png",
+                                          height: 40,
+                                          width: 40
+                                      ),
+                                      margin: EdgeInsets.only(left: 15)
+                                  ),
+                                  Container(
+                                      child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Container(
+                                                child: Text(jumlahSuratBendesaAdat, style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: HexColor("#025393")
+                                                ))
+                                            ),
+                                            Container(
+                                                child: Text("Surat Bendesa Adat", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w700
+                                                ))
+                                            )
+                                          ]
+                                      ),
+                                      margin: EdgeInsets.only(left: 15)
+                                  )
+                                ],
+                              ),
+                              Container(
+                                  alignment: Alignment.centerRight,
+                                  child: Icon(
+                                      CupertinoIcons.right_chevron,
+                                      color: HexColor("#025393")
+                                  ),
+                                  margin: EdgeInsets.only(right: 10)
+                              )
+                            ]
+                        )
+                    ),
+                  ),
+                  margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0,3)
+                        )
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                  ),
+                ),
+              ),
+              Container(
+                child: Container(
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => suratKeluarParumanDesaAdat()));
+                    },
+                    child: Container(
+                        child: Stack(
+                            alignment: Alignment.centerLeft,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                      child: Image.asset(
+                                          "images/handshake.png",
+                                          height: 40,
+                                          width: 40
+                                      ),
+                                      margin: EdgeInsets.only(left: 15)
+                                  ),
+                                  Container(
+                                      child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Container(
+                                                child: Text(jumlahSuratParumanDesaAdat, style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: HexColor("#025393")
+                                                ))
+                                            ),
+                                            Container(
+                                                child: Text("Surat Paruman Desa Adat", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w700
+                                                ))
+                                            )
+                                          ]
+                                      ),
+                                      margin: EdgeInsets.only(left: 15)
+                                  )
+                                ],
+                              ),
+                              Container(
+                                  alignment: Alignment.centerRight,
+                                  child: Icon(
+                                      CupertinoIcons.right_chevron,
+                                      color: HexColor("#025393")
+                                  ),
+                                  margin: EdgeInsets.only(right: 10)
+                              )
+                            ]
+                        )
+                    ),
+                  ),
+                  margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0,3)
+                        )
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                  ),
+                ),
+              ),
             ]
           )
-        ),
-      )
+        )
+      ),
     );
   }
 }

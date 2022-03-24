@@ -34,6 +34,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
   var namaPegawai;
   var kramaMipilID;
   var pegawaiID;
+  var selectedRole;
   var apiURLUpDataPrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/up";
   bool Loading = false;
 
@@ -48,7 +49,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop(true);},
           ),
-          title: Text("Tambah Pegawai Desa Adat", style: TextStyle(
+          title: Text("Tambah Prajuru Desa Adat", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
@@ -76,7 +77,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
               ),
               Container(
                 alignment: Alignment.topLeft,
-                child: Text("1. Data Pegawai *", style: TextStyle(
+                child: Text("1. Data Prajuru *", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
@@ -85,7 +86,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
               ),
               Container(
                 alignment: Alignment.topLeft,
-                child: Text("Silahkan pilih data pegawai yang akan Anda tambahkan dengan menekan tombol Pilih Data Pegawai.", style: TextStyle(
+                child: Text("Silahkan pilih data prajuru yang akan Anda tambahkan dengan menekan tombol Pilih Data Prajuru.", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14
                 )),
@@ -94,7 +95,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
               ),
               Container(
                 alignment: Alignment.center,
-                child: Text(namaPegawai == null ? "Data pegawai belum terpilih" : "${namaPegawai}",
+                child: Text(namaPegawai == null ? "Data prajuru belum terpilih" : "${namaPegawai}",
                     style: TextStyle(
                         fontFamily: "Poppins",
                         fontSize: 14,
@@ -107,7 +108,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                   onPressed: (){
                     navigatePilihDataPegawai(context);
                   },
-                  child: Text("Pilih Data Pegawai", style: TextStyle(
+                  child: Text("Pilih Data Prajuru", style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -360,7 +361,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                       margin: EdgeInsets.only(top: 30, left: 20),
                     ),
                     Container(
-                      child: Text("Silahkan isi informasi email pada form dibawah. Data email ini nantinya akan digunakan oleh pegawai untuk melakukan proses login. \n\nApabila pegawai sudah tidak aktif, maka data ini tidak perlu diisi", style: TextStyle(
+                      child: Text("Silahkan isi informasi email pada form dibawah. Data email ini nantinya akan digunakan oleh prajuru untuk melakukan proses login.", style: TextStyle(
                         fontFamily: "Poppins",
                         fontSize: 14
                       )),
@@ -400,7 +401,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                               borderRadius: BorderRadius.circular(50.0),
                               borderSide: BorderSide(color: HexColor("#025393"))
                             ),
-                            hintText: "Data pegawai belum terpilih",
+                            hintText: "Data prajuru belum terpilih",
                             prefixIcon: Icon(Icons.lock_rounded)
                           ),
                           style: TextStyle(
@@ -578,6 +579,15 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                   }
                               );
                             }else{
+                              if(selectedJabatan == "bendesa") {
+                                setState(() {
+                                  selectedRole = "Bendesa";
+                                });
+                              }else{
+                                setState(() {
+                                  selectedRole = "Admin";
+                                });
+                              }
                               setState(() {
                                 Loading = true;
                                 statusValue = "1";
@@ -591,7 +601,8 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                 "password" : controllerPassword.text,
                                 "desa_adat_id" : loginPage.desaId,
                                 "jabatan" : selectedJabatan,
-                                "penduduk_id" : pegawaiID
+                                "penduduk_id" : pegawaiID,
+                                "role" : selectedRole
                               });
                               http.post(Uri.parse(apiURLUpDataPrajuruDesaAdat),
                                   headers : {"Content-Type" : "application/json"},
@@ -624,7 +635,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                                         )
                                                     ),
                                                     Container(
-                                                        child: Text("Pegawai telah terdaftar", style: TextStyle(
+                                                        child: Text("Prajuru telah terdaftar", style: TextStyle(
                                                             fontFamily: "Poppins",
                                                             fontSize: 16,
                                                             fontWeight: FontWeight.w700,
@@ -633,7 +644,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                                         margin: EdgeInsets.only(top: 10)
                                                     ),
                                                     Container(
-                                                        child: Text("Pegawai telah terdaftar sebelumnya. Silahkan masukkan data pegawai yang lain dengan cara menekan tombol Pilih Data Pegawai dan coba lagi", style: TextStyle(
+                                                        child: Text("Prajuru telah terdaftar sebelumnya. Silahkan masukkan data prajuru yang lain dengan cara menekan tombol Pilih Data Prajuru dan coba lagi", style: TextStyle(
                                                             fontFamily: "Poppins",
                                                             fontSize: 14
                                                         ), textAlign: TextAlign.center),
@@ -717,7 +728,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                     Loading = false;
                                   });
                                   Fluttertoast.showToast(
-                                      msg: "Pegawai Desa Adat berhasil ditambahkan",
+                                      msg: "Prajuru Desa Adat berhasil ditambahkan",
                                       fontSize: 14,
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.CENTER
@@ -828,7 +839,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                                         )
                                                     ),
                                                     Container(
-                                                        child: Text("Pegawai telah terdaftar", style: TextStyle(
+                                                        child: Text("Prajuru telah terdaftar", style: TextStyle(
                                                             fontFamily: "Poppins",
                                                             fontSize: 16,
                                                             fontWeight: FontWeight.w700,
@@ -837,7 +848,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                                         margin: EdgeInsets.only(top: 10)
                                                     ),
                                                     Container(
-                                                        child: Text("Pegawai telah terdaftar sebelumnya. Silahkan masukkan data pegawai yang lain dengan cara menekan tombol Pilih Data Pegawai dan coba lagi", style: TextStyle(
+                                                        child: Text("Prajuru telah terdaftar sebelumnya. Silahkan masukkan data prajuru yang lain dengan cara menekan tombol Pilih Data Prajuru dan coba lagi", style: TextStyle(
                                                             fontFamily: "Poppins",
                                                             fontSize: 14
                                                         ), textAlign: TextAlign.center),
@@ -864,7 +875,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                     Loading = false;
                                   });
                                   Fluttertoast.showToast(
-                                      msg: "Pegawai Desa Adat berhasil ditambahkan",
+                                      msg: "Prajuru Desa Adat berhasil ditambahkan",
                                       fontSize: 14,
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.CENTER
@@ -875,7 +886,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                             }
                           }
                         },
-                        child: Text("Simpan Pegawai", style: TextStyle(
+                        child: Text("Simpan Prajuru", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
@@ -972,7 +983,7 @@ class _pilihDataPegawaiState extends State<pilihDataPegawai> {
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop();},
           ),
-          title: Text("Pilih Data Pegawai", style: TextStyle(
+          title: Text("Pilih Data Prajuru", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")

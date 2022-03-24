@@ -31,6 +31,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   var apiURLShowDetailPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
   var apiURLSimpanPrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/edit/up";
   var selectedIdPenduduk;
+  var selectedRole;
   bool Loading = false;
   final controllerEmail = TextEditingController();
 
@@ -45,9 +46,9 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
         setState(() {
           selectedJabatan = parsedJson['jabatan'];
           selectedMasaMulaiValue = parsedJson['tanggal_mulai_menjabat'];
-          masaMulai = new DateFormat("yyyy-mm-dd").parse(selectedMasaMulaiValue);
+          masaMulai = new DateFormat("yyyy-MM-dd").parse(selectedMasaMulaiValue);
           selectedMasaBerakhirValue = parsedJson['tanggal_akhir_menjabat'];
-          masaBerakhir = new DateFormat("yyyy-mm-dd").parse(selectedMasaBerakhirValue);
+          masaBerakhir = new DateFormat("yyyy-MM-dd").parse(selectedMasaBerakhirValue);
           controllerEmail.text = parsedJson['email'];
           selectedIdPenduduk = parsedJson['penduduk_id'];
         });
@@ -67,7 +68,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
     return MaterialApp(
       home: Loading ? loading() : Scaffold(
         appBar: AppBar(
-          title: Text("Edit Pegawai Desa Adat", style: TextStyle(
+          title: Text("Edit Prajuru Desa Adat", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
@@ -92,7 +93,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                 margin: EdgeInsets.only(top: 30)
               ),
               Container(
-                child: Text("* = diperlukan ${selectedIdPenduduk}", style: TextStyle(
+                child: Text("* = diperlukan", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
@@ -413,13 +414,23 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                       setState(() {
                         Loading = true;
                       });
+                      if(selectedJabatan == "bendesa") {
+                        setState(() {
+                          selectedRole = "Bendesa";
+                        });
+                      }else{
+                        setState(() {
+                          selectedRole = "Admin";
+                        });
+                      }
                       var body = jsonEncode({
                         "prajuru_desa_adat_id" : editPrajuruDesaAdatAdmin.idPegawai,
                         "jabatan" : selectedJabatan,
                         "masa_mulai_menjabat" : selectedMasaMulaiValue,
                         "masa_akhir_menjabat" : selectedMasaBerakhirValue,
                         'penduduk_id' : selectedIdPenduduk,
-                        'email' : controllerEmail.text
+                        'email' : controllerEmail.text,
+                        'role' : selectedRole
                       });
                       http.post(Uri.parse(apiURLSimpanPrajuruDesaAdat),
                           headers : {"Content-Type" : "application/json"},
@@ -431,7 +442,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                             Loading = false;
                           });
                           Fluttertoast.showToast(
-                              msg: "Data pegawai berhasil diperbaharui",
+                              msg: "Data prajuru berhasil diperbaharui",
                               fontSize: 14,
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.CENTER

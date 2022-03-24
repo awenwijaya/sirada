@@ -25,23 +25,6 @@ void main() {
   SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]
   );
-  configLoading();
-}
-
-void configLoading() {
-  EasyLoading.instance
-    ..displayDuration = const Duration(milliseconds: 2000)
-    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
-    ..loadingStyle = EasyLoadingStyle.dark
-    ..indicatorSize = 45.0
-    ..radius = 10.0
-    ..progressColor = Colors.yellow
-    ..backgroundColor = Colors.green
-    ..indicatorColor = Colors.yellow
-    ..textColor = Colors.yellow
-    ..maskColor = Colors.blue.withOpacity(0.5)
-    ..userInteractions = true
-    ..dismissOnTap = false;
 }
 
 class splashScreen extends StatefulWidget {
@@ -63,7 +46,7 @@ class _splashScreenState extends State<splashScreen> {
 
   Future getUserInfo() async {
     final SharedPreferences sharedpref = await SharedPreferences.getInstance();
-    userEmail = sharedpref.getString('userEmail');
+    userEmail = sharedpref.getString('email');
     userId = sharedpref.getInt('userId');
     desaId = sharedpref.getString('desaId');
     pendudukId = sharedpref.getInt('pendudukId');
@@ -85,7 +68,7 @@ class _splashScreenState extends State<splashScreen> {
           loginPage.desaId = desaId;
           loginPage.pendudukId = pendudukId;
         });
-        if(role == "Pengguna") {
+        if(role == "Krama") {
           return Timer(duration, navigatorPendudukHomePage);
         }else if(role == "Kepala Desa") {
           return Timer(duration, navigatorKepalaDesaHomePage);

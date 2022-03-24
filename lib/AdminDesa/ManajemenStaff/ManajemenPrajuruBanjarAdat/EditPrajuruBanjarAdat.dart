@@ -44,9 +44,9 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
         setState(() {
           selectedJabatan = parsedJson['jabatan'];
           selectedMasaMulaiValue = parsedJson['tanggal_mulai_menjabat'];
-          masaMulai = new DateFormat("yyyy-mm-dd").parse(selectedMasaMulaiValue);
+          masaMulai = new DateFormat("yyyy-MM-dd").parse(selectedMasaMulaiValue);
           selectedMasaBerakhirValue = parsedJson['tanggal_akhir_menjabat'];
-          masaBerakhir = new DateFormat("yyyy-mm-dd").parse(selectedMasaBerakhirValue);
+          masaBerakhir = new DateFormat("yyyy-MM-dd").parse(selectedMasaBerakhirValue);
           controllerEmail.text = parsedJson['email'];
           selectedIdPenduduk = parsedJson['penduduk_id'];
         });
@@ -66,7 +66,7 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
     return MaterialApp(
       home: Loading ? loading() : Scaffold(
         appBar: AppBar(
-          title: Text("Edit Pegawai Banjar Adat", style: TextStyle(
+          title: Text("Edit Prajuru Banjar Adat", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
@@ -376,7 +376,7 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
                             Loading = false;
                           });
                           Fluttertoast.showToast(
-                            msg: "Data pegawai berhasil diperbaharui",
+                            msg: "Data prajuru berhasil diperbaharui",
                             fontSize: 14,
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.CENTER

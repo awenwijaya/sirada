@@ -338,7 +338,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                               ),
                             ),
                             Container(
-                              child: Text("Data Pegawai Desa Adat", style: TextStyle(
+                              child: Text("Data Prajuru Desa Adat", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700
@@ -379,7 +379,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                               ),
                             ),
                             Container(
-                              child: Text("Data Pegawai Banjar Adat", style: TextStyle(
+                              child: Text("Data Prajuru Banjar Adat", style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700

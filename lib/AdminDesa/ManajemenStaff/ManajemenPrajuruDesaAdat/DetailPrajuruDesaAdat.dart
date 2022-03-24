@@ -77,7 +77,7 @@ class _detailPrajuruDesaAdatAdminState extends State<detailPrajuruDesaAdatAdmin>
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop();}
           ),
-          title: Text("Detail Pegawai", style: TextStyle(
+          title: Text("Detail Prajuru", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
@@ -106,7 +106,7 @@ class _detailPrajuruDesaAdatAdminState extends State<detailPrajuruDesaAdatAdmin>
                 margin: EdgeInsets.only(top: 20)
               ),
               Container(
-                child: Text(statusPrajuruDesaAdat == 1 ? "AKTIF" : "TIDAK AKTIF", style: TextStyle(
+                child: Text(statusPrajuruDesaAdat == "aktif" ? "AKTIF" : "TIDAK AKTIF", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -120,7 +120,7 @@ class _detailPrajuruDesaAdatAdminState extends State<detailPrajuruDesaAdatAdmin>
                 margin: EdgeInsets.only(top: 10)
               ),
               Container(
-                child: Text("Detail Pegawai", style: TextStyle(
+                child: Text("Detail Prajuru", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700

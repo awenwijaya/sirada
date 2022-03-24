@@ -743,7 +743,10 @@ class _kontakWADesaAdminState extends State<kontakWADesaAdmin> {
                   Container(
                     child: detailDesaAdmin.kontakWADesa1 == null ? Container() : Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: () async {
+                          String url = "whatsapp://send?phone=${detailDesaAdmin.kontakWADesa1}";
+                          await canLaunch(url) ? launch(url) : print("Can't open WhatsApp");
+                        },
                         child: Container(
                             child: Row(
                               children: <Widget>[
@@ -787,7 +790,10 @@ class _kontakWADesaAdminState extends State<kontakWADesaAdmin> {
                   Container(
                     child: detailDesaAdmin.kontakWADesa2 == null ? Container() : Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: () async {
+                          String url = "whatsapp://send?phone=${detailDesaAdmin.kontakWADesa2}";
+                          await canLaunch(url) ? launch(url) : print("Can't open WhatsApp");
+                        },
                         child: Container(
                             child: Row(
                               children: <Widget>[
