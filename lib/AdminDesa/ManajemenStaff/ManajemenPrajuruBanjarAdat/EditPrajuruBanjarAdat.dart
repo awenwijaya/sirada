@@ -19,7 +19,7 @@ class editPrajuruBanjarAdatAdmin extends StatefulWidget {
 }
 
 class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin> {
-  List<String> jabatan = ['kelihan_adat','pangliman_banjar','penyarikan_banjar','patengen_banjar'];
+  List<String> jabatan = ['kelihan banjar','penyarikan','patengen','pangliman'];
   String selectedJabatan;
   String selectedMasaMulai;
   String selectedMasaMulaiValue;

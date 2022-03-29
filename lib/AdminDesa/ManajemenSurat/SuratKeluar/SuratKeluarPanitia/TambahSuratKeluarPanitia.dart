@@ -1,0 +1,1309 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:lottie/lottie.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:http/http.dart' as http;
+import 'package:surat/shared/LoadingAnimation/loading.dart';
+
+class tambahSuratKeluarPanitiaAdmin extends StatefulWidget {
+  const tambahSuratKeluarPanitiaAdmin({Key key}) : super(key: key);
+
+  @override
+  State<tambahSuratKeluarPanitiaAdmin> createState() => _tambahSuratKeluarPanitiaAdminState();
+}
+
+class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitiaAdmin> {
+  var namaKetuaPanitia;
+  var kramaMipilIDKetua;
+  var kramaMipilIDSekretaris;
+  var namaSekretarisPanitia;
+  var selectedBendesaAdat;
+  var apiURLGetDataBendesaAdat = "http://172.16.56.57:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  List bendesaList = List();
+  var loadBendesa = true;
+  File file;
+  String namaFile;
+  String filePath;
+  final controllerLepihan = TextEditingController();
+  final controllerParindikan = TextEditingController();
+  final controllerTetujon = TextEditingController();
+  final controllerEmailPenerima = TextEditingController();
+  final controllerDagingSurat = TextEditingController();
+  final controllerPanitiaAcara = TextEditingController();
+  final controllerPemahbah = TextEditingController();
+  final controllerPamuput = TextEditingController();
+  TimeOfDay selectedWaktuKegiatan = TimeOfDay.now();
+  var valueWaktuKegiatan;
+  DateTime tanggalKegiatan;
+  String selectedTanggalKegiatan;
+  String selectedTanggalKegiatanValue;
+
+  void pilihBerkas() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        allowMultiple: false
+    );
+    if(result != null) {
+      setState(() {
+        filePath = result.files.first.path;
+        namaFile = result.files.first.name;
+        file = File(result.files.single.path);
+      });
+      print(filePath);
+      print(namaFile);
+    }
+  }
+
+  Future getBendesaAdat() async {
+    var response = await http.get(Uri.parse(apiURLGetDataBendesaAdat));
+    if(response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        bendesaList = jsonData;
+        loadBendesa = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getBendesaAdat();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: HexColor("#025393"),
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+          ),
+          title: Text("Tambah Data Surat", style: TextStyle(
+            fontFamily: "Poppins",
+            fontWeight: FontWeight.w700,
+            color: HexColor("#025393")
+          ))
+        ),
+        body: loadBendesa ? ProfilePageShimmer() : SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                child: Image.asset(
+                  'images/panitia.png',
+                  height: 100,
+                  width: 100,
+                ),
+                margin: EdgeInsets.only(top: 30)
+              ),
+              Container(
+                child: Text("* = diperlukan", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700
+                ), textAlign: TextAlign.center),
+                margin: EdgeInsets.only(top: 20, left: 20)
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text("1. Atribut Surat", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700
+                )),
+                margin: EdgeInsets.only(top: 30, left: 20)
+              ),
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text("Nomor Surat *", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                      )),
+                      margin: EdgeInsets.only(top: 20, left: 20)
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                        child: TextField(
+                          enabled: false,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                              borderSide: BorderSide(color: HexColor("#025393"))
+                            ),
+                            hintText: "Otomatis"
+                          ),
+                          style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontStyle: FontStyle.italic
+                          ),
+                        )
+                      ),
+                      margin: EdgeInsets.only(top: 10)
+                    )
+                  ],
+                )
+              ),
+              Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                          alignment: Alignment.topLeft,
+                          child: Text("Lepihan (Lampiran) *", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                          margin: EdgeInsets.only(top: 20, left: 20)
+                      ),
+                      Container(
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                              child: TextField(
+                                controller: controllerLepihan,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393"))
+                                    ),
+                                    hintText: "Lepihan",
+                                ),
+                                keyboardType: TextInputType.number,
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ),
+                              )
+                          ),
+                          margin: EdgeInsets.only(top: 10)
+                      )
+                    ],
+                  )
+              ),
+              Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                          alignment: Alignment.topLeft,
+                          child: Text("Parindikan *", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                          margin: EdgeInsets.only(top: 20, left: 20)
+                      ),
+                      Container(
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                              child: TextField(
+                                controller: controllerParindikan,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      borderSide: BorderSide(color: HexColor("#025393"))
+                                  ),
+                                  hintText: "Parindikan",
+                                ),
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ),
+                              )
+                          ),
+                          margin: EdgeInsets.only(top: 10)
+                      )
+                    ],
+                  )
+              ),
+              Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                          alignment: Alignment.topLeft,
+                          child: Text("Tetujon (tujuan) *", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                          margin: EdgeInsets.only(top: 20, left: 20)
+                      ),
+                      Container(
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                              child: TextField(
+                                controller: controllerTetujon,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      borderSide: BorderSide(color: HexColor("#025393"))
+                                  ),
+                                  hintText: "Tetujon",
+                                ),
+                                keyboardType: TextInputType.number,
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ),
+                              )
+                          ),
+                          margin: EdgeInsets.only(top: 10)
+                      )
+                    ],
+                  )
+              ),
+              Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                          alignment: Alignment.topLeft,
+                          child: Text("Email Penerima *", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                          margin: EdgeInsets.only(top: 20, left: 20)
+                      ),
+                      Container(
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                              child: TextField(
+                                controller: controllerEmailPenerima,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      borderSide: BorderSide(color: HexColor("#025393"))
+                                  ),
+                                  hintText: "Email Penerima",
+                                ),
+                                keyboardType: TextInputType.number,
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ),
+                              )
+                          ),
+                          margin: EdgeInsets.only(top: 10)
+                      )
+                    ],
+                  )
+              ),
+              Container(
+                child: Text("2. Daging Surat *", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700
+                )),
+                alignment: Alignment.topLeft,
+                margin: EdgeInsets.only(top: 30, left: 20)
+              ),
+              Container(
+                child: Text("Silahkan masukkan isi (daging) dari surat pada form dibawah.", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14
+                )),
+                padding: EdgeInsets.only(left: 30, right: 30),
+                margin: EdgeInsets.only(top: 10)
+              ),
+              Container(
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                      child: TextField(
+                        controller: controllerPemahbah,
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide(color: HexColor("#025393"))
+                            ),
+                            hintText: "Pemahbah (Pendahuluan)"
+                        ),
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        ),
+                      )
+                  ),
+                  margin: EdgeInsets.only(top: 15)
+              ),
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                  child: TextField(
+                    controller: controllerDagingSurat,
+                    maxLines: 20,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: HexColor("#025393"))
+                      ),
+                      hintText: "Daging (Isi)"
+                    ),
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                    ),
+                  )
+                ),
+                margin: EdgeInsets.only(top: 15)
+              ),
+              Container(
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                      child: TextField(
+                        controller: controllerPamuput,
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide(color: HexColor("#025393"))
+                            ),
+                            hintText: "Pamuput (Penutup)"
+                        ),
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        ),
+                      )
+                  ),
+                  margin: EdgeInsets.only(top: 15)
+              ),
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text("Tempat Kegiatan", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                      )),
+                      margin: EdgeInsets.only(top: 20, left: 20),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                              borderSide: BorderSide(color: HexColor("#025393"))
+                            ),
+                            hintText: "Tempat Kegiatan"
+                          ),
+                          style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              ),
+              Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.topLeft,
+                        child: Text("Waktu Kegiatan", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        )),
+                        margin: EdgeInsets.only(top: 20, left: 20),
+                      ),
+                      Container(
+                        child: Text(valueWaktuKegiatan == null ? "Waktu kegiatan belum terpilih" : valueWaktuKegiatan.toString(), style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700
+                        )),
+                        margin: EdgeInsets.only(top: 15),
+                      ),
+                      Container(
+                        child: FlatButton(
+                          onPressed: (){
+                            showTimePicker(
+                              context: context,
+                              initialTime: selectedWaktuKegiatan,
+                              initialEntryMode: TimePickerEntryMode.dial
+                            ).then((value) {
+                              setState(() {
+                                selectedWaktuKegiatan = value;
+                                valueWaktuKegiatan = "${selectedWaktuKegiatan.hour}:${selectedWaktuKegiatan.minute}";
+                              });
+                            });
+                          },
+                          child: Text("Pilih Waktu Kegiatan", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white
+                          )),
+                          color: HexColor("#025393"),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25)
+                          ),
+                          padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                        ),
+                        margin: EdgeInsets.only(top: 10),
+                      )
+                    ],
+                  )
+              ),
+              Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.topLeft,
+                        child: Text("Tanggal Kegiatan", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        )),
+                        margin: EdgeInsets.only(top: 20, left: 20),
+                      ),
+                      Container(
+                        child: Text(selectedTanggalKegiatanValue == null ? "Tanggal kegiatan belum terpilih" : selectedTanggalKegiatan.toString(), style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700
+                        )),
+                        margin: EdgeInsets.only(top: 15),
+                      ),
+                      Container(
+                        child: FlatButton(
+                          onPressed: (){
+                            showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime(2900)
+                            ).then((value){
+                              setState(() {
+                                tanggalKegiatan = value;
+                                var tanggal = DateTime.parse(tanggalKegiatan.toString());
+                                selectedTanggalKegiatan = "${tanggal.day} - ${tanggal.month} - ${tanggal.year}";
+                                selectedTanggalKegiatanValue = "${tanggal.year}-${tanggal.month}-${tanggal.day}";
+                              });
+                            });
+                          },
+                          child: Text("Pilih Tanggal Kegiatan", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white
+                          )),
+                          color: HexColor("#025393"),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25)
+                          ),
+                          padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                        ),
+                        margin: EdgeInsets.only(top: 10),
+                      )
+                    ],
+                  )
+              ),
+              Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.topLeft,
+                        child: Text("Busana Kegiatan", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        )),
+                        margin: EdgeInsets.only(top: 20, left: 20),
+                      ),
+                      Container(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                          child: TextField(
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    borderSide: BorderSide(color: HexColor("#025393"))
+                                ),
+                                hintText: "Busana Kegiatan"
+                            ),
+                            style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+              ),
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text("Panitia Acara *", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                      )),
+                      margin: EdgeInsets.only(top: 20, left: 20)
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                        child: TextField(
+                          controller: controllerPanitiaAcara,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                              borderSide: BorderSide(color: HexColor("#025393"))
+                            ),
+                            hintText: "Nama Panitia Acara"
+                          ),
+                          style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                          ),
+                        )
+                      )
+                    )
+                  ]
+                )
+              ),
+              Container(
+                child: Text("3. Lingga Tangan Miwah Pesengan", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700
+                )),
+                alignment: Alignment.topLeft,
+                margin: EdgeInsets.only(top: 30, left: 20)
+              ),
+              Container(
+                child: Text("Silahkan isi data pihak yang akan tanda tangan pada form dibawah ini.", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14
+                )),
+                padding: EdgeInsets.only(left: 30, right: 30),
+                margin: EdgeInsets.only(top: 10)
+              ),
+              Container(
+                  child: Column(
+                      children: <Widget>[
+                        Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Sekretaris Panitia *", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                            margin: EdgeInsets.only(top: 20, left: 20)
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: Text(namaSekretarisPanitia == null ? "Data sekretaris panitia belum terpilih" : namaSekretarisPanitia, style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700
+                          )),
+                          margin: EdgeInsets.only(top: 20)
+                        ),
+                        Container(
+                          child: FlatButton(
+                            onPressed: (){
+                              navigatePilihDataSekretarisPanitia(context);
+                            },
+                            child: Text("Pilih Data Sekretaris Panitia", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: HexColor("#025393")
+                            )),
+                            color: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                                side: BorderSide(color: HexColor("#025393"), width: 2)
+                            ),
+                            padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                          ),
+                          margin: EdgeInsets.only(top: 10)
+                        )
+                      ]
+                  )
+              ),
+              Container(
+                  child: Column(
+                      children: <Widget>[
+                        Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Ketua Panitia *", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                            margin: EdgeInsets.only(top: 20, left: 20)
+                        ),
+                        Container(
+                            alignment: Alignment.center,
+                            child: Text(namaKetuaPanitia == null ? "Data ketua panitia belum terpilih" : namaKetuaPanitia, style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700
+                            )),
+                            margin: EdgeInsets.only(top: 20)
+                        ),
+                        Container(
+                            child: FlatButton(
+                              onPressed: (){
+                                navigatePilihDataKetuaPanitia(context);
+                              },
+                              child: Text("Pilih Data Ketua Panitia", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor("#025393")
+                              )),
+                              color: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                  side: BorderSide(color: HexColor("#025393"), width: 2)
+                              ),
+                              padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                            ),
+                            margin: EdgeInsets.only(top: 10)
+                        )
+                      ]
+                  )
+              ),
+              Container(
+                  child: Column(
+                      children: <Widget>[
+                        Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Bendesa Adat *", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                            margin: EdgeInsets.only(top: 20, left: 20)
+                        ),
+                        Container(
+                          width: 300,
+                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: HexColor("#025393"),
+                            borderRadius: BorderRadius.circular(30)
+                          ),
+                          child: DropdownButton(
+                            isExpanded: true,
+                            hint: Center(
+                              child: Text("Pilih Bendesa Adat", style: TextStyle(
+                                fontFamily: "Poppins",
+                                color: Colors.white,
+                                fontSize: 14
+                              ))
+                            ),
+                            value: selectedBendesaAdat,
+                            underline: Container(),
+                            icon: Icon(Icons.arrow_downward, color: Colors.white),
+                            items: bendesaList.map((bendesa) {
+                              return DropdownMenuItem(
+                                value: bendesa['nama'],
+                                child: Text(bendesa['nama'].toString(), style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                                ))
+                              );
+                            }).toList(),
+                            selectedItemBuilder: (BuildContext context) => bendesaList.map((bendesa) => Center(
+                              child: Text(bendesa['nama'].toString(), style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14,
+                                color: Colors.white
+                              ))
+                            )).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedBendesaAdat = value;
+                              });
+                            },
+                          ),
+                          margin: EdgeInsets.only(top: 15)
+                        )
+                      ]
+                  )
+              ),
+              Container(
+                  child: Text("4. Lepihan Surat", style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700
+                  )),
+                  alignment: Alignment.topLeft,
+                  margin: EdgeInsets.only(top: 30, left: 20)
+              ),
+              Container(
+                  child: Text("Silahkan unggah berkas lepihan (lampiran) dalam format file PDF.", style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                  )),
+                  padding: EdgeInsets.only(left: 30, right: 30),
+                  margin: EdgeInsets.only(top: 10)
+              ),
+              Container(
+                child: namaFile == null ? Text("Berkas lampiran belum terpilih", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700
+                )) : Text("Nama berkas: ${namaFile}", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                  fontWeight: FontWeight.w700
+                )),
+                margin: EdgeInsets.only(top: 10)
+              ),
+              Container(
+                child: FlatButton(
+                  onPressed: (){
+                    if(controllerLepihan.text == "") {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(40.0))
+                            ),
+                            content: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    child: Image.asset(
+                                      'images/alert.png',
+                                      height: 50,
+                                      width: 50,
+                                    )
+                                  ),
+                                  Container(
+                                    child: Text("Data Lepihan Belum Terisi", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    ), textAlign: TextAlign.center),
+                                    margin: EdgeInsets.only(top: 10)
+                                  ),
+                                  Container(
+                                      child: Text("Data lepihan belum terisi. Silahkan isi data lepihan terlebih dahulu dan coba lagi", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      ), textAlign: TextAlign.center),
+                                      margin: EdgeInsets.only(top: 10)
+                                  )
+                                ]
+                              )
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text("OK", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor("#025393")
+                                )),
+                                onPressed: (){Navigator.of(context).pop();},
+                              )
+                            ]
+                          );
+                        }
+                      );
+                    }else if(controllerLepihan.text == "0" || controllerLepihan.text == "-") {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                ),
+                                content: Container(
+                                    child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Container(
+                                              child: Image.asset(
+                                                'images/alert.png',
+                                                height: 50,
+                                                width: 50,
+                                              )
+                                          ),
+                                          Container(
+                                              child: Text("Tidak Dapat Memilih Berkas Lepihan", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393")
+                                              ), textAlign: TextAlign.center),
+                                              margin: EdgeInsets.only(top: 10)
+                                          ),
+                                          Container(
+                                              child: Text("Tidak dapat memilih berkas lepihan karena Anda menginputkan tidak ada berkas lepihan", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14
+                                              ), textAlign: TextAlign.center),
+                                              margin: EdgeInsets.only(top: 10)
+                                          )
+                                        ]
+                                    )
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text("OK", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor("#025393")
+                                    )),
+                                    onPressed: (){Navigator.of(context).pop();},
+                                  )
+                                ]
+                            );
+                          }
+                      );
+                    }else{
+                      pilihBerkas();
+                    }
+                  },
+                  child: Text("Unggah Berkas", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white
+                  )),
+                  color: HexColor("#025393"),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    side: BorderSide(color: HexColor("#025393"), width: 2)
+                  ),
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
+                ),
+                margin: EdgeInsets.only(top: 20),
+              ),
+              Container(
+                child: FlatButton(
+                  onPressed: (){
+                    if(controllerLepihan.text == "" || controllerParindikan.text == "" || controllerTetujon.text == "" || controllerEmailPenerima.text == "" || controllerDagingSurat.text == "" || controllerPanitiaAcara.text == "" || kramaMipilIDKetua == null || kramaMipilIDSekretaris == null || namaKetuaPanitia == null || namaSekretarisPanitia == null || controllerPemahbah.text == "" || controllerPamuput.text == "") {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
+                              ),
+                              content: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Container(
+                                          child: Image.asset(
+                                            'images/warning.png',
+                                            height: 50,
+                                            width: 50,
+                                          )
+                                      ),
+                                      Container(
+                                          child: Text("Masih ada data yang kosong", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                              color: HexColor("#025393")
+                                          ), textAlign: TextAlign.center),
+                                          margin: EdgeInsets.only(top: 10)
+                                      ),
+                                      Container(
+                                        child: Text("Masih ada data yang kosong. Silahkan lengkapi form yang telah disediakan dan coba lagi", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
+                                        ), textAlign: TextAlign.center),
+                                        margin: EdgeInsets.only(top: 10),
+                                      )
+                                    ],
+                                  )
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text("OK", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                  )),
+                                  onPressed: (){Navigator.of(context).pop();},
+                                )
+                              ],
+                            );
+                          }
+                      );
+                    }else if(controllerLepihan.text != "0") {
+                      if(namaFile == null) {
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                ),
+                                content: Container(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Container(
+                                            child: Image.asset(
+                                              'images/warning.png',
+                                              height: 50,
+                                              width: 50,
+                                            )
+                                        ),
+                                        Container(
+                                            child: Text("Berkas Lepihan Belum Terpilih", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                color: HexColor("#025393")
+                                            ), textAlign: TextAlign.center),
+                                            margin: EdgeInsets.only(top: 10)
+                                        ),
+                                        Container(
+                                          child: Text("Berkas lepihan (lampiran) belum terpilih. Silahkan unggah berkas lepihan dan coba lagi nanti", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ), textAlign: TextAlign.center),
+                                          margin: EdgeInsets.only(top: 10),
+                                        )
+                                      ],
+                                    )
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text("OK", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor("#025393")
+                                    )),
+                                    onPressed: (){Navigator.of(context).pop();},
+                                  )
+                                ],
+                              );
+                            }
+                        );
+                      }
+                    }
+                  },
+                  child: Text("Simpan", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("#025393")
+                  )),
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    side: BorderSide(color: HexColor("#025393"), width: 2)
+                  ),
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
+                ),
+                margin: EdgeInsets.only(top: 20, bottom: 20)
+              )
+            ]
+          )
+        ),
+      )
+    );
+  }
+
+  void navigatePilihDataKetuaPanitia(BuildContext context) async {
+    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => pilihDataKetuaPanitia()));
+    if(result == null) {
+      namaKetuaPanitia = namaKetuaPanitia;
+    }else{
+      setState(() {
+        namaKetuaPanitia = result;
+        kramaMipilIDKetua = pilihDataKetuaPanitia.selectedId;
+      });
+    }
+  }
+
+  void navigatePilihDataSekretarisPanitia(BuildContext context) async {
+    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => pilihDataSekretarisPanitia()));
+    if(result == null) {
+      namaSekretarisPanitia = namaSekretarisPanitia;
+    }else{
+      setState(() {
+        namaSekretarisPanitia = result;
+        kramaMipilIDSekretaris = pilihDataSekretarisPanitia.selectedId;
+      });
+    }
+  }
+}
+
+class pilihDataKetuaPanitia extends StatefulWidget {
+  static var selectedId;
+  const pilihDataKetuaPanitia({Key key}) : super(key: key);
+
+  @override
+  State<pilihDataKetuaPanitia> createState() => _pilihDataKetuaPanitiaState();
+}
+
+class _pilihDataKetuaPanitiaState extends State<pilihDataKetuaPanitia> {
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var nama = [];
+  var kramaMipilID = [];
+  bool Loading = true;
+
+  Future getListPenduduk() async {
+    Uri uri = Uri.parse(apiURLGetDataPenduduk);
+    final response = await http.get(uri);
+    if(response.statusCode == 200) {
+      var data = json.decode(response.body);
+      this.nama = [];
+      this.nama = [];
+      this.kramaMipilID = [];
+      setState(() {
+        Loading = false;
+        for(var i = 0; i < data.length; i++) {
+          this.nama.add(data[i]['nama']);
+          this.kramaMipilID.add(data[i]['krama_mipil_id']);
+        }
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getListPenduduk();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: HexColor("#025393"),
+            onPressed: (){Navigator.of(context).pop();},
+          ),
+          title: Text("Pilih Data Ketua Panitia", style: TextStyle(
+            fontFamily: "Poppins",
+            fontWeight: FontWeight.w700,
+            color: HexColor("#025393")
+          ))
+        ),
+        body: Loading ? Center(
+            child: Lottie.asset('assets/loading-circle.json')
+        ) : RefreshIndicator(
+            onRefresh: getListPenduduk,
+            child: ListView.builder(
+              itemCount: kramaMipilID.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        pilihDataKetuaPanitia.selectedId = kramaMipilID[index];
+                      });
+                      Navigator.of(context, rootNavigator: true).pop(nama[index]);
+                    },
+                    child: Container(
+                      child: Row(
+                          children: <Widget>[
+                            Container(
+                                child: Image.asset(
+                                  'images/person.png',
+                                  height: 40,
+                                  width: 40,
+                                )
+                            ),
+                            Container(
+                                child: SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.6,
+                                    child: Text("${nama[index]}",
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: false,
+                                        style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393"),
+                                        ))
+                                ),
+                              margin: EdgeInsets.only(left: 15)
+                            ),
+                          ]
+                      ),
+                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 70,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0,3)
+                            )
+                          ]
+                      ),
+                    )
+                );
+              },
+            )
+        )
+      )
+    );
+  }
+}
+
+class pilihDataSekretarisPanitia extends StatefulWidget {
+  static var selectedId;
+  const pilihDataSekretarisPanitia({Key key}) : super(key: key);
+
+  @override
+  State<pilihDataSekretarisPanitia> createState() => _pilihDataSekretarisPanitiaState();
+}
+
+class _pilihDataSekretarisPanitiaState extends State<pilihDataSekretarisPanitia> {
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var nama = [];
+  var kramaMipilID = [];
+  bool Loading = true;
+
+  Future getListPenduduk() async {
+    Uri uri = Uri.parse(apiURLGetDataPenduduk);
+    final response = await http.get(uri);
+    if(response.statusCode == 200) {
+      var data = json.decode(response.body);
+      this.nama = [];
+      this.nama = [];
+      this.kramaMipilID = [];
+      setState(() {
+        Loading = false;
+        for(var i = 0; i < data.length; i++) {
+          this.nama.add(data[i]['nama']);
+          this.kramaMipilID.add(data[i]['krama_mipil_id']);
+        }
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getListPenduduk();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        home: Scaffold(
+            appBar: AppBar(
+                backgroundColor: Colors.white,
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  color: HexColor("#025393"),
+                  onPressed: (){Navigator.of(context).pop();},
+                ),
+                title: Text("Pilih Data Sekretaris Panitia", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("#025393")
+                ))
+            ),
+            body: Loading ? Center(
+                child: Lottie.asset('assets/loading-circle.json')
+            ) : RefreshIndicator(
+                onRefresh: getListPenduduk,
+                child: ListView.builder(
+                  itemCount: kramaMipilID.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                        onTap: (){
+                          setState(() {
+                            pilihDataSekretarisPanitia.selectedId = kramaMipilID[index];
+                          });
+                          Navigator.of(context, rootNavigator: true).pop(nama[index]);
+                        },
+                        child: Container(
+                          child: Row(
+                              children: <Widget>[
+                                Container(
+                                    child: Image.asset(
+                                      'images/person.png',
+                                      height: 40,
+                                      width: 40,
+                                    )
+                                ),
+                                Container(
+                                    child: SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.6,
+                                        child: Text("${nama[index]}",
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: false,
+                                            style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                              color: HexColor("#025393"),
+                                            ))
+                                    ),
+                                    margin: EdgeInsets.only(left: 15)
+                                ),
+                              ]
+                          ),
+                          margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          height: 70,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(0,3)
+                                )
+                              ]
+                          ),
+                        )
+                    );
+                  },
+                )
+            )
+        )
+    );
+  }
+}

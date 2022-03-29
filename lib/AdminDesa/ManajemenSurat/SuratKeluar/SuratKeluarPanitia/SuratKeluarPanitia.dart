@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart';
 
 class suratKeluarPanitiaAdmin extends StatefulWidget {
   const suratKeluarPanitiaAdmin({Key key}) : super(key: key);
@@ -43,7 +44,9 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
               ),
               Container(
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => tambahSuratKeluarPanitiaAdmin()));
+                  },
                   child: Text("Tambah Data Surat", style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,
