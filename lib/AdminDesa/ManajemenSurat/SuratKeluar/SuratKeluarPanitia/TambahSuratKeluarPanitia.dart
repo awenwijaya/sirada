@@ -96,7 +96,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
             icon: Icon(Icons.arrow_back),
             color: HexColor("#025393"),
             onPressed: (){
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
             },
           ),
           title: Text("Tambah Data Surat", style: TextStyle(
@@ -1089,7 +1089,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.CENTER
                               );
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(true);
                             }
                           });
                         }
@@ -1244,7 +1244,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.CENTER
                           );
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(true);
                         }
                       });
                     }
