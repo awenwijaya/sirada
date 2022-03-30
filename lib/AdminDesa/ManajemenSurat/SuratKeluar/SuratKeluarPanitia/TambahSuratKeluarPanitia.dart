@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:async/async.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
+import 'package:path/path.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/shared/LoadingAnimation/loading.dart';
@@ -25,7 +26,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   var kramaMipilIDSekretaris;
   var namaSekretarisPanitia;
   var selectedBendesaAdat;
-  var apiURLGetDataBendesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLGetDataBendesaAdat = "http://172.16.59.203:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
   List bendesaList = List();
   var loadBendesa = true;
   File file;
@@ -48,9 +49,9 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   String selectedTanggalKegiatan;
   String selectedTanggalKegiatanValue;
   bool Loading = false;
-  var apiURLUpSuratKeluarPanitia = "http://192.168.18.10:8000/api/admin/surat/keluar/up";
+  var apiURLUpSuratKeluarPanitia = "http://172.16.59.203:8000/api/admin/surat/keluar/up";
 
-  void pilihBerkas() async {
+  Future pilihBerkas() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf'],
@@ -874,7 +875,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
               ),
               Container(
                 child: FlatButton(
-                  onPressed: (){
+                  onPressed: () async {
                     if(controllerParindikan.text == "" || controllerLepihan.text == "" || controllerPemahbah.text == "" || kramaMipilIDKetua == null || kramaMipilIDSekretaris == null || selectedBendesaAdat == null) {
                       showDialog(
                           context: context,
@@ -984,6 +985,114 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                               );
                             }
                         );
+                      }else{
+                        setState(() {
+                          Loading = true;
+                        });
+                        var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
+                        var length = await file.length();
+                        var url = Uri.parse('http://172.16.59.203/siraja-api-skripsi-new/upload-file-lampiran.php');
+                        var request = http.MultipartRequest("POST", url);
+                        var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
+                        request.files.add(multipartFile);
+                        var response = await request.send();
+                        print(response.statusCode);
+                        if(response.statusCode == 200) {
+                          var body = jsonEncode({
+                            "desa_adat_id" : loginPage.desaId,
+                            "master_surat_id" : "1",
+                            "lepihan" : controllerLepihan.text,
+                            "parindikan" : controllerParindikan.text,
+                            "pihak_penerima" : controllerTetujon.text,
+                            "pemahbah_surat" : controllerPemahbah.text,
+                            "daging_surat" : controllerDagingSurat.text == "" ? null : controllerDagingSurat.text,
+                            "pamuput_surat" : controllerPamuput.text == "" ? null : controllerPamuput.text,
+                            "tanggal_kegiatan" : tanggalKegiatan == null ? null : selectedTanggalKegiatanValue,
+                            "busana" : controllerBusana.text == "" ? null : controllerBusana.text,
+                            "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
+                            "waktu_kegiatan" : valueWaktuKegiatan == null ? null : valueWaktuKegiatan,
+                            "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
+                            "nama_bendesa" : selectedBendesaAdat,
+                            "krama_mipil_ketua_id" : kramaMipilIDKetua,
+                            "krama_mipil_sekretaris_id" : kramaMipilIDSekretaris,
+                            "lampiran" : namaFile
+                          });
+                          http.post(Uri.parse(apiURLUpSuratKeluarPanitia),
+                              headers: {"Content-Type" : "application/json"},
+                              body: body
+                          ).then((http.Response response) {
+                            var responseValue = response.statusCode;
+                            if(responseValue == 500) {
+                              setState(() {
+                                Loading = false;
+                              });
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                        ),
+                                        content: Container(
+                                            child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  Container(
+                                                      child: Image.asset(
+                                                          'images/alert.png',
+                                                          height: 50,
+                                                          width: 50
+                                                      )
+                                                  ),
+                                                  Container(
+                                                      child: Text("Data kode desa tidak terdaftar", style: TextStyle(
+                                                          fontFamily: "Poppins",
+                                                          fontSize: 16,
+                                                          fontWeight: FontWeight.w700,
+                                                          color: HexColor("#025393")
+                                                      ), textAlign: TextAlign.center),
+                                                      margin: EdgeInsets.only(top: 10)
+                                                  ),
+                                                  Container(
+                                                      child: Text("Data kode desa tidak terdaftar. Silahkan hubungi Administrator untuk informasi lebih lanjut", style: TextStyle(
+                                                          fontFamily: "Poppins",
+                                                          fontSize: 14
+                                                      ), textAlign: TextAlign.center),
+                                                      margin: EdgeInsets.only(top: 10)
+                                                  )
+                                                ]
+                                            )
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text("OK", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontWeight: FontWeight.w700,
+                                                color: HexColor("#025393")
+                                            )),
+                                            onPressed: (){Navigator.of(context).pop();},
+                                          )
+                                        ]
+                                    );
+                                  }
+                              );
+                            }else if(responseValue == 200) {
+                              setState(() {
+                                Loading = false;
+                              });
+                              Fluttertoast.showToast(
+                                  msg: "Data surat keluar berhasil ditambahkan",
+                                  fontSize: 14,
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER
+                              );
+                              Navigator.of(context).pop();
+                            }
+                          });
+                        }
                       }
                     }else if(tanggalKegiatan != null) {
                       if(tanggalKegiatan.isBefore(sekarang)) {
@@ -1196,7 +1305,7 @@ class pilihDataKetuaPanitia extends StatefulWidget {
 }
 
 class _pilihDataKetuaPanitiaState extends State<pilihDataKetuaPanitia> {
-  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "http://172.16.59.203:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
   var nama = [];
   var kramaMipilID = [];
   bool Loading = true;
@@ -1319,7 +1428,7 @@ class pilihDataSekretarisPanitia extends StatefulWidget {
 }
 
 class _pilihDataSekretarisPanitiaState extends State<pilihDataSekretarisPanitia> {
-  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "http://172.16.59.203:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
   var nama = [];
   var kramaMipilID = [];
   bool Loading = true;
