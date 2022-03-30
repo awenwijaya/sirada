@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
@@ -24,7 +25,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   var kramaMipilIDSekretaris;
   var namaSekretarisPanitia;
   var selectedBendesaAdat;
-  var apiURLGetDataBendesaAdat = "http://172.16.56.57:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLGetDataBendesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
   List bendesaList = List();
   var loadBendesa = true;
   File file;
@@ -33,16 +34,21 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   final controllerLepihan = TextEditingController();
   final controllerParindikan = TextEditingController();
   final controllerTetujon = TextEditingController();
-  final controllerEmailPenerima = TextEditingController();
   final controllerDagingSurat = TextEditingController();
   final controllerPanitiaAcara = TextEditingController();
   final controllerPemahbah = TextEditingController();
   final controllerPamuput = TextEditingController();
+  final controllerTempatKegiatan = TextEditingController();
+  final controllerBusanaKegiatan = TextEditingController();
+  final controllerBusana = TextEditingController();
   TimeOfDay selectedWaktuKegiatan = TimeOfDay.now();
   var valueWaktuKegiatan;
   DateTime tanggalKegiatan;
+  DateTime sekarang = DateTime.now();
   String selectedTanggalKegiatan;
   String selectedTanggalKegiatanValue;
+  bool Loading = false;
+  var apiURLUpSuratKeluarPanitia = "http://192.168.18.10:8000/api/admin/surat/keluar/up";
 
   void pilihBerkas() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -82,7 +88,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
+      home: Loading ? loading() : Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -254,42 +260,6 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                                   ),
                                   hintText: "Tetujon",
                                 ),
-                                keyboardType: TextInputType.number,
-                                style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14
-                                ),
-                              )
-                          ),
-                          margin: EdgeInsets.only(top: 10)
-                      )
-                    ],
-                  )
-              ),
-              Container(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                          alignment: Alignment.topLeft,
-                          child: Text("Email Penerima *", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14
-                          )),
-                          margin: EdgeInsets.only(top: 20, left: 20)
-                      ),
-                      Container(
-                          child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                              child: TextField(
-                                controller: controllerEmailPenerima,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50.0),
-                                      borderSide: BorderSide(color: HexColor("#025393"))
-                                  ),
-                                  hintText: "Email Penerima",
-                                ),
-                                keyboardType: TextInputType.number,
                                 style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14
@@ -396,6 +366,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                         child: TextField(
+                          controller: controllerTempatKegiatan,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(50.0),
@@ -531,6 +502,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                           child: TextField(
+                            controller: controllerBusanaKegiatan,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(50.0),
@@ -553,7 +525,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                   children: <Widget>[
                     Container(
                       alignment: Alignment.topLeft,
-                      child: Text("Panitia Acara *", style: TextStyle(
+                      child: Text("Panitia Acara", style: TextStyle(
                         fontFamily: "Poppins",
                         fontSize: 14
                       )),
@@ -903,7 +875,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
               Container(
                 child: FlatButton(
                   onPressed: (){
-                    if(controllerLepihan.text == "" || controllerParindikan.text == "" || controllerTetujon.text == "" || controllerEmailPenerima.text == "" || controllerDagingSurat.text == "" || controllerPanitiaAcara.text == "" || kramaMipilIDKetua == null || kramaMipilIDSekretaris == null || namaKetuaPanitia == null || namaSekretarisPanitia == null || controllerPemahbah.text == "" || controllerPamuput.text == "") {
+                    if(controllerParindikan.text == "" || controllerLepihan.text == "" || controllerPemahbah.text == "" || kramaMipilIDKetua == null || kramaMipilIDSekretaris == null || selectedBendesaAdat == null) {
                       showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -981,7 +953,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                                             )
                                         ),
                                         Container(
-                                            child: Text("Berkas Lepihan Belum Terpilih", style: TextStyle(
+                                            child: Text("Berkas lepihan belum terpilih", style: TextStyle(
                                                 fontFamily: "Poppins",
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w700,
@@ -1013,6 +985,159 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                             }
                         );
                       }
+                    }else if(tanggalKegiatan != null) {
+                      if(tanggalKegiatan.isBefore(sekarang)) {
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                ),
+                                content: Container(
+                                    child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Container(
+                                              child: Image.asset(
+                                                'images/alert.png',
+                                                height: 50,
+                                                width: 50,
+                                              )
+                                          ),
+                                          Container(
+                                              child: Text("Tanggal kegiatan tidak valid", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393")
+                                              ), textAlign: TextAlign.center),
+                                              margin: EdgeInsets.only(top: 10)
+                                          ),
+                                          Container(
+                                              child: Text("Tanggal kegiatan tidak valid. Silahkan masukkan tanggal kegiatan di hari setelah tanggal hari ini dan coba lagi", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14
+                                              ), textAlign: TextAlign.center),
+                                              margin: EdgeInsets.only(top: 10)
+                                          )
+                                        ]
+                                    )
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text("OK", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor("#025393")
+                                    )),
+                                    onPressed: (){Navigator.of(context).pop();},
+                                  )
+                                ],
+                              );
+                            }
+                        );
+                      }
+                    }else{
+                      setState(() {
+                        Loading = true;
+                      });
+                      var body = jsonEncode({
+                        "desa_adat_id" : loginPage.desaId,
+                        "master_surat_id" : "1",
+                        "lepihan" : controllerLepihan.text,
+                        "parindikan" : controllerParindikan.text,
+                        "pihak_penerima" : controllerTetujon.text,
+                        "pemahbah_surat" : controllerPemahbah.text,
+                        "daging_surat" : controllerDagingSurat.text == "" ? null : controllerDagingSurat.text,
+                        "pamuput_surat" : controllerPamuput.text == "" ? null : controllerPamuput.text,
+                        "tanggal_kegiatan" : tanggalKegiatan == null ? null : selectedTanggalKegiatanValue,
+                        "busana" : controllerBusana.text == "" ? null : controllerBusana.text,
+                        "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
+                        "waktu_kegiatan" : valueWaktuKegiatan == null ? null : valueWaktuKegiatan,
+                        "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
+                        "nama_bendesa" : selectedBendesaAdat,
+                        "krama_mipil_ketua_id" : kramaMipilIDKetua,
+                        "krama_mipil_sekretaris_id" : kramaMipilIDSekretaris
+                      });
+                      http.post(Uri.parse(apiURLUpSuratKeluarPanitia),
+                        headers: {"Content-Type" : "application/json"},
+                        body: body
+                      ).then((http.Response response) {
+                        var responseValue = response.statusCode;
+                        if(responseValue == 500) {
+                          setState(() {
+                            Loading = false;
+                          });
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                ),
+                                content: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Container(
+                                        child: Image.asset(
+                                          'images/alert.png',
+                                          height: 50,
+                                          width: 50
+                                        )
+                                      ),
+                                      Container(
+                                        child: Text("Data kode desa tidak terdaftar", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393")
+                                        ), textAlign: TextAlign.center),
+                                        margin: EdgeInsets.only(top: 10)
+                                      ),
+                                      Container(
+                                        child: Text("Data kode desa tidak terdaftar. Silahkan hubungi Administrator untuk informasi lebih lanjut", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                        ), textAlign: TextAlign.center),
+                                        margin: EdgeInsets.only(top: 10)
+                                      )
+                                    ]
+                                  )
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text("OK", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    )),
+                                    onPressed: (){Navigator.of(context).pop();},
+                                  )
+                                ]
+                              );
+                            }
+                          );
+                        }else if(responseValue == 200) {
+                          setState(() {
+                            Loading = false;
+                          });
+                          Fluttertoast.showToast(
+                            msg: "Data surat keluar berhasil ditambahkan",
+                            fontSize: 14,
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER
+                          );
+                          Navigator.of(context).pop();
+                        }
+                      });
                     }
                   },
                   child: Text("Simpan", style: TextStyle(
