@@ -325,7 +325,7 @@ class _detailPrajuruDesaAdatAdminState extends State<detailPrajuruDesaAdatAdmin>
                             fontFamily: "Poppins",
                             fontSize: 14
                         )),
-                        margin: EdgeInsets.only(top: 5)
+                        margin: EdgeInsets.only(top: 5, bottom: 15)
                     )
                   ]
                 ),

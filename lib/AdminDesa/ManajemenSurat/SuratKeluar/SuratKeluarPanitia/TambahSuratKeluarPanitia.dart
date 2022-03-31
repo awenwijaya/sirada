@@ -26,7 +26,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   var kramaMipilIDSekretaris;
   var namaSekretarisPanitia;
   var selectedBendesaAdat;
-  var apiURLGetDataBendesaAdat = "http://172.16.59.203:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLGetDataBendesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
   List bendesaList = List();
   var loadBendesa = true;
   File file;
@@ -49,7 +49,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   String selectedTanggalKegiatan;
   String selectedTanggalKegiatanValue;
   bool Loading = false;
-  var apiURLUpSuratKeluarPanitia = "http://172.16.59.203:8000/api/admin/surat/keluar/up";
+  var apiURLUpSuratKeluarPanitia = "http://192.168.18.10:8000/api/admin/surat/keluar/up";
 
   Future pilihBerkas() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -991,7 +991,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         });
                         var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
                         var length = await file.length();
-                        var url = Uri.parse('http://172.16.59.203/siraja-api-skripsi-new/upload-file-lampiran.php');
+                        var url = Uri.parse('http://192.168.18.10/siraja-api-skripsi-new/upload-file-lampiran.php');
                         var request = http.MultipartRequest("POST", url);
                         var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
                         request.files.add(multipartFile);
@@ -1305,7 +1305,7 @@ class pilihDataKetuaPanitia extends StatefulWidget {
 }
 
 class _pilihDataKetuaPanitiaState extends State<pilihDataKetuaPanitia> {
-  var apiURLGetDataPenduduk = "http://172.16.59.203:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
   var nama = [];
   var kramaMipilID = [];
   bool Loading = true;
@@ -1428,7 +1428,7 @@ class pilihDataSekretarisPanitia extends StatefulWidget {
 }
 
 class _pilihDataSekretarisPanitiaState extends State<pilihDataSekretarisPanitia> {
-  var apiURLGetDataPenduduk = "http://172.16.59.203:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
   var nama = [];
   var kramaMipilID = [];
   bool Loading = true;

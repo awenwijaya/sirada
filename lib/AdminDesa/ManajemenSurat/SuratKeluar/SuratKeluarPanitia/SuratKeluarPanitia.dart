@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/DetailSurat.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
@@ -309,7 +310,12 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
                                       itemCount: idSuratMenunggu.length,
                                       itemBuilder: (context, index) {
                                         return GestureDetector(
-                                          onTap: (){},
+                                          onTap: (){
+                                            setState(() {
+                                              detailSuratKeluarPanitia.suratKeluarId = idSuratMenunggu[index];
+                                            });
+                                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia()));
+                                          },
                                           child: Container(
                                             child: Row(
                                               children: <Widget>[
