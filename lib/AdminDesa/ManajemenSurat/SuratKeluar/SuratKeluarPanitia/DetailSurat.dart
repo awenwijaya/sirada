@@ -212,6 +212,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                 margin: EdgeInsets.only(top: 20, left: 15)
               ),
               Container(
+                alignment: Alignment.topLeft,
                 child: Text("\t\t\t${pemahbah}", style: TextStyle(
                   fontFamily: "Times New Roman",
                   fontSize: 16
@@ -219,6 +220,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                 padding: EdgeInsets.only(left: 15, right: 15)
               ),
               Container(
+                  alignment: Alignment.topLeft,
                 child: Text(daging == null ? "" : "\t\t\t${daging}", style: TextStyle(
                   fontFamily: "Times New Roman",
                   fontSize: 16
@@ -226,6 +228,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                 padding: EdgeInsets.only(left: 15, right: 15)
               ),
               Container(
+                  alignment: Alignment.topLeft,
                 child: Text(pamuput == null ? "" : "\t\t\t${pamuput}", style: TextStyle(
                   fontFamily: "Times New Roman",
                   fontSize: 16

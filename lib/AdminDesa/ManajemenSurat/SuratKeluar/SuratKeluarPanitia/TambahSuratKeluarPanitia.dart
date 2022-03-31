@@ -12,6 +12,9 @@ import 'package:path/path.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/shared/LoadingAnimation/loading.dart';
+import 'package:simple_time_range_picker/simple_time_range_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class tambahSuratKeluarPanitiaAdmin extends StatefulWidget {
   const tambahSuratKeluarPanitiaAdmin({Key key}) : super(key: key);
@@ -41,15 +44,15 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   final controllerPamuput = TextEditingController();
   final controllerTempatKegiatan = TextEditingController();
   final controllerBusanaKegiatan = TextEditingController();
-  final controllerBusana = TextEditingController();
-  TimeOfDay selectedWaktuKegiatan = TimeOfDay.now();
-  var valueWaktuKegiatan;
-  DateTime tanggalKegiatan;
-  DateTime sekarang = DateTime.now();
-  String selectedTanggalKegiatan;
-  String selectedTanggalKegiatanValue;
   bool Loading = false;
   var apiURLUpSuratKeluarPanitia = "http://192.168.18.10:8000/api/admin/surat/keluar/up";
+  TimeOfDay startTime;
+  TimeOfDay endTime;
+  final DateRangePickerController controllerTanggalKegiatan = DateRangePickerController();
+  String tanggalMulai;
+  String tanggalMulaiValue;
+  String tanggalBerakhir;
+  String tanggalBerakhirValue;
 
   Future pilihBerkas() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -79,11 +82,24 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
     }
   }
 
+  void selectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      tanggalMulai = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
+      tanggalMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
+      tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
+      tanggalBerakhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getBendesaAdat();
+    final DateTime sekarang = DateTime.now();
+    tanggalMulai = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
+    tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(sekarang.add(Duration(days: 7))).toString();
+    controllerTanggalKegiatan.selectedRange = PickerDateRange(sekarang, sekarang.add(Duration(days: 7)));
   }
 
   @override
@@ -386,6 +402,39 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                 )
               ),
               Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text("Tanggal Kegiatan", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                      )),
+                      margin: EdgeInsets.only(top: 20, left: 20)
+                    ),
+                    Container(
+                      child: Text(tanggalMulaiValue == null ? "Tanggal kegiatan belum terpilih" : tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      )),
+                      margin: EdgeInsets.only(top: 20, left: 20)
+                    ),
+                    Container(
+                      child: Card(
+                        margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
+                        child: SfDateRangePicker(
+                          controller: controllerTanggalKegiatan,
+                          selectionMode: DateRangePickerSelectionMode.range,
+                          onSelectionChanged: selectionChanged,
+                          allowViewNavigation: false,
+                        )
+                      )
+                    )
+                  ]
+                )
+              ),
+              Container(
                   child: Column(
                     children: <Widget>[
                       Container(
@@ -397,7 +446,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         margin: EdgeInsets.only(top: 20, left: 20),
                       ),
                       Container(
-                        child: Text(valueWaktuKegiatan == null ? "Waktu kegiatan belum terpilih" : valueWaktuKegiatan.toString(), style: TextStyle(
+                        child: Text(startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14,
                           fontWeight: FontWeight.w700
@@ -407,16 +456,18 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                       Container(
                         child: FlatButton(
                           onPressed: (){
-                            showTimePicker(
+                            TimeRangePicker.show(
                               context: context,
-                              initialTime: selectedWaktuKegiatan,
-                              initialEntryMode: TimePickerEntryMode.dial
-                            ).then((value) {
-                              setState(() {
-                                selectedWaktuKegiatan = value;
-                                valueWaktuKegiatan = "${selectedWaktuKegiatan.hour}:${selectedWaktuKegiatan.minute}";
-                              });
-                            });
+                              unSelectedEmpty: true,
+                                headerDefaultStartLabel: "Waktu Mulai",
+                              headerDefaultEndLabel: "Waktu Selesai",
+                              onSubmitted: (TimeRangeValue value) {
+                                setState(() {
+                                  startTime = value.startTime;
+                                  endTime = value.endTime;
+                                });
+                              }
+                            );
                           },
                           child: Text("Pilih Waktu Kegiatan", style: TextStyle(
                             fontFamily: "Poppins",
@@ -427,59 +478,6 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                           color: HexColor("#025393"),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25)
-                          ),
-                          padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
-                        ),
-                        margin: EdgeInsets.only(top: 10),
-                      )
-                    ],
-                  )
-              ),
-              Container(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.topLeft,
-                        child: Text("Tanggal Kegiatan", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                        )),
-                        margin: EdgeInsets.only(top: 20, left: 20),
-                      ),
-                      Container(
-                        child: Text(selectedTanggalKegiatanValue == null ? "Tanggal kegiatan belum terpilih" : selectedTanggalKegiatan.toString(), style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700
-                        )),
-                        margin: EdgeInsets.only(top: 15),
-                      ),
-                      Container(
-                        child: FlatButton(
-                          onPressed: (){
-                            showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1900),
-                              lastDate: DateTime(2900)
-                            ).then((value){
-                              setState(() {
-                                tanggalKegiatan = value;
-                                var tanggal = DateTime.parse(tanggalKegiatan.toString());
-                                selectedTanggalKegiatan = "${tanggal.day} - ${tanggal.month} - ${tanggal.year}";
-                                selectedTanggalKegiatanValue = "${tanggal.year}-${tanggal.month}-${tanggal.day}";
-                              });
-                            });
-                          },
-                          child: Text("Pilih Tanggal Kegiatan", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white
-                          )),
-                          color: HexColor("#025393"),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25)
                           ),
                           padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
                         ),
@@ -1006,11 +1004,13 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                             "pihak_penerima" : controllerTetujon.text,
                             "pemahbah_surat" : controllerPemahbah.text,
                             "daging_surat" : controllerDagingSurat.text == "" ? null : controllerDagingSurat.text,
+                            "tanggal_mulai" : tanggalMulaiValue == null ? null : tanggalMulaiValue,
+                            "tanggal_selesai" : tanggalMulaiValue == null ? null : tanggalBerakhir == null ? tanggalMulaiValue : tanggalBerakhirValue,
+                            "waktu_mulai" : startTime == null ? null : "${startTime.hour}:${startTime.minute}",
+                            "waktu_selesai" : startTime == null ? null : endTime == null ? "${startTime.hour}:${startTime.minute}" : "${endTime.hour}:${endTime.minute}",
                             "pamuput_surat" : controllerPamuput.text == "" ? null : controllerPamuput.text,
-                            "tanggal_kegiatan" : tanggalKegiatan == null ? null : selectedTanggalKegiatanValue,
-                            "busana" : controllerBusana.text == "" ? null : controllerBusana.text,
+                            "busana" : controllerBusanaKegiatan.text == "" ? null : controllerBusanaKegiatan.text,
                             "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
-                            "waktu_kegiatan" : valueWaktuKegiatan == null ? null : valueWaktuKegiatan,
                             "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
                             "nama_bendesa" : selectedBendesaAdat,
                             "krama_mipil_ketua_id" : kramaMipilIDKetua,
@@ -1094,62 +1094,6 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                           });
                         }
                       }
-                    }else if(tanggalKegiatan != null) {
-                      if(tanggalKegiatan.isBefore(sekarang)) {
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                ),
-                                content: Container(
-                                    child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Container(
-                                              child: Image.asset(
-                                                'images/alert.png',
-                                                height: 50,
-                                                width: 50,
-                                              )
-                                          ),
-                                          Container(
-                                              child: Text("Tanggal kegiatan tidak valid", style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: HexColor("#025393")
-                                              ), textAlign: TextAlign.center),
-                                              margin: EdgeInsets.only(top: 10)
-                                          ),
-                                          Container(
-                                              child: Text("Tanggal kegiatan tidak valid. Silahkan masukkan tanggal kegiatan di hari setelah tanggal hari ini dan coba lagi", style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontSize: 14
-                                              ), textAlign: TextAlign.center),
-                                              margin: EdgeInsets.only(top: 10)
-                                          )
-                                        ]
-                                    )
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text("OK", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontWeight: FontWeight.w700,
-                                        color: HexColor("#025393")
-                                    )),
-                                    onPressed: (){Navigator.of(context).pop();},
-                                  )
-                                ],
-                              );
-                            }
-                        );
-                      }
                     }else{
                       setState(() {
                         Loading = true;
@@ -1163,10 +1107,12 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         "pemahbah_surat" : controllerPemahbah.text,
                         "daging_surat" : controllerDagingSurat.text == "" ? null : controllerDagingSurat.text,
                         "pamuput_surat" : controllerPamuput.text == "" ? null : controllerPamuput.text,
-                        "tanggal_kegiatan" : tanggalKegiatan == null ? null : selectedTanggalKegiatanValue,
-                        "busana" : controllerBusana.text == "" ? null : controllerBusana.text,
+                        "tanggal_mulai" : tanggalMulaiValue == null ? null : tanggalMulaiValue,
+                        "tanggal_selesai" : tanggalMulaiValue == null ? null : tanggalBerakhir == null ? tanggalMulaiValue : tanggalBerakhirValue,
+                        "waktu_mulai" : startTime == null ? null : "${startTime.hour}:${startTime.minute}",
+                        "waktu_selesai" : startTime == null ? null : endTime == null ? "${startTime.hour}:${startTime.minute}" : "${endTime.hour}:${endTime.minute}",
+                        "busana" : controllerBusanaKegiatan.text == "" ? null : controllerBusanaKegiatan.text,
                         "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
-                        "waktu_kegiatan" : valueWaktuKegiatan == null ? null : valueWaktuKegiatan,
                         "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
                         "nama_bendesa" : selectedBendesaAdat,
                         "krama_mipil_ketua_id" : kramaMipilIDKetua,
