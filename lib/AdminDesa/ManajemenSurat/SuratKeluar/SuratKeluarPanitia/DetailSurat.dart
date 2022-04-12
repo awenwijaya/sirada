@@ -32,6 +32,11 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   var logoDesa;
   var timKegiatan;
   var apiURLShowDetailSuratKeluar = "http://192.168.18.10:8000/api/data/surat/keluar/view/${detailSuratKeluarPanitia.suratKeluarId}";
+  var apiURLShowPanitia = "http://192.168.18.10:8000/api/data/admin/surat/keluar/panitia/${detailSuratKeluarPanitia.suratKeluarId}";
+  var apiURLShowPrajuru = "http://192.168.18.10:8000/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarPanitia.suratKeluarId}";
+  var namaKetua;
+  var namaSekretaris;
+  var namaBendesa;
   bool LoadData = true;
 
   getSuratKeluarInfo() async {
@@ -65,11 +70,68 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
     });
   }
 
+  getKetuaPanitiaInfo() async {
+    var body = jsonEncode({
+      "jabatan" : "Ketua Panitia"
+    });
+    http.post(Uri.parse(apiURLShowPanitia),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      if(response.statusCode == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          namaKetua = parsedJson['nama'];
+        });
+      }
+    });
+  }
+
+  getSekretarisPanitiaInfo() async {
+    var body = jsonEncode({
+      "jabatan" : "Sekretaris Panitia"
+    });
+    http.post(Uri.parse(apiURLShowPanitia),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      if(response.statusCode == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          namaSekretaris = parsedJson['nama'];
+        });
+      }
+    });
+  }
+
+  getBendesaInfo() async {
+    var body = jsonEncode({
+      "jabatan" : "Bendesa"
+    });
+    http.post(Uri.parse(apiURLShowPrajuru),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      if(response.statusCode == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          namaBendesa = parsedJson['nama'];
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getSuratKeluarInfo();
+    getKetuaPanitiaInfo();
+    getSekretarisPanitiaInfo();
+    getBendesaInfo();
   }
 
   @override
@@ -255,6 +317,81 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                   padding: EdgeInsets.only(right: 15)
               ),
               Container(
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: namaKetua == null ? Container() : Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            child: Text("Ketua", style: TextStyle(
+                              fontFamily: "Times New Roman",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700
+                            ))
+                          ),
+                          Container(
+                              child: Text(namaKetua, style: TextStyle(
+                                  fontFamily: "Times New Roman",
+                                  fontSize: 16
+                              )),
+                            margin: EdgeInsets.only(top: 25)
+                          )
+                        ],
+                      ),
+                      margin: EdgeInsets.only(left: 10, top: 10)
+                    ),
+                    Container(
+                        alignment: Alignment.topRight,
+                        child: namaSekretaris == null ? Container() : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                                child: Text("Sekretaris", style: TextStyle(
+                                    fontFamily: "Times New Roman",
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700
+                                ))
+                            ),
+                            Container(
+                                child: Text(namaSekretaris, style: TextStyle(
+                                    fontFamily: "Times New Roman",
+                                    fontSize: 16
+                                )),
+                                margin: EdgeInsets.only(top: 25)
+                            )
+                          ],
+                        ),
+                        margin: EdgeInsets.only(right: 10, top: 10)
+                    )
+                  ]
+                )
+              ),
+              Container(
+                alignment: Alignment.center,
+                child: namaBendesa == null ? Container() : Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      child: Text("Bendesa", style: TextStyle(
+                        fontFamily: "Times New Roman",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700
+                      ))
+                    ),
+                    Container(
+                      child: Text(namaBendesa, style: TextStyle(
+                        fontFamily: "Times New Roman",
+                        fontSize: 16
+                      )),
+                      margin: EdgeInsets.only(top: 25)
+                    )
+                  ],
+                ),
+                margin: EdgeInsets.only(top: 20)
+              ),
+              Container(
                 child: Text("Status Surat", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
@@ -275,7 +412,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                         Container(
                           child: Flexible(
                               child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Container(

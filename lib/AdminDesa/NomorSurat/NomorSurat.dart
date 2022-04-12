@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class nomorSuratAdmin extends StatefulWidget {
   const nomorSuratAdmin({Key key}) : super(key: key);
@@ -32,7 +33,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
   var apiURLDeleteNomorSurat = "http://192.168.18.10:8000/api/admin/nomor_surat/delete_nomor_surat";
 
   Future refreshListNomorSurat() async {
-    Uri uri = Uri.parse('http://172.16.59.240:8000/api/data/nomorsurat');
+    Uri uri = Uri.parse('http://192.168.18.10:8000/api/data/nomorsurat/${loginPage.desaId}');
     final response = await http.get(uri);
     if(response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -116,11 +117,13 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                                         )),
                                       ),
                                       Container(
-                                          child: Text("${keteranganSurat[index]}", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700,
-                                          ))
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.55,
+                                            child: Text("${keteranganSurat[index]}", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                            ))
+                                          )
                                       )
                                     ]
                                 ),
@@ -187,8 +190,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                     ]
                   ),
                   margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  height: 70,
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     color: Colors.white,

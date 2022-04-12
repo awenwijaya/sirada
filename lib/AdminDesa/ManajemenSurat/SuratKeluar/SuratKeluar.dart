@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarBendesaAdat/SuratKeluarBendesaAdat.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/SuratKeluarNonPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/SuratKeluarPanitia.dart';
-import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarParumanDesaAdat/SuratKeluarParumanDesaAdat.dart';
-import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratParjuruDesaAdat/SuratPrajuruDesaAdat.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
 
@@ -139,7 +137,7 @@ class _suratKeluarAdminState extends State<suratKeluarAdmin> {
                 child: Container(
                   child: GestureDetector(
                     onTap: (){
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => suratKeluarPrajuruDesaAdatAdmin()));
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => suratKeluarNonPanitiaAdmin()));
                     },
                     child: Container(
                         child: Stack(
@@ -169,155 +167,7 @@ class _suratKeluarAdminState extends State<suratKeluarAdmin> {
                                                 ))
                                             ),
                                             Container(
-                                                child: Text("Surat Prajuru Desa Adat", style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w700
-                                                ))
-                                            )
-                                          ]
-                                      ),
-                                      margin: EdgeInsets.only(left: 15)
-                                  )
-                                ],
-                              ),
-                              Container(
-                                  alignment: Alignment.centerRight,
-                                  child: Icon(
-                                      CupertinoIcons.right_chevron,
-                                      color: HexColor("#025393")
-                                  ),
-                                  margin: EdgeInsets.only(right: 10)
-                              )
-                            ]
-                        )
-                    ),
-                  ),
-                  margin: EdgeInsets.only(top: 15, left: 20, right: 20),
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0,3)
-                        )
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(10))
-                  ),
-                ),
-              ),
-              Container(
-                child: Container(
-                  child: GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => suratKeluarBendesaAdatAdmin()));
-                    },
-                    child: Container(
-                        child: Stack(
-                            alignment: Alignment.centerLeft,
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Container(
-                                      child: Image.asset(
-                                          "images/bendesa.png",
-                                          height: 40,
-                                          width: 40
-                                      ),
-                                      margin: EdgeInsets.only(left: 15)
-                                  ),
-                                  Container(
-                                      child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Container(
-                                                child: Text(jumlahSuratBendesaAdat, style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: HexColor("#025393")
-                                                ))
-                                            ),
-                                            Container(
-                                                child: Text("Surat Bendesa Adat", style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w700
-                                                ))
-                                            )
-                                          ]
-                                      ),
-                                      margin: EdgeInsets.only(left: 15)
-                                  )
-                                ],
-                              ),
-                              Container(
-                                  alignment: Alignment.centerRight,
-                                  child: Icon(
-                                      CupertinoIcons.right_chevron,
-                                      color: HexColor("#025393")
-                                  ),
-                                  margin: EdgeInsets.only(right: 10)
-                              )
-                            ]
-                        )
-                    ),
-                  ),
-                  margin: EdgeInsets.only(top: 15, left: 20, right: 20),
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0,3)
-                        )
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(10))
-                  ),
-                ),
-              ),
-              Container(
-                child: Container(
-                  child: GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => suratKeluarParumanDesaAdat()));
-                    },
-                    child: Container(
-                        child: Stack(
-                            alignment: Alignment.centerLeft,
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Container(
-                                      child: Image.asset(
-                                          "images/handshake.png",
-                                          height: 40,
-                                          width: 40
-                                      ),
-                                      margin: EdgeInsets.only(left: 15)
-                                  ),
-                                  Container(
-                                      child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Container(
-                                                child: Text(jumlahSuratParumanDesaAdat, style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: HexColor("#025393")
-                                                ))
-                                            ),
-                                            Container(
-                                                child: Text("Surat Paruman Desa Adat", style: TextStyle(
+                                                child: Text("Surat Non-Panitia", style: TextStyle(
                                                     fontFamily: "Poppins",
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w700

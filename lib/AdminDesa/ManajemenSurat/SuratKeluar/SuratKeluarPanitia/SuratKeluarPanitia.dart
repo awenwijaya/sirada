@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/DetailSurat.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/EditSuratKeluarPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
@@ -41,6 +42,7 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
   var apiURLShowListSuratSedangDiproses = "http://192.168.18.10:8000/api/data/surat/keluar/sedang_direspons/1";
   var apiURLShowListSuratDikonfirmasi = "http://192.168.18.10:8000/api/data/surat/keluar/telah_dikonfirmasi/1";
   var apiURLShowListSuratDibatalkan = "http://192.168.18.10:8000/api/data/surat/keluar/dibatalkan/1";
+  var selectedIdSuratKeluar;
 
   Future refreshListSuratKeluarMenunggu() async {
     var body = jsonEncode({
@@ -317,48 +319,107 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
                                             Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia()));
                                           },
                                           child: Container(
-                                            child: Row(
+                                            child: Stack(
                                               children: <Widget>[
                                                 Container(
-                                                  child: Image.asset(
-                                                    'images/email.png',
-                                                    height: 40,
-                                                    width: 40,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                  child: Row(
                                                     children: <Widget>[
                                                       Container(
-                                                        child: SizedBox(
-                                                          width: MediaQuery.of(context).size.width * 0.55,
-                                                          child: Text(
-                                                            perihalSuratMenunggu[index],
-                                                            style: TextStyle(
-                                                              fontFamily: "Poppins",
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.w700,
-                                                              color: HexColor("#025393")
-                                                            ),
-                                                            maxLines: 1,
-                                                            overflow: TextOverflow.ellipsis,
-                                                            softWrap: false,
-                                                          ),
+                                                        child: Image.asset(
+                                                          'images/email.png',
+                                                          height: 40,
+                                                          width: 40,
                                                         ),
                                                       ),
                                                       Container(
-                                                        child: Text(nomorSuratMenunggu[index], style: TextStyle(
-                                                          fontFamily: "Poppins",
-                                                          fontSize: 14
-                                                        )),
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              child: SizedBox(
+                                                                width: MediaQuery.of(context).size.width * 0.55,
+                                                                child: Text(
+                                                                  perihalSuratMenunggu[index],
+                                                                  style: TextStyle(
+                                                                      fontFamily: "Poppins",
+                                                                      fontSize: 16,
+                                                                      fontWeight: FontWeight.w700,
+                                                                      color: HexColor("#025393")
+                                                                  ),
+                                                                  maxLines: 1,
+                                                                  overflow: TextOverflow.ellipsis,
+                                                                  softWrap: false,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              child: Text(nomorSuratMenunggu[index], style: TextStyle(
+                                                                  fontFamily: "Poppins",
+                                                                  fontSize: 14
+                                                              )),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        margin: EdgeInsets.only(left: 15),
                                                       )
                                                     ],
-                                                  ),
-                                                  margin: EdgeInsets.only(left: 15),
+                                                  )
+                                                ),
+                                                Container(
+                                                  alignment: Alignment.centerRight,
+                                                  child: PopupMenuButton<int>(
+                                                   onSelected: (item) {
+                                                     setState(() {
+                                                       selectedIdSuratKeluar = idSuratMenunggu[index];
+                                                     });
+                                                     onSelected(context, item);
+                                                   },
+                                                    itemBuilder: (context) => [
+                                                      PopupMenuItem<int>(
+                                                        value: 0,
+                                                        child: Row(
+                                                          children: <Widget>[
+                                                            Container(
+                                                              child: Icon(
+                                                                Icons.edit,
+                                                                color: HexColor("#025393")
+                                                              )
+                                                            ),
+                                                            Container(
+                                                              child: Text("Edit", style: TextStyle(
+                                                                fontFamily: "Poppins",
+                                                                fontSize: 14
+                                                              )),
+                                                              margin: EdgeInsets.only(left: 10)
+                                                            )
+                                                          ]
+                                                        )
+                                                      ),
+                                                      PopupMenuItem<int>(
+                                                        value: 0,
+                                                        child: Row(
+                                                          children: <Widget>[
+                                                            Container(
+                                                              child: Icon(
+                                                                Icons.delete,
+                                                                color: HexColor("#025393")
+                                                              )
+                                                            ),
+                                                            Container(
+                                                              child: Text("Hapus", style: TextStyle(
+                                                                fontFamily: "Poppins",
+                                                                fontSize: 14
+                                                              )),
+                                                              margin: EdgeInsets.only(left: 10)
+                                                            )
+                                                          ]
+                                                        )
+                                                      )
+                                                    ]
+                                                  )
                                                 )
-                                              ],
+                                              ]
                                             ),
                                             margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                                             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -715,5 +776,17 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
         )
       )
     );
+  }
+
+  void onSelected(BuildContext context, int item) {
+    switch(item) {
+      case 0:
+        Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratKeluarPanitiaAdmin())).then((value) {
+          refreshListSuratKeluarMenunggu();
+          refreshListSuratKeluarDikonfirmasi();
+          refreshListSuratKeluarSedangDiproses();
+          refreshListSuratKeluarDibatalkan();
+        });
+    }
   }
 }
