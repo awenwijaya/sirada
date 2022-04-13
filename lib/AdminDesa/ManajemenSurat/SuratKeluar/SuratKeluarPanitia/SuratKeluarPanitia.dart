@@ -769,6 +769,9 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
   void onSelected(BuildContext context, int item) {
     switch(item) {
       case 0:
+        setState(() {
+          editSuratKeluarPanitiaAdmin.idSuratKeluar = selectedIdSuratKeluar;
+        });
         Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratKeluarPanitiaAdmin())).then((value) {
           refreshListSuratKeluarMenunggu();
           refreshListSuratKeluarDikonfirmasi();
