@@ -29,12 +29,21 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   var kramaMipilIDSekretaris;
   var namaSekretarisPanitia;
   var selectedBendesaAdat;
+  var selectedKodeSurat;
+  var apiURLShowKodeSurat = "http://192.168.18.10:8000/api/data/admin/surat/panitia/kode/${loginPage.desaId}";
+  var apiURLShowKomponenNomorSurat = "http://192.168.18.10:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
   var apiURLGetDataBendesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLUpSuratKeluarPanitia = "http://192.168.18.10:8000/api/admin/surat/keluar/panitia/up";
   List bendesaList = List();
-  var loadBendesa = true;
+  List kodeSuratList = List();
+  bool availableBendesa = false;
+  bool availableKodeSurat = false;
+  bool LoadingBendesa = true;
+  bool KodeSuratLoading = true;
   File file;
   String namaFile;
   String filePath;
+  final controllerNomorSurat = TextEditingController();
   final controllerLepihan = TextEditingController();
   final controllerParindikan = TextEditingController();
   final controllerTetujon = TextEditingController();
@@ -45,7 +54,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   final controllerTempatKegiatan = TextEditingController();
   final controllerBusanaKegiatan = TextEditingController();
   bool Loading = false;
-  var apiURLUpSuratKeluarPanitia = "http://192.168.18.10:8000/api/admin/surat/keluar/up";
+  bool NomorSuratLoading = true;
   TimeOfDay startTime;
   TimeOfDay endTime;
   final DateRangePickerController controllerTanggalKegiatan = DateRangePickerController();
@@ -53,6 +62,12 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   String tanggalMulaiValue;
   String tanggalBerakhir;
   String tanggalBerakhirValue;
+
+  //kodesurat
+  var nomorUrutSurat;
+  var kodeDesa;
+  var bulan;
+  var tahun;
 
   Future pilihBerkas() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -77,7 +92,45 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
       var jsonData = json.decode(response.body);
       setState(() {
         bendesaList = jsonData;
-        loadBendesa = false;
+        LoadingBendesa = false;
+        availableBendesa = true;
+      });
+    }else{
+      setState(() {
+        LoadingBendesa = false;
+        availableBendesa = false;
+      });
+    }
+  }
+
+  Future getKodeSurat() async {
+    var response = await http.get(Uri.parse(apiURLShowKodeSurat));
+    if(response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        kodeSuratList = jsonData;
+        KodeSuratLoading = false;
+        availableKodeSurat = true;
+      });
+    }else{
+      setState(() {
+        KodeSuratLoading = false;
+        availableKodeSurat = false;
+      });
+    }
+  }
+
+  Future getKomponenNomorSurat() async {
+    var response = await http.get(Uri.parse(apiURLShowKomponenNomorSurat));
+    if(response.statusCode == 200) {
+      var jsonData = response.body;
+      var parsedJson = json.decode(jsonData);
+      setState(() {
+        nomorUrutSurat = parsedJson['nomor_urut_surat'];
+        kodeDesa = parsedJson['kode_desa'];
+        bulan = parsedJson['bulan'];
+        tahun = parsedJson['tahun'];
+        NomorSuratLoading = false;
       });
     }
   }
@@ -96,6 +149,8 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
     // TODO: implement initState
     super.initState();
     getBendesaAdat();
+    getKodeSurat();
+    getKomponenNomorSurat();
     final DateTime sekarang = DateTime.now();
     tanggalMulai = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
     tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(sekarang.add(Duration(days: 7))).toString();
@@ -121,7 +176,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
             color: HexColor("#025393")
           ))
         ),
-        body: loadBendesa ? ProfilePageShimmer() : SingleChildScrollView(
+        body: NomorSuratLoading ? ProfilePageShimmer() : SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Container(
@@ -143,7 +198,122 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
               ),
               Container(
                 alignment: Alignment.topLeft,
-                child: Text("1. Atribut Surat", style: TextStyle(
+                child: Text("1. Kode Surat *", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700
+                )),
+                margin: EdgeInsets.only(top: 30, left: 20)
+              ),
+              Container(
+                child: KodeSuratLoading ? ListTileShimmer() : Column(
+                  children: <Widget>[
+                    Container(
+                      child: Text("Silahkan pilih salah satu kode surat dari surat yang ingin Anda ajukan.", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                      )),
+                      padding: EdgeInsets.only(left: 30, right: 30),
+                      margin: EdgeInsets.only(top: 10)
+                    ),
+                    Container(
+                      child: availableKodeSurat == false ? Container(
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.white
+                              )
+                            ),
+                            Container(
+                              child: Flexible(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Text("Tidak ada Data Kode Surat", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white
+                                      ))
+                                    ),
+                                    Container(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.7,
+                                        child: Text("Anda tidak bisa melanjutkan proses ini sebelum Anda menambahkan data kode surat pada menu Nomor Surat", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          color: Colors.white
+                                        ))
+                                      )
+                                    )
+                                  ]
+                                )
+                              ),
+                              margin: EdgeInsets.only(left: 15)
+                            )
+                          ]
+                        ),
+                        decoration: BoxDecoration(
+                          color: HexColor("B20600"),
+                          borderRadius: BorderRadius.circular(25)
+                        ),
+                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+                        margin: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 5)
+                      ) : Container(
+                          width: 300,
+                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                          decoration: BoxDecoration(
+                              color: HexColor("#025393"),
+                              borderRadius: BorderRadius.circular(30)
+                          ),
+                          child: DropdownButton(
+                            isExpanded: true,
+                            hint: Center(
+                                child: Text("Pilih Kode Surat", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    color: Colors.white,
+                                    fontSize: 14
+                                ))
+                            ),
+                            value: selectedKodeSurat,
+                            underline: Container(),
+                            icon: Icon(Icons.arrow_downward, color: Colors.white),
+                            items: kodeSuratList.map((kodeSurat) {
+                              return DropdownMenuItem(
+                                  value: kodeSurat['kode_nomor_surat'],
+                                  child: Text("${kodeSurat['kode_nomor_surat']} - ${kodeSurat['keterangan']}", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ))
+                              );
+                            }).toList(),
+                            selectedItemBuilder: (BuildContext context) => kodeSuratList.map((kodeSurat) => Center(
+                                child: Text("${kodeSurat['kode_nomor_surat']}", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    color: Colors.white
+                                ))
+                            )).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedKodeSurat = value;
+                                controllerNomorSurat.text = "$nomorUrutSurat/$selectedKodeSurat-$kodeDesa/$bulan/$tahun";
+                              });
+                            },
+                          ),
+                          margin: EdgeInsets.only(top: 15)
+                      )
+                    )
+                  ]
+                )
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text("2. Atribut Surat", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
@@ -165,6 +335,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                         child: TextField(
+                          controller: controllerNomorSurat,
                           enabled: false,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -175,8 +346,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                           ),
                           style: TextStyle(
                             fontFamily: "Poppins",
-                            fontSize: 14,
-                            fontStyle: FontStyle.italic
+                            fontSize: 14
                           ),
                         )
                       ),
@@ -289,7 +459,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                   )
               ),
               Container(
-                child: Text("2. Daging Surat *", style: TextStyle(
+                child: Text("3. Daging Surat *", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
@@ -553,7 +723,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                 )
               ),
               Container(
-                child: Text("3. Lingga Tangan Miwah Pesengan", style: TextStyle(
+                child: Text("4. Lingga Tangan Miwah Pesengan", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
@@ -660,60 +830,108 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                       children: <Widget>[
                         Container(
                             alignment: Alignment.topLeft,
-                            child: Text("Bendesa Adat *", style: TextStyle(
+                            child: Text("Bendesa *", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14
                             )),
                             margin: EdgeInsets.only(top: 20, left: 20)
                         ),
                         Container(
-                          width: 300,
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: HexColor("#025393"),
-                            borderRadius: BorderRadius.circular(30)
-                          ),
-                          child: DropdownButton(
-                            isExpanded: true,
-                            hint: Center(
-                              child: Text("Pilih Bendesa Adat", style: TextStyle(
-                                fontFamily: "Poppins",
-                                color: Colors.white,
-                                fontSize: 14
-                              ))
-                            ),
-                            value: selectedBendesaAdat,
-                            underline: Container(),
-                            icon: Icon(Icons.arrow_downward, color: Colors.white),
-                            items: bendesaList.map((bendesa) {
-                              return DropdownMenuItem(
-                                value: bendesa['nama'],
-                                child: Text(bendesa['nama'].toString(), style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14
-                                ))
-                              );
-                            }).toList(),
-                            selectedItemBuilder: (BuildContext context) => bendesaList.map((bendesa) => Center(
-                              child: Text(bendesa['nama'].toString(), style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                color: Colors.white
-                              ))
-                            )).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedBendesaAdat = value;
-                              });
-                            },
-                          ),
-                          margin: EdgeInsets.only(top: 15)
+                            child: LoadingBendesa ? ListTileShimmer() : availableBendesa == false ? Container(
+                                child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                          child: Icon(
+                                              Icons.close,
+                                              color: Colors.white
+                                          )
+                                      ),
+                                      Container(
+                                          child: Flexible(
+                                              child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Container(
+                                                        child: Text("Tidak ada Data Bendesa", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.white
+                                                        ))
+                                                    ),
+                                                    Container(
+                                                        child: SizedBox(
+                                                            width: MediaQuery.of(context).size.width * 0.7,
+                                                            child: Text("Anda tidak bisa melanjutkan proses ini sebelum Anda menambahkan data Bendesa pada menu Prajuru Desa Adat", style: TextStyle(
+                                                                fontFamily: "Poppins",
+                                                                fontSize: 14,
+                                                                color: Colors.white
+                                                            ))
+                                                        )
+                                                    )
+                                                  ]
+                                              )
+                                          ),
+                                          margin: EdgeInsets.only(left: 15)
+                                      )
+                                    ]
+                                ),
+                                decoration: BoxDecoration(
+                                    color: HexColor("B20600"),
+                                    borderRadius: BorderRadius.circular(25)
+                                ),
+                                padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+                                margin: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 5)
+                            ) : Container(
+                                width: 300,
+                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: HexColor("#025393"),
+                                    borderRadius: BorderRadius.circular(30)
+                                ),
+                                child: DropdownButton(
+                                    isExpanded: true,
+                                    hint: Center(
+                                        child: Text("Pilih Bendesa Adat", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            color: Colors.white
+                                        ))
+                                    ),
+                                    value: selectedBendesaAdat,
+                                    underline: Container(),
+                                    icon: Icon(Icons.arrow_downward, color: Colors.white),
+                                    items: bendesaList.map((bendesa) {
+                                      return DropdownMenuItem(
+                                          value: bendesa['prajuru_desa_adat_id'],
+                                          child: Text("${bendesa['nik']} - ${bendesa['nama']}", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ))
+                                      );
+                                    }).toList(),
+                                    selectedItemBuilder: (BuildContext context) => bendesaList.map((bendesa) => Center(
+                                        child: Text("${bendesa['nik']} - ${bendesa['nama']}", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            color: Colors.white
+                                        ))
+                                    )).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedBendesaAdat = value;
+                                      });
+                                    }
+                                ),
+                                margin: EdgeInsets.only(top: 15)
+                            )
                         )
                       ]
                   )
               ),
               Container(
-                  child: Text("4. Lepihan Surat", style: TextStyle(
+                  child: Text("5. Lepihan Surat", style: TextStyle(
                       fontFamily: "Poppins",
                       fontSize: 14,
                       fontWeight: FontWeight.w700
@@ -874,7 +1092,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
               Container(
                 child: FlatButton(
                   onPressed: () async {
-                    if(controllerParindikan.text == "" || controllerLepihan.text == "" || controllerPemahbah.text == "" || kramaMipilIDKetua == null || kramaMipilIDSekretaris == null || selectedBendesaAdat == null) {
+                    if(controllerParindikan.text == "" || controllerLepihan.text == "" || controllerPemahbah.text == "" || kramaMipilIDKetua == null || kramaMipilIDSekretaris == null || selectedBendesaAdat == null || controllerNomorSurat.text == "") {
                       showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -998,7 +1216,8 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         if(response.statusCode == 200) {
                           var body = jsonEncode({
                             "desa_adat_id" : loginPage.desaId,
-                            "master_surat_id" : "1",
+                            "master_surat" : selectedKodeSurat,
+                            "nomor_surat" : controllerNomorSurat.text,
                             "lepihan" : controllerLepihan.text,
                             "parindikan" : controllerParindikan.text,
                             "pihak_penerima" : controllerTetujon.text,
@@ -1012,7 +1231,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                             "busana" : controllerBusanaKegiatan.text == "" ? null : controllerBusanaKegiatan.text,
                             "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
                             "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
-                            "nama_bendesa" : selectedBendesaAdat,
+                            "bendesa_adat_id" : selectedBendesaAdat,
                             "krama_mipil_ketua_id" : kramaMipilIDKetua,
                             "krama_mipil_sekretaris_id" : kramaMipilIDSekretaris,
                             "lampiran" : namaFile
@@ -1100,7 +1319,8 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                       });
                       var body = jsonEncode({
                         "desa_adat_id" : loginPage.desaId,
-                        "master_surat_id" : "1",
+                        "master_surat" : selectedKodeSurat,
+                        "nomor_surat" : controllerNomorSurat.text,
                         "lepihan" : controllerLepihan.text,
                         "parindikan" : controllerParindikan.text,
                         "pihak_penerima" : controllerTetujon.text,
@@ -1114,7 +1334,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         "busana" : controllerBusanaKegiatan.text == "" ? null : controllerBusanaKegiatan.text,
                         "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
                         "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
-                        "nama_bendesa" : selectedBendesaAdat,
+                        "bendesa_adat_id" : selectedBendesaAdat,
                         "krama_mipil_ketua_id" : kramaMipilIDKetua,
                         "krama_mipil_sekretaris_id" : kramaMipilIDSekretaris
                       });

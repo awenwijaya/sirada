@@ -241,16 +241,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                   ),
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
                 ),
-                margin: EdgeInsets.only(top: 20)
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                child: Text("Status Pengajuan Surat", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700
-                )),
-                margin: EdgeInsets.only(top: 20, left: 15, bottom: 20)
+                margin: EdgeInsets.only(top: 15, bottom: 15)
               ),
               Container(
                 child: Column(
@@ -306,7 +297,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                             )
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.5,
+                            height: MediaQuery.of(context).size.height * 0.7,
                             decoration: BoxDecoration(
                               border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
                             ),

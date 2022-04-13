@@ -38,17 +38,14 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
   bool availableDataSedangDiproses = false;
   bool availableDataDikonfirmasi = false;
   bool availableDataDibatalkan = false;
-  var apiURLShowListSuratKeluarMenunggu = "http://192.168.18.10:8000/api/data/surat/keluar/menunggu_respons/1";
-  var apiURLShowListSuratSedangDiproses = "http://192.168.18.10:8000/api/data/surat/keluar/sedang_direspons/1";
-  var apiURLShowListSuratDikonfirmasi = "http://192.168.18.10:8000/api/data/surat/keluar/telah_dikonfirmasi/1";
-  var apiURLShowListSuratDibatalkan = "http://192.168.18.10:8000/api/data/surat/keluar/dibatalkan/1";
+  var apiURLShowListSuratKeluar = "http://192.168.18.10:8000/api/data/admin/surat/panitia/${loginPage.desaId}";
   var selectedIdSuratKeluar;
 
   Future refreshListSuratKeluarMenunggu() async {
     var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId
+      "status" : "Menunggu Respons"
     });
-    http.post(Uri.parse(apiURLShowListSuratKeluarMenunggu),
+    http.post(Uri.parse(apiURLShowListSuratKeluar),
       headers: {"Content-Type" : "application/json"},
       body: body
     ).then((http.Response response) {
@@ -77,9 +74,9 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
 
   Future refreshListSuratKeluarSedangDiproses() async {
     var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId
+      "status" : "Sedang Diproses"
     });
-    http.post(Uri.parse(apiURLShowListSuratSedangDiproses),
+    http.post(Uri.parse(apiURLShowListSuratKeluar),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) {
@@ -108,9 +105,9 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
 
   Future refreshListSuratKeluarDikonfirmasi() async {
     var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId
+      "status" : "Telah Dikonfirmasi"
     });
-    http.post(Uri.parse(apiURLShowListSuratDikonfirmasi),
+    http.post(Uri.parse(apiURLShowListSuratKeluar),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) {
@@ -139,9 +136,9 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
 
   Future refreshListSuratKeluarDibatalkan() async {
     var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId
+      "status" : "Dibatalkan"
     });
-    http.post(Uri.parse(apiURLShowListSuratDibatalkan),
+    http.post(Uri.parse(apiURLShowListSuratKeluar),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) {
@@ -232,16 +229,7 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
                   ),
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
                 ),
-                margin: EdgeInsets.only(top: 20)
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                child: Text("Status Pengajuan Surat", style: TextStyle(
-                  fontFamily: "Poppins",
-                 fontSize: 14,
-                 fontWeight: FontWeight.w700
-                )),
-                margin: EdgeInsets.only(top: 20, left: 15, bottom: 20)
+                margin: EdgeInsets.only(top: 15, bottom: 15)
               ),
               Container(
                 child: Column(
@@ -299,7 +287,7 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
                             )
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.5,
+                            height: MediaQuery.of(context).size.height * 0.7,
                             decoration: BoxDecoration(
                               border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
                             ),

@@ -24,22 +24,13 @@
       <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_build.d" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_build.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/app/outputs/apk/debug/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/outputs/apk/debug/app-debug.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app-debug.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app.apk" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app.apk.sha1" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/outputs/flutter-apk/app.apk.sha1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/Dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/Dashboard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluar.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarBendesaAdat/SuratKeluarBendesaAdat.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/DetailSurat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/DetailSurat.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/PrajuruBanjarAdat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/PrajuruBanjarAdat.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/PrajuruDesaAdat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/PrajuruDesaAdat.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/SuratKeluarNonPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/SuratKeluarNonPanitia.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/SuratKeluarPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/SuratKeluarPanitia.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarParumanDesaAdat/SuratKeluarParumanDesaAdat.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratParjuruDesaAdat/SuratPrajuruDesaAdat.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/NomorSurat/NomorSurat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/NomorSurat/NomorSurat.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/LoginAndRegistration/LoginPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/LoginAndRegistration/LoginPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
