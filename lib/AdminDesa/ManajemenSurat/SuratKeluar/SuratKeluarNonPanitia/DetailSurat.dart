@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/EditSuratKeluarNonPanitia.dart';
 
 class detailSuratKeluarNonPanitia extends StatefulWidget {
   static var suratKeluarId;
@@ -130,7 +131,25 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                 fontFamily: "Poppins",
                 fontWeight: FontWeight.w700,
                 color: HexColor("#025393")
-            ))
+            )),
+          actions: <Widget>[
+            IconButton(
+              onPressed: (){
+                setState(() {
+                  setState(() {
+                    editSuratKeluarNonPanitia.idSuratKeluar = detailSuratKeluarNonPanitia.suratKeluarId;
+                  });
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratKeluarNonPanitia())).then((value) {
+                    getSuratKeluarInfo();
+                    getBendesaInfo();
+                    getPenyarikanInfo();
+                  });
+                });
+              },
+              icon: Icon(Icons.edit),
+              color: HexColor("#025393")
+            )
+          ]
         ),
         body: LoadData ? ProfilePageShimmer() : SingleChildScrollView(
           child: Column(

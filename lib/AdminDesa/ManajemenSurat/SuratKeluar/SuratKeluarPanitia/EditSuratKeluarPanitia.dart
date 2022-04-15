@@ -51,6 +51,7 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
   String namaFileLampiran;
   String filePath;
 
+
   //kodesurat
   var nomorUrutSurat;
   var kodeDesa;
@@ -82,6 +83,9 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
   String tanggalBerakhirValue;
   DateTime tanggalMulaiKegiatan;
   DateTime tanggalAkhirKegiatan;
+  String tanggalSurat;
+  String tanggalSuratValue;
+  DateTime selectedTanggalSurat;
 
   Future getDataSuratKeluar() async {
     var response  = await http.get(Uri.parse(apiURLShowDataEditSuratKeluar));
@@ -100,10 +104,21 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
         controllerTempatKegiatan.text = parsedJson['tempat_kegiatan'] == null ? "" : parsedJson['tempat_kegiatan'];
         controllerBusanaKegiatan.text = parsedJson['busana'] == null ? "" : parsedJson['busana'];
         selectedKodeSurat = parsedJson['kode_nomor_surat'];
-        tanggalMulaiKegiatan = parsedJson['tanggal_mulai'];
-        tanggalAkhirKegiatan = parsedJson['tanggal_selesai'];
-        startTime = parsedJson['waktu_mulai'];
-        endTime = parsedJson['waktu_selesai'];
+        tanggalAkhirKegiatan = parsedJson['tanggal_selesai'] == null ? null : DateTime.parse(parsedJson['tanggal_selesai']);
+        tanggalMulaiKegiatan = parsedJson['tanggal_mulai'] == null ? null : DateTime.parse(parsedJson['tanggal_mulai']);
+        if(tanggalAkhirKegiatan != null || tanggalMulaiKegiatan != null) {
+          controllerTanggalKegiatan.selectedRange = PickerDateRange(tanggalMulaiKegiatan, tanggalAkhirKegiatan);
+          tanggalMulai = DateFormat("dd-MMM-yyyy").format(tanggalMulaiKegiatan).toString();
+          tanggalMulaiValue = DateFormat("yyyy-MM-dd").format(tanggalMulaiKegiatan).toString();
+          tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(tanggalAkhirKegiatan).toString();
+          tanggalBerakhirValue = DateFormat("yyyy-MM-dd").format(tanggalAkhirKegiatan).toString();
+        }
+        startTime = parsedJson['waktu_mulai'] == null ? null : TimeOfDay(hour: int.parse(parsedJson['waktu_mulai'].split(":")[0]), minute: int.parse(parsedJson['waktu_mulai'].split(":")[1]));
+        endTime = parsedJson['waktu_selesai'] == null ? null : TimeOfDay(hour: int.parse(parsedJson['waktu_selesai'].split(":")[0]), minute: int.parse(parsedJson['waktu_selesai'].split(":")[1]));
+        namaFileLampiran = parsedJson['lampiran'] == null ? null : parsedJson['lampiran'];
+        selectedTanggalSurat = DateTime.parse(parsedJson['tanggal_surat']);
+        tanggalSurat = DateFormat("dd-MMM-yyyy").format(selectedTanggalSurat).toString();
+        tanggalSuratValue = DateFormat("yyyy-MM-dd").format(selectedTanggalSurat).toString();
         LoadingData = false;
       });
     }
@@ -261,8 +276,8 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
     getListPenduduk();
     final DateTime sekarang = DateTime.now();
     tanggalMulai = DateFormat("dd-MMM-yyyy").format(tanggalMulaiKegiatan == null ? sekarang : tanggalMulaiKegiatan).toString();
-    tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(tanggalAkhirKegiatan == null ? sekarang.add(Duration(days: 7)) : tanggalAkhirKegiatan).toString();
-    controllerTanggalKegiatan.selectedRange = PickerDateRange(sekarang, sekarang.add(Duration(days: 7)));
+    tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(tanggalAkhirKegiatan == null ? sekarang : tanggalAkhirKegiatan).toString();
+    controllerTanggalKegiatan.selectedRange = PickerDateRange(tanggalMulaiKegiatan == null ? sekarang : tanggalMulaiKegiatan, tanggalAkhirKegiatan == null ? sekarang : tanggalAkhirKegiatan);
   }
 
   @override
@@ -384,7 +399,6 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                         padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                         child: TextField(
                           controller: controllerNomorSurat,
-                          enabled: false,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(50.0),
@@ -500,6 +514,58 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                                 margin: EdgeInsets.only(top: 10)
                             )
                           ],
+                        )
+                    ),
+                    Container(
+                        child: Column(
+                            children: <Widget>[
+                              Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("Tanggal Surat", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  )),
+                                  margin: EdgeInsets.only(top: 20, left: 20)
+                              ),
+                              Container(
+                                  child: Text(tanggalSurat, style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700
+                                  )),
+                                  margin: EdgeInsets.only(top: 10)
+                              ),
+                              Container(
+                                  child: FlatButton(
+                                      onPressed: (){
+                                        showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime(1900),
+                                            lastDate: DateTime(2900)
+                                        ).then((value) {
+                                          setState(() {
+                                            selectedTanggalSurat = value;
+                                            tanggalSurat = DateFormat("dd-MMM-yyyy").format(selectedTanggalSurat).toString();
+                                            tanggalSuratValue = DateFormat("yyyy-MM-dd").format(selectedTanggalSurat).toString();
+                                          });
+                                        });
+                                      },
+                                      child: Text("Pilih Tanggal", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white
+                                      )),
+                                      color: HexColor("#025393"),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(25)
+                                      ),
+                                      padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
+                                  ),
+                                  margin: EdgeInsets.only(top: 10)
+                              )
+                            ]
                         )
                     ),
                     Container(
@@ -619,7 +685,7 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                             margin: EdgeInsets.only(top: 20, left: 20)
                           ),
                           Container(
-                            child: Text(tanggalMulaiValue == null ? "Tanggal kegiatan belum terpilih" : tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir", style: TextStyle(
+                            child: Text(tanggalMulaiKegiatan == null ? tanggalMulaiValue == null ? "Tanggal kegiatan belum terpilih" : tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir" : "$tanggalMulai - $tanggalBerakhir", style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 14,
                               fontWeight: FontWeight.w700
@@ -1256,7 +1322,8 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                             "bendesa_adat_id" : selectedBendesaAdat,
                             "krama_mipil_ketua_id" : selectedKetuaPanitia,
                             "krama_mipil_sekretaris_id" : selectedSekretarisPanitia,
-                            "lampiran" : namaFile == null ? namaFileLampiran : namaFile
+                            "lampiran" : namaFile == null ? namaFileLampiran : namaFile,
+                            "tanggal_surat" : tanggalSuratValue
                           });
                           http.post(Uri.parse(apiURLSimpanEditSuratKeluar),
                               headers: {"Content-Type" : "application/json"},
@@ -1360,7 +1427,9 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                         "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
                         "bendesa_adat_id" : selectedBendesaAdat,
                         "krama_mipil_ketua_id" : selectedKetuaPanitia,
-                        "krama_mipil_sekretaris_id" : selectedSekretarisPanitia
+                        "krama_mipil_sekretaris_id" : selectedSekretarisPanitia,
+                        "tanggal_surat" : tanggalSuratValue,
+                        "lampiran" : null
                       });
                       http.post(Uri.parse(apiURLSimpanEditSuratKeluar),
                           headers: {"Content-Type" : "application/json"},

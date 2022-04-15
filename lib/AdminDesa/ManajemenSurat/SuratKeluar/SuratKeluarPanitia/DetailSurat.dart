@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/EditSuratKeluarPanitia.dart';
 
 class detailSuratKeluarPanitia extends StatefulWidget {
   static var suratKeluarId;
@@ -37,6 +38,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   var namaKetua;
   var namaSekretaris;
   var namaBendesa;
+  var createdAt;
   bool LoadData = true;
 
   getSuratKeluarInfo() async {
@@ -64,6 +66,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           kontakWa2 = parsedJson['desadat_wa_kontak_2'];
           logoDesa = parsedJson['desadat_logo'];
           timKegiatan = parsedJson['tim_kegiatan'];
+          createdAt = parsedJson['created_at'];
           LoadData = false;
         });
       }
@@ -151,7 +154,24 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393")
-          ))
+          )),
+          actions: <Widget>[
+            IconButton(
+              onPressed: (){
+                setState(() {
+                  editSuratKeluarPanitiaAdmin.idSuratKeluar = detailSuratKeluarPanitia.suratKeluarId;
+                });
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratKeluarPanitiaAdmin())).then((value) {
+                  getSuratKeluarInfo();
+                  getKetuaPanitiaInfo();
+                  getSekretarisPanitiaInfo();
+                  getBendesaInfo();
+                });
+              },
+              icon: Icon(Icons.edit),
+              color: HexColor("#025393")
+            )
+          ]
         ),
         body: LoadData ? ProfilePageShimmer() : SingleChildScrollView(
           child: Column(
@@ -416,7 +436,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Container(
-                                        child: Text(tanggalSurat, style: TextStyle(
+                                        child: Text(tanggalSurat.toString(), style: TextStyle(
                                             fontFamily: "Poppins",
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,

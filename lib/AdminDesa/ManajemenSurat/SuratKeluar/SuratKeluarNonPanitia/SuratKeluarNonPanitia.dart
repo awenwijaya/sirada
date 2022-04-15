@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/DetailSurat.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/EditSuratKeluarNonPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/TambahSuratKeluarNonPanitia.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +19,7 @@ class suratKeluarNonPanitiaAdmin extends StatefulWidget {
 
 class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin> {
   var apiURLShowListSuratKeluar = "http://192.168.18.10:8000/api/data/admin/surat/non-panitia/${loginPage.desaId}";
+  var selectedIdSuratKeluar;
 
   //loading status
   bool LoadingMenunggu = true;
@@ -51,7 +53,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
   bool availableDataDikonfirmasi = false;
   bool availableDataDibatalkan = false;
 
-  var selectedIdSuratKeluar;
+  var selectedIdSuratKeluarNonPanitia;
 
   Future refreshListSuratKeluarMenunggu() async {
     var body = jsonEncode({
@@ -297,7 +299,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                             )
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.7,
+                            height: MediaQuery.of(context).size.height * 0.6,
                             decoration: BoxDecoration(
                               border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
                             ),
@@ -317,54 +319,48 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                             Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
                                           },
                                           child: Container(
-                                            child: Stack(
-                                              children: <Widget>[
-                                                Container(
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        child: Image.asset(
+                                            child: Row(
+                                                children: <Widget>[
+                                                  Container(
+                                                      child: Image.asset(
                                                           'images/email.png',
                                                           height: 40,
                                                           width: 40
-                                                        )
-                                                      ),
-                                                      Container(
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: <Widget>[
-                                                            Container(
-                                                              child: SizedBox(
-                                                                width: MediaQuery.of(context).size.width * 0.55,
-                                                                child: Text(
-                                                                  perihalSuratMenunggu[index],
-                                                                  style: TextStyle(
-                                                                    fontFamily: "Poppins",
-                                                                    fontSize: 16,
-                                                                    fontWeight: FontWeight.w700,
-                                                                    color: HexColor("#025393")
-                                                                  ),
-                                                                  maxLines: 1,
-                                                                  overflow: TextOverflow.ellipsis,
-                                                                  softWrap: false,
-                                                                )
-                                                              )
-                                                            ),
-                                                            Container(
-                                                              child: Text(nomorSuratMenunggu[index], style: TextStyle(
-                                                                fontFamily: "Poppins",
-                                                                fontSize: 14
-                                                              ))
-                                                            )
-                                                          ]
-                                                        ),
-                                                        margin: EdgeInsets.only(left: 15),
                                                       )
-                                                    ]
+                                                  ),
+                                                  Container(
+                                                    child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: <Widget>[
+                                                          Container(
+                                                              child: SizedBox(
+                                                                  width: MediaQuery.of(context).size.width * 0.55,
+                                                                  child: Text(
+                                                                    perihalSuratMenunggu[index],
+                                                                    style: TextStyle(
+                                                                        fontFamily: "Poppins",
+                                                                        fontSize: 16,
+                                                                        fontWeight: FontWeight.w700,
+                                                                        color: HexColor("#025393")
+                                                                    ),
+                                                                    maxLines: 1,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    softWrap: false,
+                                                                  )
+                                                              )
+                                                          ),
+                                                          Container(
+                                                              child: Text(nomorSuratMenunggu[index], style: TextStyle(
+                                                                  fontFamily: "Poppins",
+                                                                  fontSize: 14
+                                                              ))
+                                                          )
+                                                        ]
+                                                    ),
+                                                    margin: EdgeInsets.only(left: 15),
                                                   )
-                                                )
-                                              ],
+                                                ]
                                             ),
                                             margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                                             padding: EdgeInsets.symmetric(horizontal: 20),

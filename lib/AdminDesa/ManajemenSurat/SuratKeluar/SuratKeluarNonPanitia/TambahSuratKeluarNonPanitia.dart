@@ -61,6 +61,9 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
   String tanggalMulaiValue;
   String tanggalBerakhir;
   String tanggalBerakhirValue;
+  String tanggalSurat;
+  String tanggalSuratValue;
+  DateTime selectedTanggalSurat;
   File file;
   String namaFile;
   String filePath;
@@ -174,6 +177,8 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
     final DateTime sekarang = DateTime.now();
     tanggalMulai = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
     tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(sekarang.add(Duration(days: 7))).toString();
+    tanggalSurat = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
+    tanggalSuratValue = DateFormat("yyyy-MM-dd").format(sekarang).toString();
     controllerTanggalKegiatan.selectedRange = PickerDateRange(sekarang, sekarang.add(Duration(days: 7)));
   }
 
@@ -355,7 +360,6 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                         child: TextField(
-                          enabled: false,
                           controller: controllerNomorSurat,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -479,7 +483,59 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                 )
               ),
               Container(
-                child: Text("2. Daging Surat", style: TextStyle(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text("Tanggal Surat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                      )),
+                      margin: EdgeInsets.only(top: 20, left: 20)
+                    ),
+                    Container(
+                      child: Text(tanggalSurat, style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                      )),
+                      margin: EdgeInsets.only(top: 10)
+                    ),
+                    Container(
+                      child: FlatButton(
+                        onPressed: (){
+                          showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime(2900)
+                          ).then((value) {
+                            setState(() {
+                              selectedTanggalSurat = value;
+                              tanggalSurat = DateFormat("dd-MMM-yyyy").format(selectedTanggalSurat).toString();
+                              tanggalSuratValue = DateFormat("yyyy-MM-dd").format(selectedTanggalSurat).toString();
+                            });
+                          });
+                        },
+                        child: Text("Pilih Tanggal", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white
+                        )),
+                        color: HexColor("#025393"),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)
+                        ),
+                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
+                      ),
+                      margin: EdgeInsets.only(top: 10)
+                    )
+                  ]
+                )
+              ),
+              Container(
+                child: Text("3. Daging Surat", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
@@ -774,7 +830,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                   )
               ),
               Container(
-                child: Text("3. Lingga Tangan Miwah Pesengan", style: TextStyle(
+                child: Text("4. Lingga Tangan Miwah Pesengan", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
@@ -1001,7 +1057,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                   )
               ),
               Container(
-                child: Text("4. Lepihan Surat", style: TextStyle(
+                child: Text("5. Lepihan Surat", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
@@ -1303,7 +1359,8 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                             "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
                             "bendesa_adat_id" : selectedBendesaAdat,
                             "penyarikan_id" : selectedPenyarikan,
-                            "lampiran" : namaFile
+                            "lampiran" : namaFile,
+                            "tanggal_surat" : tanggalSuratValue
                           });
                           http.post(Uri.parse(apiURLUpDataSuratNonPanitia),
                             headers: {"Content-Type" : "application/json"},
@@ -1348,6 +1405,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                         "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
                         "bendesa_adat_id" : selectedBendesaAdat,
                         "penyarikan_id" : selectedPenyarikan,
+                        "tanggal_surat" : tanggalSuratValue
                       });
                       http.post(Uri.parse(apiURLUpDataSuratNonPanitia),
                         headers: {"Content-Type" : "application/json"},

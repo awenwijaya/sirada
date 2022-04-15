@@ -24,22 +24,23 @@ class tambahSuratKeluarPanitiaAdmin extends StatefulWidget {
 }
 
 class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitiaAdmin> {
-  var namaKetuaPanitia;
-  var kramaMipilIDKetua;
-  var kramaMipilIDSekretaris;
-  var namaSekretarisPanitia;
+  var selectedKetuaPanitia;
+  var selectedSekretarisPanitia;
   var selectedBendesaAdat;
   var selectedKodeSurat;
   var apiURLShowKodeSurat = "http://192.168.18.10:8000/api/data/admin/surat/panitia/kode/${loginPage.desaId}";
   var apiURLShowKomponenNomorSurat = "http://192.168.18.10:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
   var apiURLGetDataBendesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
   var apiURLUpSuratKeluarPanitia = "http://192.168.18.10:8000/api/admin/surat/keluar/panitia/up";
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
   List bendesaList = List();
   List kodeSuratList = List();
+  List pendudukList = List();
   bool availableBendesa = false;
   bool availableKodeSurat = false;
   bool LoadingBendesa = true;
   bool KodeSuratLoading = true;
+  bool LoadingPenduduk = true;
   File file;
   String namaFile;
   String filePath;
@@ -62,6 +63,9 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   String tanggalMulaiValue;
   String tanggalBerakhir;
   String tanggalBerakhirValue;
+  String tanggalSurat;
+  String tanggalSuratValue;
+  DateTime selectedTanggalSurat;
 
   //kodesurat
   var nomorUrutSurat;
@@ -83,6 +87,18 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
       });
       print(filePath);
       print(namaFile);
+    }
+  }
+
+  Future getListPenduduk() async {
+    Uri uri = Uri.parse(apiURLGetDataPenduduk);
+    final response = await http.get(uri);
+    if(response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        pendudukList = jsonData;
+        LoadingPenduduk = false;
+      });
     }
   }
 
@@ -151,9 +167,12 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
     getBendesaAdat();
     getKodeSurat();
     getKomponenNomorSurat();
+    getListPenduduk();
     final DateTime sekarang = DateTime.now();
     tanggalMulai = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
     tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(sekarang.add(Duration(days: 7))).toString();
+    tanggalSurat = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
+    tanggalSuratValue = DateFormat("yyyy-MM-dd").format(sekarang).toString();
     controllerTanggalKegiatan.selectedRange = PickerDateRange(sekarang, sekarang.add(Duration(days: 7)));
   }
 
@@ -336,7 +355,6 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                         child: TextField(
                           controller: controllerNomorSurat,
-                          enabled: false,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(50.0),
@@ -457,6 +475,58 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                       )
                     ],
                   )
+              ),
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text("Tanggal Surat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                      )),
+                      margin: EdgeInsets.only(top: 20, left: 20)
+                    ),
+                    Container(
+                      child: Text(tanggalSurat, style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                      )),
+                      margin: EdgeInsets.only(top: 10)
+                    ),
+                    Container(
+                      child: FlatButton(
+                        onPressed: (){
+                          showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime(2900)
+                          ).then((value) {
+                            setState(() {
+                              selectedTanggalSurat = value;
+                              tanggalSurat = DateFormat("dd-MMM-yyyy").format(selectedTanggalSurat).toString();
+                              tanggalSuratValue = DateFormat("yyyy-MM-dd").format(selectedTanggalSurat).toString();
+                            });
+                          });
+                        },
+                        child: Text("Pilih Tanggal", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white
+                        )),
+                          color: HexColor("#025393"),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25)
+                          ),
+                          padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
+                      ),
+                      margin: EdgeInsets.only(top: 10)
+                    )
+                  ]
+                )
               ),
               Container(
                 child: Text("3. Daging Surat *", style: TextStyle(
@@ -751,33 +821,49 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                             margin: EdgeInsets.only(top: 20, left: 20)
                         ),
                         Container(
-                          alignment: Alignment.center,
-                          child: Text(namaSekretarisPanitia == null ? "Data sekretaris panitia belum terpilih" : namaSekretarisPanitia, style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700
-                          )),
-                          margin: EdgeInsets.only(top: 20)
-                        ),
-                        Container(
-                          child: FlatButton(
-                            onPressed: (){
-                              navigatePilihDataSekretarisPanitia(context);
-                            },
-                            child: Text("Pilih Data Sekretaris Panitia", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: HexColor("#025393")
-                            )),
-                            color: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                                side: BorderSide(color: HexColor("#025393"), width: 2)
-                            ),
-                            padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
-                          ),
-                          margin: EdgeInsets.only(top: 10)
+                            child: LoadingPenduduk ? ListTileShimmer() : Container(
+                                width: 300,
+                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: HexColor("#025393"),
+                                    borderRadius: BorderRadius.circular(30)
+                                ),
+                                child: DropdownButton(
+                                    isExpanded: true,
+                                    hint: Center(
+                                        child: Text("Pilih Sekretaris", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            color: Colors.white
+                                        ))
+                                    ),
+                                    value: selectedSekretarisPanitia,
+                                    underline: Container(),
+                                    icon: Icon(Icons.arrow_downward, color: Colors.white),
+                                    items: pendudukList.map((penduduk) {
+                                      return DropdownMenuItem(
+                                          value: penduduk['krama_mipil_id'],
+                                          child: Text("${penduduk['nik']} - ${penduduk['nama']}", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ))
+                                      );
+                                    }).toList(),
+                                    selectedItemBuilder: (BuildContext context) => pendudukList.map((penduduk) => Center(
+                                        child: Text("${penduduk['nik']} - ${penduduk['nama']}", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            color: Colors.white
+                                        ))
+                                    )).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedSekretarisPanitia = value;
+                                      });
+                                    }
+                                ),
+                                margin: EdgeInsets.only(top: 15)
+                            )
                         )
                       ]
                   )
@@ -794,33 +880,49 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                             margin: EdgeInsets.only(top: 20, left: 20)
                         ),
                         Container(
-                            alignment: Alignment.center,
-                            child: Text(namaKetuaPanitia == null ? "Data ketua panitia belum terpilih" : namaKetuaPanitia, style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700
-                            )),
-                            margin: EdgeInsets.only(top: 20)
-                        ),
-                        Container(
-                            child: FlatButton(
-                              onPressed: (){
-                                navigatePilihDataKetuaPanitia(context);
-                              },
-                              child: Text("Pilih Data Ketua Panitia", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: HexColor("#025393")
-                              )),
-                              color: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
-                                  side: BorderSide(color: HexColor("#025393"), width: 2)
-                              ),
-                              padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
-                            ),
-                            margin: EdgeInsets.only(top: 10)
+                            child: LoadingPenduduk ? ListTileShimmer() : Container(
+                                width: 300,
+                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: HexColor("#025393"),
+                                    borderRadius: BorderRadius.circular(30)
+                                ),
+                                child: DropdownButton(
+                                    isExpanded: true,
+                                    hint: Center(
+                                        child: Text("Pilih Ketua", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            color: Colors.white
+                                        ))
+                                    ),
+                                    value: selectedKetuaPanitia,
+                                    underline: Container(),
+                                    icon: Icon(Icons.arrow_downward, color: Colors.white),
+                                    items: pendudukList.map((penduduk) {
+                                      return DropdownMenuItem(
+                                          value: penduduk['krama_mipil_id'],
+                                          child: Text("${penduduk['nik']} - ${penduduk['nama']}", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ))
+                                      );
+                                    }).toList(),
+                                    selectedItemBuilder: (BuildContext context) => pendudukList.map((penduduk) => Center(
+                                        child: Text("${penduduk['nik']} - ${penduduk['nama']}", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            color: Colors.white
+                                        ))
+                                    )).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedKetuaPanitia = value;
+                                      });
+                                    }
+                                ),
+                                margin: EdgeInsets.only(top: 15)
+                            )
                         )
                       ]
                   )
@@ -1092,7 +1194,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
               Container(
                 child: FlatButton(
                   onPressed: () async {
-                    if(controllerParindikan.text == "" || controllerLepihan.text == "" || controllerPemahbah.text == "" || kramaMipilIDKetua == null || kramaMipilIDSekretaris == null || selectedBendesaAdat == null || controllerNomorSurat.text == "") {
+                    if(controllerParindikan.text == "" || controllerLepihan.text == "" || controllerPemahbah.text == "" || selectedKetuaPanitia == null || selectedSekretarisPanitia == null || selectedBendesaAdat == null || controllerNomorSurat.text == "") {
                       showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -1232,9 +1334,10 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                             "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
                             "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
                             "bendesa_adat_id" : selectedBendesaAdat,
-                            "krama_mipil_ketua_id" : kramaMipilIDKetua,
-                            "krama_mipil_sekretaris_id" : kramaMipilIDSekretaris,
-                            "lampiran" : namaFile
+                            "krama_mipil_ketua_id" : selectedKetuaPanitia,
+                            "krama_mipil_sekretaris_id" : selectedSekretarisPanitia,
+                            "lampiran" : namaFile,
+                            "tanggal_surat" : tanggalSuratValue
                           });
                           http.post(Uri.parse(apiURLUpSuratKeluarPanitia),
                               headers: {"Content-Type" : "application/json"},
@@ -1335,8 +1438,9 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
                         "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
                         "bendesa_adat_id" : selectedBendesaAdat,
-                        "krama_mipil_ketua_id" : kramaMipilIDKetua,
-                        "krama_mipil_sekretaris_id" : kramaMipilIDSekretaris
+                        "krama_mipil_ketua_id" : selectedKetuaPanitia,
+                        "krama_mipil_sekretaris_id" : selectedSekretarisPanitia,
+                        "tanggal_surat" : tanggalSuratValue
                       });
                       http.post(Uri.parse(apiURLUpSuratKeluarPanitia),
                         headers: {"Content-Type" : "application/json"},
@@ -1434,276 +1538,6 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
           )
         ),
       )
-    );
-  }
-
-  void navigatePilihDataKetuaPanitia(BuildContext context) async {
-    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => pilihDataKetuaPanitia()));
-    if(result == null) {
-      namaKetuaPanitia = namaKetuaPanitia;
-    }else{
-      setState(() {
-        namaKetuaPanitia = result;
-        kramaMipilIDKetua = pilihDataKetuaPanitia.selectedId;
-      });
-    }
-  }
-
-  void navigatePilihDataSekretarisPanitia(BuildContext context) async {
-    final result = await Navigator.push(context, CupertinoPageRoute(builder: (context) => pilihDataSekretarisPanitia()));
-    if(result == null) {
-      namaSekretarisPanitia = namaSekretarisPanitia;
-    }else{
-      setState(() {
-        namaSekretarisPanitia = result;
-        kramaMipilIDSekretaris = pilihDataSekretarisPanitia.selectedId;
-      });
-    }
-  }
-}
-
-class pilihDataKetuaPanitia extends StatefulWidget {
-  static var selectedId;
-  const pilihDataKetuaPanitia({Key key}) : super(key: key);
-
-  @override
-  State<pilihDataKetuaPanitia> createState() => _pilihDataKetuaPanitiaState();
-}
-
-class _pilihDataKetuaPanitiaState extends State<pilihDataKetuaPanitia> {
-  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
-  var nama = [];
-  var kramaMipilID = [];
-  bool Loading = true;
-
-  Future getListPenduduk() async {
-    Uri uri = Uri.parse(apiURLGetDataPenduduk);
-    final response = await http.get(uri);
-    if(response.statusCode == 200) {
-      var data = json.decode(response.body);
-      this.nama = [];
-      this.nama = [];
-      this.kramaMipilID = [];
-      setState(() {
-        Loading = false;
-        for(var i = 0; i < data.length; i++) {
-          this.nama.add(data[i]['nama']);
-          this.kramaMipilID.add(data[i]['krama_mipil_id']);
-        }
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getListPenduduk();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            color: HexColor("#025393"),
-            onPressed: (){Navigator.of(context).pop();},
-          ),
-          title: Text("Pilih Data Ketua Panitia", style: TextStyle(
-            fontFamily: "Poppins",
-            fontWeight: FontWeight.w700,
-            color: HexColor("#025393")
-          ))
-        ),
-        body: Loading ? Center(
-            child: Lottie.asset('assets/loading-circle.json')
-        ) : RefreshIndicator(
-            onRefresh: getListPenduduk,
-            child: ListView.builder(
-              itemCount: kramaMipilID.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        pilihDataKetuaPanitia.selectedId = kramaMipilID[index];
-                      });
-                      Navigator.of(context, rootNavigator: true).pop(nama[index]);
-                    },
-                    child: Container(
-                      child: Row(
-                          children: <Widget>[
-                            Container(
-                                child: Image.asset(
-                                  'images/person.png',
-                                  height: 40,
-                                  width: 40,
-                                )
-                            ),
-                            Container(
-                                child: SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.6,
-                                    child: Text("${nama[index]}",
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        softWrap: false,
-                                        style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                          color: HexColor("#025393"),
-                                        ))
-                                ),
-                              margin: EdgeInsets.only(left: 15)
-                            ),
-                          ]
-                      ),
-                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      height: 70,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: Offset(0,3)
-                            )
-                          ]
-                      ),
-                    )
-                );
-              },
-            )
-        )
-      )
-    );
-  }
-}
-
-class pilihDataSekretarisPanitia extends StatefulWidget {
-  static var selectedId;
-  const pilihDataSekretarisPanitia({Key key}) : super(key: key);
-
-  @override
-  State<pilihDataSekretarisPanitia> createState() => _pilihDataSekretarisPanitiaState();
-}
-
-class _pilihDataSekretarisPanitiaState extends State<pilihDataSekretarisPanitia> {
-  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
-  var nama = [];
-  var kramaMipilID = [];
-  bool Loading = true;
-
-  Future getListPenduduk() async {
-    Uri uri = Uri.parse(apiURLGetDataPenduduk);
-    final response = await http.get(uri);
-    if(response.statusCode == 200) {
-      var data = json.decode(response.body);
-      this.nama = [];
-      this.nama = [];
-      this.kramaMipilID = [];
-      setState(() {
-        Loading = false;
-        for(var i = 0; i < data.length; i++) {
-          this.nama.add(data[i]['nama']);
-          this.kramaMipilID.add(data[i]['krama_mipil_id']);
-        }
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getListPenduduk();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-                backgroundColor: Colors.white,
-                leading: IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  color: HexColor("#025393"),
-                  onPressed: (){Navigator.of(context).pop();},
-                ),
-                title: Text("Pilih Data Sekretaris Panitia", style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontWeight: FontWeight.w700,
-                    color: HexColor("#025393")
-                ))
-            ),
-            body: Loading ? Center(
-                child: Lottie.asset('assets/loading-circle.json')
-            ) : RefreshIndicator(
-                onRefresh: getListPenduduk,
-                child: ListView.builder(
-                  itemCount: kramaMipilID.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                        onTap: (){
-                          setState(() {
-                            pilihDataSekretarisPanitia.selectedId = kramaMipilID[index];
-                          });
-                          Navigator.of(context, rootNavigator: true).pop(nama[index]);
-                        },
-                        child: Container(
-                          child: Row(
-                              children: <Widget>[
-                                Container(
-                                    child: Image.asset(
-                                      'images/person.png',
-                                      height: 40,
-                                      width: 40,
-                                    )
-                                ),
-                                Container(
-                                    child: SizedBox(
-                                        width: MediaQuery.of(context).size.width * 0.6,
-                                        child: Text("${nama[index]}",
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            softWrap: false,
-                                            style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              color: HexColor("#025393"),
-                                            ))
-                                    ),
-                                    margin: EdgeInsets.only(left: 15)
-                                ),
-                              ]
-                          ),
-                          margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          height: 70,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: Offset(0,3)
-                                )
-                              ]
-                          ),
-                        )
-                    );
-                  },
-                )
-            )
-        )
     );
   }
 }
