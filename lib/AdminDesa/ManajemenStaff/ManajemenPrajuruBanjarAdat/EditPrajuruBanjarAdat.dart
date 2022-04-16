@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class editPrajuruBanjarAdatAdmin extends StatefulWidget {
   static var idPegawai;
@@ -32,6 +33,7 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
   var selectedIdPenduduk;
   bool Loading = false;
   final controllerEmail = TextEditingController();
+  final DateRangePickerController controllerMasaAktif = DateRangePickerController();
 
   getPrajuruBanjarAdatInfo() async {
     http.get(Uri.parse(apiURLShowDetailPrajuruBanjarAdat),
@@ -43,14 +45,26 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
         var parsedJson = json.decode(jsonData);
         setState(() {
           selectedJabatan = parsedJson['jabatan'];
-          selectedMasaMulaiValue = parsedJson['tanggal_mulai_menjabat'];
-          masaMulai = new DateFormat("yyyy-MM-dd").parse(selectedMasaMulaiValue);
-          selectedMasaBerakhirValue = parsedJson['tanggal_akhir_menjabat'];
-          masaBerakhir = new DateFormat("yyyy-MM-dd").parse(selectedMasaBerakhirValue);
+          masaMulai = DateTime.parse(parsedJson['tanggal_mulai_menjabat']);
+          selectedMasaMulaiValue = DateFormat("yyyy-MM-dd").format(masaMulai).toString();
+          masaBerakhir = DateTime.parse(parsedJson['tanggal_akhir_menjabat']);
+          selectedMasaBerakhirValue = DateFormat("yyyy-MM-dd").format(masaBerakhir).toString();
+          selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(masaMulai).toString();
+          selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(masaBerakhir).toString();
+          controllerMasaAktif.selectedRange = PickerDateRange(masaMulai, masaBerakhir);
           controllerEmail.text = parsedJson['email'];
           selectedIdPenduduk = parsedJson['penduduk_id'];
         });
       }
+    });
+  }
+
+  void selectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
+      selectedMasaMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
+      selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedMasaBerakhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
     });
   }
 
@@ -59,6 +73,10 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
     // TODO: implement initState
     super.initState();
     getPrajuruBanjarAdatInfo();
+    final DateTime sekarang = DateTime.now();
+    selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(masaMulai == null ? sekarang : masaMulai).toString();
+    selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(masaBerakhir == null ? sekarang : masaBerakhir).toString();
+    controllerMasaAktif.selectedRange = PickerDateRange(masaMulai == null ? sekarang : masaMulai, masaBerakhir == null ? sekarang : masaBerakhir);
   }
 
   @override
@@ -161,14 +179,14 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
                       children: <Widget>[
                         Container(
                           alignment: Alignment.topLeft,
-                          child: Text("Masa Mulai Menjabat *", style: TextStyle(
+                          child: Text("Masa Jabatan *", style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 14
                           )),
                           margin: EdgeInsets.only(top: 20, left: 20),
                         ),
                         Container(
-                            child: Text(selectedMasaMulai == null ? "${masaMulai.day.toString()} - ${masaMulai.month.toString()} - ${masaMulai.year.toString()}" : selectedMasaMulai, style: TextStyle(
+                            child: Text(selectedMasaMulaiValue == null ? "Masa aktif belum terpilih" : selectedMasaBerakhirValue == null ? "$selectedMasaMulai - $selectedMasaMulai" : "$selectedMasaMulai - $selectedMasaBerakhir", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700
@@ -176,88 +194,15 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
                             margin: EdgeInsets.only(top: 10)
                         ),
                         Container(
-                          child: FlatButton(
-                            onPressed: (){
-                              showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2900)
-                              ).then((value) {
-                                setState(() {
-                                  masaMulai = value;
-                                  var tanggal = DateTime.parse(masaMulai.toString());
-                                  selectedMasaMulai = "${tanggal.day} - ${tanggal.month} - ${tanggal.year}";
-                                  selectedMasaMulaiValue = "${tanggal.year}-${tanggal.month}-${tanggal.day}";
-                                });
-                              });
-                            },
-                            child: Text("Pilih Tanggal", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white
-                            )),
-                            color: HexColor("#025393"),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25)
-                            ),
-                            padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
-                          ),
-                          margin: EdgeInsets.only(top: 10),
-                        )
-                      ]
-                  )
-              ),
-              Container(
-                  child: Column(
-                      children: <Widget>[
-                        Container(
-                            child: Text("Masa Berakhir Menjabat", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            )),
-                            alignment: Alignment.topLeft,
-                            margin: EdgeInsets.only(top: 20, left: 20)
-                        ),
-                        Container(
-                            child: Text(selectedMasaBerakhir == null ? "${masaBerakhir.day.toString()} - ${masaBerakhir.month.toString()} - ${masaBerakhir.year.toString()}" : selectedMasaBerakhir, style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14
-                            )),
-                            margin: EdgeInsets.only(top: 10)
-                        ),
-                        Container(
-                          child: FlatButton(
-                            onPressed: (){
-                              showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2900)
-                              ).then((value) {
-                                setState(() {
-                                  masaBerakhir = value;
-                                  var tanggal = DateTime.parse(masaBerakhir.toString());
-                                  selectedMasaBerakhir = "${tanggal.day} - ${tanggal.month} - ${tanggal.year}";
-                                  selectedMasaBerakhirValue = "${tanggal.year}-${tanggal.month}-${tanggal.day}";
-                                });
-                              });
-                            },
-                            child: Text("Pilih Tanggal", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white
-                            )),
-                            color: HexColor("#025393"),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25)
-                            ),
-                            padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
-                          ),
-                          margin: EdgeInsets.only(top: 10),
+                            child: Card(
+                                margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
+                                child: SfDateRangePicker(
+                                  controller: controllerMasaAktif,
+                                  selectionMode: DateRangePickerSelectionMode.range,
+                                  onSelectionChanged: selectionChanged,
+                                  allowViewNavigation: false,
+                                )
+                            )
                         )
                       ]
                   )

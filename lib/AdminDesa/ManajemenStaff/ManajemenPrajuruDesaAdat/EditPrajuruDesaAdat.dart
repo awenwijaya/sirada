@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class editPrajuruDesaAdatAdmin extends StatefulWidget {
   static var idPegawai;
@@ -28,6 +29,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   DateTime masaMulai;
   DateTime masaBerakhir;
   DateTime sekarang = DateTime.now();
+  final DateRangePickerController controllerMasaAktif = DateRangePickerController();
   var apiURLShowDetailPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
   var apiURLSimpanPrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/edit/up";
   var selectedIdPenduduk;
@@ -45,10 +47,13 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
         var parsedJson = json.decode(jsonData);
         setState(() {
           selectedJabatan = parsedJson['jabatan'];
-          selectedMasaMulaiValue = parsedJson['tanggal_mulai_menjabat'];
-          masaMulai = new DateFormat("yyyy-MM-dd").parse(selectedMasaMulaiValue);
-          selectedMasaBerakhirValue = parsedJson['tanggal_akhir_menjabat'];
-          masaBerakhir = new DateFormat("yyyy-MM-dd").parse(selectedMasaBerakhirValue);
+          masaMulai = DateTime.parse(parsedJson['tanggal_mulai_menjabat']);
+          selectedMasaMulaiValue = DateFormat("yyyy-MM-dd").format(masaMulai).toString();
+          masaBerakhir = DateTime.parse(parsedJson['tanggal_akhir_menjabat']);
+          selectedMasaBerakhirValue = DateFormat("yyyy-MM-dd").format(masaBerakhir).toString();
+          selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(masaMulai).toString();
+          selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(masaBerakhir).toString();
+          controllerMasaAktif.selectedRange = PickerDateRange(masaMulai, masaBerakhir);
           controllerEmail.text = parsedJson['email'];
           selectedIdPenduduk = parsedJson['penduduk_id'];
         });
@@ -56,11 +61,25 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
     });
   }
 
+  void selectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
+      selectedMasaMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
+      selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedMasaBerakhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+    });
+  }
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getPrajuruDesaAdatInfo();
+    final DateTime sekarang = DateTime.now();
+    selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(masaMulai == null ? sekarang : masaMulai).toString();
+    selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(masaBerakhir == null ? sekarang : masaBerakhir).toString();
+    controllerMasaAktif.selectedRange = PickerDateRange(masaMulai == null ? sekarang : masaMulai, masaBerakhir == null ? sekarang : masaBerakhir);
   }
 
   @override
@@ -163,14 +182,14 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                       children: <Widget>[
                         Container(
                           alignment: Alignment.topLeft,
-                          child: Text("Masa Mulai Menjabat *", style: TextStyle(
+                          child: Text("Masa Jabatan *", style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 14
                           )),
                           margin: EdgeInsets.only(top: 20, left: 20),
                         ),
                         Container(
-                            child: Text(selectedMasaMulai == null ? "${masaMulai.day.toString()} - ${masaMulai.month.toString()} - ${masaMulai.year.toString()}" : selectedMasaMulai, style: TextStyle(
+                            child: Text(selectedMasaMulaiValue == null ? "Masa aktif belum terpilih" : selectedMasaBerakhirValue == null ? "$selectedMasaMulai - $selectedMasaMulai" : "$selectedMasaMulai - $selectedMasaBerakhir", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700
@@ -178,88 +197,15 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                             margin: EdgeInsets.only(top: 10)
                         ),
                         Container(
-                          child: FlatButton(
-                            onPressed: (){
-                              showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2900)
-                              ).then((value) {
-                                setState(() {
-                                  masaMulai = value;
-                                  var tanggal = DateTime.parse(masaMulai.toString());
-                                  selectedMasaMulai = "${tanggal.day} - ${tanggal.month} - ${tanggal.year}";
-                                  selectedMasaMulaiValue = "${tanggal.year}-${tanggal.month}-${tanggal.day}";
-                                });
-                              });
-                            },
-                            child: Text("Pilih Tanggal", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white
-                            )),
-                            color: HexColor("#025393"),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25)
-                            ),
-                            padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
-                          ),
-                          margin: EdgeInsets.only(top: 10),
-                        )
-                      ]
-                  )
-              ),
-              Container(
-                  child: Column(
-                      children: <Widget>[
-                        Container(
-                            child: Text("Masa Berakhir Menjabat", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            )),
-                            alignment: Alignment.topLeft,
-                            margin: EdgeInsets.only(top: 20, left: 20)
-                        ),
-                        Container(
-                            child: Text(selectedMasaBerakhir == null ? "${masaBerakhir.day.toString()} - ${masaBerakhir.month.toString()} - ${masaBerakhir.year.toString()}" : selectedMasaBerakhir, style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14
-                            )),
-                            margin: EdgeInsets.only(top: 10)
-                        ),
-                        Container(
-                          child: FlatButton(
-                            onPressed: (){
-                              showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2900)
-                              ).then((value) {
-                                setState(() {
-                                  masaBerakhir = value;
-                                  var tanggal = DateTime.parse(masaBerakhir.toString());
-                                  selectedMasaBerakhir = "${tanggal.day} - ${tanggal.month} - ${tanggal.year}";
-                                  selectedMasaBerakhirValue = "${tanggal.year}-${tanggal.month}-${tanggal.day}";
-                                });
-                              });
-                            },
-                            child: Text("Pilih Tanggal", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white
-                            )),
-                            color: HexColor("#025393"),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25)
-                            ),
-                            padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
-                          ),
-                          margin: EdgeInsets.only(top: 10),
+                            child: Card(
+                                margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
+                                child: SfDateRangePicker(
+                                  controller: controllerMasaAktif,
+                                  selectionMode: DateRangePickerSelectionMode.range,
+                                  onSelectionChanged: selectionChanged,
+                                  allowViewNavigation: false,
+                                )
+                            )
                         )
                       ]
                   )
@@ -302,155 +248,45 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
               Container(
                 child: FlatButton(
                   onPressed: (){
-                    if(masaBerakhir.isBefore(masaMulai)) {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context){
-                            return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                ),
-                                content: Container(
-                                  child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Container(
-                                            child: Image.asset(
-                                              'images/alert.png',
-                                              height: 50,
-                                              width: 50,
-                                            )
-                                        ),
-                                        Container(
-                                            child: Text("Tanggal masa berakhir tidak valid", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("#025393")
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10)
-                                        ),
-                                        Container(
-                                            child: Text("Tanggal masa berakhir tidak valid. Silahkan masukkan tanggal masa berakhir karyawan di hari setelah masa mulai karyawan dan coba lagi", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 14
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10)
-                                        )
-                                      ]
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text("OK", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontWeight: FontWeight.w700,
-                                        color: HexColor("#025393")
-                                    )),
-                                    onPressed: (){Navigator.of(context).pop();},
-                                  )
-                                ]
-                            );
-                          }
-                      );
-                    }else if(masaBerakhir.isBefore(sekarang)){
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context){
-                            return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                ),
-                                content: Container(
-                                  child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Container(
-                                            child: Image.asset(
-                                              'images/alert.png',
-                                              height: 50,
-                                              width: 50,
-                                            )
-                                        ),
-                                        Container(
-                                            child: Text("Tanggal masa berakhir tidak valid", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("#025393")
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10)
-                                        ),
-                                        Container(
-                                            child: Text("Tanggal masa berakhir tidak valid. Silahkan masukkan tanggal masa berakhir karyawan di hari setelah tanggal hari ini dan coba lagi", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 14
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10)
-                                        )
-                                      ]
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text("OK", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontWeight: FontWeight.w700,
-                                        color: HexColor("#025393")
-                                    )),
-                                    onPressed: (){Navigator.of(context).pop();},
-                                  )
-                                ]
-                            );
-                          }
-                      );
+                    setState(() {
+                      Loading = true;
+                    });
+                    if(selectedJabatan == "bendesa") {
+                      setState(() {
+                        selectedRole = "Bendesa";
+                      });
                     }else{
                       setState(() {
-                        Loading = true;
-                      });
-                      if(selectedJabatan == "bendesa") {
-                        setState(() {
-                          selectedRole = "Bendesa";
-                        });
-                      }else{
-                        setState(() {
-                          selectedRole = "Admin";
-                        });
-                      }
-                      var body = jsonEncode({
-                        "prajuru_desa_adat_id" : editPrajuruDesaAdatAdmin.idPegawai,
-                        "jabatan" : selectedJabatan,
-                        "masa_mulai_menjabat" : selectedMasaMulaiValue,
-                        "masa_akhir_menjabat" : selectedMasaBerakhirValue,
-                        'penduduk_id' : selectedIdPenduduk,
-                        'email' : controllerEmail.text,
-                        'role' : selectedRole
-                      });
-                      http.post(Uri.parse(apiURLSimpanPrajuruDesaAdat),
-                          headers : {"Content-Type" : "application/json"},
-                          body : body
-                      ).then((http.Response response) {
-                        var responseValue = response.statusCode;
-                        if(responseValue == 200) {
-                          setState(() {
-                            Loading = false;
-                          });
-                          Fluttertoast.showToast(
-                              msg: "Data prajuru berhasil diperbaharui",
-                              fontSize: 14,
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER
-                          );
-                          Navigator.of(context).pop(true);
-                        }
+                        selectedRole = "Admin";
                       });
                     }
+                    var body = jsonEncode({
+                      "prajuru_desa_adat_id" : editPrajuruDesaAdatAdmin.idPegawai,
+                      "jabatan" : selectedJabatan,
+                      "masa_mulai_menjabat" : selectedMasaMulaiValue,
+                      "masa_akhir_menjabat" : selectedMasaBerakhirValue,
+                      'penduduk_id' : selectedIdPenduduk,
+                      'email' : controllerEmail.text,
+                      'role' : selectedRole
+                    });
+                    http.post(Uri.parse(apiURLSimpanPrajuruDesaAdat),
+                        headers : {"Content-Type" : "application/json"},
+                        body : body
+                    ).then((http.Response response) {
+                      var responseValue = response.statusCode;
+                      if(responseValue == 200) {
+                        setState(() {
+                          Loading = false;
+                        });
+                        Fluttertoast.showToast(
+                            msg: "Data prajuru berhasil diperbaharui",
+                            fontSize: 14,
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER
+                        );
+                        Navigator.of(context).pop(true);
+                      }
+                    });
                   },
                   child: Text("Simpan", style: TextStyle(
                     fontFamily: "Poppins",
