@@ -43,15 +43,20 @@ class _splashScreenState extends State<splashScreen> {
   var desaId;
   var role;
   var pendudukId;
+  var prajuruId;
 
   Future getUserInfo() async {
     final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+    final SharedPreferences sharedprefadmin = await SharedPreferences.getInstance();
     userEmail = sharedpref.getString('email');
     userId = sharedpref.getInt('userId');
     desaId = sharedpref.getString('desaId');
     pendudukId = sharedpref.getInt('pendudukId');
     userStatus = sharedpref.getString('status');
     role = sharedpref.getString('role');
+    if(role == "Admin" || role == "Bendesa") {
+      prajuruId = sharedprefadmin.getInt('prajuru_adat_id');
+    }
     setState(() {
       status = userStatus;
     });
@@ -61,21 +66,28 @@ class _splashScreenState extends State<splashScreen> {
     var duration = Duration(seconds: pageDelay);
     getUserInfo().whenComplete(() async{
       print(status);
+      print(role);
       if(status == 'login'){
-        setState(() {
-          loginPage.userId = userId;
-          loginPage.userEmail = userEmail;
-          loginPage.desaId = desaId;
-          loginPage.pendudukId = pendudukId;
-        });
+        if(role == "Admin" || role == "Bendesa") {
+          setState(() {
+            loginPage.userId = userId;
+            loginPage.userEmail = userEmail;
+            loginPage.desaId = desaId;
+            loginPage.pendudukId = pendudukId;
+            loginPage.prajuruId = prajuruId;
+          });
+        }else{
+          setState(() {
+            loginPage.userId = userId;
+            loginPage.userEmail = userEmail;
+            loginPage.desaId = desaId;
+            loginPage.pendudukId = pendudukId;
+          });
+        }
         if(role == "Krama") {
           return Timer(duration, navigatorPendudukHomePage);
-        }else if(role == "Kepala Desa") {
-          return Timer(duration, navigatorKepalaDesaHomePage);
-        }else if(role == "Admin") {
+        }else if(role == "Admin" || role == "Bendesa") {
           return Timer(duration, navigatorAdminDesaHomePage);
-        }else if(role == "Kepala Dusun") {
-          return Timer(duration, navigatorKepalaDusunHomePage);
         }
       }else{
         return Timer(duration, navigatorWelcomeScreen);
@@ -87,20 +99,12 @@ class _splashScreenState extends State<splashScreen> {
     Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardPenduduk(), type: PageTransitionType.fade), (route) => false);
   }
 
-  void navigatorKepalaDesaHomePage() {
-    Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardKepalaDesa(), type: PageTransitionType.fade), (route) => false);
-  }
-
   void navigatorWelcomeScreen() {
     Navigator.pushAndRemoveUntil(context, PageTransition(child: welcomeScreen(), type: PageTransitionType.fade), (route) => false);
   }
 
   void navigatorAdminDesaHomePage() {
     Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardAdminDesa(), type: PageTransitionType.fade), (route) => false);
-  }
-
-  void navigatorKepalaDusunHomePage() {
-    Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardKepalaDusun(), type: PageTransitionType.fade), (route) => false);
   }
 
   @override

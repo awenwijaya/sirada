@@ -48,6 +48,7 @@ dependencies:
   flutter_shimmer: ^2.1.2
   simple_time_range_picker: ^0.0.4
   syncfusion_flutter_datepicker: ^19.4.56
+  syncfusion_flutter_pdfviewer: ^19.4.56-beta
 
 dev_dependencies:
   flutter_test:

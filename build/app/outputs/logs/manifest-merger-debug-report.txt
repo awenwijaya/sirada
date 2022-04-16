@@ -5,13 +5,14 @@ INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-s
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:1:1-70:12
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:1:1-70:12
 MERGED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:1:1-70:12
-MERGED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-19:12
+MERGED from [:shared_preferences_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\shared_preferences_android\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:file_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-17:12
+MERGED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-19:12
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:hexcolor] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\hexcolor\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
-MERGED from [:shared_preferences] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
-MERGED from [:url_launcher_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\url_launcher_android\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-14:12
+MERGED from [:syncfusion_flutter_pdfviewer] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\syncfusion_flutter_pdfviewer\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:fluttertoast] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\fluttertoast\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
+MERGED from [:url_launcher_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\url_launcher_android\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-14:12
 MERGED from [androidx.exifinterface:exifinterface:1.3.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\edc8758795abf1ce73a47930e4eca79c\exifinterface-1.3.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\ba80674a1a5fdce2b1b29eea5683af77\fragment-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\2f70304b103eacfab05dbe55739e869f\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
@@ -87,8 +88,8 @@ application
 ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:31:4-69:19
 MERGED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:31:4-69:19
 MERGED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml:31:4-69:19
-MERGED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-17:19
-MERGED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-17:19
+MERGED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-17:19
+MERGED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-17:19
 MERGED from [:url_launcher_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\url_launcher_android\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-12:19
 MERGED from [:url_launcher_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\url_launcher_android\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-12:19
 MERGED from [androidx.core:core:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\d67cd79abd1ca209502f51c69d23182b\core-1.1.0\AndroidManifest.xml:24:5-89
@@ -151,20 +152,22 @@ uses-sdk
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml
 INJECTED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\main\AndroidManifest.xml
-MERGED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:shared_preferences_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\shared_preferences_android\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:shared_preferences_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\shared_preferences_android\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:file_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:file_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:hexcolor] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\hexcolor\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:hexcolor] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\hexcolor\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:shared_preferences] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:shared_preferences] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\shared_preferences\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:url_launcher_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\url_launcher_android\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:url_launcher_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\url_launcher_android\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:syncfusion_flutter_pdfviewer] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\syncfusion_flutter_pdfviewer\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:syncfusion_flutter_pdfviewer] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\syncfusion_flutter_pdfviewer\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:fluttertoast] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\fluttertoast\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:fluttertoast] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\fluttertoast\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:url_launcher_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\url_launcher_android\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:url_launcher_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\url_launcher_android\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [androidx.exifinterface:exifinterface:1.3.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\edc8758795abf1ce73a47930e4eca79c\exifinterface-1.3.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.exifinterface:exifinterface:1.3.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\edc8758795abf1ce73a47930e4eca79c\exifinterface-1.3.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\awenh\.gradle\caches\transforms-2\files-2.1\ba80674a1a5fdce2b1b29eea5683af77\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
@@ -209,22 +212,6 @@ uses-permission#android.permission.FLASHLIGHT
 ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\debug\AndroidManifest.xml:8:5-69
 	android:name
 		ADDED from C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\android\app\src\debug\AndroidManifest.xml:8:22-66
-provider#io.flutter.plugins.imagepicker.ImagePickerFileProvider
-ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:8:9-16:20
-	android:grantUriPermissions
-		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:12:13-47
-	android:authorities
-		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:10:13-74
-	android:exported
-		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:13-37
-	android:name
-		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-82
-meta-data#android.support.FILE_PROVIDER_PATHS
-ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-15:75
-	android:resource
-		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:15:17-72
-	android:name
-		ADDED from [:image_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:14:17-67
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
 ADDED from [:file_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-80
 	android:name
@@ -235,6 +222,22 @@ action#android.intent.action.GET_CONTENT
 ADDED from [:file_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:13-72
 	android:name
 		ADDED from [:file_picker] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:21-69
+provider#io.flutter.plugins.imagepicker.ImagePickerFileProvider
+ADDED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:8:9-16:20
+	android:grantUriPermissions
+		ADDED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:12:13-47
+	android:authorities
+		ADDED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:10:13-74
+	android:exported
+		ADDED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:11:13-37
+	android:name
+		ADDED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-82
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-15:75
+	android:resource
+		ADDED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:15:17-72
+	android:name
+		ADDED from [:image_picker_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\image_picker_android\intermediates\library_manifest\debug\AndroidManifest.xml:14:17-67
 activity#io.flutter.plugins.urllauncher.WebViewActivity
 ADDED from [:url_launcher_android] C:\Users\awenh\Documents\College Stuffs\Bahan Skripsi\app\siraja-skripsi\build\url_launcher_android\intermediates\library_manifest\debug\AndroidManifest.xml:8:9-11:74
 	android:exported

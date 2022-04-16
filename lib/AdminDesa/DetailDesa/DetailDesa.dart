@@ -48,7 +48,7 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
           emailDesa = parsedJson['desadat_email'];
           webDesa = parsedJson['desadat_web'];
           luasDesa = parsedJson['desadat_luas'].toString();
-          namaKecamatan = parsedJson['name'];
+          namaKecamatan = parsedJson['nama_kecamatan'];
           detailDesaAdmin.kontakWADesa1 = parsedJson['desadat_wa_kontak_1'];
           detailDesaAdmin.kontakWADesa2 = parsedJson['desadat_wa_kontak_2'];
           sejarahDesaAdmin.sejarahDesa = parsedJson['desadat_sejarah'];

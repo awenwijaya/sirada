@@ -27,7 +27,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var profilePicture;
   var namaAdmin;
   var namaDesa;
-  var apiURLGetDataUser = "http://192.168.1.193:8000/api/data/userdata/${loginPage.pendudukId}";
+  var apiURLGetDataUser = "http://192.168.18.10:8000/api/data/userdata/${loginPage.pendudukId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -66,7 +66,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                 color: HexColor("#025393")
               )),
               Container(
-                child: Text("ADMIN", style: TextStyle(
+                child: Text(loginPage.role == "Bendesa" ? "BENDESA" : "ADMIN", style: TextStyle(
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.w700,
                   color: Colors.white,

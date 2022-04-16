@@ -19,6 +19,7 @@ class loginPage extends StatefulWidget {
   static var desaId;
   static var pendudukId;
   static var role;
+  static var prajuruId;
 
   const loginPage({Key key}) : super(key: key);
 
@@ -27,11 +28,17 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
-  var apiURLLogin = "http://172.16.56.137:8000/api/autentikasi/login";
+  var apiURLLogin = "http://192.168.18.10:8000/api/autentikasi/login";
   var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   bool Loading = false;
+  var statusPrajuru;
+  var tempPendudukId;
+  var tempEmail;
+  var tempRole;
+  var tempDesaId;
+  var tempUserId;
 
   @override
   Widget build(BuildContext context) {
@@ -263,6 +270,13 @@ class _loginPageState extends State<loginPage> {
                                 });
                                 var jsonData = response.body;
                                 var parsedJson = json.decode(jsonData);
+                                setState(() {
+                                  tempPendudukId = parsedJson['penduduk_id'];
+                                  tempDesaId = parsedJson['desa_adat_id'];
+                                  tempEmail = parsedJson['email'];
+                                  tempUserId = parsedJson['user_id'];
+                                  tempRole = parsedJson['role'];
+                                });
                                 if(parsedJson['role'] == "Super Admin") {
                                   setState(() {
                                     Loading = false;
@@ -323,28 +337,115 @@ class _loginPageState extends State<loginPage> {
                                 }else{
                                   if(parsedJson['is_verified'] == "Verified") {
                                     if(parsedJson['desadat_status_register'] == 'Terdaftar') {
-                                      setState(() {
-                                        loginPage.pendudukId = parsedJson['penduduk_id'];
-                                        loginPage.userEmail = parsedJson['email'];
-                                        loginPage.desaId = parsedJson['desa_adat_id'];
-                                        loginPage.userId = parsedJson['user_id'];
-                                        loginPage.role = parsedJson['role'];
-                                      });
-                                      final SharedPreferences sharedpref = await SharedPreferences.getInstance();
-                                      sharedpref.setInt('userId', loginPage.userId);
-                                      sharedpref.setInt('pendudukId', loginPage.pendudukId);
-                                      sharedpref.setString('desaId', loginPage.desaId);
-                                      sharedpref.setString('email', loginPage.userEmail);
-                                      sharedpref.setString('role', loginPage.role);
-                                      sharedpref.setString('status', 'login');
-                                      if(loginPage.role == "Krama") {
+                                      if(parsedJson['role'] == "Admin" || parsedJson['Bendesa']) {
+                                        var response = await http.get(Uri.parse("http://192.168.18.10:8000/api/autentikasi/login/status/prajuru_desa_adat/${tempPendudukId}"));
+                                        if(response.statusCode == 200) {
+                                          var jsonDataPrajuru = response.body;
+                                          var parsedJsonPrajuru = json.decode(jsonDataPrajuru);
+                                          if(parsedJsonPrajuru['status_prajuru_desa_adat'] == "aktif") {
+                                            setState(() {
+                                              loginPage.pendudukId = tempPendudukId;
+                                              loginPage.userEmail = tempEmail;
+                                              loginPage.desaId = tempDesaId;
+                                              loginPage.userId = tempUserId;
+                                              loginPage.role = tempRole;
+                                              loginPage.prajuruId = parsedJsonPrajuru['prajuru_desa_adat_id'];
+                                            });
+                                            final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+                                            final SharedPreferences sharedprefadmin = await SharedPreferences.getInstance();
+                                            sharedpref.setInt('userId', loginPage.userId);
+                                            sharedpref.setInt('pendudukId', loginPage.pendudukId);
+                                            sharedpref.setString('desaId', loginPage.desaId);
+                                            sharedpref.setString('email', loginPage.userEmail);
+                                            sharedpref.setString('role', loginPage.role);
+                                            sharedpref.setString('status', 'login');
+                                            sharedprefadmin.setInt('prajuru_adat_id', loginPage.prajuruId);
+                                            Navigator.of(context).pushAndRemoveUntil(createRouteAdminDesaDashboard(), (route) => false);
+                                          }else{
+                                            setState(() {
+                                              Loading = false;
+                                            });
+                                            showDialog(
+                                                context: context,
+                                                barrierDismissible: false,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                                    ),
+                                                    content: Container(
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              child: Image.asset(
+                                                                'images/alert.png',
+                                                                height: 50,
+                                                                width: 50,
+                                                              ),
+                                                              alignment: Alignment.center,
+                                                            ),
+                                                            Container(
+                                                              child: Text(
+                                                                "Akun Nonaktif",
+                                                                style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 16,
+                                                                    fontWeight: FontWeight.w700,
+                                                                    color: HexColor("#025393")
+                                                                ),
+                                                                textAlign: TextAlign.center,
+                                                              ),
+                                                              margin: EdgeInsets.only(top: 10),
+                                                              alignment: Alignment.center,
+                                                            ),
+                                                            Container(
+                                                              child: Text(
+                                                                "Anda tidak bisa login karena akun Anda sudah di nonaktifkan.",
+                                                                style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 14
+                                                                ),
+                                                                textAlign: TextAlign.center,
+                                                              ),
+                                                              margin: EdgeInsets.only(top: 10),
+                                                            )
+                                                          ],
+                                                        )
+                                                    ),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        child: Text("OK", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontWeight: FontWeight.w700,
+                                                            color: HexColor("#025393")
+                                                        )),
+                                                        onPressed: (){Navigator.of(context).pop();},
+                                                      )
+                                                    ],
+                                                  );
+                                                }
+                                            );
+                                          }
+                                        }
+                                      }else if(parsedJson['role'] == "Krama") {
+                                        setState(() {
+                                          loginPage.pendudukId = parsedJson['penduduk_id'];
+                                          loginPage.userEmail = parsedJson['email'];
+                                          loginPage.desaId = parsedJson['desa_adat_id'];
+                                          loginPage.userId = parsedJson['user_id'];
+                                          loginPage.role = parsedJson['role'];
+                                        });
+                                        final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+                                        sharedpref.setInt('userId', loginPage.userId);
+                                        sharedpref.setInt('pendudukId', loginPage.pendudukId);
+                                        sharedpref.setString('desaId', loginPage.desaId);
+                                        sharedpref.setString('email', loginPage.userEmail);
+                                        sharedpref.setString('role', loginPage.role);
+                                        sharedpref.setString('status', 'login');
                                         Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
-                                      }else if(loginPage.role == "Kepala Desa") {
-                                        Navigator.of(context).pushAndRemoveUntil(createRouteKepalaDesaDashboard(), (route) => false);
-                                      }else if(loginPage.role == "Admin") {
-                                        Navigator.of(context).pushAndRemoveUntil(createRouteAdminDesaDashboard(), (route) => false);
-                                      }else if(loginPage.role == "Kepala Dusun") {
-                                        Navigator.of(context).pushAndRemoveUntil(createRouteKepalaDusunDashboard(), (route) => false);
                                       }
                                     }else{
                                       setState(() {
