@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratMasuk/DetailSuratMasuk.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratMasuk/EditSuratMasuk.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratMasuk/TambahSuratMasuk.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
@@ -18,9 +20,11 @@ class suratMasukAdmin extends StatefulWidget {
 
 class _suratMasukAdminState extends State<suratMasukAdmin> {
   var apiURLShowListSuratMasuk = "http://192.168.18.10:8000/api/data/admin/surat/masuk/${loginPage.desaId}";
+  var apiURLDeleteSuratMasuk = "http://192.168.18.10:8000/api/admin/surat/masuk/delete";
   var idSuratMasuk = [];
   var perihalSuratMasuk = [];
   var asalSuratMasuk = [];
+  var selectedIdSuratMasuk;
   bool LoadingSuratMasuk = true;
   bool availableSuratMasuk = false;
 
@@ -87,45 +91,104 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                   Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratMasukAdmin()));
                 },
                 child: Container(
-                  child: Row(
+                  child: Stack(
                     children: <Widget>[
                       Container(
-                        child: Image.asset(
-                          'images/email.png',
-                          height: 40,
-                          width: 40,
-                        ),
-                      ),
-                      Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           children: <Widget>[
                             Container(
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.55,
-                                child: Text(perihalSuratMasuk[index], style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: HexColor("#025393")
-                                ), maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: false,
-                                ),
+                              child: Image.asset(
+                                'images/email.png',
+                                height: 40,
+                                width: 40,
                               ),
                             ),
                             Container(
-                              child: Text(asalSuratMasuk[index], style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14
-                              )),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.55,
+                                      child: Text(perihalSuratMasuk[index], style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("#025393")
+                                      ), maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: false,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Text(asalSuratMasuk[index], style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    )),
+                                  )
+                                ],
+                              ),
+                              margin: EdgeInsets.only(left: 15),
                             )
                           ],
                         ),
-                        margin: EdgeInsets.only(left: 15),
+                      ),
+                      Container(
+                          alignment: Alignment.centerRight,
+                          child: PopupMenuButton<int>(
+                              onSelected: (item) {
+                                setState(() {
+                                  selectedIdSuratMasuk = idSuratMasuk[index];
+                                });
+                                onSelected(context, item);
+                              },
+                              itemBuilder: (context) => [
+                                PopupMenuItem<int>(
+                                    value: 0,
+                                    child: Row(
+                                        children: <Widget>[
+                                          Container(
+                                              child: Icon(
+                                                  Icons.edit,
+                                                  color: HexColor("#025393")
+                                              )
+                                          ),
+                                          Container(
+                                              child: Text("Edit", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14
+                                              )),
+                                              margin: EdgeInsets.only(left: 10)
+                                          )
+                                        ]
+                                    )
+                                ),
+                                PopupMenuItem<int>(
+                                    value: 1,
+                                    child: Row(
+                                        children: <Widget>[
+                                          Container(
+                                              child: Icon(
+                                                  Icons.delete,
+                                                  color: HexColor("#025393")
+                                              )
+                                          ),
+                                          Container(
+                                              child: Text("Hapus", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14
+                                              )),
+                                              margin: EdgeInsets.only(left: 10)
+                                          )
+                                        ]
+                                    )
+                                )
+                              ]
+                          )
                       )
-                    ],
+                    ]
                   ),
                   margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                   padding: EdgeInsets.symmetric(horizontal: 20),
@@ -191,5 +254,102 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
         )
       )
     );
+  }
+
+  void onSelected(BuildContext context, int item) {
+    switch (item) {
+      case 0:
+        setState(() {
+          editSuratMasukAdmin.idSuratMasuk = selectedIdSuratMasuk;
+        });
+        Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratMasukAdmin())).then((value) {
+          refreshListSuratMasuk();
+        });
+        break;
+
+      case 1:
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(40.0))
+                  ),
+                  content: Container(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Container(
+                                child: Image.asset(
+                                    'images/question.png',
+                                    height: 50,
+                                    width: 50
+                                )
+                            ),
+                            Container(
+                                child: Text("Hapus Surat Masuk", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: HexColor("#025393")
+                                ), textAlign: TextAlign.center),
+                                margin: EdgeInsets.only(top: 10)
+                            ),
+                            Container(
+                                child: Text("Apakah Anda yakin ingin menghapus surat ini?", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ), textAlign: TextAlign.center),
+                                margin: EdgeInsets.only(top: 10)
+                            )
+                          ]
+                      )
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                        onPressed: (){
+                          var body = jsonEncode({
+                            "surat_masuk_id" : selectedIdSuratMasuk
+                          });
+                          http.post(Uri.parse(apiURLDeleteSuratMasuk),
+                              headers: {"Content-Type" : "application/json"},
+                              body: body
+                          ).then((http.Response response) {
+                            var responseValue = response.statusCode;
+                            if(responseValue == 200) {
+                              refreshListSuratMasuk();
+                              Fluttertoast.showToast(
+                                  msg: "Surat berhasil dihapus",
+                                  fontSize: 14,
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER
+                              );
+                              Navigator.of(context).pop();
+                            }
+                          });
+                        },
+                        child: Text("Ya", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontWeight: FontWeight.w700,
+                            color: HexColor("#025393")
+                        ))
+                    ),
+                    TextButton(
+                        onPressed: (){Navigator.of(context).pop();},
+                        child: Text("Tidak", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontWeight: FontWeight.w700,
+                            color: HexColor("#025393")
+                        ))
+                    )
+                  ]
+              );
+            }
+        );
+        break;
+    }
   }
 }
