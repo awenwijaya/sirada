@@ -31,7 +31,7 @@ class adminProfile extends StatefulWidget {
 }
 
 class _adminProfileState extends State<adminProfile> {
-  var apiURLUserProfile = "http://192.168.18.10:8000/api/data/userdata/${loginPage.pendudukId}";
+  var apiURLUserProfile = "http://10.164.60.135:8000/api/data/userdata/${loginPage.pendudukId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLUserProfile),
@@ -55,7 +55,6 @@ class _adminProfileState extends State<adminProfile> {
           adminProfile.nomorTeleponPenduduk = parsedJson['telepon'];
           adminProfile.statusPerkawinan = parsedJson['status_perkawinan'];
           adminProfile.agamaPenduduk = parsedJson['agama'];
-          adminProfile.pendidikanTerakhir = parsedJson['pendidikan_terakhir'];
           adminProfile.namaPekerjaan = parsedJson['profesi'];
         });
       }
@@ -352,32 +351,6 @@ class _adminProfileState extends State<adminProfile> {
                         ],
                       ),
                     ),
-                    Container(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Text("Pendidikan Terakhir", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14
-                            ), textAlign: TextAlign.left),
-                            margin: EdgeInsets.only(top: 15),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              adminProfile.pendidikanTerakhir.toString(),
-                              style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14
-                              ),
-                            ),
-                            margin: EdgeInsets.only(top: 5, bottom: 15),
-                          )
-                        ],
-                      ),
-                    )
                   ],
                 ),
                 decoration: BoxDecoration(

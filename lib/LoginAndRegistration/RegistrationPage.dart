@@ -355,7 +355,7 @@ class _registrationPageState extends State<registrationPage> {
                                       )),
                                       onPressed: (){
                                         setState(() {
-                                          enterEmail.desaId = parsedJson['desa_id'];
+                                          enterEmail.desaId = parsedJson['desa_adat_id'];
                                           enterEmail.pendudukId = parsedJson['penduduk_id'];
                                         });
                                         Navigator.push(context, CupertinoPageRoute(builder: (context) => enterEmail()));

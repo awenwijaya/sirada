@@ -691,7 +691,8 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
                                 "waktu_kegiatan_mulai" : startTime == null ? null : "${startTime.hour}:${startTime.minute}",
                                 "waktu_kegiatan_selesai" : startTime == null ? null : endTime == null ? "${startTime.hour}:${startTime.minute}" : "${endTime.hour}:${endTime.minute}",
                                 "file" : namaFile,
-                                "desa_adat_id" : loginPage.desaId
+                                "desa_adat_id" : loginPage.desaId,
+                                "nomor_surat" : controllerNomorSurat.text
                               });
                               http.post(Uri.parse(apiURLSimpanSurat),
                                   headers: {"Content-Type" : "application/json"},

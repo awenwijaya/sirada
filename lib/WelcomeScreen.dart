@@ -27,7 +27,7 @@ class welcomeScreen extends StatelessWidget {
               ),
               Container(
                 child: Text(
-                  "Selamat Datang di SiRaja!",
+                  "Selamat Datang di SiRada!",
                   style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 22,

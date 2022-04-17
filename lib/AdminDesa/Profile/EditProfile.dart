@@ -29,7 +29,7 @@ class _editProfileAdminState extends State<editProfileAdmin> {
   String selectedStatusPerkawinan = adminProfile.statusPerkawinan;
   String selectedPendidikanTerakhir = adminProfile.pendidikanTerakhir;
   bool Loading = false;
-  var apiURLEditProfile = "http://192.168.18.10:8000/api/data/userdata/edit";
+  var apiURLEditProfile = "http://10.164.60.135:8000/api/data/userdata/edit";
 
   Future choiceImage() async {
     var pickedImage = await picker.pickImage(source: ImageSource.gallery);

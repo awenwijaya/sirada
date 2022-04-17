@@ -626,7 +626,8 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                                 "waktu_kegiatan_selesai" : startTime == null ? null : endTime == null ? "${startTime.hour}:${startTime.minute}" : "${endTime.hour}:${endTime.minute}",
                                 "file" : namaFile,
                                 "desa_adat_id" : loginPage.desaId,
-                                "prajuru_desa_adat_id" : loginPage.prajuruId
+                                "prajuru_desa_adat_id" : loginPage.prajuruId,
+                                "nomor_surat" : controllerNomorSurat.text
                               });
                               http.post(Uri.parse(apiURLSimpanSurat),
                                   headers: {"Content-Type" : "application/json"},

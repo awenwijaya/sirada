@@ -277,6 +277,7 @@ class _loginPageState extends State<loginPage> {
                                   tempUserId = parsedJson['user_id'];
                                   tempRole = parsedJson['role'];
                                 });
+                                print(parsedJson['role']);
                                 if(parsedJson['role'] == "Super Admin") {
                                   setState(() {
                                     Loading = false;
@@ -337,7 +338,7 @@ class _loginPageState extends State<loginPage> {
                                 }else{
                                   if(parsedJson['is_verified'] == "Verified") {
                                     if(parsedJson['desadat_status_register'] == 'Terdaftar') {
-                                      if(parsedJson['role'] == "Admin" || parsedJson['Bendesa']) {
+                                      if(parsedJson['role'] == "Admin" || parsedJson['role'] == 'Bendesa') {
                                         var response = await http.get(Uri.parse("http://192.168.18.10:8000/api/autentikasi/login/status/prajuru_desa_adat/${tempPendudukId}"));
                                         if(response.statusCode == 200) {
                                           var jsonDataPrajuru = response.body;
