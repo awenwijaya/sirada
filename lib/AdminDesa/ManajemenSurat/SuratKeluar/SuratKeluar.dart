@@ -80,28 +80,12 @@ class _suratKeluarAdminState extends State<suratKeluarAdmin> {
                                     margin: EdgeInsets.only(left: 15)
                                 ),
                                 Container(
-                                  child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(
-                                        child: Text(jumlahSuratPanitia, style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                          color: HexColor("#025393")
-                                        ))
-                                      ),
-                                      Container(
-                                        child: Text("Surat Panitia", style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w700
-                                        ))
-                                      )
-                                    ]
-                                  ),
-                                  margin: EdgeInsets.only(left: 15)
+                                    child: Text("Surat Panitia", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700
+                                    )),
+                                    margin: EdgeInsets.only(left: 15)
                                 )
                               ],
                             ),
@@ -154,28 +138,12 @@ class _suratKeluarAdminState extends State<suratKeluarAdmin> {
                                       margin: EdgeInsets.only(left: 15)
                                   ),
                                   Container(
-                                      child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Container(
-                                                child: Text(jumlahSuratPrajuruDesaAdat, style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: HexColor("#025393")
-                                                ))
-                                            ),
-                                            Container(
-                                                child: Text("Surat Non-Panitia", style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w700
-                                                ))
-                                            )
-                                          ]
-                                      ),
-                                      margin: EdgeInsets.only(left: 15)
+                                      child: Text("Surat Non-Panitia", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700
+                                      )),
+                                    margin: EdgeInsets.only(left: 15)
                                   )
                                 ],
                               ),

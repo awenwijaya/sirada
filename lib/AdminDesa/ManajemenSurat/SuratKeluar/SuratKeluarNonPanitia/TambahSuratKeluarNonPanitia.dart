@@ -374,7 +374,6 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                           )
                         )
                       ),
-                      margin: EdgeInsets.only(top: 10)
                     )
                   ]
                 )
@@ -409,7 +408,6 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                           )
                         )
                       ),
-                      margin: EdgeInsets.only(top: 10)
                     )
                   ]
                 )
@@ -443,7 +441,6 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                           )
                         )
                       ),
-                      margin: EdgeInsets.only(top: 10)
                     )
                   ]
                 )
@@ -477,7 +474,6 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                           )
                         )
                       ),
-                      margin: EdgeInsets.only(top: 10)
                     )
                   ]
                 )
@@ -573,7 +569,6 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                           )
                         )
                       ),
-                      margin: EdgeInsets.only(top: 10)
                     )
                   ]
                 )
@@ -608,7 +603,6 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                     )
                                 )
                             ),
-                            margin: EdgeInsets.only(top: 10)
                         )
                       ]
                   )
@@ -643,7 +637,6 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                     )
                                 )
                             ),
-                            margin: EdgeInsets.only(top: 10)
                         )
                       ]
                   )

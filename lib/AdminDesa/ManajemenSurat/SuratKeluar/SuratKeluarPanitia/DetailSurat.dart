@@ -6,6 +6,7 @@ import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/EditSuratKeluarPanitia.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/ViewLampiran.dart';
 
 class detailSuratKeluarPanitia extends StatefulWidget {
   static var suratKeluarId;
@@ -39,6 +40,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   var namaSekretaris;
   var namaBendesa;
   var createdAt;
+  var lampiran;
   bool LoadData = true;
 
   getSuratKeluarInfo() async {
@@ -66,7 +68,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           kontakWa2 = parsedJson['desadat_wa_kontak_2'];
           logoDesa = parsedJson['desadat_logo'];
           timKegiatan = parsedJson['tim_kegiatan'];
-          createdAt = parsedJson['created_at'];
+          lampiran = parsedJson['lampiran'];
           LoadData = false;
         });
       }
@@ -410,6 +412,31 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                   ],
                 ),
                 margin: EdgeInsets.only(top: 20)
+              ),
+              Container(
+                child: lampiran == null ? Container() : Container(
+                  child: FlatButton(
+                    onPressed: (){
+                      setState(() {
+                        viewLampiranSuratKeluarAdmin.namaFile = lampiran;
+                      });
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => viewLampiranSuratKeluarAdmin()));
+                    },
+                    child: Text("Lihat Lampiran", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: HexColor("#025393")
+                    )),
+                    color: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        side: BorderSide(color: HexColor("#025393"), width: 2)
+                    ),
+                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                  ),
+                  margin: EdgeInsets.only(top: 10, bottom: 10),
+                ),
               ),
               Container(
                 child: Text("Status Surat", style: TextStyle(

@@ -38,7 +38,7 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
   bool availableDataSedangDiproses = false;
   bool availableDataDikonfirmasi = false;
   bool availableDataDibatalkan = false;
-  var apiURLShowListSuratKeluar = "http://172.16.56.26:8000/api/data/admin/surat/panitia/${loginPage.desaId}";
+  var apiURLShowListSuratKeluar = "http://192.168.18.10:8000/api/data/admin/surat/panitia/${loginPage.desaId}";
   var selectedIdSuratKeluar;
 
   Future refreshListSuratKeluarMenunggu() async {
