@@ -25,8 +25,8 @@ class tambahSuratMasukAdmin extends StatefulWidget {
 class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
   var selectedKodeSurat;
   List kodeSuratList = List();
-  var apiURLGetKodeSurat = "http://192.168.18.10:8000/api/data/nomorsurat/${loginPage.desaId}";
-  var apiURLSimpanSurat = "http://192.168.18.10:8000/api/admin/surat/masuk/up";
+  var apiURLGetKodeSurat = "http://192.168.239.149:8000/api/data/nomorsurat/${loginPage.desaId}";
+  var apiURLSimpanSurat = "http://192.168.239.149:8000/api/admin/surat/masuk/up";
   bool availableKodeSurat = false;
   bool KodeSuratLoading = true;
   bool Loading = false;
@@ -608,7 +608,7 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                             });
                             var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
                             var length = await file.length();
-                            var url = Uri.parse('http://192.168.18.10/siraja-api-skripsi-new/upload-file-surat-masuk.php');
+                            var url = Uri.parse('http://192.168.239.149/siraja-api-skripsi-new/upload-file-surat-masuk.php');
                             var request = http.MultipartRequest("POST", url);
                             var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
                             request.files.add(multipartFile);

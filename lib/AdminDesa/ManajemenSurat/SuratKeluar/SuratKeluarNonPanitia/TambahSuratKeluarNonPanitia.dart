@@ -23,12 +23,12 @@ class tambahSuratKeluarNonPanitiaAdmin extends StatefulWidget {
 }
 
 class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonPanitiaAdmin> {
-  var apiURLShowKodeSurat = "http://192.168.18.10:8000/api/data/admin/surat/non-panitia/kode/${loginPage.desaId}";
-  var apiURLShowKomponenNomorSurat = "http://192.168.18.10:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
-  var apiURLGetDataBendesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
-  var apiURLGetDataPenyarikan = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/penyarikan/${loginPage.desaId}";
-  var apiURLUpDataSuratNonPanitia = "http://192.168.18.10:8000/api/admin/surat/keluar/non-panitia/up";
-  var apiURLUpFileLampiran = 'http://192.168.18.10/siraja-api-skripsi-new/upload-file-lampiran.php';
+  var apiURLShowKodeSurat = "http://192.168.239.149:8000/api/data/admin/surat/non-panitia/kode/${loginPage.desaId}";
+  var apiURLShowKomponenNomorSurat = "http://192.168.239.149:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
+  var apiURLGetDataBendesaAdat = "http://192.168.239.149:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLGetDataPenyarikan = "http://192.168.239.149:8000/api/data/staff/prajuru/desa_adat/penyarikan/${loginPage.desaId}";
+  var apiURLUpDataSuratNonPanitia = "http://192.168.239.149:8000/api/admin/surat/keluar/non-panitia/up";
+  var apiURLUpFileLampiran = 'http://192.168.239.149/siraja-api-skripsi-new/upload-file-lampiran.php';
   var kodeSurat;
   var selectedKodeSurat;
   var selectedPenyarikan;
@@ -67,6 +67,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
   File file;
   String namaFile;
   String filePath;
+  final controllerTumusan = TextEditingController();
 
   //kodesurat
   var nomorUrutSurat;
@@ -1050,6 +1051,40 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                   )
               ),
               Container(
+                  child: Column(
+                      children: <Widget>[
+                        Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Tumusan", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                            margin: EdgeInsets.only(top: 20, left: 20)
+                        ),
+                        Container(
+                            child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                child: TextField(
+                                  controller: controllerTumusan,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393"))
+                                    ),
+                                    hintText: "Tumusan",
+                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ),
+                                )
+                            ),
+                            margin: EdgeInsets.only(top: 10)
+                        )
+                      ]
+                  )
+              ),
+              Container(
                 child: Text("5. Lepihan Surat", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
@@ -1353,7 +1388,8 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                             "bendesa_adat_id" : selectedBendesaAdat,
                             "penyarikan_id" : selectedPenyarikan,
                             "lampiran" : namaFile,
-                            "tanggal_surat" : tanggalSuratValue
+                            "tanggal_surat" : tanggalSuratValue,
+                            "tumusan" : controllerTumusan.text == "" ? null : controllerTumusan.text,
                           });
                           http.post(Uri.parse(apiURLUpDataSuratNonPanitia),
                             headers: {"Content-Type" : "application/json"},
@@ -1398,7 +1434,8 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                         "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
                         "bendesa_adat_id" : selectedBendesaAdat,
                         "penyarikan_id" : selectedPenyarikan,
-                        "tanggal_surat" : tanggalSuratValue
+                        "tanggal_surat" : tanggalSuratValue,
+                        "tumusan" : controllerTumusan.text == "" ? null : controllerTumusan.text,
                       });
                       http.post(Uri.parse(apiURLUpDataSuratNonPanitia),
                         headers: {"Content-Type" : "application/json"},

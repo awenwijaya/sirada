@@ -2,14 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
-import 'package:surat/KepalaDesa/Dashboard.dart';
-import 'package:surat/KepalaDusun/Dashboard.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/WelcomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() {
   runApp(new MaterialApp(

@@ -28,11 +28,11 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   var selectedSekretarisPanitia;
   var selectedBendesaAdat;
   var selectedKodeSurat;
-  var apiURLShowKodeSurat = "http://172.16.56.26:8000/api/data/admin/surat/panitia/kode/${loginPage.desaId}";
-  var apiURLShowKomponenNomorSurat = "http://172.16.56.26:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
-  var apiURLGetDataBendesaAdat = "http://172.16.56.26:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
-  var apiURLUpSuratKeluarPanitia = "http://172.16.56.26:8000/api/admin/surat/keluar/panitia/up";
-  var apiURLGetDataPenduduk = "http://172.16.56.26:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLShowKodeSurat = "http://192.168.239.149:8000/api/data/admin/surat/panitia/kode/${loginPage.desaId}";
+  var apiURLShowKomponenNomorSurat = "http://192.168.239.149:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
+  var apiURLGetDataBendesaAdat = "http://192.168.239.149:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLUpSuratKeluarPanitia = "http://192.168.239.149:8000/api/admin/surat/keluar/panitia/up";
+  var apiURLGetDataPenduduk = "http://192.168.239.149:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
   List bendesaList = List();
   List kodeSuratList = List();
   List pendudukList = List();
@@ -54,6 +54,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   final controllerPamuput = TextEditingController();
   final controllerTempatKegiatan = TextEditingController();
   final controllerBusanaKegiatan = TextEditingController();
+  final controllerTumusan = TextEditingController();
   bool Loading = false;
   bool NomorSuratLoading = true;
   TimeOfDay startTime;
@@ -368,7 +369,6 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                           ),
                         )
                       ),
-                      margin: EdgeInsets.only(top: 10)
                     )
                   ],
                 )
@@ -403,7 +403,6 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                                 ),
                               )
                           ),
-                          margin: EdgeInsets.only(top: 10)
                       )
                     ],
                   )
@@ -437,7 +436,6 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                                 ),
                               )
                           ),
-                          margin: EdgeInsets.only(top: 10)
                       )
                     ],
                   )
@@ -471,7 +469,6 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                                 ),
                               )
                           ),
-                          margin: EdgeInsets.only(top: 10)
                       )
                     ],
                   )
@@ -538,12 +535,12 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                 margin: EdgeInsets.only(top: 30, left: 20)
               ),
               Container(
-                child: Text("Silahkan masukkan isi (daging) dari surat pada form dibawah.", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14
-                )),
-                padding: EdgeInsets.only(left: 30, right: 30),
-                margin: EdgeInsets.only(top: 10)
+                  alignment: Alignment.topLeft,
+                  child: Text("Pemahbah *", style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                  )),
+                  margin: EdgeInsets.only(top: 20, left: 20)
               ),
               Container(
                   child: Padding(
@@ -564,7 +561,14 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         ),
                       )
                   ),
-                  margin: EdgeInsets.only(top: 15)
+              ),
+              Container(
+                  alignment: Alignment.topLeft,
+                  child: Text("Daging Surat", style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                  )),
+                  margin: EdgeInsets.only(top: 20, left: 20)
               ),
               Container(
                 child: Padding(
@@ -585,7 +589,14 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                     ),
                   )
                 ),
-                margin: EdgeInsets.only(top: 15)
+              ),
+              Container(
+                  alignment: Alignment.topLeft,
+                  child: Text("Pamuput Surat", style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                  )),
+                  margin: EdgeInsets.only(top: 20, left: 20)
               ),
               Container(
                   child: Padding(
@@ -606,7 +617,6 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         ),
                       )
                   ),
-                  margin: EdgeInsets.only(top: 15)
               ),
               Container(
                 child: Column(
@@ -1033,6 +1043,40 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                   )
               ),
               Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                        alignment: Alignment.topLeft,
+                        child: Text("Tumusan", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        )),
+                        margin: EdgeInsets.only(top: 20, left: 20)
+                    ),
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                            child: TextField(
+                              controller: controllerTumusan,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    borderSide: BorderSide(color: HexColor("#025393"))
+                                ),
+                                hintText: "Tumusan",
+                              ),
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              ),
+                            )
+                        ),
+                        margin: EdgeInsets.only(top: 10)
+                    )
+                  ]
+                )
+              ),
+              Container(
                   child: Text("5. Lepihan Surat", style: TextStyle(
                       fontFamily: "Poppins",
                       fontSize: 14,
@@ -1309,7 +1353,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         });
                         var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
                         var length = await file.length();
-                        var url = Uri.parse('http://192.168.18.10/siraja-api-skripsi-new/upload-file-lampiran.php');
+                        var url = Uri.parse('http://192.168.239.149/siraja-api-skripsi-new/upload-file-lampiran.php');
                         var request = http.MultipartRequest("POST", url);
                         var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
                         request.files.add(multipartFile);
@@ -1337,7 +1381,8 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                             "krama_mipil_ketua_id" : selectedKetuaPanitia,
                             "krama_mipil_sekretaris_id" : selectedSekretarisPanitia,
                             "lampiran" : namaFile,
-                            "tanggal_surat" : tanggalSuratValue
+                            "tanggal_surat" : tanggalSuratValue,
+                            "tumusan" : controllerTumusan.text == "" ? null : controllerTumusan.text,
                           });
                           http.post(Uri.parse(apiURLUpSuratKeluarPanitia),
                               headers: {"Content-Type" : "application/json"},
@@ -1440,7 +1485,8 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                         "bendesa_adat_id" : selectedBendesaAdat,
                         "krama_mipil_ketua_id" : selectedKetuaPanitia,
                         "krama_mipil_sekretaris_id" : selectedSekretarisPanitia,
-                        "tanggal_surat" : tanggalSuratValue
+                        "tanggal_surat" : tanggalSuratValue,
+                        "tumusan" : controllerTumusan.text == "" ? null : controllerTumusan.text,
                       });
                       http.post(Uri.parse(apiURLUpSuratKeluarPanitia),
                         headers: {"Content-Type" : "application/json"},

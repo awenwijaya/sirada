@@ -36,9 +36,10 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   var namaPenyarikan;
   var namaBendesa;
   var lampiran;
+  var tumusan;
   bool LoadData = true;
-  var apiURLShowDetailSuratKeluar = "http://192.168.18.10:8000/api/data/surat/keluar/view/${detailSuratKeluarNonPanitia.suratKeluarId}";
-  var apiURLShowPrajuru = "http://192.168.18.10:8000/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarNonPanitia.suratKeluarId}";
+  var apiURLShowDetailSuratKeluar = "http://192.168.239.149:8000/api/data/surat/keluar/view/${detailSuratKeluarNonPanitia.suratKeluarId}";
+  var apiURLShowPrajuru = "http://192.168.239.149:8000/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarNonPanitia.suratKeluarId}";
 
   getSuratKeluarInfo() async {
     http.get(Uri.parse(apiURLShowDetailSuratKeluar),
@@ -53,7 +54,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
           nomorSurat = parsedJson['nomor_surat'];
           lepihan = parsedJson['lepihan'];
           parindikan = parsedJson['parindikan'];
-          pemahbah = parsedJson['pemahbah_surat'];
+          pemahbah = parsedJson['pamahbah_surat'];
           daging = parsedJson['daging_surat'];
           pamuput = parsedJson['pamuput_surat'];
           pihakPenerima = parsedJson['pihak_penerima'];
@@ -66,6 +67,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
           logoDesa = parsedJson['desadat_logo'];
           timKegiatan = parsedJson['tim_kegiatan'];
           lampiran = parsedJson['lampiran'];
+          tumusan = parsedJson['tumusan'];
           LoadData = false;
         });
       }
@@ -247,7 +249,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                         ),
                         Container(
                             alignment: Alignment.topLeft,
-                            child: Text(lepihan.toString() == "0" ? "Lepihan: -" : "Lepihan: ${lepihan.toString} lepih", style: TextStyle(
+                            child: Text(lepihan == "0" ? "Lepihan: -" : "Lepihan: ${lepihan} lepih", style: TextStyle(
                                 fontFamily: "Times New Roman",
                                 fontSize: 16
                             )),
@@ -256,6 +258,14 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                         Container(
                             alignment: Alignment.topLeft,
                             child: Text("Parindikan: ${parindikan}", style: TextStyle(
+                                fontFamily: "Times New Roman",
+                                fontSize: 16
+                            )),
+                            margin: EdgeInsets.only(top: 5)
+                        ),
+                        Container(
+                            alignment: Alignment.topLeft,
+                            child: Text(tumusan == null ? "Tumusan: -" : "Tumusan: ${tumusan}", style: TextStyle(
                                 fontFamily: "Times New Roman",
                                 fontSize: 16
                             )),

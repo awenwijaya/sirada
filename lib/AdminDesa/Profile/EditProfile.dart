@@ -29,7 +29,7 @@ class _editProfileAdminState extends State<editProfileAdmin> {
   String selectedStatusPerkawinan = adminProfile.statusPerkawinan;
   String selectedPendidikanTerakhir = adminProfile.pendidikanTerakhir;
   bool Loading = false;
-  var apiURLEditProfile = "http://10.164.60.135:8000/api/data/userdata/edit";
+  var apiURLEditProfile = "http://192.168.239.149:8000/api/data/userdata/edit";
 
   Future choiceImage() async {
     var pickedImage = await picker.pickImage(source: ImageSource.gallery);
@@ -39,7 +39,7 @@ class _editProfileAdminState extends State<editProfileAdmin> {
   }
 
   Future uploadImage() async {
-    final uri = Uri.parse("http://192.168.18.10/siraja-api-skripsi-new/upload-profile-picture.php");
+    final uri = Uri.parse("http://192.168.239.149/siraja-api-skripsi-new/upload-profile-picture.php");
     var request = http.MultipartRequest('POST', uri);
     request.fields['user_id'] = loginPage.userId.toString();
     var pic = await http.MultipartFile.fromPath("image", image.path);
@@ -103,7 +103,7 @@ class _editProfileAdminState extends State<editProfileAdmin> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${adminProfile.profilePicture}')
+                            image: NetworkImage('http://192.168.239.149/siraja-api-skripsi-new/${adminProfile.profilePicture}')
                         )
                     ),
                   ),

@@ -35,10 +35,10 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
   bool availableDataAktif = false;
   var selectedIdPrajuruBanjarAdat;
   var selectedIdPenduduk;
-  var apiURLShowListPrajuruBanjarAdatAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/aktif/${loginPage.desaId}";
-  var apiURLShowListPrajuruBanjarAdatTidakAktif =  "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
-  var apiURLDeletePrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/delete";
-  var apiURLSetPrajuruBanjarTidakAktif = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/set_tidak_aktif";
+  var apiURLShowListPrajuruBanjarAdatAktif = "http://192.168.239.149:8000/api/data/staff/prajuru_banjar_adat/aktif/${loginPage.desaId}";
+  var apiURLShowListPrajuruBanjarAdatTidakAktif =  "http://192.168.239.149:8000/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
+  var apiURLDeletePrajuruBanjarAdat = "http://192.168.239.149:8000/api/admin/prajuru/banjar_adat/delete";
+  var apiURLSetPrajuruBanjarTidakAktif = "http://192.168.239.149:8000/api/admin/prajuru/banjar_adat/set_tidak_aktif";
 
   Future refreshListPrajuruBanjarAdatAktif() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruBanjarAdatAktif);
@@ -289,26 +289,6 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                                     )
                                                                   ),
                                                                   PopupMenuItem<int>(
-                                                                      value: 1,
-                                                                      child: Row(
-                                                                          children: <Widget>[
-                                                                            Container(
-                                                                                child: Icon(
-                                                                                    Icons.delete,
-                                                                                    color: HexColor("#025393")
-                                                                                )
-                                                                            ),
-                                                                            Container(
-                                                                                child: Text("Hapus", style: TextStyle(
-                                                                                    fontFamily: "Poppins",
-                                                                                    fontSize: 14
-                                                                                )),
-                                                                                margin: EdgeInsets.only(left: 10)
-                                                                            )
-                                                                          ]
-                                                                      )
-                                                                  ),
-                                                                  PopupMenuItem<int>(
                                                                       value: 2,
                                                                       child: Row(
                                                                           children: <Widget>[
@@ -452,40 +432,6 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                                   ]
                                                               )
                                                           ),
-                                                          Container(
-                                                              alignment: Alignment.centerRight,
-                                                              child: PopupMenuButton<int>(
-                                                                  onSelected: (item) {
-                                                                    setState(() {
-                                                                      selectedIdPrajuruBanjarAdat = prajuruBanjarAdatIDTidakAktif[index];
-                                                                      selectedIdPenduduk = pendudukIdTidakAktif[index];
-                                                                    });
-                                                                    onSelected(context, item);
-                                                                  },
-                                                                  itemBuilder: (context) => [
-                                                                    PopupMenuItem<int>(
-                                                                        value: 1,
-                                                                        child: Row(
-                                                                            children: <Widget>[
-                                                                              Container(
-                                                                                  child: Icon(
-                                                                                      Icons.delete,
-                                                                                      color: HexColor("#025393")
-                                                                                  )
-                                                                              ),
-                                                                              Container(
-                                                                                  child: Text("Hapus", style: TextStyle(
-                                                                                      fontFamily: "Poppins",
-                                                                                      fontSize: 14
-                                                                                  )),
-                                                                                  margin: EdgeInsets.only(left: 10)
-                                                                              )
-                                                                            ]
-                                                                        )
-                                                                    ),
-                                                                  ]
-                                                              )
-                                                          )
                                                         ]
                                                     ),
                                                     margin: EdgeInsets.only(top: 10, left: 20, right: 20),

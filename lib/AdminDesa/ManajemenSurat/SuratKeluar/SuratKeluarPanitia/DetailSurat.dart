@@ -33,14 +33,15 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   var kontakWa2;
   var logoDesa;
   var timKegiatan;
-  var apiURLShowDetailSuratKeluar = "http://192.168.18.10:8000/api/data/surat/keluar/view/${detailSuratKeluarPanitia.suratKeluarId}";
-  var apiURLShowPanitia = "http://192.168.18.10:8000/api/data/admin/surat/keluar/panitia/${detailSuratKeluarPanitia.suratKeluarId}";
-  var apiURLShowPrajuru = "http://192.168.18.10:8000/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarPanitia.suratKeluarId}";
+  var apiURLShowDetailSuratKeluar = "http://192.168.239.149:8000/api/data/surat/keluar/view/${detailSuratKeluarPanitia.suratKeluarId}";
+  var apiURLShowPanitia = "http://192.168.239.149:8000/api/data/admin/surat/keluar/panitia/${detailSuratKeluarPanitia.suratKeluarId}";
+  var apiURLShowPrajuru = "http://192.168.239.149:8000/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarPanitia.suratKeluarId}";
   var namaKetua;
   var namaSekretaris;
   var namaBendesa;
   var createdAt;
   var lampiran;
+  var tumusan;
   bool LoadData = true;
 
   getSuratKeluarInfo() async {
@@ -56,7 +57,8 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           nomorSurat = parsedJson['nomor_surat'];
           lepihan = parsedJson['lepihan'];
           parindikan = parsedJson['parindikan'];
-          pemahbah = parsedJson['pemahbah_surat'];
+          tumusan = parsedJson['tumusan'];
+          pemahbah = parsedJson['pamahbah_surat'];
           daging = parsedJson['daging_surat'];
           pamuput = parsedJson['pamuput_surat'];
           pihakPenerima = parsedJson['pihak_penerima'];
@@ -268,7 +270,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                     ),
                     Container(
                       alignment: Alignment.topLeft,
-                      child: Text(lepihan.toString() == "0" ? "Lepihan: -" : "Lepihan: ${lepihan.toString} lepih", style: TextStyle(
+                      child: Text(lepihan == "0" ? "Lepihan: -" : "Lepihan: ${lepihan} lepih", style: TextStyle(
                         fontFamily: "Times New Roman",
                         fontSize: 16
                       )),
@@ -281,6 +283,14 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                         fontSize: 16
                       )),
                       margin: EdgeInsets.only(top: 5)
+                    ),
+                    Container(
+                        alignment: Alignment.topLeft,
+                        child: Text(tumusan == null ? "Tumusan: -" : "Tumusan: ${tumusan}", style: TextStyle(
+                            fontFamily: "Times New Roman",
+                            fontSize: 16
+                        )),
+                        margin: EdgeInsets.only(top: 5)
                     ),
                   ]
                 ),

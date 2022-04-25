@@ -28,12 +28,12 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
   var controllerKodeSuratEdit = TextEditingController();
   final controllerKeterangan = TextEditingController();
   var controllerKeteranganEdit = TextEditingController();
-  var apiURLUpNomorSurat = "http://192.168.18.10:8000/api/admin/nomor_surat/up_nomor_surat";
-  var apiURLEditNomorSurat = "http://192.168.18.10:8000/api/admin/nomor_surat/edit_nomor_surat";
-  var apiURLDeleteNomorSurat = "http://192.168.18.10:8000/api/admin/nomor_surat/delete_nomor_surat";
+  var apiURLUpNomorSurat = "http://192.168.239.149:8000/api/admin/nomor_surat/up_nomor_surat";
+  var apiURLEditNomorSurat = "http://192.168.239.149:8000/api/admin/nomor_surat/edit_nomor_surat";
+  var apiURLDeleteNomorSurat = "http://192.168.239.149:8000/api/admin/nomor_surat/delete_nomor_surat";
 
   Future refreshListNomorSurat() async {
-    Uri uri = Uri.parse('http://192.168.18.10:8000/api/data/nomorsurat/${loginPage.desaId}');
+    Uri uri = Uri.parse('http://192.168.239.149:8000/api/data/nomorsurat/${loginPage.desaId}');
     final response = await http.get(uri);
     if(response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -397,7 +397,8 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                           });
                           var body = jsonEncode({
                             "kode_nomor_surat" : controllerKodeSurat.text,
-                            "keterangan" : controllerKeterangan.text
+                            "keterangan" : controllerKeterangan.text,
+                            "desa_adat_id" : loginPage.desaId
                           });
                           http.post(Uri.parse(apiURLUpNomorSurat),
                             headers: {"Content-Type" : "application/json"},
@@ -663,7 +664,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                       var body = jsonEncode({
                         "kode_nomor_surat" : controllerKodeSuratEdit.text,
                         "keterangan" : controllerKeteranganEdit.text,
-                        "id" : selectedIdNomorSurat
+                        "id" : selectedIdNomorSurat,
                       });
                       http.post(Uri.parse(apiURLEditNomorSurat),
                         headers: {"Content-Type" : "application/json"},

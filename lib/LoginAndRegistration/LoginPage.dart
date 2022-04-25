@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
-import 'package:surat/KepalaDesa/Dashboard.dart';
-import 'package:surat/KepalaDusun/Dashboard.dart';
 import 'package:surat/LoginAndRegistration/LupaPassword.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
@@ -697,45 +695,9 @@ Route createRoutePendudukDashboard() {
   );
 }
 
-Route createRouteKepalaDesaDashboard() {
-  return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => const dashboardKepalaDesa(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0.0, 1.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      }
-  );
-}
-
 Route createRouteAdminDesaDashboard() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => const dashboardAdminDesa(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    }
-  );
-}
-
-Route createRouteKepalaDusunDashboard() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const dashboardKepalaDusun(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);
       const end = Offset.zero;

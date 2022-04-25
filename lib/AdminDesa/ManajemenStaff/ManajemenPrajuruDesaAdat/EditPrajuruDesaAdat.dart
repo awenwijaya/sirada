@@ -30,8 +30,8 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   DateTime masaBerakhir;
   DateTime sekarang = DateTime.now();
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
-  var apiURLShowDetailPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/edit/up";
+  var apiURLShowDetailPrajuruDesaAdat = "http://192.168.239.149:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruDesaAdat = "http://192.168.239.149:8000/api/admin/prajuru/desa_adat/edit/up";
   var selectedIdPenduduk;
   var selectedRole;
   bool Loading = false;

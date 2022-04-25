@@ -14,10 +14,6 @@ class suratKeluarAdmin extends StatefulWidget {
 }
 
 class _suratKeluarAdminState extends State<suratKeluarAdmin> {
-  var jumlahSuratPanitia = "0";
-  var jumlahSuratPrajuruDesaAdat = "0";
-  var jumlahSuratBendesaAdat = "0";
-  var jumlahSuratParumanDesaAdat = "0";
 
   @override
   Widget build(BuildContext context) {

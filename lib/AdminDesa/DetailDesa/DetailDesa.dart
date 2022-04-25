@@ -21,7 +21,7 @@ class detailDesaAdmin extends StatefulWidget {
 }
 
 class _detailDesaAdminState extends State<detailDesaAdmin> {
-  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/userdata/desa/${loginPage.desaId}";
+  var apiURLGetDetailDesaById = "http://192.168.239.149:8000/api/data/userdata/desa/${loginPage.desaId}";
   var namaDesa;
   var status;
   var kodePos;

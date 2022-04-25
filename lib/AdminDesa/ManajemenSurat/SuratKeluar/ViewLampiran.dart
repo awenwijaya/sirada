@@ -32,7 +32,7 @@ class _viewLampiranSuratKeluarAdminState extends State<viewLampiranSuratKeluarAd
               )),
             ),
             body: Container(
-              child: SfPdfViewer.network("http://192.168.18.10//siraja-api-skripsi-new/public/assets/file/lampiran/${viewLampiranSuratKeluarAdmin.namaFile}"),
+              child: SfPdfViewer.network("http://192.168.239.149/siraja-api-skripsi-new/public/assets/file/lampiran/${viewLampiranSuratKeluarAdmin.namaFile}"),
             )
         )
     );

@@ -24,14 +24,14 @@ class editSuratKeluarPanitiaAdmin extends StatefulWidget {
 }
 
 class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmin> {
-  var apiURLShowDataEditSuratKeluar = "http://172.16.56.26:8000/api/admin/surat/keluar/panitia/edit/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
-  var apiURLShowDataNomorSuratKeluarEdit = "http://172.16.56.26:8000/api/admin/surat/keluar/panitia/edit/nomor_surat/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
-  var apiURLShowKodeSurat = "http://172.16.56.26:8000/api/data/admin/surat/panitia/kode/${loginPage.desaId}";
-  var apiURLShowPanitia = "http://172.16.56.26:8000/api/data/admin/surat/keluar/panitia/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
-  var apiURLShowPrajuru = "http://172.16.56.26:8000/api/data/admin/surat/keluar/prajuru/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
-  var apiURLGetDataBendesaAdat = "http://172.16.56.26:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
-  var apiURLGetDataPenduduk = "http://172.16.56.26:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
-  var apiURLSimpanEditSuratKeluar = "http://172.16.56.26:8000/api/admin/surat/keluar/panitia/edit/panitia/up";
+  var apiURLShowDataEditSuratKeluar = "http://192.168.239.149:8000/api/admin/surat/keluar/panitia/edit/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
+  var apiURLShowDataNomorSuratKeluarEdit = "http://192.168.239.149:8000/api/admin/surat/keluar/panitia/edit/nomor_surat/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
+  var apiURLShowKodeSurat = "http://192.168.239.149:8000/api/data/admin/surat/panitia/kode/${loginPage.desaId}";
+  var apiURLShowPanitia = "http://192.168.239.149:8000/api/data/admin/surat/keluar/panitia/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
+  var apiURLShowPrajuru = "http://192.168.239.149:8000/api/data/admin/surat/keluar/prajuru/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
+  var apiURLGetDataBendesaAdat = "http://192.168.239.149:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "http://192.168.239.149:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLSimpanEditSuratKeluar = "http://192.168.239.149:8000/api/admin/surat/keluar/panitia/edit/panitia/up";
 
   //loading indicator
   bool LoadingData = true;
@@ -48,7 +48,6 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
   var selectedSekretarisPanitia;
   File file;
   String namaFile;
-  String namaFileLampiran;
   String filePath;
 
 
@@ -74,6 +73,7 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
   final controllerPamuput = TextEditingController();
   final controllerTempatKegiatan = TextEditingController();
   final controllerBusanaKegiatan = TextEditingController();
+  final controllerTumusan = TextEditingController();
   final DateRangePickerController controllerTanggalKegiatan = DateRangePickerController();
   TimeOfDay startTime;
   TimeOfDay endTime;
@@ -97,7 +97,7 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
         controllerLepihan.text = parsedJson['lepihan'].toString();
         controllerParindikan.text = parsedJson['parindikan'];
         controllerTetujon.text = parsedJson['pihak_penerima'];
-        controllerPemahbah.text = parsedJson['pemahbah_surat'] == null ? "" : parsedJson['pemahbah_surat'];
+        controllerPemahbah.text = parsedJson['pamahbah_surat'] == null ? "" : parsedJson['pamahbah_surat'];
         controllerDagingSurat.text = parsedJson['daging_surat'] == null ? "" : parsedJson['daging_surat'];
         controllerPamuput.text = parsedJson['pamuput_surat'] == null ? "" : parsedJson['pamuput_surat'];
         controllerPanitiaAcara.text = parsedJson['tim_kegiatan'] == null ? "" : parsedJson['tim_kegiatan'];
@@ -115,7 +115,8 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
         }
         startTime = parsedJson['waktu_mulai'] == null ? null : TimeOfDay(hour: int.parse(parsedJson['waktu_mulai'].split(":")[0]), minute: int.parse(parsedJson['waktu_mulai'].split(":")[1]));
         endTime = parsedJson['waktu_selesai'] == null ? null : TimeOfDay(hour: int.parse(parsedJson['waktu_selesai'].split(":")[0]), minute: int.parse(parsedJson['waktu_selesai'].split(":")[1]));
-        namaFileLampiran = parsedJson['lampiran'] == null ? null : parsedJson['lampiran'];
+        namaFile = parsedJson['lampiran'] == null ? null : parsedJson['lampiran'];
+        controllerTumusan.text = parsedJson['tumusan'] == null ? null : parsedJson['tumusan'];
         selectedTanggalSurat = DateTime.parse(parsedJson['tanggal_surat']);
         tanggalSurat = DateFormat("dd-MMM-yyyy").format(selectedTanggalSurat).toString();
         tanggalSuratValue = DateFormat("yyyy-MM-dd").format(selectedTanggalSurat).toString();
@@ -411,7 +412,6 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                           ),
                         )
                       ),
-                      margin: EdgeInsets.only(top: 10)
                     ),
                     Container(
                         child: Column(
@@ -443,7 +443,6 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                                       ),
                                     )
                                 ),
-                                margin: EdgeInsets.only(top: 10)
                             )
                           ],
                         )
@@ -477,7 +476,6 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                                       ),
                                     )
                                 ),
-                                margin: EdgeInsets.only(top: 10)
                             )
                           ],
                         )
@@ -511,7 +509,6 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                                       ),
                                     )
                                 ),
-                                margin: EdgeInsets.only(top: 10)
                             )
                           ],
                         )
@@ -578,6 +575,14 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                       margin: EdgeInsets.only(top: 30, left: 20)
                     ),
                     Container(
+                        alignment: Alignment.topLeft,
+                        child: Text("Pemahbah *", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        )),
+                        margin: EdgeInsets.only(top: 20, left: 20)
+                    ),
+                    Container(
                         child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                             child: TextField(
@@ -596,7 +601,14 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                               ),
                             )
                         ),
-                        margin: EdgeInsets.only(top: 15)
+                    ),
+                    Container(
+                        alignment: Alignment.topLeft,
+                        child: Text("Daging Surat", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        )),
+                        margin: EdgeInsets.only(top: 20, left: 20)
                     ),
                     Container(
                         child: Padding(
@@ -617,7 +629,14 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                               ),
                             )
                         ),
-                        margin: EdgeInsets.only(top: 15)
+                    ),
+                    Container(
+                        alignment: Alignment.topLeft,
+                        child: Text("Pamuput Surat", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        )),
+                        margin: EdgeInsets.only(top: 20, left: 20)
                     ),
                     Container(
                         child: Padding(
@@ -638,7 +657,6 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                               ),
                             )
                         ),
-                        margin: EdgeInsets.only(top: 15)
                     ),
                     Container(
                         child: Column(
@@ -1010,6 +1028,41 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                             ]
                         )
                     ),
+
+                    Container(
+                        child: Column(
+                            children: <Widget>[
+                              Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("Tumusan", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  )),
+                                  margin: EdgeInsets.only(top: 20, left: 20)
+                              ),
+                              Container(
+                                  child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                      child: TextField(
+                                        controller: controllerTumusan,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(50.0),
+                                              borderSide: BorderSide(color: HexColor("#025393"))
+                                          ),
+                                          hintText: "Tumusan",
+                                        ),
+                                        style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
+                                        ),
+                                      )
+                                  ),
+                                  margin: EdgeInsets.only(top: 10)
+                              )
+                            ]
+                        )
+                    ),
                     Container(
                       child: Text("5. Lepihan Surat", style: TextStyle(
                         fontFamily: "Poppins",
@@ -1028,15 +1081,11 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                         margin: EdgeInsets.only(top: 10)
                     ),
                     Container(
-                        child: namaFileLampiran == null ? namaFile == null ? Text("Berkas lampiran belum terpilih", style: TextStyle(
+                        child: namaFile == null ? Text("Berkas lampiran belum terpilih", style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14,
                             fontWeight: FontWeight.w700
                         )) : Text("Nama berkas: ${namaFile}", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700
-                        )) : Text("Nama berkas: ${namaFileLampiran}", style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14,
                             fontWeight: FontWeight.w700
@@ -1234,7 +1283,7 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                           }
                       );
                     }else if(controllerLepihan.text != "0") {
-                      if(namaFile == null || namaFileLampiran == null) {
+                      if(namaFile == null) {
                         showDialog(
                             context: context,
                             barrierDismissible: false,
@@ -1294,7 +1343,7 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                         });
                         var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
                         var length = await file.length();
-                        var url = Uri.parse('http://192.168.18.10/siraja-api-skripsi-new/upload-file-lampiran.php');
+                        var url = Uri.parse('http://192.168.239.149/siraja-api-skripsi-new/upload-file-lampiran.php');
                         var request = http.MultipartRequest("POST", url);
                         var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
                         request.files.add(multipartFile);
@@ -1322,8 +1371,9 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                             "bendesa_adat_id" : selectedBendesaAdat,
                             "krama_mipil_ketua_id" : selectedKetuaPanitia,
                             "krama_mipil_sekretaris_id" : selectedSekretarisPanitia,
-                            "lampiran" : namaFile == null ? namaFileLampiran : namaFile,
-                            "tanggal_surat" : tanggalSuratValue
+                            "lampiran" : namaFile,
+                            "tanggal_surat" : tanggalSuratValue,
+                            "tumusan" : controllerTumusan.text == "" ? null : controllerTumusan.text,
                           });
                           http.post(Uri.parse(apiURLSimpanEditSuratKeluar),
                               headers: {"Content-Type" : "application/json"},
@@ -1429,7 +1479,8 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                         "krama_mipil_ketua_id" : selectedKetuaPanitia,
                         "krama_mipil_sekretaris_id" : selectedSekretarisPanitia,
                         "tanggal_surat" : tanggalSuratValue,
-                        "lampiran" : null
+                        "lampiran" : null,
+                        "tumusan" : controllerTumusan.text == "" ? null : controllerTumusan.text,
                       });
                       http.post(Uri.parse(apiURLSimpanEditSuratKeluar),
                           headers: {"Content-Type" : "application/json"},

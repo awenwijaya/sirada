@@ -26,9 +26,9 @@ class editSuratMasukAdmin extends StatefulWidget {
 class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
   var selectedKodeSurat;
   List kodeSuratList = List();
-  var apiURLGetKodeSurat = "http://192.168.18.10:8000/api/data/nomorsurat/${loginPage.desaId}";
-  var apiURLSimpanSurat = "http://192.168.18.10:8000/api/admin/surat/masuk/edit/up";
-  var apiURLGetDataSurat = "http://192.168.18.10:8000/api/admin/surat/masuk/edit/${editSuratMasukAdmin.idSuratMasuk}";
+  var apiURLGetKodeSurat = "http://192.168.239.149:8000/api/data/nomorsurat/${loginPage.desaId}";
+  var apiURLSimpanSurat = "http://192.168.239.149:8000/api/admin/surat/masuk/edit/up";
+  var apiURLGetDataSurat = "http://192.168.239.149:8000/api/admin/surat/masuk/edit/${editSuratMasukAdmin.idSuratMasuk}";
   bool availableKodeSurat = false;
   bool KodeSuratLoading = true;
   bool Loading = false;
@@ -640,7 +640,7 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
                             if(file != null) {
                               var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
                               var length = await file.length();
-                              var url = Uri.parse('http://192.168.18.10/siraja-api-skripsi-new/upload-file-surat-masuk.php');
+                              var url = Uri.parse('http://192.168.239.149/siraja-api-skripsi-new/upload-file-surat-masuk.php');
                               var request = http.MultipartRequest("POST", url);
                               var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
                               request.files.add(multipartFile);
