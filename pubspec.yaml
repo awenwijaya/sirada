@@ -49,6 +49,7 @@ dependencies:
   simple_time_range_picker: ^0.0.4
   syncfusion_flutter_datepicker: ^19.4.56
   syncfusion_flutter_pdfviewer: ^19.4.56-beta
+  carousel_slider: ^4.1.1
 
 dev_dependencies:
   flutter_test:

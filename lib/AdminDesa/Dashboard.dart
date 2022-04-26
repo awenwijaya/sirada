@@ -66,7 +66,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                 color: HexColor("#025393")
               )),
               Container(
-                child: Text(loginPage.role == "Bendesa" ? "BENDESA" : "ADMIN", style: TextStyle(
+                child: Text("ADMIN", style: TextStyle(
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
