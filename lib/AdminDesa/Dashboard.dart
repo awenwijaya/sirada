@@ -27,7 +27,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var profilePicture;
   var namaAdmin;
   var namaDesa;
-  var apiURLGetDataUser = "http://192.168.239.149:8000/api/data/userdata/${loginPage.pendudukId}";
+  var apiURLGetDataUser = "http://192.168.122.149:8000/api/data/userdata/${loginPage.pendudukId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -193,7 +193,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: NetworkImage('http://192.168.239.149/siraja-api-skripsi-new/${profilePicture}'),
+                            image: NetworkImage('http://192.168.122.149/siraja-api-skripsi-new/${profilePicture}'),
                             fit: BoxFit.fill,
                           )
                         ),
@@ -257,7 +257,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  image: NetworkImage('http://192.168.239.149/siraja-api-skripsi/${dashboardAdminDesa.logoDesa}')
+                                  image: NetworkImage('http://192.168.122.149/siraja-api-skripsi/${dashboardAdminDesa.logoDesa}')
                               )
                           ),
                         ),

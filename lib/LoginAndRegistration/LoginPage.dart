@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
 import 'package:surat/LoginAndRegistration/LupaPassword.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
+import 'package:surat/Penduduk/BottomNavigationBar.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +19,7 @@ class loginPage extends StatefulWidget {
   static var pendudukId;
   static var role;
   static var prajuruId;
+  static var kramaId;
 
   const loginPage({Key key}) : super(key: key);
 
@@ -337,7 +339,7 @@ class _loginPageState extends State<loginPage> {
                                   if(parsedJson['is_verified'] == "Verified") {
                                     if(parsedJson['desadat_status_register'] == 'Terdaftar') {
                                       if(parsedJson['role'] == "Admin" || parsedJson['role'] == 'Bendesa') {
-                                        var response = await http.get(Uri.parse("http://192.168.18.10:8000/api/autentikasi/login/status/prajuru_desa_adat/${tempPendudukId}"));
+                                        var response = await http.get(Uri.parse("http://192.168.122.149:8000/api/autentikasi/login/status/prajuru_desa_adat/${tempPendudukId}"));
                                         if(response.statusCode == 200) {
                                           var jsonDataPrajuru = response.body;
                                           var parsedJsonPrajuru = json.decode(jsonDataPrajuru);
@@ -430,21 +432,29 @@ class _loginPageState extends State<loginPage> {
                                           }
                                         }
                                       }else if(parsedJson['role'] == "Krama") {
-                                        setState(() {
-                                          loginPage.pendudukId = parsedJson['penduduk_id'];
-                                          loginPage.userEmail = parsedJson['email'];
-                                          loginPage.desaId = parsedJson['desa_adat_id'];
-                                          loginPage.userId = parsedJson['user_id'];
-                                          loginPage.role = parsedJson['role'];
-                                        });
-                                        final SharedPreferences sharedpref = await SharedPreferences.getInstance();
-                                        sharedpref.setInt('userId', loginPage.userId);
-                                        sharedpref.setInt('pendudukId', loginPage.pendudukId);
-                                        sharedpref.setString('desaId', loginPage.desaId);
-                                        sharedpref.setString('email', loginPage.userEmail);
-                                        sharedpref.setString('role', loginPage.role);
-                                        sharedpref.setString('status', 'login');
-                                        Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
+                                        var response = await http.get(Uri.parse("http://192.168.18.10:8000/api/krama/mipil/${tempPendudukId}"));
+                                        if(response.statusCode == 200) {
+                                          var jsonDataKrama = response.body;
+                                          var parsedJsonKrama = json.decode(jsonDataKrama);
+                                          setState(() {
+                                            loginPage.pendudukId = parsedJson['penduduk_id'];
+                                            loginPage.userEmail = parsedJson['email'];
+                                            loginPage.desaId = parsedJson['desa_adat_id'];
+                                            loginPage.userId = parsedJson['user_id'];
+                                            loginPage.role = parsedJson['role'];
+                                            loginPage.kramaId = parsedJsonKrama['krama_mipil_id'];
+                                          });
+                                          final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+                                          final SharedPreferences sharedprefkrama = await SharedPreferences.getInstance();
+                                          sharedpref.setInt('userId', loginPage.userId);
+                                          sharedpref.setInt('pendudukId', loginPage.pendudukId);
+                                          sharedpref.setString('desaId', loginPage.desaId);
+                                          sharedpref.setString('email', loginPage.userEmail);
+                                          sharedpref.setString('role', loginPage.role);
+                                          sharedpref.setString('status', 'login');
+                                          sharedprefkrama.setInt('kramaId', loginPage.kramaId);
+                                          Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
+                                        }
                                       }
                                     }else{
                                       setState(() {
@@ -679,7 +689,7 @@ class _loginPageState extends State<loginPage> {
 
 Route createRoutePendudukDashboard() {
   return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => const dashboardPenduduk(),
+      pageBuilder: (context, animation, secondaryAnimation) => const bottomNavigationBarPenduduk(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;

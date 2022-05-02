@@ -29,7 +29,7 @@ class _editLogoDesaAdminState extends State<editLogoDesaAdmin> {
   }
 
   Future uploadImage() async {
-    final uri = Uri.parse("http://192.168.239.149/siraja-api-skripsi/upload-logo-desa.php");
+    final uri = Uri.parse("http://192.168.122.149/siraja-api-skripsi/upload-logo-desa.php");
     var request = http.MultipartRequest('POST', uri);
     request.fields['desa_id'] = loginPage.desaId.toString();
     var pic = await http.MultipartFile.fromPath("image", image.path);

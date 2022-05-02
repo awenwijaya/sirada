@@ -18,7 +18,7 @@ class suratKeluarNonPanitiaAdmin extends StatefulWidget {
 }
 
 class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin> {
-  var apiURLShowListSuratKeluar = "http://192.168.239.149:8000/api/data/admin/surat/non-panitia/${loginPage.desaId}";
+  var apiURLShowListSuratKeluar = "http://192.168.122.149:8000/api/data/admin/surat/non-panitia/${loginPage.desaId}";
   var selectedIdSuratKeluar;
 
   //loading status
@@ -299,7 +299,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                             )
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.6,
+                            height: MediaQuery.of(context).size.height * 0.678,
                             decoration: BoxDecoration(
                               border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
                             ),

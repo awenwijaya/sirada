@@ -28,8 +28,8 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
   String selectedMasaBerakhirValue;
   DateTime masaMulai;
   DateTime masaBerakhir;
-  var apiURLShowDetailPrajuruBanjarAdat = "http://192.168.239.149:8000/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruBanjarAdat = "http://192.168.239.149:8000/api/admin/prajuru/banjar_adat/edit/up";
+  var apiURLShowDetailPrajuruBanjarAdat = "http://192.168.122.149:8000/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruBanjarAdat = "http://192.168.122.149:8000/api/admin/prajuru/banjar_adat/edit/up";
   var selectedIdPenduduk;
   bool Loading = false;
   final controllerEmail = TextEditingController();

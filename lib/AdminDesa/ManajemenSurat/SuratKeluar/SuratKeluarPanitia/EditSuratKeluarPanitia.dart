@@ -24,14 +24,14 @@ class editSuratKeluarPanitiaAdmin extends StatefulWidget {
 }
 
 class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmin> {
-  var apiURLShowDataEditSuratKeluar = "http://192.168.239.149:8000/api/admin/surat/keluar/panitia/edit/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
-  var apiURLShowDataNomorSuratKeluarEdit = "http://192.168.239.149:8000/api/admin/surat/keluar/panitia/edit/nomor_surat/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
-  var apiURLShowKodeSurat = "http://192.168.239.149:8000/api/data/admin/surat/panitia/kode/${loginPage.desaId}";
-  var apiURLShowPanitia = "http://192.168.239.149:8000/api/data/admin/surat/keluar/panitia/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
-  var apiURLShowPrajuru = "http://192.168.239.149:8000/api/data/admin/surat/keluar/prajuru/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
-  var apiURLGetDataBendesaAdat = "http://192.168.239.149:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
-  var apiURLGetDataPenduduk = "http://192.168.239.149:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
-  var apiURLSimpanEditSuratKeluar = "http://192.168.239.149:8000/api/admin/surat/keluar/panitia/edit/panitia/up";
+  var apiURLShowDataEditSuratKeluar = "http://192.168.122.149:8000/api/admin/surat/keluar/panitia/edit/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
+  var apiURLShowDataNomorSuratKeluarEdit = "http://192.168.122.149:8000/api/admin/surat/keluar/panitia/edit/nomor_surat/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
+  var apiURLShowKodeSurat = "http://192.168.122.149:8000/api/data/admin/surat/panitia/kode/${loginPage.desaId}";
+  var apiURLShowPanitia = "http://192.168.122.149:8000/api/data/admin/surat/keluar/panitia/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
+  var apiURLShowPrajuru = "http://192.168.122.149:8000/api/data/admin/surat/keluar/prajuru/${editSuratKeluarPanitiaAdmin.idSuratKeluar}";
+  var apiURLGetDataBendesaAdat = "http://192.168.122.149:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "http://192.168.122.149:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLSimpanEditSuratKeluar = "http://192.168.122.149:8000/api/admin/surat/keluar/panitia/edit/panitia/up";
 
   //loading indicator
   bool LoadingData = true;
@@ -1343,7 +1343,7 @@ class _editSuratKeluarPanitiaAdminState extends State<editSuratKeluarPanitiaAdmi
                         });
                         var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
                         var length = await file.length();
-                        var url = Uri.parse('http://192.168.239.149/siraja-api-skripsi-new/upload-file-lampiran.php');
+                        var url = Uri.parse('http://192.168.122.149/siraja-api-skripsi-new/upload-file-lampiran.php');
                         var request = http.MultipartRequest("POST", url);
                         var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
                         request.files.add(multipartFile);

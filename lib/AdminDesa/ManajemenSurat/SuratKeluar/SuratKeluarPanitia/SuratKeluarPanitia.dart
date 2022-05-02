@@ -38,7 +38,7 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
   bool availableDataSedangDiproses = false;
   bool availableDataDikonfirmasi = false;
   bool availableDataDibatalkan = false;
-  var apiURLShowListSuratKeluar = "http://192.168.239.149:8000/api/data/admin/surat/panitia/${loginPage.desaId}";
+  var apiURLShowListSuratKeluar = "http://192.168.122.149:8000/api/data/admin/surat/panitia/${loginPage.desaId}";
   var selectedIdSuratKeluar;
 
   Future refreshListSuratKeluarMenunggu() async {
@@ -287,7 +287,7 @@ class _suratKeluarPanitiaAdminState extends State<suratKeluarPanitiaAdmin> {
                             )
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.6,
+                            height: MediaQuery.of(context).size.height * 0.678,
                             decoration: BoxDecoration(
                               border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
                             ),

@@ -37,7 +37,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
   var kramaMipilID;
   var pegawaiID;
   var selectedRole;
-  var apiURLUpDataPrajuruDesaAdat = "http://192.168.239.149:8000/api/admin/prajuru/desa_adat/up";
+  var apiURLUpDataPrajuruDesaAdat = "http://192.168.122.149:8000/api/admin/prajuru/desa_adat/up";
   bool Loading = false;
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
 
@@ -719,7 +719,7 @@ class pilihDataPegawai extends StatefulWidget {
 }
 
 class _pilihDataPegawaiState extends State<pilihDataPegawai> {
-  var apiURLGetDataPenduduk = "http://192.168.239.149:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "http://192.168.122.149:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
   var nikPegawai = [];
   var namaPegawai = [];
   var kramaMipilID = [];

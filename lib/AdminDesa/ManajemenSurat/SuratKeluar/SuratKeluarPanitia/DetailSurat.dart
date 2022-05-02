@@ -33,9 +33,9 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   var kontakWa2;
   var logoDesa;
   var timKegiatan;
-  var apiURLShowDetailSuratKeluar = "http://192.168.239.149:8000/api/data/surat/keluar/view/${detailSuratKeluarPanitia.suratKeluarId}";
-  var apiURLShowPanitia = "http://192.168.239.149:8000/api/data/admin/surat/keluar/panitia/${detailSuratKeluarPanitia.suratKeluarId}";
-  var apiURLShowPrajuru = "http://192.168.239.149:8000/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarPanitia.suratKeluarId}";
+  var apiURLShowDetailSuratKeluar = "http://192.168.122.149:8000/api/data/surat/keluar/view/${detailSuratKeluarPanitia.suratKeluarId}";
+  var apiURLShowPanitia = "http://192.168.122.149:8000/api/data/admin/surat/keluar/panitia/${detailSuratKeluarPanitia.suratKeluarId}";
+  var apiURLShowPrajuru = "http://192.168.122.149:8000/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarPanitia.suratKeluarId}";
   var namaKetua;
   var namaSekretaris;
   var namaBendesa;

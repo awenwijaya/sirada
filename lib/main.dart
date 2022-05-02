@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
+import 'package:surat/Penduduk/BottomNavigationBar.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/WelcomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,18 +42,23 @@ class _splashScreenState extends State<splashScreen> {
   var role;
   var pendudukId;
   var prajuruId;
+  var kramaId;
 
   Future getUserInfo() async {
     final SharedPreferences sharedpref = await SharedPreferences.getInstance();
     final SharedPreferences sharedprefadmin = await SharedPreferences.getInstance();
+    final SharedPreferences sharedprefkrama = await SharedPreferences.getInstance();
     userEmail = sharedpref.getString('email');
     userId = sharedpref.getInt('userId');
     desaId = sharedpref.getString('desaId');
     pendudukId = sharedpref.getInt('pendudukId');
     userStatus = sharedpref.getString('status');
     role = sharedpref.getString('role');
+    kramaId = sharedprefkrama.getInt('kramaId');
     if(role == "Admin" || role == "Bendesa") {
       prajuruId = sharedprefadmin.getInt('prajuru_adat_id');
+    }else if(role == "Krama") {
+      kramaId = sharedprefkrama.getInt('kramaId');
     }
     setState(() {
       status = userStatus;
@@ -73,12 +79,13 @@ class _splashScreenState extends State<splashScreen> {
             loginPage.pendudukId = pendudukId;
             loginPage.prajuruId = prajuruId;
           });
-        }else{
+        }else if(role == "Krama"){
           setState(() {
             loginPage.userId = userId;
             loginPage.userEmail = userEmail;
             loginPage.desaId = desaId;
             loginPage.pendudukId = pendudukId;
+            loginPage.kramaId = kramaId;
           });
         }
         if(role == "Krama") {
@@ -93,7 +100,7 @@ class _splashScreenState extends State<splashScreen> {
   }
 
   void navigatorPendudukHomePage() {
-    Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardPenduduk(), type: PageTransitionType.fade), (route) => false);
+    Navigator.pushAndRemoveUntil(context, PageTransition(child: bottomNavigationBarPenduduk(), type: PageTransitionType.fade), (route) => false);
   }
 
   void navigatorWelcomeScreen() {

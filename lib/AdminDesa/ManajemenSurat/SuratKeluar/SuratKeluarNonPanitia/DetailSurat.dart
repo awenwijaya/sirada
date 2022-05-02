@@ -38,8 +38,8 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   var lampiran;
   var tumusan;
   bool LoadData = true;
-  var apiURLShowDetailSuratKeluar = "http://192.168.239.149:8000/api/data/surat/keluar/view/${detailSuratKeluarNonPanitia.suratKeluarId}";
-  var apiURLShowPrajuru = "http://192.168.239.149:8000/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarNonPanitia.suratKeluarId}";
+  var apiURLShowDetailSuratKeluar = "http://192.168.122.149:8000/api/data/surat/keluar/view/${detailSuratKeluarNonPanitia.suratKeluarId}";
+  var apiURLShowPrajuru = "http://192.168.122.149:8000/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarNonPanitia.suratKeluarId}";
 
   getSuratKeluarInfo() async {
     http.get(Uri.parse(apiURLShowDetailSuratKeluar),

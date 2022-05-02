@@ -35,10 +35,10 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
   bool availableDataAktif = false;
   var selectedIdPrajuruBanjarAdat;
   var selectedIdPenduduk;
-  var apiURLShowListPrajuruBanjarAdatAktif = "http://192.168.239.149:8000/api/data/staff/prajuru_banjar_adat/aktif/${loginPage.desaId}";
-  var apiURLShowListPrajuruBanjarAdatTidakAktif =  "http://192.168.239.149:8000/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
-  var apiURLDeletePrajuruBanjarAdat = "http://192.168.239.149:8000/api/admin/prajuru/banjar_adat/delete";
-  var apiURLSetPrajuruBanjarTidakAktif = "http://192.168.239.149:8000/api/admin/prajuru/banjar_adat/set_tidak_aktif";
+  var apiURLShowListPrajuruBanjarAdatAktif = "http://192.168.122.149:8000/api/data/staff/prajuru_banjar_adat/aktif/${loginPage.desaId}";
+  var apiURLShowListPrajuruBanjarAdatTidakAktif =  "http://192.168.122.149:8000/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
+  var apiURLDeletePrajuruBanjarAdat = "http://192.168.122.149:8000/api/admin/prajuru/banjar_adat/delete";
+  var apiURLSetPrajuruBanjarTidakAktif = "http://192.168.122.149:8000/api/admin/prajuru/banjar_adat/set_tidak_aktif";
 
   Future refreshListPrajuruBanjarAdatAktif() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruBanjarAdatAktif);
