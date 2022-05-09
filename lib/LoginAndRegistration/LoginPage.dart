@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -39,6 +40,19 @@ class _loginPageState extends State<loginPage> {
   var tempRole;
   var tempDesaId;
   var tempUserId;
+  String token;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseMessaging.instance.getToken().then((value) {
+      setState(() {
+        token = value;
+      });
+      print(token);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

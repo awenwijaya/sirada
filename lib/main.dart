@@ -5,14 +5,31 @@ import 'package:surat/AdminDesa/Dashboard.dart';
 import 'package:surat/Penduduk/BottomNavigationBar.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/WelcomeScreen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel',
+  'High Importance Notifications',
+  importance: Importance.high,
+  playSound: true
+);
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+Future<void> main() async {
   runApp(new MaterialApp(
     home: new splashScreen()
   ));
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
@@ -20,9 +37,22 @@ void main() {
       statusBarIconBrightness: Brightness.dark
     )
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true
+  );
+  await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+                                      ?.createNotificationChannel(channel);
   SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]
   );
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('A bg message just showed up: ${message.messageId}');
 }
 
 class splashScreen extends StatefulWidget {
@@ -112,7 +142,7 @@ class _splashScreenState extends State<splashScreen> {
   }
 
   @override
-  void initState() {
+  initState(){
     // TODO: implement initState
     super.initState();
     loadWidget();

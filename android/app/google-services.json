@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "930766606135",
+    "project_id": "sirada-skripsi",
+    "storage_bucket": "sirada-skripsi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930766606135:android:edaab80c0901e9b06d94b2",
+        "android_client_info": {
+          "package_name": "com.tugasakhir.surat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930766606135-59g7ph048luv9gi8ahanmcf22g1fleh1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBigAdyBB1uAtrXxnbnFdHupGLxXSK2n8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930766606135-59g7ph048luv9gi8ahanmcf22g1fleh1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "930766606135-nnu2tfbtgor31br0qcrkkof4noi8knpd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tugasakhir.surat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
