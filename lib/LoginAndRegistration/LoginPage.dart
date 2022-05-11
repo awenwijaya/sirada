@@ -21,6 +21,7 @@ class loginPage extends StatefulWidget {
   static var role;
   static var prajuruId;
   static var kramaId;
+  static String token;
 
   const loginPage({Key key}) : super(key: key);
 
@@ -31,6 +32,7 @@ class loginPage extends StatefulWidget {
 class _loginPageState extends State<loginPage> {
   var apiURLLogin = "http://192.168.18.10:8000/api/autentikasi/login";
   var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
+  var apiURLUploadFCMToken = "http://192.168.18.10:8000/api/autentikasi/login/token";
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   bool Loading = false;
@@ -40,7 +42,6 @@ class _loginPageState extends State<loginPage> {
   var tempRole;
   var tempDesaId;
   var tempUserId;
-  String token;
 
   @override
   void initState() {
@@ -48,9 +49,9 @@ class _loginPageState extends State<loginPage> {
     super.initState();
     FirebaseMessaging.instance.getToken().then((value) {
       setState(() {
-        token = value;
+        loginPage.token = value;
       });
-      print(token);
+      print(loginPage.token);
     });
   }
 
@@ -279,9 +280,6 @@ class _loginPageState extends State<loginPage> {
                                   }
                                 );
                               } else if(data == 200) {
-                                setState((){
-                                  Loading = false;
-                                });
                                 var jsonData = response.body;
                                 var parsedJson = json.decode(jsonData);
                                 setState(() {
@@ -358,24 +356,37 @@ class _loginPageState extends State<loginPage> {
                                           var jsonDataPrajuru = response.body;
                                           var parsedJsonPrajuru = json.decode(jsonDataPrajuru);
                                           if(parsedJsonPrajuru['status_prajuru_desa_adat'] == "aktif") {
-                                            setState(() {
-                                              loginPage.pendudukId = tempPendudukId;
-                                              loginPage.userEmail = tempEmail;
-                                              loginPage.desaId = tempDesaId;
-                                              loginPage.userId = tempUserId;
-                                              loginPage.role = tempRole;
-                                              loginPage.prajuruId = parsedJsonPrajuru['prajuru_desa_adat_id'];
+                                            var bodyToken = jsonEncode({
+                                              "user_id" : tempUserId,
+                                              "token" : loginPage.token
                                             });
-                                            final SharedPreferences sharedpref = await SharedPreferences.getInstance();
-                                            final SharedPreferences sharedprefadmin = await SharedPreferences.getInstance();
-                                            sharedpref.setInt('userId', loginPage.userId);
-                                            sharedpref.setInt('pendudukId', loginPage.pendudukId);
-                                            sharedpref.setString('desaId', loginPage.desaId);
-                                            sharedpref.setString('email', loginPage.userEmail);
-                                            sharedpref.setString('role', loginPage.role);
-                                            sharedpref.setString('status', 'login');
-                                            sharedprefadmin.setInt('prajuru_adat_id', loginPage.prajuruId);
-                                            Navigator.of(context).pushAndRemoveUntil(createRouteAdminDesaDashboard(), (route) => false);
+                                            http.post(Uri.parse(apiURLUploadFCMToken),
+                                              headers: {"Content-Type" : "application/json"},
+                                              body: bodyToken
+                                            ).then((http.Response response) async {
+                                              var data = response.statusCode;
+                                              if(data == 200) {
+                                                setState(() {
+                                                  loginPage.pendudukId = tempPendudukId;
+                                                  loginPage.userEmail = tempEmail;
+                                                  loginPage.desaId = tempDesaId;
+                                                  loginPage.userId = tempUserId;
+                                                  loginPage.role = tempRole;
+                                                  loginPage.prajuruId = parsedJsonPrajuru['prajuru_desa_adat_id'];
+                                                  Loading = false;
+                                                });
+                                                final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+                                                final SharedPreferences sharedprefadmin = await SharedPreferences.getInstance();
+                                                sharedpref.setInt('userId', loginPage.userId);
+                                                sharedpref.setInt('pendudukId', loginPage.pendudukId);
+                                                sharedpref.setString('desaId', loginPage.desaId);
+                                                sharedpref.setString('email', loginPage.userEmail);
+                                                sharedpref.setString('role', loginPage.role);
+                                                sharedpref.setString('status', 'login');
+                                                sharedprefadmin.setInt('prajuru_adat_id', loginPage.prajuruId);
+                                                Navigator.of(context).pushAndRemoveUntil(createRouteAdminDesaDashboard(), (route) => false);
+                                              }
+                                            });
                                           }else{
                                             setState(() {
                                               Loading = false;
@@ -453,6 +464,7 @@ class _loginPageState extends State<loginPage> {
                                           setState(() {
                                             loginPage.pendudukId = parsedJson['penduduk_id'];
                                             loginPage.userEmail = parsedJson['email'];
+                                            print(loginPage.userEmail);
                                             loginPage.desaId = parsedJson['desa_adat_id'];
                                             loginPage.userId = parsedJson['user_id'];
                                             loginPage.role = parsedJson['role'];
@@ -462,12 +474,27 @@ class _loginPageState extends State<loginPage> {
                                           final SharedPreferences sharedprefkrama = await SharedPreferences.getInstance();
                                           sharedpref.setInt('userId', loginPage.userId);
                                           sharedpref.setInt('pendudukId', loginPage.pendudukId);
-                                          sharedpref.setString('desaId', loginPage.desaId);
+                                          sharedpref.setInt('desaId', loginPage.desaId);
                                           sharedpref.setString('email', loginPage.userEmail);
                                           sharedpref.setString('role', loginPage.role);
                                           sharedpref.setString('status', 'login');
                                           sharedprefkrama.setInt('kramaId', loginPage.kramaId);
-                                          Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
+                                          var bodyFCM = jsonEncode({
+                                            "user_id" : loginPage.userId,
+                                            "token" : loginPage.token
+                                          });
+                                          http.post(Uri.parse(apiURLUploadFCMToken),
+                                            headers: {"Content-Type" : "application/json"},
+                                            body: bodyFCM
+                                          ).then((http.Response response) {
+                                            var data = response.statusCode;
+                                            if(data == 200) {
+                                              setState(() {
+                                                Loading = false;
+                                              });
+                                              Navigator.of(context).pushAndRemoveUntil(createRoutePendudukDashboard(), (route) => false);
+                                            }
+                                          });
                                         }
                                       }
                                     }else{

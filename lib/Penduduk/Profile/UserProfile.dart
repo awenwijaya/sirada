@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/Penduduk/Profile/EditProfile.dart';
+import 'package:surat/WelcomeScreen.dart';
 
 class kramaProfile extends StatefulWidget {
   static var namaPenduduk;
@@ -32,6 +34,7 @@ class kramaProfile extends StatefulWidget {
 
 class _kramaProfileState extends State<kramaProfile> {
   var apiURLUserProfile = "http://192.168.18.10:8000/api/data/userdata/${loginPage.userId}";
+  var apiURLRemoveFCMToken = "http://192.168.18.10:8000/api/autentikasi/login/token/remove";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLUserProfile),
@@ -329,7 +332,89 @@ class _kramaProfileState extends State<kramaProfile> {
               ),
               Container(
                   child: FlatButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(40.0))
+                              ),
+                              content: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Image.asset(
+                                        'images/logout.png',
+                                        height: 50,
+                                        width: 50,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text("Logout?", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor("#025393")
+                                      ), textAlign: TextAlign.center),
+                                      margin: EdgeInsets.only(top: 10)
+                                    ),
+                                    Container(
+                                      child: Text("Apakah Anda yakin ingin logout?", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                      ), textAlign: TextAlign.center),
+                                      margin: EdgeInsets.only(top: 10)
+                                    )
+                                  ],
+                                )
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () async {
+                                    var body = jsonEncode({
+                                      "token" : loginPage.token
+                                    });
+                                    http.post(Uri.parse(apiURLRemoveFCMToken),
+                                      headers: {"Content-Type" : "application/json"},
+                                      body: body
+                                    ).then((http.Response response) async {
+                                      var data = response.statusCode;
+                                      if(data == 200) {
+                                        final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+                                        sharedpref.remove('userId');
+                                        sharedpref.remove('pendudukId');
+                                        sharedpref.remove('desaId');
+                                        sharedpref.remove('email');
+                                        sharedpref.remove('role');
+                                        sharedpref.remove('status');
+                                        Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => welcomeScreen()), (route) => false);
+                                      }
+                                    });
+                                  },
+                                  child: Text("Ya", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontWeight: FontWeight.w700,
+                                    color: HexColor("#025393")
+                                  ))
+                                ),
+                                TextButton(
+                                  onPressed: (){Navigator.of(context).pop();},
+                                  child: Text("Tidak", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontWeight: FontWeight.w700,
+                                    color: HexColor("#025393")
+                                  )),
+                                )
+                              ],
+                            );
+                          }
+                        );
+                      },
                       child: Text("Logout", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14,

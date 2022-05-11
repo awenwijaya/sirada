@@ -7,6 +7,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:surat/Penduduk/DetailDesa/DetailDesa.dart';
+import 'package:surat/Penduduk/SuratPengumuman/SuratPengumuman.dart';
 import 'package:surat/Penduduk/ValidasiSuratPanitia/ValidasiSurat.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -25,6 +26,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
   var nama;
   var namaDesa;
   var suratPengumuman = ['Test Pengumuman I', 'Test Pengumuman II'];
+  var isiPengumuman = ['Ini hanyalah test 1', 'Ini hanyalah test 2'];
   bool availableSuratPanitia = false;
   bool LoadingSuratPanitia = true;
   var countSuratPanitia;
@@ -342,7 +344,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                       fontSize: 14,
                       fontWeight: FontWeight.bold
                     )),
-                    margin: EdgeInsets.only(top: 5, left: 15)
+                    margin: EdgeInsets.only(top: 10, left: 15)
                   ),
                   Container(
                     child: Column(
@@ -353,37 +355,74 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                                 return Builder(
                                     builder: (BuildContext context) {
                                       return Container(
-                                          width: MediaQuery.of(context).size.width,
-                                          margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(Radius.circular(20)),
-                                              color: HexColor("#025393"),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    color: Colors.grey.withOpacity(0.2),
-                                                    spreadRadius: 5,
-                                                    blurRadius: 7,
-                                                    offset: Offset(0,3)
-                                                )
-                                              ]
-                                          ),
-                                          child: GestureDetector(
-                                            child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Container(
-                                                      child: Text(i, style: TextStyle(
+                                        width: MediaQuery.of(context).size.width,
+                                        margin: EdgeInsets.symmetric(horizontal: 5),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                                          color: HexColor("#025393"),
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: (){},
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: <Widget>[
+                                              Container(
+                                                child: Expanded(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                                                      color: Colors.white,
+                                                    ),
+                                                    child: Center(
+                                                      child: Image.asset(
+                                                        'images/email.png',
+                                                        height: 50,
+                                                        width: 50,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                child: Expanded(
+                                                  flex: 3,
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Container(
+                                                        child: Text(i, style: TextStyle(
                                                           fontFamily: "Poppins",
                                                           fontSize: 16,
                                                           fontWeight: FontWeight.w700,
                                                           color: Colors.white
-                                                      ), textAlign: TextAlign.center)
-                                                  ),
-                                                ]
-                                            ),
-                                            onTap: (){},
-                                          )
+                                                        )),
+                                                        margin: EdgeInsets.only(top: 15),
+                                                      ),
+                                                      Container(
+                                                        child: Text(isiPengumuman[current], style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 14,
+                                                            color: Colors.white
+                                                        )),
+                                                        margin: EdgeInsets.only(top: 10),
+                                                      ),
+                                                      Container(
+                                                        child: Text("Tekan untuk informasi lebih lanjut", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: Colors.white
+                                                        )),
+                                                        margin: EdgeInsets.only(top: 20),
+                                                      )
+                                                    ],
+                                                  )
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
                                       );
                                     }
                                 );
@@ -412,6 +451,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                               color: HexColor("#025393")
                             )),
                             onPressed: (){
+                              Navigator.push(context, CupertinoPageRoute(builder: (context) => suratPengumumanKrama()));
                             },
                           ),
                         )

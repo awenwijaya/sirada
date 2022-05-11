@@ -441,10 +441,16 @@ class _detailDesaKramaState extends State<detailDesaKrama> {
                                                 child: webDesa == null ? Text("Website belum diinputkan", style: TextStyle(
                                                     fontFamily: "Poppins",
                                                     fontSize: 14
-                                                )) : Text(webDesa.toString(), style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14
-                                                ))
+                                                )) : SizedBox(
+                                                  width: MediaQuery.of(context).size.width * 0.7,
+                                                  child: Text(webDesa.toString(), style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14
+                                                  ), maxLines: 1,
+                                                    softWrap: false,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                )
                                             )
                                           ],
                                         ),
