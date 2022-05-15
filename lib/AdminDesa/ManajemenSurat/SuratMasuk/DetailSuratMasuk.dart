@@ -17,7 +17,7 @@ class detailSuratMasukAdmin extends StatefulWidget {
 }
 
 class _detailSuratMasukAdminState extends State<detailSuratMasukAdmin> {
-  var apiURLShowDetailSuratMasuk = "http://192.168.122.149:8000/api/data/admin/surat/keluar/view/${detailSuratMasukAdmin.idSurat}";
+  var apiURLShowDetailSuratMasuk = "http://192.168.18.10:8000/api/data/admin/surat/keluar/view/${detailSuratMasukAdmin.idSurat}";
   var kodeSurat;
   var parindikan;
   var tanggalSurat;

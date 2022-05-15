@@ -6,6 +6,7 @@ import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
+import 'package:surat/AdminDesa/ManajemenStaff/ViewSKPrajuru.dart';
 
 class detailPrajuruDesaAdatAdmin extends StatefulWidget {
   static var prajuruDesaAdatId;
@@ -30,7 +31,7 @@ class _detailPrajuruDesaAdatAdminState extends State<detailPrajuruDesaAdatAdmin>
   var alamat;
   var profesi;
 
-  var apiURLDetailPrajuruDesaAdat = "http://192.168.122.149:8000/api/data/staff/prajuru_desa_adat/detail/${detailPrajuruDesaAdatAdmin.prajuruDesaAdatId}";
+  var apiURLDetailPrajuruDesaAdat = "http://192.168.138.149:8000/api/data/staff/prajuru_desa_adat/detail/${detailPrajuruDesaAdatAdmin.prajuruDesaAdatId}";
 
   getPrajuruDesaAdatInfo() async {
     http.get(Uri.parse(apiURLDetailPrajuruDesaAdat),
@@ -54,6 +55,7 @@ class _detailPrajuruDesaAdatAdminState extends State<detailPrajuruDesaAdatAdmin>
           alamat = parsedJson['alamat'];
           profesi = parsedJson['profesi'];
           jenisKelamin = parsedJson['jenis_kelamin'];
+          viewSKPrajuru.namaFile = parsedJson['sk_prajuru'];
         });
       }
     });
@@ -334,7 +336,27 @@ class _detailPrajuruDesaAdatAdminState extends State<detailPrajuruDesaAdatAdmin>
                   borderRadius: BorderRadius.circular(25)
                 ),
                 padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
-                margin: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 20)
+                margin: EdgeInsets.only(left: 20, right: 20, top: 10)
+              ),
+              Container(
+                child: FlatButton(
+                  onPressed: (){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context) => viewSKPrajuru()));
+                  },
+                  child: Text("Lihat SK Prajuru", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("#025393")
+                  )),
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    side: BorderSide(color: HexColor("#025393"), width: 2)
+                  ),
+                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                ),
+                margin: EdgeInsets.only(top: 10, bottom: 10)
               )
             ]
           )

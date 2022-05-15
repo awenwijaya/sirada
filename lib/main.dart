@@ -95,6 +95,15 @@ class _splashScreenState extends State<splashScreen> {
     });
   }
 
+  getFirebaseFCMToken() async {
+    FirebaseMessaging.instance.getToken().then((value) {
+      setState(() {
+        loginPage.token = value;
+      });
+      print(loginPage.token);
+    });
+  }
+
   loadWidget() async {
     var duration = Duration(seconds: pageDelay);
     getUserInfo().whenComplete(() async{
@@ -146,6 +155,7 @@ class _splashScreenState extends State<splashScreen> {
     // TODO: implement initState
     super.initState();
     loadWidget();
+    getFirebaseFCMToken();
   }
 
   @override

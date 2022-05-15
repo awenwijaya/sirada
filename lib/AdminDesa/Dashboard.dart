@@ -27,7 +27,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var profilePicture;
   var namaAdmin;
   var namaDesa;
-  var apiURLGetDataUser = "http://192.168.122.149:8000/api/data/userdata/${loginPage.pendudukId}";
+  var apiURLGetDataUser = "http://192.168.138.149:8000/api/data/userdata/${loginPage.userId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -193,7 +193,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: NetworkImage('http://192.168.122.149/siraja-api-skripsi-new/${profilePicture}'),
+                            image: NetworkImage('http://192.168.138.149/siraja-api-skripsi-new/${profilePicture}'),
                             fit: BoxFit.fill,
                           )
                         ),
@@ -257,7 +257,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  image: NetworkImage('http://192.168.122.149/siraja-api-skripsi/${dashboardAdminDesa.logoDesa}')
+                                  image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${dashboardAdminDesa.logoDesa}')
                               )
                           ),
                         ),
@@ -338,7 +338,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                               ),
                             ),
                             Container(
-                              child: Text("Data Prajuru Desa Adat", style: TextStyle(
+                              child: Text("Prajuru Desa Adat", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700
@@ -379,7 +379,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                               ),
                             ),
                             Container(
-                              child: Text("Data Prajuru Banjar Adat", style: TextStyle(
+                              child: Text("Prajuru Banjar Adat", style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700

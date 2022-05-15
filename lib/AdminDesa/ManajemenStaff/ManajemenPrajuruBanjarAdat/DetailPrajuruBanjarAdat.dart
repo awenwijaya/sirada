@@ -31,7 +31,7 @@ class _detailPrajuruBanjarAdatAdminState extends State<detailPrajuruBanjarAdatAd
   var alamat;
   var profesi;
 
-  var apiURLDetailPrajuruBanjarAdat = "http://192.168.122.149:8000/api/data/staff/prajuru_banjar_adat/detail/${detailPrajuruBanjarAdatAdmin.prajuruBanjarAdatId}";
+  var apiURLDetailPrajuruBanjarAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/detail/${detailPrajuruBanjarAdatAdmin.prajuruBanjarAdatId}";
 
   getPrajuruBanjarAdatInfo() async {
     http.get(Uri.parse(apiURLDetailPrajuruBanjarAdat),

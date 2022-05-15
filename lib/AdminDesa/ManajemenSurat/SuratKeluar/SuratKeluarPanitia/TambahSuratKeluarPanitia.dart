@@ -28,11 +28,11 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   var selectedSekretarisPanitia;
   var selectedBendesaAdat;
   var selectedKodeSurat;
-  var apiURLShowKodeSurat = "http://192.168.122.149:8000/api/data/admin/surat/panitia/kode/${loginPage.desaId}";
-  var apiURLShowKomponenNomorSurat = "http://192.168.122.149:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
-  var apiURLGetDataBendesaAdat = "http://192.168.122.149:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
-  var apiURLUpSuratKeluarPanitia = "http://192.168.122.149:8000/api/admin/surat/keluar/panitia/up";
-  var apiURLGetDataPenduduk = "http://192.168.122.149:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLShowKodeSurat = "http://192.168.18.10:8000/api/data/admin/surat/panitia/kode/${loginPage.desaId}";
+  var apiURLShowKomponenNomorSurat = "http://192.168.18.10:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
+  var apiURLGetDataBendesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLUpSuratKeluarPanitia = "http://192.168.18.10:8000/api/admin/surat/keluar/panitia/up";
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
   List bendesaList = List();
   List kodeSuratList = List();
   List pendudukList = List();

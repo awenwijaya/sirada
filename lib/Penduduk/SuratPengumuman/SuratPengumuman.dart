@@ -27,6 +27,31 @@ class _suratPengumumanKramaState extends State<suratPengumumanKrama> {
             color: Colors.white,
             onPressed: (){Navigator.of(context).pop();},
           ),
+        ),
+        body: Container(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                child: Icon(
+                  CupertinoIcons.mail_solid,
+                  size: 50,
+                  color: Colors.black26
+                )
+              ),
+              Container(
+                child: Text("Tidak ada Pengumuman", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black26
+                ), textAlign: TextAlign.center),
+                margin: EdgeInsets.only(top: 10),
+                padding: EdgeInsets.symmetric(horizontal: 30)
+              ),
+            ],
+          )
         )
       )
     );

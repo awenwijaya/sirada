@@ -24,13 +24,13 @@ class editSuratKeluarNonPanitia extends StatefulWidget {
 }
 
 class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
-  var apiURLShowDataEditSuratKeluar = "http://192.168.122.149:8000/api/admin/surat/keluar/panitia/edit/${editSuratKeluarNonPanitia.idSuratKeluar}";
-  var apiURLShowDataNomorSuratKeluarEdit = "http://192.168.122.149:8000/api/admin/surat/keluar/panitia/edit/nomor_surat/${editSuratKeluarNonPanitia.idSuratKeluar}";
-  var apiURLShowKodeSurat = "http://192.168.122.149:8000/api/data/admin/surat/non-panitia/kode/${loginPage.desaId}";
-  var apiURLGetDataBendesaAdat = "http://192.168.122.149:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
-  var apiURLGetDataPenyarikan = "http://192.168.122.149:8000/api/data/staff/prajuru/desa_adat/penyarikan/${loginPage.desaId}";
-  var apiURLShowPrajuru = "http://192.168.122.149:8000/api/data/admin/surat/keluar/prajuru/${editSuratKeluarNonPanitia.idSuratKeluar}";
-  var apiURLSimpanEditSuratKeluar = "http://192.168.122.149:8000/api/admin/surat/keluar/non-panitia/edit/up";
+  var apiURLShowDataEditSuratKeluar = "http://192.168.18.10:8000/api/admin/surat/keluar/panitia/edit/${editSuratKeluarNonPanitia.idSuratKeluar}";
+  var apiURLShowDataNomorSuratKeluarEdit = "http://192.168.18.10:8000/api/admin/surat/keluar/panitia/edit/nomor_surat/${editSuratKeluarNonPanitia.idSuratKeluar}";
+  var apiURLShowKodeSurat = "http://192.168.18.10:8000/api/data/admin/surat/non-panitia/kode/${loginPage.desaId}";
+  var apiURLGetDataBendesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLGetDataPenyarikan = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/penyarikan/${loginPage.desaId}";
+  var apiURLShowPrajuru = "http://192.168.18.10:8000/api/data/admin/surat/keluar/prajuru/${editSuratKeluarNonPanitia.idSuratKeluar}";
+  var apiURLSimpanEditSuratKeluar = "http://192.168.18.10:8000/api/admin/surat/keluar/non-panitia/edit/up";
 
   //kodesurat
   var nomorUrutSurat;

@@ -39,7 +39,7 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
   var banjarID;
   var namaBanjar;
   var selectedRole;
-  var apiURLUpDataPrajuruBanjarAdat = "http://192.168.122.149:8000/api/admin/prajuru/banjar_adat/up";
+  var apiURLUpDataPrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/up";
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
 
   void selectionChanged(DateRangePickerSelectionChangedArgs args) {

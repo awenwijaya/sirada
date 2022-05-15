@@ -25,8 +25,8 @@ class tambahSuratMasukAdmin extends StatefulWidget {
 class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
   var selectedKodeSurat;
   List kodeSuratList = List();
-  var apiURLGetKodeSurat = "http://192.168.122.149:8000/api/data/nomorsurat/${loginPage.desaId}";
-  var apiURLSimpanSurat = "http://192.168.122.149:8000/api/admin/surat/masuk/up";
+  var apiURLGetKodeSurat = "http://192.168.18.10:8000/api/data/nomorsurat/${loginPage.desaId}";
+  var apiURLSimpanSurat = "http://192.168.18.10:8000/api/admin/surat/masuk/up";
   bool availableKodeSurat = false;
   bool KodeSuratLoading = true;
   bool Loading = false;
@@ -149,7 +149,7 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
-                ), textAlign: TextAlign.center),
+                )),
                 margin: EdgeInsets.only(top: 30, left: 20),
               ),
               Container(

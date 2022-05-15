@@ -21,7 +21,7 @@ class detailDesaAdmin extends StatefulWidget {
 }
 
 class _detailDesaAdminState extends State<detailDesaAdmin> {
-  var apiURLGetDetailDesaById = "http://192.168.122.149:8000/api/data/userdata/desa/${loginPage.desaId}";
+  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/userdata/desa/${loginPage.desaId}";
   var namaDesa;
   var status;
   var kodePos;
@@ -48,7 +48,7 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
           emailDesa = parsedJson['desadat_email'];
           webDesa = parsedJson['desadat_web'];
           luasDesa = parsedJson['desadat_luas'].toString();
-          namaKecamatan = parsedJson['nama_kecamatan'];
+          namaKecamatan = parsedJson['name'];
           detailDesaAdmin.kontakWADesa1 = parsedJson['desadat_wa_kontak_1'];
           detailDesaAdmin.kontakWADesa2 = parsedJson['desadat_wa_kontak_2'];
           sejarahDesaAdmin.sejarahDesa = parsedJson['desadat_sejarah'];
