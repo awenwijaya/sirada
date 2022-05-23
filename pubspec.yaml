@@ -56,6 +56,8 @@ dependencies:
   firebase_messaging: ^11.2.7
   flutter_local_notifications: ^9.5.1
   firebase_messaging_platform_interface: ^3.2.0
+  syncfusion_flutter_calendar: ^19.4.56
+  image_cropper: ^2.0.3
 
 dev_dependencies:
   flutter_test:

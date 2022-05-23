@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
+import 'package:surat/KramaPanitia/Dashboard.dart';
 import 'package:surat/Penduduk/BottomNavigationBar.dart';
 import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/WelcomeScreen.dart';
@@ -96,6 +97,9 @@ class _splashScreenState extends State<splashScreen> {
   }
 
   getFirebaseFCMToken() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     FirebaseMessaging.instance.getToken().then((value) {
       setState(() {
         loginPage.token = value;
@@ -129,8 +133,10 @@ class _splashScreenState extends State<splashScreen> {
         }
         if(role == "Krama") {
           return Timer(duration, navigatorPendudukHomePage);
-        }else if(role == "Admin" || role == "Bendesa") {
+        }else if(role == "Admin" || role == "Bendesa" || role == "Penyarikan") {
           return Timer(duration, navigatorAdminDesaHomePage);
+        }else if(role == "Panitia") {
+          return Timer(duration, navigatorKramaPanitiaHomePage);
         }
       }else{
         return Timer(duration, navigatorWelcomeScreen);
@@ -148,6 +154,10 @@ class _splashScreenState extends State<splashScreen> {
 
   void navigatorAdminDesaHomePage() {
     Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardAdminDesa(), type: PageTransitionType.fade), (route) => false);
+  }
+
+  void navigatorKramaPanitiaHomePage() {
+    Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardKramaPanitia(), type: PageTransitionType.fade), (route) => false);
   }
 
   @override

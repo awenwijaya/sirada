@@ -20,10 +20,6 @@
         "source": "C:\\Users\\awenh\\Documents\\College Stuffs\\Bahan Skripsi\\app\\siraja-skripsi\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\awenh\\Documents\\College Stuffs\\Bahan Skripsi\\app\\siraja-skripsi\\build\\app\\intermediates\\res\\merged\\debug\\drawable_launch_background.xml.flat",
-        "source": "C:\\Users\\awenh\\Documents\\College Stuffs\\Bahan Skripsi\\app\\siraja-skripsi\\android\\app\\src\\main\\res\\drawable\\launch_background.xml"
-    },
-    {
         "merged": "C:\\Users\\awenh\\Documents\\College Stuffs\\Bahan Skripsi\\app\\siraja-skripsi\\build\\app\\intermediates\\res\\merged\\debug\\drawable-v21_launch_background.xml.flat",
         "source": "C:\\Users\\awenh\\Documents\\College Stuffs\\Bahan Skripsi\\app\\siraja-skripsi\\android\\app\\src\\main\\res\\drawable-v21\\launch_background.xml"
     }

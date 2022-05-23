@@ -5,7 +5,7 @@
     android:versionName="1.0.0" >
 
     <uses-sdk
-        android:minSdkVersion="19"
+        android:minSdkVersion="28"
         android:targetSdkVersion="31" />
     <!--
          Flutter needs it to communicate with the running application
@@ -67,12 +67,14 @@
     <application
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:debuggable="true"
+        android:extractNativeLibs="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="SiRaja"
+        android:label="SiRada"
         android:usesCleartextTraffic="true" >
         <activity
             android:name="com.tugasakhir.surat.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
@@ -104,6 +106,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--
  Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java

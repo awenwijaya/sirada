@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,10 @@ import 'package:http/http.dart' as http;
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:path/path.dart';
+import 'package:async/async.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:surat/main.dart';
 
 class tambahPrajuruBanjarAdatAdmin extends StatefulWidget {
   const tambahPrajuruBanjarAdatAdmin({Key key}) : super(key: key);
@@ -18,7 +23,7 @@ class tambahPrajuruBanjarAdatAdmin extends StatefulWidget {
 }
 
 class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAdmin> {
-  List<String> jabatan = ['kelihan banjar','penyarikan','patengen','pangliman'];
+  List<String> jabatan = ['kelihan_adat','pangliman_banjar','penyarikan_banjar','patengen_banjar'];
   List<String> status = ["Aktif", "Tidak Aktif"];
   String selectedStatus;
   String statusValue;
@@ -39,11 +44,46 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
   var banjarID;
   var namaBanjar;
   var selectedRole;
-  var apiURLUpDataPrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/up";
+  var apiURLUpDataPrajuruBanjarAdat = "http://172.16.58.41:8000/api/admin/prajuru/banjar_adat/up";
+  var apiURLUploadFileSKPrajuru = "http://172.16.58.41/sirada-api/upload-file-sk-prajuru.php";
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
+  File file;
+  String namaFile;
+  String filePath;
+
+  Future pilihBerkas() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+      allowMultiple: false
+    );
+    if(result!=null) {
+      setState(() {
+        filePath = result.files.first.path;
+        namaFile = result.files.first.name;
+        file = File(result.files.single.path);
+      });
+      print(filePath);
+      print(namaFile);
+    }
+  }
+
+  void showNotification() {
+    flutterLocalNotificationsPlugin.show(0, "Prajuru Desa Adat berhasil ditambahkan!", "Disarankan untuk mengubah password dari akun Prajuru untuk menghindari terjadinya penyalahgunaan akun", NotificationDetails(
+        android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            importance: Importance.high,
+            color: Colors.blue,
+            playSound: true,
+            icon: '@mipmap/ic_launcher'
+        )
+    ));
+  }
 
   void selectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
+      selectMasaBerakhir = args.value.endDate;
       selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
       selectedMasaMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
       selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
@@ -469,9 +509,58 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
                             margin: EdgeInsets.only(top: 10)
                         ),
                         Container(
+                          alignment: Alignment.topLeft,
+                          child: Text("5. File SK", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700
+                          )),
+                          margin: EdgeInsets.only(top: 30, left: 20)
+                        ),
+                        Container(
+                          child: Text("Silahkan unggah File SK (PDF) dari Prajuru yang akan Anda tambahkan.", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                          )),
+                          padding: EdgeInsets.only(left: 30, right: 30),
+                          margin: EdgeInsets.only(top: 10),
+                        ),
+                        Container(
+                          child: namaFile == null ? Text("Berkas lampiran belum terpilih", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700
+                          )) : Text("Nama berkas: ${namaFile}", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700
+                          )),
+                          margin: EdgeInsets.only(top: 10),
+                        ),
+                        Container(
                           child: FlatButton(
                             onPressed: (){
-                              if(selectedStatus == null || selectedJabatan == null || selectedMasaBerakhirValue == null || selectedMasaMulaiValue == null || kramaMipilID == null || banjarID == null || controllerEmail.text == "") {
+                              pilihBerkas();
+                            },
+                            child: Text("Unggah Berkas", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white
+                            )),
+                            color: HexColor("#025393"),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              side: BorderSide(color: HexColor("#025393"), width: 2)
+                            ),
+                            padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
+                          ),
+                          margin: EdgeInsets.only(top: 20),
+                        ),
+                        Container(
+                          child: FlatButton(
+                            onPressed: () async {
+                              if(selectedStatus == null || selectedJabatan == null || selectedMasaBerakhirValue == null || selectedMasaMulaiValue == null || kramaMipilID == null || banjarID == null || controllerEmail.text == "" || file == null) {
                                 showDialog(
                                     context: context,
                                     barrierDismissible: false,
@@ -525,257 +614,434 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
                                       );
                                     }
                                 );
-                              }else if(selectedStatus == "Aktif") { //status pegawai aktif
-                                setState(() {
-                                  Loading = true;
-                                  statusValue = "1";
-                                });
-                                if(selectedJabatan == "kelihan banjar") {
-                                  setState(() {
-                                    selectedRole = "Kelihan Banjar";
-                                  });
+                              }else{
+                                if(selectedStatus == "Aktif") {
+                                  if(selectMasaBerakhir.isBefore(sekarang)) {
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                          ),
+                                          content: Container(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Container(
+                                                  child: Image.asset(
+                                                    'images/alert.png',
+                                                    height: 50,
+                                                    width: 50,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  child: Text("Masa jabatan tidak valid", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: HexColor("#025393")
+                                                  ), textAlign: TextAlign.center),
+                                                  margin: EdgeInsets.only(top: 10)
+                                                ),
+                                                Container(
+                                                  child: Text("Masa jabatan tidak valid. Silahkan masukkan tanggal masa berakhir Prajuru di hari setelah tanggal sekarang", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14
+                                                  ), textAlign: TextAlign.center),
+                                                  margin: EdgeInsets.only(top: 10)
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text("OK", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontWeight: FontWeight.w700,
+                                                color: HexColor("#025393")
+                                              )),
+                                              onPressed: (){Navigator.of(context).pop();},
+                                            )
+                                          ],
+                                        );
+                                      }
+                                    );
+                                  }else{
+                                    setState(() {
+                                      statusValue = "aktif";
+                                      Loading = true;
+                                    });
+                                    var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
+                                    var length = await file.length();
+                                    var url = Uri.parse(apiURLUploadFileSKPrajuru);
+                                    var request = http.MultipartRequest("POST", url);
+                                    var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
+                                    request.files.add(multipartFile);
+                                    var response = await request.send();
+                                    print(response.statusCode);
+                                    if(response.statusCode == 200) {
+                                      var body = jsonEncode({
+                                        "krama_mipil_id" : kramaMipilID,
+                                        "banjar_id" : banjarID,
+                                        "status" : statusValue,
+                                        "jabatan" : selectedJabatan,
+                                        "tanggal_mulai_menjabat" : selectedMasaMulaiValue,
+                                        "tanggal_akhir_menjabat" : selectedMasaBerakhirValue,
+                                        "email" : controllerEmail.text,
+                                        "password" : controllerPassword.text,
+                                        "desa_adat_id" : loginPage.desaId,
+                                        "penduduk_id" : pegawaiID,
+                                        "role" : "Admin",
+                                        "sk_prajuru" : namaFile
+                                      });
+                                      http.post(Uri.parse(apiURLUpDataPrajuruBanjarAdat),
+                                          headers: {"Content-Type" : "application/json"},
+                                          body: body
+                                      ).then((http.Response response) {
+                                        var responseValue = response.statusCode;
+                                        print(responseValue);
+                                        if(responseValue == 501) {
+                                          setState(() {
+                                            Loading = false;
+                                          });
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                                    ),
+                                                    content: Container(
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            Container(
+                                                                child: Image.asset(
+                                                                  'images/alert.png',
+                                                                  height: 50,
+                                                                  width: 50,
+                                                                )
+                                                            ),
+                                                            Container(
+                                                                child: Text("Prajuru telah terdaftar", style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 16,
+                                                                    fontWeight: FontWeight.w700,
+                                                                    color: HexColor("#025393")
+                                                                ), textAlign: TextAlign.center),
+                                                                margin: EdgeInsets.only(top: 10)
+                                                            ),
+                                                            Container(
+                                                                child: Text("Prajuru telah terdaftar sebelumnya. Silahkan masukkan data prajuru yang lain dengan cara menekan tombol Pilih Data Prajuru dan coba lagi", style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 14
+                                                                ), textAlign: TextAlign.center),
+                                                                margin: EdgeInsets.only(top: 10)
+                                                            )
+                                                          ],
+                                                        )
+                                                    ),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        child: Text("OK", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontWeight: FontWeight.w700,
+                                                            color: HexColor("#025393")
+                                                        )),
+                                                        onPressed: (){Navigator.of(context).pop();},
+                                                      )
+                                                    ]
+                                                );
+                                              }
+                                          );
+                                        }else if(responseValue == 502) {
+                                          setState(() {
+                                            Loading = false;
+                                          });
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                                    ),
+                                                    content: Container(
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            Container(
+                                                                child: Image.asset(
+                                                                  'images/alert.png',
+                                                                  height: 50,
+                                                                  width: 50,
+                                                                )
+                                                            ),
+                                                            Container(
+                                                                child: Text("Email telah terdaftar", style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 16,
+                                                                    fontWeight: FontWeight.w700,
+                                                                    color: HexColor("#025393")
+                                                                ), textAlign: TextAlign.center),
+                                                                margin: EdgeInsets.only(top: 10)
+                                                            ),
+                                                            Container(
+                                                                child: Text("Email yang Anda masukkan sudah terdaftar sebelumnya. Silahkan masukkan email yang lain dan coba lagi", style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 14
+                                                                ), textAlign: TextAlign.center),
+                                                                margin: EdgeInsets.only(top: 10)
+                                                            )
+                                                          ],
+                                                        )
+                                                    ),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        child: Text("OK", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontWeight: FontWeight.w700,
+                                                            color: HexColor("#025393")
+                                                        )),
+                                                        onPressed: (){Navigator.of(context).pop();},
+                                                      )
+                                                    ]
+                                                );
+                                              }
+                                          );
+                                        }else if(responseValue == 200){
+                                          setState(() {
+                                            Loading = false;
+                                          });
+                                          showNotification();
+                                          Navigator.of(context).pop(true);
+                                        }
+                                      });
+                                    }
+                                  }
                                 }else{
-                                  setState(() {
-                                    selectedRole = "Admin";
-                                  });
+                                  if(sekarang.isBefore(selectMasaBerakhir)) {
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                          ),
+                                          content: Container(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Container(
+                                                  child: Image.asset(
+                                                    'images/alert.png',
+                                                    height: 50,
+                                                    width: 50,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  child: Text("Masa jabatan tidak valid", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: HexColor("#025393")
+                                                  ), textAlign: TextAlign.center),
+                                                  margin: EdgeInsets.only(top: 10)
+                                                ),
+                                                Container(
+                                                    child: Text("Masa jabatan tidak valid. Silahkan masukkan tanggal masa berakhir Prajuru di hari sebelum tanggal sekarang", style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 14
+                                                    ), textAlign: TextAlign.center),
+                                                    margin: EdgeInsets.only(top: 10)
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text("OK", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontWeight: FontWeight.w700,
+                                                color: HexColor("#025393")
+                                              )),
+                                              onPressed: (){Navigator.of(context).pop();},
+                                            )
+                                          ],
+                                        );
+                                      }
+                                    );
+                                  }else{
+                                    setState(() {
+                                      statusValue = "tidak aktif";
+                                      Loading = true;
+                                    });
+                                    var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
+                                    var length = await file.length();
+                                    var url = Uri.parse(apiURLUploadFileSKPrajuru);
+                                    var request = http.MultipartRequest("POST", url);
+                                    var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
+                                    request.files.add(multipartFile);
+                                    var response = await request.send();
+                                    print(response.statusCode);
+                                    if(response.statusCode == 200) {
+                                      var body = jsonEncode({
+                                        "krama_mipil_id" : kramaMipilID,
+                                        "banjar_id" : banjarID,
+                                        "status" : statusValue,
+                                        "jabatan" : selectedJabatan,
+                                        "tanggal_mulai_menjabat" : selectedMasaMulaiValue,
+                                        "tanggal_akhir_menjabat" : selectedMasaBerakhirValue,
+                                        "email" : controllerEmail.text,
+                                        "password" : controllerPassword.text,
+                                        "desa_adat_id" : loginPage.desaId,
+                                        "penduduk_id" : pegawaiID,
+                                        "role" : "Admin",
+                                        "sk_prajuru" : namaFile
+                                      });
+                                      http.post(Uri.parse(apiURLUpDataPrajuruBanjarAdat),
+                                          headers: {"Content-Type" : "application/json"},
+                                          body: body
+                                      ).then((http.Response response) {
+                                        var responseValue = response.statusCode;
+                                        print(responseValue);
+                                        if(responseValue == 501) {
+                                          setState(() {
+                                            Loading = false;
+                                          });
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                                    ),
+                                                    content: Container(
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            Container(
+                                                                child: Image.asset(
+                                                                  'images/alert.png',
+                                                                  height: 50,
+                                                                  width: 50,
+                                                                )
+                                                            ),
+                                                            Container(
+                                                                child: Text("Prajuru telah terdaftar", style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 16,
+                                                                    fontWeight: FontWeight.w700,
+                                                                    color: HexColor("#025393")
+                                                                ), textAlign: TextAlign.center),
+                                                                margin: EdgeInsets.only(top: 10)
+                                                            ),
+                                                            Container(
+                                                                child: Text("Prajuru telah terdaftar sebelumnya. Silahkan masukkan data prajuru yang lain dengan cara menekan tombol Pilih Data Prajuru dan coba lagi", style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 14
+                                                                ), textAlign: TextAlign.center),
+                                                                margin: EdgeInsets.only(top: 10)
+                                                            )
+                                                          ],
+                                                        )
+                                                    ),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        child: Text("OK", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontWeight: FontWeight.w700,
+                                                            color: HexColor("#025393")
+                                                        )),
+                                                        onPressed: (){Navigator.of(context).pop();},
+                                                      )
+                                                    ]
+                                                );
+                                              }
+                                          );
+                                        }else if(responseValue == 502) {
+                                          setState(() {
+                                            Loading = false;
+                                          });
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                                    ),
+                                                    content: Container(
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: <Widget>[
+                                                            Container(
+                                                                child: Image.asset(
+                                                                  'images/alert.png',
+                                                                  height: 50,
+                                                                  width: 50,
+                                                                )
+                                                            ),
+                                                            Container(
+                                                                child: Text("Email telah terdaftar", style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 16,
+                                                                    fontWeight: FontWeight.w700,
+                                                                    color: HexColor("#025393")
+                                                                ), textAlign: TextAlign.center),
+                                                                margin: EdgeInsets.only(top: 10)
+                                                            ),
+                                                            Container(
+                                                                child: Text("Email yang Anda masukkan sudah terdaftar sebelumnya. Silahkan masukkan email yang lain dan coba lagi", style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 14
+                                                                ), textAlign: TextAlign.center),
+                                                                margin: EdgeInsets.only(top: 10)
+                                                            )
+                                                          ],
+                                                        )
+                                                    ),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        child: Text("OK", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontWeight: FontWeight.w700,
+                                                            color: HexColor("#025393")
+                                                        )),
+                                                        onPressed: (){Navigator.of(context).pop();},
+                                                      )
+                                                    ]
+                                                );
+                                              }
+                                          );
+                                        }else if(responseValue == 200){
+                                          setState(() {
+                                            Loading = false;
+                                          });
+                                          showNotification();
+                                          Navigator.of(context).pop(true);
+                                        }
+                                      });
+                                    }
+                                  }
                                 }
-                                var body = jsonEncode({
-                                  "krama_mipil_id" : kramaMipilID,
-                                  "banjar_id" : banjarID,
-                                  "status" : statusValue,
-                                  "jabatan" : selectedJabatan,
-                                  "tanggal_mulai_menjabat" : selectedMasaMulaiValue,
-                                  "tanggal_akhir_menjabat" : selectedMasaBerakhirValue,
-                                  "email" : controllerEmail.text,
-                                  "password" : controllerPassword.text,
-                                  "desa_adat_id" : loginPage.desaId,
-                                  "penduduk_id" : pegawaiID,
-                                  "role" : selectedRole
-                                });
-                                http.post(Uri.parse(apiURLUpDataPrajuruBanjarAdat),
-                                    headers: {"Content-Type" : "application/json"},
-                                    body: body
-                                ).then((http.Response response) {
-                                  var responseValue = response.statusCode;
-                                  if(responseValue == 501) {
-                                    setState(() {
-                                      Loading = false;
-                                    });
-                                    showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                              ),
-                                              content: Container(
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Container(
-                                                          child: Image.asset(
-                                                            'images/alert.png',
-                                                            height: 50,
-                                                            width: 50,
-                                                          )
-                                                      ),
-                                                      Container(
-                                                          child: Text("Prajuru telah terdaftar", style: TextStyle(
-                                                              fontFamily: "Poppins",
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.w700,
-                                                              color: HexColor("#025393")
-                                                          ), textAlign: TextAlign.center),
-                                                          margin: EdgeInsets.only(top: 10)
-                                                      ),
-                                                      Container(
-                                                          child: Text("Prajuru telah terdaftar sebelumnya. Silahkan masukkan data prajuru yang lain dengan cara menekan tombol Pilih Data Prajuru dan coba lagi", style: TextStyle(
-                                                              fontFamily: "Poppins",
-                                                              fontSize: 14
-                                                          ), textAlign: TextAlign.center),
-                                                          margin: EdgeInsets.only(top: 10)
-                                                      )
-                                                    ],
-                                                  )
-                                              ),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: Text("OK", style: TextStyle(
-                                                      fontFamily: "Poppins",
-                                                      fontWeight: FontWeight.w700,
-                                                      color: HexColor("#025393")
-                                                  )),
-                                                  onPressed: (){Navigator.of(context).pop();},
-                                                )
-                                              ]
-                                          );
-                                        }
-                                    );
-                                  }else if(responseValue == 502) {
-                                    setState(() {
-                                      Loading = false;
-                                    });
-                                    showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                              ),
-                                              content: Container(
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Container(
-                                                          child: Image.asset(
-                                                            'images/alert.png',
-                                                            height: 50,
-                                                            width: 50,
-                                                          )
-                                                      ),
-                                                      Container(
-                                                          child: Text("Email telah terdaftar", style: TextStyle(
-                                                              fontFamily: "Poppins",
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.w700,
-                                                              color: HexColor("#025393")
-                                                          ), textAlign: TextAlign.center),
-                                                          margin: EdgeInsets.only(top: 10)
-                                                      ),
-                                                      Container(
-                                                          child: Text("Email yang Anda masukkan sudah terdaftar sebelumnya. Silahkan masukkan email yang lain dan coba lagi", style: TextStyle(
-                                                              fontFamily: "Poppins",
-                                                              fontSize: 14
-                                                          ), textAlign: TextAlign.center),
-                                                          margin: EdgeInsets.only(top: 10)
-                                                      )
-                                                    ],
-                                                  )
-                                              ),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: Text("OK", style: TextStyle(
-                                                      fontFamily: "Poppins",
-                                                      fontWeight: FontWeight.w700,
-                                                      color: HexColor("#025393")
-                                                  )),
-                                                  onPressed: (){Navigator.of(context).pop();},
-                                                )
-                                              ]
-                                          );
-                                        }
-                                    );
-                                  }else if(responseValue == 200){
-                                    setState(() {
-                                      Loading = false;
-                                    });
-                                    Fluttertoast.showToast(
-                                        msg: "Prajuru Banjar Adat berhasil ditambahkan",
-                                        fontSize: 14,
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER
-                                    );
-                                    Navigator.of(context).pop(true);
-                                  }
-                                });
-                              }else{ //status pegawai tidak aktif
-                                setState(() {
-                                  Loading = true;
-                                  statusValue = "0";
-                                });
-                                var body = jsonEncode({
-                                  "krama_mipil_id" : kramaMipilID,
-                                  "banjar_id" : banjarID,
-                                  "status" : statusValue,
-                                  "jabatan" : selectedJabatan,
-                                  "tanggal_mulai_menjabat" : selectedMasaMulaiValue,
-                                  "tanggal_akhir_menjabat" : selectedMasaBerakhirValue,
-                                  "email" : controllerEmail.text,
-                                  "password" : controllerPassword.text,
-                                  "desa_adat_id" : loginPage.desaId,
-                                  "penduduk_id" : pegawaiID
-                                });
-                                http.post(Uri.parse(apiURLUpDataPrajuruBanjarAdat),
-                                    headers: {"Content-Type" : "application/json"},
-                                    body: body
-                                ).then((http.Response response) {
-                                  var responseValue = response.statusCode;
-                                  if(responseValue == 501) {
-                                    setState(() {
-                                      Loading = false;
-                                    });
-                                    showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                              ),
-                                              content: Container(
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Container(
-                                                          child: Image.asset(
-                                                            'images/alert.png',
-                                                            height: 50,
-                                                            width: 50,
-                                                          )
-                                                      ),
-                                                      Container(
-                                                          child: Text("Prajuru telah terdaftar", style: TextStyle(
-                                                              fontFamily: "Poppins",
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.w700,
-                                                              color: HexColor("#025393")
-                                                          ), textAlign: TextAlign.center),
-                                                          margin: EdgeInsets.only(top: 10)
-                                                      ),
-                                                      Container(
-                                                          child: Text("Prajuru telah terdaftar sebelumnya. Silahkan masukkan data prajuru yang lain dengan cara menekan tombol Pilih Data Prajuru dan coba lagi", style: TextStyle(
-                                                              fontFamily: "Poppins",
-                                                              fontSize: 14
-                                                          ), textAlign: TextAlign.center),
-                                                          margin: EdgeInsets.only(top: 10)
-                                                      )
-                                                    ],
-                                                  )
-                                              ),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: Text("OK", style: TextStyle(
-                                                      fontFamily: "Poppins",
-                                                      fontWeight: FontWeight.w700,
-                                                      color: HexColor("#025393")
-                                                  )),
-                                                  onPressed: (){Navigator.of(context).pop();},
-                                                )
-                                              ]
-                                          );
-                                        }
-                                    );
-                                  }else if(responseValue == 200){
-                                    setState(() {
-                                      Loading = false;
-                                    });
-                                    Fluttertoast.showToast(
-                                        msg: "Prajuru Banjar Adat berhasil ditambahkan",
-                                        fontSize: 14,
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER
-                                    );
-                                    Navigator.of(context).pop(true);
-                                  }
-                                });
                               }
                             },
                             child: Text("Simpan Prajuru", style: TextStyle(
@@ -842,7 +1108,7 @@ class pilihDataPrajuruBanjarAdat extends StatefulWidget {
 }
 
 class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat> {
-  var apiURLGetDataPenduduk = "http://192.168.122.149:8000/api/data/penduduk/banjar_adat/${pilihDataPrajuruBanjarAdat.banjarId}";
+  var apiURLGetDataPenduduk = "http://172.16.58.41:8000/api/data/penduduk/banjar_adat/${pilihDataPrajuruBanjarAdat.banjarId}";
   var nikPegawai = [];
   var namaPegawai = [];
   var kramaMipilID = [];
@@ -987,7 +1253,7 @@ class pilihDataBanjar extends StatefulWidget {
 }
 
 class _pilihDataBanjarState extends State<pilihDataBanjar> {
-  var apiURLGetDataBanjar = "http://192.168.122.149:8000/api/data/banjar/${loginPage.desaId}";
+  var apiURLGetDataBanjar = "http://172.16.58.41:8000/api/data/banjar/${loginPage.desaId}";
   var idBanjar = [];
   var namaBanjar = [];
   bool Loading = true;

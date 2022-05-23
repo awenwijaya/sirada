@@ -23,12 +23,12 @@ class tambahSuratKeluarNonPanitiaAdmin extends StatefulWidget {
 }
 
 class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonPanitiaAdmin> {
-  var apiURLShowKodeSurat = "http://192.168.18.10:8000/api/data/admin/surat/non-panitia/kode/${loginPage.desaId}";
-  var apiURLShowKomponenNomorSurat = "http://192.168.18.10:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
-  var apiURLGetDataBendesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
-  var apiURLGetDataPenyarikan = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/penyarikan/${loginPage.desaId}";
-  var apiURLUpDataSuratNonPanitia = "http://192.168.18.10:8000/api/admin/surat/keluar/non-panitia/up";
-  var apiURLUpFileLampiran = 'http://192.168.18.10/siraja-api-skripsi-new/upload-file-lampiran.php';
+  var apiURLShowKodeSurat = "http://192.168.1.193:8000/api/data/admin/surat/non-panitia/kode/${loginPage.desaId}";
+  var apiURLShowKomponenNomorSurat = "http://192.168.1.193:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
+  var apiURLGetDataBendesaAdat = "http://192.168.1.193:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLGetDataPenyarikan = "http://192.168.1.193:8000/api/data/staff/prajuru/desa_adat/penyarikan/${loginPage.desaId}";
+  var apiURLUpDataSuratNonPanitia = "http://192.168.1.193:8000/api/admin/surat/keluar/non-panitia/up";
+  var apiURLUpFileLampiran = 'http://192.168.1.193/siraja-api-skripsi-new/upload-file-lampiran.php';
   var kodeSurat;
   var selectedKodeSurat;
   var selectedPenyarikan;
@@ -74,6 +74,12 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
   var kodeDesa;
   var bulan;
   var tahun;
+
+  //list file
+  var jumlahFile = 0;
+  var lampiran_file = [];
+  var file_name = [];
+  var file_path = [];
 
   void selectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
@@ -158,6 +164,10 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
     );
     if(result != null) {
       setState(() {
+        this.lampiran_file.add(File(result.files.single.path));
+        this.file_name.add(result.files.first.name);
+        this.file_path.add(result.files.first.path);
+        jumlahFile = jumlahFile + 1;
         filePath = result.files.first.path;
         namaFile = result.files.first.name;
         file = File(result.files.single.path);
@@ -175,6 +185,9 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
     getKodeSurat();
     getBendesaAdat();
     getPenyarikan();
+    this.lampiran_file = [];
+    this.file_name = [];
+    this.file_path = [];
     final DateTime sekarang = DateTime.now();
     tanggalMulai = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
     tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(sekarang.add(Duration(days: 7))).toString();
@@ -1102,16 +1115,79 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                 margin: EdgeInsets.only(top: 10)
               ),
               Container(
-                child: namaFile == null ? Text("Berkas lampiran belum terpilih", style: TextStyle(
+                child: Text("Jumlah Lampiran: ${jumlahFile.toString()}", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
-                  fontWeight: FontWeight.w700
-                )) : Text("Nama berkas: ${namaFile}", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700
+                  fontWeight: FontWeight.bold
                 )),
-                margin: EdgeInsets.only(top: 10)
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(top: 15)
+              ),
+              Container(
+                child: jumlahFile == 0 ? Container() : SizedBox(
+                  height: 170,
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(
+                        color: HexColor("#025393"),
+                        width: 2
+                      )
+                    ),
+                    child: ListView.builder(
+                      itemCount: file_name.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: (){},
+                          child: Container(
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  child: Image.asset(
+                                    'images/paper.png',
+                                    height: 30,
+                                    width: 30,
+                                  )
+                                ),
+                                Container(
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.55,
+                                    child: Text(file_name[index], style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    ), maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: false),
+                                  ),
+                                  margin: EdgeInsets.only(left: 10)
+                                )
+                              ]
+                            ),
+                              margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: Offset(0,3)
+                                    )
+                                  ]
+                              )
+                          )
+                        );
+                      },
+                    )
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 15)
               ),
               Container(
                 child: FlatButton(
@@ -1228,7 +1304,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                       pilihBerkas();
                     }
                   },
-                  child: Text("Unggah Berkas", style: TextStyle(
+                  child: Text("Tambah Berkas", style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,
                     fontWeight: FontWeight.w700,

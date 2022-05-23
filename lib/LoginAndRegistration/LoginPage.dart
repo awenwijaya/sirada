@@ -1,15 +1,15 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
+import 'package:surat/KramaPanitia/Dashboard.dart';
 import 'package:surat/LoginAndRegistration/LupaPassword.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
 import 'package:surat/Penduduk/BottomNavigationBar.dart';
-import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:http/http.dart' as http;
 
@@ -30,9 +30,9 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
-  var apiURLLogin = "http://172.17.224.1:8000/api/autentikasi/login";
-  var apiURLKonfirmasiEmail = "http://172.17.224.1:8000/api/autentikasi/registrasi/konfirmasi_email";
-  var apiURLUploadFCMToken = "http://172.17.224.1:8000/api/autentikasi/login/token";
+  var apiURLLogin = "http://192.168.18.10:8000/api/autentikasi/login";
+  var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
+  var apiURLUploadFCMToken = "http://192.168.18.10:8000/api/autentikasi/login/token";
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   bool Loading = false;
@@ -42,6 +42,7 @@ class _loginPageState extends State<loginPage> {
   var tempRole;
   var tempDesaId;
   var tempUserId;
+  bool connected = false;
 
   @override
   void initState() {
@@ -91,6 +92,7 @@ class _loginPageState extends State<loginPage> {
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                         child: TextField(
+                          keyboardType: TextInputType.emailAddress,
                           controller: controllerEmail,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -98,7 +100,7 @@ class _loginPageState extends State<loginPage> {
                               borderSide: BorderSide(color: HexColor("#025393")),
                             ),
                             hintText: "Email",
-                            prefixIcon: Icon(Icons.email_rounded),
+                            prefixIcon: Icon(Icons.email_rounded)
                           ),
                           style: TextStyle(
                             fontFamily: "Poppins",
@@ -351,7 +353,7 @@ class _loginPageState extends State<loginPage> {
                                   if(parsedJson['is_verified'] == "Verified") {
                                     if(parsedJson['desadat_status_register'] == 'Terdaftar') {
                                       if(parsedJson['role'] == "Admin" || parsedJson['role'] == 'Bendesa' || parsedJson['role'] == 'Penyarikan') {
-                                        var response = await http.get(Uri.parse("http://172.17.224.1:8000/api/autentikasi/login/status/prajuru_desa_adat/${tempPendudukId}"));
+                                        var response = await http.get(Uri.parse("http://192.168.18.10:8000/api/autentikasi/login/status/prajuru_desa_adat/${tempPendudukId}"));
                                         if(response.statusCode == 200) {
                                           var jsonDataPrajuru = response.body;
                                           var parsedJsonPrajuru = json.decode(jsonDataPrajuru);
@@ -459,7 +461,7 @@ class _loginPageState extends State<loginPage> {
                                           }
                                         }
                                       }else if(parsedJson['role'] == "Krama") {
-                                        var response = await http.get(Uri.parse("http://172.17.224.1:8000/api/krama/mipil/${tempPendudukId}"));
+                                        var response = await http.get(Uri.parse("http://192.168.18.10:8000/api/krama/mipil/${tempPendudukId}"));
                                         if(response.statusCode == 200) {
                                           var jsonDataKrama = response.body;
                                           var parsedJsonKrama = json.decode(jsonDataKrama);
@@ -498,6 +500,8 @@ class _loginPageState extends State<loginPage> {
                                             }
                                           });
                                         }
+                                      }else if(parsedJson['role'] == "Panitia") {
+                                        Navigator.of(context).pushAndRemoveUntil(createRouteKramaPanitiaDashboard(), (route) => false);
                                       }
                                     }else{
                                       setState(() {
@@ -567,7 +571,7 @@ class _loginPageState extends State<loginPage> {
                                           }
                                       );
                                     }
-                                  } else {
+                                  }else {
                                     setState(() {
                                       Loading = false;
                                     });
@@ -751,6 +755,24 @@ Route createRoutePendudukDashboard() {
 Route createRouteAdminDesaDashboard() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => const dashboardAdminDesa(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    }
+  );
+}
+
+Route createRouteKramaPanitiaDashboard() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => const dashboardKramaPanitia(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);
       const end = Offset.zero;

@@ -33,8 +33,8 @@ class kramaProfile extends StatefulWidget {
 }
 
 class _kramaProfileState extends State<kramaProfile> {
-  var apiURLUserProfile = "http://192.168.18.10:8000/api/data/userdata/${loginPage.userId}";
-  var apiURLRemoveFCMToken = "http://192.168.18.10:8000/api/autentikasi/login/token/remove";
+  var apiURLUserProfile = "http://192.168.108.149:8000/api/data/userdata/${loginPage.userId}";
+  var apiURLRemoveFCMToken = "http://192.168.108.149:8000/api/autentikasi/login/token/remove";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLUserProfile),
@@ -104,7 +104,7 @@ class _kramaProfileState extends State<kramaProfile> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: NetworkImage('http://192.168.122.149/siraja-api-skripsi-new/${kramaProfile.profilePicture}')
+                      image: NetworkImage('http://192.168.108.149/siraja-api-skripsi-new/${kramaProfile.profilePicture}')
                     )
                   )
                 ),

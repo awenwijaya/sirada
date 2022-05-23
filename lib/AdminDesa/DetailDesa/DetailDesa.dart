@@ -281,49 +281,74 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                            child: Row(
+                            child: Column(
                               children: <Widget>[
                                 Container(
-                                  child: Icon(
-                                    Icons.location_on_outlined,
-                                    color: HexColor("#025393"),
-                                    size: 30,
-                                  ),
-                                  margin: EdgeInsets.only(left: 20),
-                                ),
-                                Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  child: Row(
                                     children: <Widget>[
                                       Container(
-                                        child: Text("Alamat Kantor", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: HexColor("#025393")
-                                        )),
+                                        child: Icon(
+                                          Icons.location_on_outlined,
+                                          color: HexColor("#025393"),
+                                          size: 30,
+                                        ),
+                                        margin: EdgeInsets.only(left: 20),
                                       ),
                                       Container(
-                                          child: alamatKantorDesa == null ? Text("Alamat kantor belum diinputkan", style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14
-                                          )) : Container(
-                                            child: SizedBox(
-                                              width: MediaQuery.of(context).size.width * 0.7,
-                                              child: Text(alamatKantorDesa.toString(), style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 14
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Container(
+                                              child: Text("Alamat Kantor", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("#025393")
                                               )),
                                             ),
-                                          )
-                                      )
+                                            Container(
+                                                child: alamatKantorDesa == null ? Text("Alamat kantor belum diinputkan", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14
+                                                )) : Container(
+                                                  child: SizedBox(
+                                                    width: MediaQuery.of(context).size.width * 0.7,
+                                                    child: Text(alamatKantorDesa.toString(), style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 14
+                                                    )),
+                                                  ),
+                                                )
+                                            )
+                                          ],
+                                        ),
+                                        margin: EdgeInsets.only(left: 15),
+                                      ),
                                     ],
                                   ),
-                                  margin: EdgeInsets.only(left: 15),
                                 ),
-                              ],
-                            ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: alamatKantorDesa == null ? Container() : TextButton(
+                                    onPressed: () async {
+                                      String googleURL = "https://www.google.com/maps/search/?api=1&query=-8.702976508916437,115.23417075502773";
+                                      if(await canLaunch(googleURL)) {
+                                        await launch(googleURL);
+                                      }else{
+                                        throw 'Could not open the map';
+                                      }
+                                    },
+                                    child: Text("Buka di Google Maps", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                    ))
+                                  )
+                                )
+                              ]
+                            )
                           ),
                         ],
                       ),
@@ -451,10 +476,16 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
                                           child: webDesa == null ? Text("Website belum diinputkan", style: TextStyle(
                                               fontFamily: "Poppins",
                                               fontSize: 14
-                                          )) : Text(webDesa.toString(), style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14
-                                          ))
+                                          )) : SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.7,
+                                            child: Text(webDesa.toString(), style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14
+                                            ), maxLines: 1,
+                                              softWrap: false,
+                                              overflow: TextOverflow.ellipsis,
+                                            )
+                                          )
                                       )
                                     ],
                                   ),

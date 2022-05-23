@@ -18,7 +18,7 @@ class registrationPage extends StatefulWidget {
 class _registrationPageState extends State<registrationPage> {
   final controllerNIK = TextEditingController();
   bool Loading = false;
-  var apiURLcekPenduduk = "http://192.168.18.10:8000/api/autentikasi/registrasi/cek_nik";
+  var apiURLcekPenduduk = "http://192.168.218.149:8000/api/autentikasi/registrasi/cek_nik";
 
   @override
   Widget build(BuildContext context) {
@@ -494,8 +494,8 @@ class _enterEmailState extends State<enterEmail> {
   final controllerPassword = TextEditingController();
   final controllerKonfirmasiPassword = TextEditingController();
   bool Loading = false;
-  var apiURLRegistrasiAkun = "http://192.168.18.10:8000/api/autentikasi/registrasi/post";
-  var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
+  var apiURLRegistrasiAkun = "http://192.168.218.149:8000/api/autentikasi/registrasi/post";
+  var apiURLKonfirmasiEmail = "http://192.168.218.149:8000/api/autentikasi/registrasi/konfirmasi_email";
 
   @override
   Widget build(BuildContext context) {

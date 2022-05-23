@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:surat/AdminDesa/Profile/AdminProfile.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
@@ -31,10 +32,21 @@ class _editProfileAdminState extends State<editProfileAdmin> {
   bool Loading = false;
   var apiURLEditProfile = "http://192.168.18.10:8000/api/data/userdata/edit";
 
-  Future choiceImage() async {
-    var pickedImage = await picker.pickImage(source: ImageSource.gallery);
+  Future<void> choiceImage(ImageSource source) async {
+    var pickedImage = await picker.pickImage(source: source);
     setState(() {
       image = File(pickedImage.path);
+    });
+    cropImage();
+  }
+
+  Future<void> cropImage() async {
+    final cropped = await ImageCropper().cropImage(
+        sourcePath: image.path,
+      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1)
+    );
+    setState(() {
+      image = File(cropped.path);
     });
   }
 
@@ -141,7 +153,7 @@ class _editProfileAdminState extends State<editProfileAdmin> {
                 alignment: Alignment.center,
                 child: FlatButton(
                   onPressed: () async {
-                    await choiceImage();
+                    await choiceImage(ImageSource.gallery);
                   },
                   child: Text("Ubah foto profil", style: TextStyle(
                       fontFamily: "Poppins",
