@@ -45,9 +45,15 @@ class _editProfileAdminState extends State<editProfileAdmin> {
         sourcePath: image.path,
       aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1)
     );
-    setState(() {
-      image = File(cropped.path);
-    });
+    if(cropped == null) {
+      setState(() {
+        image = null;
+      });
+    }else{
+      setState(() {
+        image = File(cropped.path);
+      });
+    }
   }
 
   Future uploadImage() async {
