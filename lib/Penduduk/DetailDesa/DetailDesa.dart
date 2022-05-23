@@ -19,7 +19,7 @@ class detailDesaKrama extends StatefulWidget {
 }
 
 class _detailDesaKramaState extends State<detailDesaKrama> {
-  var apiURLGetDetailDesaById = "http://192.168.108.149:8000/api/data/userdata/desa/${loginPage.desaId}";
+  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/userdata/desa/${loginPage.desaId}";
   var namaDesa;
   var status;
   var kodePos;
@@ -463,7 +463,7 @@ class _detailDesaKramaState extends State<detailDesaKrama> {
                                   alignment: Alignment.center,
                                   child: webDesa == null ? Container() : TextButton(
                                     onPressed: () async {
-                                      final url = webDesa;
+                                      final url = "https://$webDesa";
 
                                       if (await canLaunch(url)) {
                                         await launch(url);

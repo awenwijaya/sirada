@@ -33,6 +33,7 @@ class _editProfileKramaState extends State<editProfileKrama> {
   bool Loading = false;
   var apiURLEditProfile = "http://192.168.18.10:8000/api/data/userdata/edit";
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  FToast ftoast;
 
   Future choiceImage() async {
     var pickedImage = await picker.pickImage(source: ImageSource.gallery);
@@ -82,6 +83,8 @@ class _editProfileKramaState extends State<editProfileKrama> {
     controllerUsername = new TextEditingController(text: kramaProfile.usernamePenduduk);
     controllerPassword = new TextEditingController();
     controllerPasswordKonfirmasi = new TextEditingController();
+    ftoast = FToast();
+    ftoast.init(context);
   }
 
 
@@ -458,11 +461,32 @@ class _editProfileKramaState extends State<editProfileKrama> {
                         }
                       });
                     }else {
-                      Fluttertoast.showToast(
-                        msg: "Masih terdapat data yang tidak valid. Silahkan diperiksa kembali",
-                        fontSize: 14,
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER
+                      ftoast.showToast(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.redAccent
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.close),
+                                Container(
+                                    margin: EdgeInsets.only(left: 15),
+                                    child: SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.65,
+                                        child: Text("Masih terdapat data yang kosong atau tidak valid. Silahkan diperiksa kembali", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white
+                                        ))
+                                    )
+                                )
+                              ],
+                            ),
+                          ),
+                          toastDuration: Duration(seconds: 3)
                       );
                     }
                   },

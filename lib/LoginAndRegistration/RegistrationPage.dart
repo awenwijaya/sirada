@@ -20,7 +20,16 @@ class _registrationPageState extends State<registrationPage> {
   final controllerNIK = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool Loading = false;
+  FToast ftoast;
   var apiURLcekPenduduk = "http://192.168.18.10:8000/api/autentikasi/registrasi/cek_nik";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ftoast = FToast();
+    ftoast.init(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -332,11 +341,32 @@ class _registrationPageState extends State<registrationPage> {
                         }
                       });
                     }else{
-                      Fluttertoast.showToast(
-                        msg: "Masih terdapat data yang kosong atau tidak valid. Silahkan diperiksa kembali",
-                        fontSize: 14,
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER
+                      ftoast.showToast(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.redAccent
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.close),
+                                Container(
+                                    margin: EdgeInsets.only(left: 15),
+                                    child: SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.65,
+                                        child: Text("Masih terdapat data yang kosong atau tidak valid. Silahkan diperiksa kembali", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white
+                                        ))
+                                    )
+                                )
+                              ],
+                            ),
+                          ),
+                          toastDuration: Duration(seconds: 3)
                       );
                     }
                   },
@@ -456,10 +486,18 @@ class _enterEmailState extends State<enterEmail> {
   final controllerPassword = TextEditingController();
   final controllerKonfirmasiPassword = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
+  FToast ftoast;
   bool Loading = false;
   var apiURLRegistrasiAkun = "http://192.168.18.10:8000/api/autentikasi/registrasi/post";
   var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ftoast = FToast();
+    ftoast.init(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -763,11 +801,32 @@ class _enterEmailState extends State<enterEmail> {
                                       }
                                     });
                                   }else {
-                                    Fluttertoast.showToast(
-                                        msg: "Masih terdapat data yang kosong atau tidak valid. Silahkan diperiksa kembali",
-                                        fontSize: 14,
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER
+                                    ftoast.showToast(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(25),
+                                              color: Colors.redAccent
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.close),
+                                              Container(
+                                                  margin: EdgeInsets.only(left: 15),
+                                                  child: SizedBox(
+                                                      width: MediaQuery.of(context).size.width * 0.65,
+                                                      child: Text("Masih terdapat data yang kosong atau tidak valid. Silahkan diperiksa kembali", style: TextStyle(
+                                                          fontFamily: "Poppins",
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.w700,
+                                                          color: Colors.white
+                                                      ))
+                                                  )
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        toastDuration: Duration(seconds: 3)
                                     );
                                   }
                                 },

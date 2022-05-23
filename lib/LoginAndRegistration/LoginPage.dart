@@ -43,6 +43,7 @@ class _loginPageState extends State<loginPage> {
   var tempRole;
   var tempDesaId;
   var tempUserId;
+  FToast ftoast;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -55,6 +56,8 @@ class _loginPageState extends State<loginPage> {
       });
       print(loginPage.token);
     });
+    ftoast = FToast();
+    ftoast.init(context);
   }
 
   @override
@@ -631,11 +634,32 @@ class _loginPageState extends State<loginPage> {
                               }
                             });
                           }else {
-                            Fluttertoast.showToast(
-                              msg: "Masih terdapat data yang kosong atau tidak valid. Silahkan diperiksa kembali",
-                              fontSize: 14,
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER
+                            ftoast.showToast(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: Colors.redAccent
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.close),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 15),
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.65,
+                                        child: Text("Masih terdapat data yang kosong atau tidak valid. Silahkan diperiksa kembali", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white
+                                        ))
+                                      )
+                                    )
+                                  ],
+                                ),
+                              ),
+                              toastDuration: Duration(seconds: 3)
                             );
                           }
                          },
