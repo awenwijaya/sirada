@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
@@ -30,12 +32,14 @@ class _editProfileKramaState extends State<editProfileKrama> {
   String selectedPendidikanTerakhir = kramaProfile.pendidikanTerakhir;
   bool Loading = false;
   var apiURLEditProfile = "http://192.168.18.10:8000/api/data/userdata/edit";
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future choiceImage() async {
     var pickedImage = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
       image = File(pickedImage.path);
     });
+    cropImage();
   }
 
   Future uploadImage() async {
@@ -52,6 +56,22 @@ class _editProfileKramaState extends State<editProfileKrama> {
       Navigator.pop(context, true);
     }else{
       print("Gambar gagal diupload");
+    }
+  }
+
+  Future<void> cropImage() async {
+    final cropped = await ImageCropper().cropImage(
+      sourcePath: image.path,
+      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1)
+    );
+    if(cropped == null) {
+      setState(() {
+        image = null;
+      });
+    }else{
+      setState(() {
+        image = File(cropped.path);
+      });
     }
   }
 
@@ -160,178 +180,144 @@ class _editProfileKramaState extends State<editProfileKrama> {
                 margin: EdgeInsets.only(top: 30)
               ),
               Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: Text("Username *", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 14
-                      )),
-                      margin: EdgeInsets.only(top: 30, left: 20)
-                    ),
-                    Container(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                        child: TextField(
-                          controller: controllerUsername,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                              borderSide: BorderSide(color: HexColor("#025393"))
-                            ),
-                            prefixIcon: Icon(Icons.person_outline_rounded),
-                            hintText: "Username"
-                          ),
-                          style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                          )
-                        )
-                      )
-                    )
-                  ]
-                )
-              ),
-              Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Password Baru (kosongkan jika tidak ingin diubah)",
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14
-                        ),
-                      ),
-                      margin: EdgeInsets.only(top: 15, left: 20)
-                    ),
-                    Container(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                        child: TextField(
-                          controller: controllerPassword,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(50.0),
-                                borderSide: BorderSide(color: HexColor("#025393"))
-                            ),
-                            prefixIcon: Icon(Icons.lock),
-                            hintText: "Password",
-                          ),
-                          obscureText: true,
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14
-                          ),
-                        ),
-                      ),
-                    )
-                  ]
-                )
-              ),
-              Container(
+                child: Form(
+                  key: formKey,
                   child: Column(
                       children: <Widget>[
                         Container(
                             alignment: Alignment.topLeft,
-                            child: Text("Password Anda *", style: TextStyle(
+                            child: Text("Username *", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14
                             )),
-                            margin: EdgeInsets.only(top: 15, left: 20)
+                            margin: EdgeInsets.only(top: 30, left: 20)
                         ),
                         Container(
                             child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                                child: TextField(
-                                    controller: controllerPasswordKonfirmasi,
+                                child: TextFormField(
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if(value.isEmpty) {
+                                        return "Username tidak boleh kosong";
+                                      }else {
+                                        return null;
+                                      }
+                                    },
+                                    controller: controllerUsername,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(50.0),
                                             borderSide: BorderSide(color: HexColor("#025393"))
                                         ),
-                                        prefixIcon: Icon(Icons.lock),
-                                        hintText: "Password Anda"
+                                        prefixIcon: Icon(Icons.person_outline_rounded),
+                                        hintText: "Username"
                                     ),
-                                    obscureText: true,
                                     style: TextStyle(
                                         fontFamily: "Poppins",
                                         fontSize: 14
                                     )
                                 )
                             )
-                        )
-                      ]
-                  )
-              ),
-              Container(
-                child: FlatButton(
-                  onPressed: (){
-                    if(controllerUsername.text == "" || controllerPasswordKonfirmasi.text == "") {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
-                              ),
-                              content: Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Container(
-                                      child: Image.asset(
-                                        'images/warning.png',
-                                        height: 50,
-                                        width: 50,
-                                      ),
-                                    ),
-                                    Container(
+                        ),
+                        Container(
+                            child: Column(
+                                children: <Widget>[
+                                  Container(
+                                      alignment: Alignment.topLeft,
                                       child: Text(
-                                        "Masih terdapat data yang kosong",
-                                        style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: HexColor("#025393")
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      margin: EdgeInsets.only(top: 10),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        "Masih terdapat data yang kosong. Silahkan isi semua data yang ditampilkan pada form ini dan silahkan coba lagi",
+                                        "Password Baru (kosongkan jika tidak ingin diubah)",
                                         style: TextStyle(
                                             fontFamily: "Poppins",
                                             fontSize: 14
                                         ),
-                                        textAlign: TextAlign.center,
                                       ),
-                                      margin: EdgeInsets.only(top: 10),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text("OK", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontWeight: FontWeight.w700,
-                                      color: HexColor("#025393")
-                                  )),
-                                  onPressed: (){Navigator.of(context).pop();},
-                                )
-                              ],
-                            );
-                          }
-                      );
-                    }else{
+                                      margin: EdgeInsets.only(top: 15, left: 20)
+                                  ),
+                                  Container(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                      child: TextFormField(
+                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                                        validator: (value) {
+                                          if(value.isNotEmpty && value.length < 8) {
+                                            return "Password tidak boleh kurang dari 8 karakter";
+                                          }else {
+                                            return null;
+                                          }
+                                        },
+                                        controller: controllerPassword,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(50.0),
+                                              borderSide: BorderSide(color: HexColor("#025393"))
+                                          ),
+                                          prefixIcon: Icon(Icons.lock),
+                                          hintText: "Password",
+                                        ),
+                                        obscureText: true,
+                                        style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ]
+                            )
+                        ),
+                        Container(
+                            child: Column(
+                                children: <Widget>[
+                                  Container(
+                                      alignment: Alignment.topLeft,
+                                      child: Text("Password Anda *", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      )),
+                                      margin: EdgeInsets.only(top: 15, left: 20)
+                                  ),
+                                  Container(
+                                      child: Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                          child: TextFormField(
+                                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                                              validator: (value) {
+                                                if(value.isEmpty) {
+                                                  return "Password tidak boleh kosong";
+                                                }else {
+                                                  return null;
+                                                }
+                                              },
+                                              controller: controllerPasswordKonfirmasi,
+                                              decoration: InputDecoration(
+                                                  border: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(50.0),
+                                                      borderSide: BorderSide(color: HexColor("#025393"))
+                                                  ),
+                                                  prefixIcon: Icon(Icons.lock),
+                                                  hintText: "Password Anda"
+                                              ),
+                                              obscureText: true,
+                                              style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14
+                                              )
+                                          )
+                                      )
+                                  )
+                                ]
+                            )
+                        ),
+                      ]
+                  ),
+                )
+              ),
+
+              Container(
+                child: FlatButton(
+                  onPressed: (){
+                    if(formKey.currentState.validate()) {
                       setState(() {
                         Loading = true;
                       });
@@ -471,6 +457,13 @@ class _editProfileKramaState extends State<editProfileKrama> {
                           );
                         }
                       });
+                    }else {
+                      Fluttertoast.showToast(
+                        msg: "Masih terdapat data yang tidak valid. Silahkan diperiksa kembali",
+                        fontSize: 14,
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER
+                      );
                     }
                   },
                   child: Text("Simpan", style: TextStyle(

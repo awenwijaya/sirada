@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/WelcomeScreen.dart';
@@ -17,8 +18,9 @@ class registrationPage extends StatefulWidget {
 
 class _registrationPageState extends State<registrationPage> {
   final controllerNIK = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool Loading = false;
-  var apiURLcekPenduduk = "http://192.168.218.149:8000/api/autentikasi/registrasi/cek_nik";
+  var apiURLcekPenduduk = "http://192.168.18.10:8000/api/autentikasi/registrasi/cek_nik";
 
   @override
   Widget build(BuildContext context) {
@@ -51,45 +53,60 @@ class _registrationPageState extends State<registrationPage> {
                 margin: EdgeInsets.only(top: 45),
               ),
               Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      child: Text(
-                        "Silahkan masukkan NIK yang tertera pada KTP Anda untuk melanjutkan",
-                        style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      margin: EdgeInsets.only(top: 30),
-                    ),
-                    Container(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                        child: TextField(
-                          controller: controllerNIK,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(50.0),
-                                borderSide: BorderSide(color: HexColor("#025393"))
-                            ),
-                            hintText: "Contoh: 3313091704330001",
-                            prefixIcon: Icon(Icons.person_rounded),
-                          ),
-                          keyboardType: TextInputType.number,
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        child: Text(
+                          "Silahkan masukkan NIK yang tertera pada KTP Anda untuk melanjutkan",
                           style: TextStyle(
                               fontFamily: "Poppins",
-                              fontSize: 14
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        margin: EdgeInsets.only(top: 30),
+                      ),
+                      Container(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                          child: TextFormField(
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            validator: (value) {
+                              if(value.isNotEmpty && value.length > 16) {
+                                return 'NIK tidak boleh lebih dari 16 karakter';
+                              }else if(value.isNotEmpty && value.length < 16) {
+                                return 'NIK tidak boleh kurang dari 16 karakter';
+                              }else if(value.isEmpty) {
+                                return 'Data NIK tidak boleh kosong';
+                              }else {
+                                return null;
+                              }
+                            },
+                            controller: controllerNIK,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  borderSide: BorderSide(color: HexColor("#025393"))
+                              ),
+                              hintText: "Contoh: 3313091704330001",
+                              prefixIcon: Icon(Icons.person_rounded),
+                            ),
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            ),
                           ),
                         ),
-                      ),
-                      margin: EdgeInsets.only(top: 30),
-                    )
-                  ],
-                ),
+                        margin: EdgeInsets.only(top: 30),
+                      )
+                    ],
+                  ),
+                )
               ),
               Container(
                 alignment: Alignment.center,
@@ -104,69 +121,7 @@ class _registrationPageState extends State<registrationPage> {
                     ),
                   ),
                   onPressed: (){
-                    if(controllerNIK.text == "") {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(40.0))
-                            ),
-                            content: Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Container(
-                                      child: Image.asset(
-                                        'images/warning.png',
-                                        height: 50,
-                                        width: 50,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        "Data NIK belum diinputkan",
-                                        style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                          color: HexColor("#025393"),
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      margin: EdgeInsets.only(top: 10),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        "Silahkan isi data NIK terlebih dahulu sebelum melanjutkan",
-                                        style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      margin: EdgeInsets.only(top: 10),
-                                    )
-                                  ],
-                                )
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text('OK', style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w700,
-                                  color: HexColor("#025393"),
-                                )),
-                                onPressed: (){Navigator.of(context).pop();},
-                              )
-                            ],
-                          );
-                        }
-                      );
-                    }else{
+                    if(formKey.currentState.validate()) {
                       setState(() {
                         Loading = true;
                       });
@@ -174,8 +129,8 @@ class _registrationPageState extends State<registrationPage> {
                         "nik" : controllerNIK.text
                       });
                       http.post(Uri.parse(apiURLcekPenduduk),
-                        headers: {"Content-Type" : "application/json"},
-                        body: body
+                          headers: {"Content-Type" : "application/json"},
+                          body: body
                       ).then((http.Response response) {
                         var data = response.statusCode;
                         if(data == 500) {
@@ -249,137 +204,144 @@ class _registrationPageState extends State<registrationPage> {
                             var jsonData = response.body;
                             var parsedJson = json.decode(jsonData);
                             showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context){
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                  ),
-                                  content: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Container(
-                                        child: Image.asset(
-                                          'images/person.png',
-                                          height: 50,
-                                          width: 50,
-                                        ),
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          "Konfirmasi Data Anda",
-                                          style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              color: HexColor("#025393")
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        margin: EdgeInsets.only(top: 10),
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          "Silahkan konfirmasi data di bawah ini apakah data ini benar milik Anda",
-                                          style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        margin: EdgeInsets.only(top: 10),
-                                      ),
-                                      Container(
-                                        child: Column(
-                                          children: <Widget>[
-                                            Container(
-                                              child: Text(
-                                                "Nama :",
-                                                style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w700
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                parsedJson['nama'].toString(),
-                                                style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        margin: EdgeInsets.only(top: 20),
-                                      ),
-                                      Container(
-                                        child: Column(
-                                          children: <Widget>[
-                                            Container(
-                                              child: Text(
-                                                "Jenis Kelamin :",
-                                                style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w700
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                parsedJson['jenis_kelamin'].toString(),
-                                                style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        margin: EdgeInsets.only(top: 20),
-                                      ),
-                                    ],
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('Benar', style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontWeight: FontWeight.w700,
-                                          color: HexColor("#025393")
-                                      )),
-                                      onPressed: (){
-                                        setState(() {
-                                          enterEmail.desaId = parsedJson['desa_adat_id'];
-                                          enterEmail.pendudukId = parsedJson['penduduk_id'];
-                                        });
-                                        Navigator.push(context, CupertinoPageRoute(builder: (context) => enterEmail()));
-                                      },
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context){
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
                                     ),
-                                    TextButton(
-                                      child: Text('Tidak', style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontWeight: FontWeight.w700,
-                                          color: HexColor("#025393")
-                                      )),
-                                      onPressed: (){Navigator.of(context).pop();},
-                                    )
-                                  ],
-                                );
-                              }
+                                    content: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Container(
+                                          child: Image.asset(
+                                            'images/person.png',
+                                            height: 50,
+                                            width: 50,
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Text(
+                                            "Konfirmasi Data Anda",
+                                            style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                color: HexColor("#025393")
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          margin: EdgeInsets.only(top: 10),
+                                        ),
+                                        Container(
+                                          child: Text(
+                                            "Silahkan konfirmasi data di bawah ini apakah data ini benar milik Anda",
+                                            style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          margin: EdgeInsets.only(top: 10),
+                                        ),
+                                        Container(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Container(
+                                                child: Text(
+                                                  "Nama :",
+                                                  style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w700
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                  parsedJson['nama'].toString(),
+                                                  style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          margin: EdgeInsets.only(top: 20),
+                                        ),
+                                        Container(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Container(
+                                                child: Text(
+                                                  "Jenis Kelamin :",
+                                                  style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w700
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                  parsedJson['jenis_kelamin'].toString(),
+                                                  style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          margin: EdgeInsets.only(top: 20),
+                                        ),
+                                      ],
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text('Benar', style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontWeight: FontWeight.w700,
+                                            color: HexColor("#025393")
+                                        )),
+                                        onPressed: (){
+                                          setState(() {
+                                            enterEmail.desaId = parsedJson['desa_adat_id'];
+                                            enterEmail.pendudukId = parsedJson['penduduk_id'];
+                                          });
+                                          Navigator.push(context, CupertinoPageRoute(builder: (context) => enterEmail()));
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text('Tidak', style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontWeight: FontWeight.w700,
+                                            color: HexColor("#025393")
+                                        )),
+                                        onPressed: (){Navigator.of(context).pop();},
+                                      )
+                                    ],
+                                  );
+                                }
                             );
                           });
                         }
                       });
+                    }else{
+                      Fluttertoast.showToast(
+                        msg: "Masih terdapat data yang kosong atau tidak valid. Silahkan diperiksa kembali",
+                        fontSize: 14,
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER
+                      );
                     }
                   },
                 ),
-                margin: EdgeInsets.only(top: 20),
+                margin: EdgeInsets.only(top: 15),
               ),
               Container(
                 alignment: Alignment.bottomCenter,
@@ -493,9 +455,11 @@ class _enterEmailState extends State<enterEmail> {
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   final controllerKonfirmasiPassword = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   bool Loading = false;
-  var apiURLRegistrasiAkun = "http://192.168.218.149:8000/api/autentikasi/registrasi/post";
-  var apiURLKonfirmasiEmail = "http://192.168.218.149:8000/api/autentikasi/registrasi/konfirmasi_email";
+  var apiURLRegistrasiAkun = "http://192.168.18.10:8000/api/autentikasi/registrasi/post";
+  var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
 
   @override
   Widget build(BuildContext context) {
@@ -539,366 +503,290 @@ class _enterEmailState extends State<enterEmail> {
                       margin: EdgeInsets.only(top: 50),
                     ),
                     Container(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                              child: TextField(
-                                controller: controllerUsername,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50.0),
-                                      borderSide: BorderSide(color: HexColor("#025393")),
-                                    ),
-                                    hintText: "Username",
-                                    prefixIcon: Icon(Icons.person_rounded)
-                                ),
-                                style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                              child: TextField(
-                                controller: controllerPhoneNumber,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50.0),
-                                      borderSide: BorderSide(color: HexColor("#025393")),
-                                    ),
-                                    hintText: "Nomor Telepon",
-                                    prefixIcon: Icon(Icons.phone)
-                                ),
-                                keyboardType: TextInputType.number,
-                                style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                              child: TextField(
-                                controller: controllerEmail,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(50.0),
-                                    borderSide: BorderSide(color: HexColor("#025393")),
-                                  ),
-                                  hintText: "Email",
-                                  prefixIcon: Icon(Icons.email_rounded)
-                                ),
-                                keyboardType: TextInputType.emailAddress,
-                                style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                              child: TextField(
-                                controller: controllerPassword,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(50.0),
-                                    borderSide: BorderSide(color: HexColor("#025393"))
-                                  ),
-                                  prefixIcon: Icon(Icons.lock_rounded),
-                                  hintText: "Password"
-                                ),
-                                style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14
-                                ),
-                                obscureText: true,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                              child: TextField(
-                                controller: controllerKonfirmasiPassword,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(50.0),
-                                        borderSide: BorderSide(color: HexColor("#025393"))
-                                    ),
-                                    prefixIcon: Icon(Icons.lock_rounded),
-                                    hintText: "Konfirmasi Password"
-                                ),
-                                style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14
-                                ),
-                                obscureText: true,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: FlatButton(
-                              onPressed: (){
-                                if(controllerUsername.text == "" || controllerEmail.text == "" || controllerPhoneNumber.text == "" || controllerPassword.text == "" || controllerKonfirmasiPassword.text == "") {
-                                  showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                        ),
-                                        content: Container(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Container(
-                                                child: Image.asset(
-                                                  'images/warning.png',
-                                                  height: 50,
-                                                  width: 50,
-                                                ),
-                                              ),
-                                              Container(
-                                                child: Text(
-                                                  "Data ada yang belum terisi",
-                                                  style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: HexColor("#025393")
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                margin: EdgeInsets.only(top: 10),
-                                              ),
-                                              Container(
-                                                child: Text(
-                                                  "Isikanlah semua data yang ada sebelum melanjutkan",
-                                                  style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                margin: EdgeInsets.only(top: 10),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: Text('OK', style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontWeight: FontWeight.w700,
-                                              color: HexColor("#025393")
-                                            )),
-                                            onPressed: (){Navigator.of(context).pop();},
-                                          )
-                                        ],
-                                      );
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                child: TextFormField(
+                                  controller: controllerUsername,
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if(value.isEmpty) {
+                                      return 'Username tidak boleh kosong';
+                                    }else {
+                                      return null;
                                     }
-                                  );
-                                }else if(controllerPassword.text != controllerKonfirmasiPassword.text) {
-                                  showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                          ),
-                                          content: Container(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                Container(
-                                                  child: Image.asset(
-                                                    'images/warning.png',
-                                                    height: 50,
-                                                    width: 50,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  child: Text(
-                                                    "Password tidak sesuai",
-                                                    style: TextStyle(
-                                                        fontFamily: "Poppins",
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.w700,
-                                                        color: HexColor("#025393")
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  margin: EdgeInsets.only(top: 10),
-                                                ),
-                                                Container(
-                                                  child: Text(
-                                                    "Silahkan sesuaikan password dengan konfirmasi password dan coba lagi",
-                                                    style: TextStyle(
-                                                        fontFamily: "Poppins",
-                                                        fontSize: 14
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  margin: EdgeInsets.only(top: 10),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text('OK', style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontWeight: FontWeight.w700,
-                                                  color: HexColor("#025393")
-                                              )),
-                                              onPressed: (){Navigator.of(context).pop();},
-                                            )
-                                          ],
-                                        );
-                                      }
-                                  );
-                                }else{
-                                  setState(() {
-                                    Loading = true;
-                                  });
-                                  var body = jsonEncode({
-                                    "username" : controllerUsername.text,
-                                    "nomor_telepon" : controllerPhoneNumber.text,
-                                    "email" : controllerEmail.text,
-                                    "password" : controllerPassword.text,
-                                    "desa_id" : enterEmail.desaId,
-                                    "penduduk_id" : enterEmail.pendudukId
-                                  });
-                                  http.post(Uri.parse(apiURLRegistrasiAkun),
-                                    headers: {"Content-Type" : "application/json"},
-                                    body: body
-                                  ).then((http.Response response) {
-                                    var data = response.statusCode;
-                                    print(response.statusCode.toString());
-                                    if(data == 200) {
-                                      setState(() {
-                                        emailConfirmation.userEmail = controllerEmail.text;
-                                      });
-                                      var body = jsonEncode({
-                                        "email" : controllerEmail.text
-                                      });
-                                      http.post(Uri.parse(apiURLKonfirmasiEmail),
+                                  },
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393")),
+                                      ),
+                                      hintText: "Username",
+                                      prefixIcon: Icon(Icons.person_rounded)
+                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                child: TextField(
+                                  controller: controllerPhoneNumber,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393")),
+                                      ),
+                                      hintText: "Nomor Telepon",
+                                      prefixIcon: Icon(Icons.phone)
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                child: TextFormField(
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if(value.isNotEmpty && RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+                                      return null;
+                                    }else if(value.isEmpty) {
+                                      return "Data tidak boleh kosong";
+                                    }else{
+                                      return "Masukkan email yang valid";
+                                    }
+                                  },
+                                  controller: controllerEmail,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393")),
+                                      ),
+                                      hintText: "Email",
+                                      prefixIcon: Icon(Icons.email_rounded)
+                                  ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                child: TextFormField(
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if(value.isEmpty) {
+                                      return 'Password tidak boleh kosong';
+                                    }else if(value.isNotEmpty && value.length < 8) {
+                                      return 'Password tidak boleh kurang dari 8 digit';
+                                    }else {
+                                      return null;
+                                    }
+                                  },
+                                  controller: controllerPassword,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(50.0),
+                                          borderSide: BorderSide(color: HexColor("#025393"))
+                                      ),
+                                      prefixIcon: Icon(Icons.lock_rounded),
+                                      hintText: "Password"
+                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ),
+                                  obscureText: true,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                child: TextFormField(
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if(value.isNotEmpty && controllerPassword.text!=value) {
+                                      return "Password tidak sesuai";
+                                    }else if(value.isEmpty) {
+                                      return "Konfirmasi password tidak boleh kosong";
+                                    }else{
+                                      return null;
+                                    }
+                                  },
+                                  controller: controllerKonfirmasiPassword,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(50.0),
+                                          borderSide: BorderSide(color: HexColor("#025393"))
+                                      ),
+                                      prefixIcon: Icon(Icons.lock_rounded),
+                                      hintText: "Konfirmasi Password"
+                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ),
+                                  obscureText: true,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: FlatButton(
+                                onPressed: (){
+                                  if(formKey.currentState.validate()) {
+                                    setState(() {
+                                      Loading = true;
+                                    });
+                                    var body = jsonEncode({
+                                      "username" : controllerUsername.text,
+                                      "nomor_telepon" : controllerPhoneNumber.text,
+                                      "email" : controllerEmail.text,
+                                      "password" : controllerPassword.text,
+                                      "desa_id" : enterEmail.desaId,
+                                      "penduduk_id" : enterEmail.pendudukId
+                                    });
+                                    http.post(Uri.parse(apiURLRegistrasiAkun),
                                         headers: {"Content-Type" : "application/json"},
                                         body: body
-                                      ).then((http.Response response) {
-                                        var data = response.statusCode;
-                                        if(data == 200) {
-                                          setState(() {
-                                            Loading = false;
-                                            showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                builder: (BuildContext context) {
-                                                  return emailConfirmation();
-                                                }
-                                            );
-                                          });
-                                        }
-                                      });
-                                    } else if(data == 501){
-                                      setState(() {
-                                        Loading = false;
-                                      });
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                            ),
-                                            content: Container(
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  Container(
-                                                    child: Image.asset(
-                                                      'images/alert.png',
-                                                      height: 50,
-                                                      width: 50,
-                                                    ),
+                                    ).then((http.Response response) {
+                                      var data = response.statusCode;
+                                      print(response.statusCode.toString());
+                                      if(data == 200) {
+                                        setState(() {
+                                          emailConfirmation.userEmail = controllerEmail.text;
+                                        });
+                                        var body = jsonEncode({
+                                          "email" : controllerEmail.text
+                                        });
+                                        http.post(Uri.parse(apiURLKonfirmasiEmail),
+                                            headers: {"Content-Type" : "application/json"},
+                                            body: body
+                                        ).then((http.Response response) {
+                                          var data = response.statusCode;
+                                          if(data == 200) {
+                                            setState(() {
+                                              Loading = false;
+                                              showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (BuildContext context) {
+                                                    return emailConfirmation();
+                                                  }
+                                              );
+                                            });
+                                          }
+                                        });
+                                      } else if(data == 501){
+                                        setState(() {
+                                          Loading = false;
+                                        });
+                                        showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                                ),
+                                                content: Container(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Container(
+                                                        child: Image.asset(
+                                                          'images/alert.png',
+                                                          height: 50,
+                                                          width: 50,
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        child: Text(
+                                                          "Akun sudah terdaftar",
+                                                          style: TextStyle(
+                                                              fontFamily: "Poppins",
+                                                              fontSize: 16,
+                                                              fontWeight: FontWeight.w700,
+                                                              color: HexColor("#025393")
+                                                          ),
+                                                          textAlign: TextAlign.center,
+                                                        ),
+                                                        margin: EdgeInsets.only(top: 10),
+                                                      ),
+                                                      Container(
+                                                        child: Text(
+                                                          "Data yang Anda masukkan sudah terdaftar sebelumnya. Silahkan gunakan data username/email/nomor telefon yang lain untuk melanjutkan pendaftaran",
+                                                          style: TextStyle(
+                                                              fontFamily: "Poppins",
+                                                              fontSize: 14
+                                                          ),
+                                                          textAlign: TextAlign.center,
+                                                        ),
+                                                        margin: EdgeInsets.only(top: 10),
+                                                      )
+                                                    ],
                                                   ),
-                                                  Container(
-                                                    child: Text(
-                                                      "Akun sudah terdaftar",
-                                                      style: TextStyle(
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text("OK", style: TextStyle(
                                                         fontFamily: "Poppins",
-                                                        fontSize: 16,
                                                         fontWeight: FontWeight.w700,
                                                         color: HexColor("#025393")
-                                                      ),
-                                                      textAlign: TextAlign.center,
-                                                    ),
-                                                    margin: EdgeInsets.only(top: 10),
-                                                  ),
-                                                  Container(
-                                                    child: Text(
-                                                      "Data yang Anda masukkan sudah terdaftar sebelumnya. Silahkan gunakan data username/email/nomor telefon yang lain untuk melanjutkan pendaftaran",
-                                                      style: TextStyle(
-                                                        fontFamily: "Poppins",
-                                                        fontSize: 14
-                                                      ),
-                                                      textAlign: TextAlign.center,
-                                                    ),
-                                                    margin: EdgeInsets.only(top: 10),
+                                                    )),
+                                                    onPressed: (){Navigator.of(context).pop();},
                                                   )
                                                 ],
-                                              ),
-                                            ),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: Text("OK", style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontWeight: FontWeight.w700,
-                                                  color: HexColor("#025393")
-                                                )),
-                                                onPressed: (){Navigator.of(context).pop();},
-                                              )
-                                            ],
-                                          );
-                                        }
-                                      );
-                                    }
-                                  });
-                                }
-                              },
-                              child: Text('Daftar Akun', style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700
-                              )),
-                              color: HexColor("#025393"),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25)
+                                              );
+                                            }
+                                        );
+                                      }
+                                    });
+                                  }else {
+                                    Fluttertoast.showToast(
+                                        msg: "Masih terdapat data yang kosong atau tidak valid. Silahkan diperiksa kembali",
+                                        fontSize: 14,
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER
+                                    );
+                                  }
+                                },
+                                child: Text('Daftar Akun', style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700
+                                )),
+                                color: HexColor("#025393"),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25)
+                                ),
+                                padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
                               ),
-                              padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
-                            ),
-                            margin: EdgeInsets.only(top: 20, bottom: 20),
-                          )
-                        ],
+                              margin: EdgeInsets.only(top: 20, bottom: 20),
+                            )
+                          ],
+                        ),
                       ),
                       margin: EdgeInsets.only(top: 20),
                     )

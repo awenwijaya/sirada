@@ -31,7 +31,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
   var countSuratPanitia;
   final CarouselController controller = CarouselController();
   int current = 0;
-  var apiURLGetDataUser = "http://192.168.218.149:8000/api/data/userdata/${loginPage.userId}";
+  var apiURLGetDataUser = "http://192.168.18.10:8000/api/data/userdata/${loginPage.userId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),

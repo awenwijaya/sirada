@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
@@ -42,7 +43,7 @@ class _loginPageState extends State<loginPage> {
   var tempRole;
   var tempDesaId;
   var tempUserId;
-  bool connected = false;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -86,52 +87,73 @@ class _loginPageState extends State<loginPage> {
                 ),
               ),
               Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                        child: TextField(
-                          keyboardType: TextInputType.emailAddress,
-                          controller: controllerEmail,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                              borderSide: BorderSide(color: HexColor("#025393")),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                          child: TextFormField(
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            validator: (value) {
+                              if(value.isEmpty) {
+                                return "Email tidak boleh kosong";
+                              }else if(value.isNotEmpty && RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+                                return null;
+                              }else {
+                                return "Masukkan email yang valid";
+                              }
+                            },
+                            keyboardType: TextInputType.emailAddress,
+                            controller: controllerEmail,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  borderSide: BorderSide(color: HexColor("#025393")),
+                                ),
+                                hintText: "Email",
+                                prefixIcon: Icon(Icons.email_rounded)
                             ),
-                            hintText: "Email",
-                            prefixIcon: Icon(Icons.email_rounded)
-                          ),
-                          style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
+                            style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                        child: TextField(
-                          controller: controllerPassword,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(50.0),
-                                borderSide: BorderSide(color: HexColor("#025393")),
-                              ),
-                              prefixIcon: Icon(Icons.lock_rounded),
-                              hintText: "Password"
+                      Container(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                          child: TextFormField(
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            validator: (value) {
+                              if(value.isEmpty) {
+                                return "Data tidak boleh kosong";
+                              }else {
+                                return null;
+                              }
+                            },
+                            controller: controllerPassword,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  borderSide: BorderSide(color: HexColor("#025393")),
+                                ),
+                                prefixIcon: Icon(Icons.lock_rounded),
+                                hintText: "Password"
+                            ),
+                            style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            ),
+                            obscureText: true,
                           ),
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14
-                          ),
-                          obscureText: true,
                         ),
-                      ),
-                      margin: EdgeInsets.only(top: 10),
-                    )
-                  ],
+                        margin: EdgeInsets.only(top: 10),
+                      )
+                    ],
+                  )
                 ),
               ),
               Container(
@@ -141,69 +163,7 @@ class _loginPageState extends State<loginPage> {
                     Container(
                       child: FlatButton(
                         onPressed: () async {
-                          if(controllerEmail.text == "" || controllerPassword.text == "") {
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                  ),
-                                  content: Container(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Container(
-                                          child: Image.asset(
-                                            'images/warning.png',
-                                            height: 50,
-                                            width: 50,
-                                          ),
-                                        ),
-                                        Container(
-                                          child: Text(
-                                            "Data email atau password belum diinputkan",
-                                            style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              color: HexColor("#025393")
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          margin: EdgeInsets.only(top: 10),
-                                        ),
-                                        Container(
-                                          child: Text(
-                                            "Silahkan isi data email dan password sebelum melanjutkan",
-                                            style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          margin: EdgeInsets.only(top: 10),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text("OK", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontWeight: FontWeight.w700,
-                                        color: HexColor("#025393")
-                                      )),
-                                      onPressed: (){Navigator.of(context).pop();},
-                                    )
-                                  ],
-                                );
-                              }
-                            );
-                          } else {
+                          if(formKey.currentState.validate()) {
                             setState(() {
                               Loading = true;
                             });
@@ -212,8 +172,8 @@ class _loginPageState extends State<loginPage> {
                               "password" : controllerPassword.text
                             });
                             http.post(Uri.parse(apiURLLogin),
-                              headers: {"Content-Type" : "application/json"},
-                              body: body
+                                headers: {"Content-Type" : "application/json"},
+                                body: body
                             ).then((http.Response response) async {
                               var data = response.statusCode;
                               if(data == 500) {
@@ -221,65 +181,65 @@ class _loginPageState extends State<loginPage> {
                                   Loading = false;
                                 });
                                 showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                      ),
-                                      content: Container(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Container(
-                                              child: Image.asset(
-                                                'images/alert.png',
-                                                height: 50,
-                                                width: 50,
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                "Email atau password salah",
-                                                style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: HexColor("#025393")
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              margin: EdgeInsets.only(top: 10),
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                "Pastikan Anda menginputkan data email dan password yang benar dan coba lagi",
-                                                style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontSize: 14
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              margin: EdgeInsets.only(top: 10),
-                                            )
-                                          ],
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(40.0))
                                         ),
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: Text("OK", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.w700,
-                                            color: HexColor("#025393")
-                                          )),
-                                          onPressed: (){Navigator.of(context).pop();},
-                                        )
-                                      ],
-                                    );
-                                  }
+                                        content: Container(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Container(
+                                                child: Image.asset(
+                                                  'images/alert.png',
+                                                  height: 50,
+                                                  width: 50,
+                                                ),
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                  "Email atau password salah",
+                                                  style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: HexColor("#025393")
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                margin: EdgeInsets.only(top: 10),
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                  "Pastikan Anda menginputkan data email dan password yang benar dan coba lagi",
+                                                  style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                margin: EdgeInsets.only(top: 10),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text("OK", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontWeight: FontWeight.w700,
+                                                color: HexColor("#025393")
+                                            )),
+                                            onPressed: (){Navigator.of(context).pop();},
+                                          )
+                                        ],
+                                      );
+                                    }
                                 );
                               } else if(data == 200) {
                                 var jsonData = response.body;
@@ -380,8 +340,8 @@ class _loginPageState extends State<loginPage> {
                                               "token" : loginPage.token
                                             });
                                             http.post(Uri.parse(apiURLUploadFCMToken),
-                                              headers: {"Content-Type" : "application/json"},
-                                              body: bodyToken
+                                                headers: {"Content-Type" : "application/json"},
+                                                body: bodyToken
                                             ).then((http.Response response) async {
                                               var data = response.statusCode;
                                               if(data == 200) {
@@ -488,8 +448,8 @@ class _loginPageState extends State<loginPage> {
                                             "token" : loginPage.token
                                           });
                                           http.post(Uri.parse(apiURLUploadFCMToken),
-                                            headers: {"Content-Type" : "application/json"},
-                                            body: bodyFCM
+                                              headers: {"Content-Type" : "application/json"},
+                                              body: bodyFCM
                                           ).then((http.Response response) {
                                             var data = response.statusCode;
                                             if(data == 200) {
@@ -670,8 +630,15 @@ class _loginPageState extends State<loginPage> {
                                 }
                               }
                             });
+                          }else {
+                            Fluttertoast.showToast(
+                              msg: "Masih terdapat data yang kosong atau tidak valid. Silahkan diperiksa kembali",
+                              fontSize: 14,
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER
+                            );
                           }
-                        },
+                         },
                         child: Text('Login', style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 14,
