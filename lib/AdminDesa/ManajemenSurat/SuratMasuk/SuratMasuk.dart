@@ -27,6 +27,7 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
   var selectedIdSuratMasuk;
   bool LoadingSuratMasuk = true;
   bool availableSuratMasuk = false;
+  FToast ftoast;
 
   Future refreshListSuratMasuk() async {
     var response = await http.get(Uri.parse(apiURLShowListSuratMasuk));
@@ -57,6 +58,8 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
     // TODO: implement initState
     super.initState();
     refreshListSuratMasuk();
+    ftoast = FToast();
+    ftoast.init(this.context);
   }
 
   @override
@@ -123,10 +126,16 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                                     ),
                                   ),
                                   Container(
-                                    child: Text(asalSuratMasuk[index], style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                    )),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.55,
+                                      child: Text(asalSuratMasuk[index], style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      ), maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: false,
+                                      ),
+                                    )
                                   )
                                 ],
                               ),
@@ -322,10 +331,9 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                             if(responseValue == 200) {
                               refreshListSuratMasuk();
                               Fluttertoast.showToast(
-                                  msg: "Surat berhasil dihapus",
-                                  fontSize: 14,
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER
+                                  msg: "Data surat masuk berhasil dihapus",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM
                               );
                               Navigator.of(context).pop();
                             }
