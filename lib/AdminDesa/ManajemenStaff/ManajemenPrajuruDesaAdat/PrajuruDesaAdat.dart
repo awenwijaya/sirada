@@ -34,10 +34,11 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
   bool availableDataTidakAktif = false;
   var selectedIdPrajuruDesaAdat;
   var selectedIdPenduduk;
-  var apiURLShowListPrajuruDesaAdatAktif = "http://192.168.138.149:8000/api/data/staff/prajuru_desa_adat/aktif/${loginPage.desaId}";
-  var apiURLShowListPrajuruDesaAdatTidakAktif = "http://192.168.138.149:8000/api/data/staff/prajuru_desa_adat/tidak_aktif/${loginPage.desaId}";
-  var apiURLDeletePrajuruDesaAdat = "http://192.168.138.149:8000/api/admin/prajuru/desa_adat/delete";
-  var apiURLSetPrajuruTidakAktif = "http://192.168.138.149:8000/api/admin/prajuru/desa_adat/set_tidak_aktif";
+  var apiURLShowListPrajuruDesaAdatAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/aktif/${loginPage.desaId}";
+  var apiURLShowListPrajuruDesaAdatTidakAktif = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/tidak_aktif/${loginPage.desaId}";
+  var apiURLDeletePrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/delete";
+  var apiURLSetPrajuruTidakAktif = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/set_tidak_aktif";
+  FToast ftoast;
 
   Future refreshListPrajuruDesaAdatAktif() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruDesaAdatAktif);
@@ -97,6 +98,8 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    ftoast = FToast();
+    ftoast.init(context);
     refreshListPrajuruDesaAdatAktif();
     refreshListPrajuruDesaAdatTidakAktif();
   }
@@ -604,11 +607,32 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                       if(responseValue == 200) {
                         refreshListPrajuruDesaAdatAktif();
                         refreshListPrajuruDesaAdatTidakAktif();
-                        Fluttertoast.showToast(
-                          msg: "Data prajuru berhasil dihapus",
-                          fontSize: 14,
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER
+                        ftoast.showToast(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: Colors.green
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(Icons.done),
+                                Container(
+                                  margin: EdgeInsets.only(left: 15),
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.65,
+                                    child: Text("Prajuru Desa Adat berhasil dihapus", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white
+                                    )),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          toastDuration: Duration(seconds: 3)
                         );
                         Navigator.of(context).pop();
                       }
@@ -690,11 +714,32 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                         if(responseValue == 200) {
                           refreshListPrajuruDesaAdatAktif();
                           refreshListPrajuruDesaAdatTidakAktif();
-                          Fluttertoast.showToast(
-                            msg: "Prajuru berhasil dinonaktifkan!",
-                            fontSize: 14,
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER
+                          ftoast.showToast(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.green
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.done),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 15),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.65,
+                                      child: Text("Prajuru Desa Adat berhasil dinonaktifkan", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white
+                                      )),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            toastDuration: Duration(seconds: 3)
                           );
                           Navigator.of(context).pop();
                         }

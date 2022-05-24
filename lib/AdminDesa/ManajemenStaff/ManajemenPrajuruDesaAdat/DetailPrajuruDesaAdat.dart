@@ -31,7 +31,7 @@ class _detailPrajuruDesaAdatAdminState extends State<detailPrajuruDesaAdatAdmin>
   var alamat;
   var profesi;
 
-  var apiURLDetailPrajuruDesaAdat = "http://192.168.138.149:8000/api/data/staff/prajuru_desa_adat/detail/${detailPrajuruDesaAdatAdmin.prajuruDesaAdatId}";
+  var apiURLDetailPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/detail/${detailPrajuruDesaAdatAdmin.prajuruDesaAdatId}";
 
   getPrajuruDesaAdatInfo() async {
     http.get(Uri.parse(apiURLDetailPrajuruDesaAdat),

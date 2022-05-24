@@ -32,9 +32,9 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   DateTime masaBerakhir;
   DateTime sekarang = DateTime.now();
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
-  var apiURLShowDetailPrajuruDesaAdat = "http://192.168.138.149:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruDesaAdat = "http://192.168.138.149:8000/api/admin/prajuru/desa_adat/edit/up";
-  var apiURLUploadFileSKPrajuru = "http://192.168.138.149/sirada-api/upload-file-sk-prajuru.php";
+  var apiURLShowDetailPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/edit/up";
+  var apiURLUploadFileSKPrajuru = "http://192.168.18.10/sirada-api/upload-file-sk-prajuru.php";
   var selectedIdPenduduk;
   var selectedRole;
   bool Loading = false;
@@ -42,6 +42,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   File file;
   String namaFile;
   String filePath;
+  FToast ftoast;
 
   getPrajuruDesaAdatInfo() async {
     http.get(Uri.parse(apiURLShowDetailPrajuruDesaAdat),
@@ -70,6 +71,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
 
   void selectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
+      masaBerakhir = args.value.endDate;
       selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
       selectedMasaMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
       selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
@@ -104,6 +106,8 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
     selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(masaMulai == null ? sekarang : masaMulai).toString();
     selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(masaBerakhir == null ? sekarang : masaBerakhir).toString();
     controllerMasaAktif.selectedRange = PickerDateRange(masaMulai == null ? sekarang : masaMulai, masaBerakhir == null ? sekarang : masaBerakhir);
+    ftoast = FToast();
+    ftoast.init(this.context);
   }
 
   @override
@@ -287,32 +291,112 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
               Container(
                 child: FlatButton(
                   onPressed: () async {
-                    setState(() {
-                      Loading = true;
-                    });
-                    if(selectedJabatan == "bendesa") {
+                    if(masaBerakhir.isBefore(sekarang)) {
+                      ftoast.showToast(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: Colors.redAccent
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              Icon(Icons.close),
+                              Container(
+                                margin: EdgeInsets.only(left: 15),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width * 0.65,
+                                  child: Text("Masa jabatan tidak valid. Silahkan masukkan tanggal masa akhir setelah tanggal hari ini dan coba lagi", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white
+                                  )),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        toastDuration: Duration(seconds: 3)
+                      );
+                    } else {
                       setState(() {
-                        selectedRole = "Bendesa";
+                        Loading = true;
                       });
-                    }else if(selectedJabatan == "penyarikan") {
-                      setState(() {
-                        selectedRole = "Penyarikan";
-                      });
-                    }else{
-                      setState(() {
-                        selectedRole = "Admin";
-                      });
-                    }
-                    if(file!=null) {
-                      var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
-                      var length = await file.length();
-                      var url = Uri.parse(apiURLUploadFileSKPrajuru);
-                      var request = http.MultipartRequest("POST", url);
-                      var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
-                      request.files.add(multipartFile);
-                      var response = await request.send();
-                      print(response.statusCode);
-                      if(response.statusCode == 200) {
+                      if(selectedJabatan == "bendesa") {
+                        setState(() {
+                          selectedRole = "Bendesa";
+                        });
+                      }else if(selectedJabatan == "penyarikan") {
+                        setState(() {
+                          selectedRole = "Penyarikan";
+                        });
+                      }else{
+                        setState(() {
+                          selectedRole = "Admin";
+                        });
+                      }
+                      if(file!=null) {
+                        var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
+                        var length = await file.length();
+                        var url = Uri.parse(apiURLUploadFileSKPrajuru);
+                        var request = http.MultipartRequest("POST", url);
+                        var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
+                        request.files.add(multipartFile);
+                        var response = await request.send();
+                        print(response.statusCode);
+                        if(response.statusCode == 200) {
+                          var body = jsonEncode({
+                            "prajuru_desa_adat_id" : editPrajuruDesaAdatAdmin.idPegawai,
+                            "jabatan" : selectedJabatan,
+                            "masa_mulai_menjabat" : selectedMasaMulaiValue,
+                            "masa_akhir_menjabat" : selectedMasaBerakhirValue,
+                            'penduduk_id' : selectedIdPenduduk,
+                            'email' : controllerEmail.text,
+                            'role' : selectedRole,
+                            "sk_prajuru" : namaFile
+                          });
+                          http.post(Uri.parse(apiURLSimpanPrajuruDesaAdat),
+                              headers : {"Content-Type" : "application/json"},
+                              body : body
+                          ).then((http.Response response) {
+                            var responseValue = response.statusCode;
+                            if(responseValue == 200) {
+                              setState(() {
+                                Loading = false;
+                              });
+                              ftoast.showToast(
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: Colors.green
+                                    ),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.done),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 15),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.65,
+                                            child: Text("Data Prajuru Desa Adat berhasil diperbaharui", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white
+                                            )),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  toastDuration: Duration(seconds: 3)
+                              );
+                              Navigator.of(context).pop(true);
+                            }
+                          });
+                        }
+                      }else{
                         var body = jsonEncode({
                           "prajuru_desa_adat_id" : editPrajuruDesaAdatAdmin.idPegawai,
                           "jabatan" : selectedJabatan,
@@ -332,45 +416,37 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                             setState(() {
                               Loading = false;
                             });
-                            Fluttertoast.showToast(
-                                msg: "Data prajuru berhasil diperbaharui",
-                                fontSize: 14,
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER
+                            ftoast.showToast(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Colors.green
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.done),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.65,
+                                          child: Text("Data Prajuru Desa Adat berhasil diperbaharui", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white
+                                          )),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                toastDuration: Duration(seconds: 3)
                             );
                             Navigator.of(context).pop(true);
                           }
                         });
                       }
-                    }else{
-                      var body = jsonEncode({
-                        "prajuru_desa_adat_id" : editPrajuruDesaAdatAdmin.idPegawai,
-                        "jabatan" : selectedJabatan,
-                        "masa_mulai_menjabat" : selectedMasaMulaiValue,
-                        "masa_akhir_menjabat" : selectedMasaBerakhirValue,
-                        'penduduk_id' : selectedIdPenduduk,
-                        'email' : controllerEmail.text,
-                        'role' : selectedRole,
-                        "sk_prajuru" : namaFile
-                      });
-                      http.post(Uri.parse(apiURLSimpanPrajuruDesaAdat),
-                          headers : {"Content-Type" : "application/json"},
-                          body : body
-                      ).then((http.Response response) {
-                        var responseValue = response.statusCode;
-                        if(responseValue == 200) {
-                          setState(() {
-                            Loading = false;
-                          });
-                          Fluttertoast.showToast(
-                              msg: "Data prajuru berhasil diperbaharui",
-                              fontSize: 14,
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER
-                          );
-                          Navigator.of(context).pop(true);
-                        }
-                      });
                     }
 
                   },

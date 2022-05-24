@@ -6,6 +6,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/AgendaAcara/AgendaAcara.dart';
 import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
+import 'package:surat/AdminDesa/ManajemenPanitia/ManajemenPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/PrajuruBanjarAdat.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/PrajuruDesaAdat.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluar.dart';
@@ -408,7 +409,9 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                     ),
                     Container(
                       child: GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => manajemenPanitiaDesaAdatAdmin()));
+                        },
                         child: Row(
                           children: <Widget>[
                             Container(

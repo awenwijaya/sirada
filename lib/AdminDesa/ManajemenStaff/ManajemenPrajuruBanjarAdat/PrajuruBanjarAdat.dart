@@ -39,6 +39,8 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
   var apiURLShowListPrajuruBanjarAdatTidakAktif =  "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
   var apiURLDeletePrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/delete";
   var apiURLSetPrajuruBanjarTidakAktif = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/set_tidak_aktif";
+  FToast ftoast;
+
   Future refreshListPrajuruBanjarAdatAktif() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruBanjarAdatAktif);
     final response = await http.get(uri);
@@ -103,6 +105,8 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
     super.initState();
     refreshListPrajuruBanjarAdatAktif();
     refreshListPrajuruBanjarAdatTidakAktif();
+    ftoast = FToast();
+    ftoast.init(context);
   }
 
   @override
@@ -507,92 +511,6 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
         });
         break;
 
-      case 1:
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(40.0))
-              ),
-              content: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                        child: Image.asset(
-                          'images/question.png',
-                          height: 50,
-                          width: 50,
-                        )
-                    ),
-                    Container(
-                        child: Text("Hapus Data Prajuru", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: HexColor("#025393")
-                        ), textAlign: TextAlign.center),
-                        margin: EdgeInsets.only(top: 10)
-                    ),
-                    Container(
-                      child: Text("Apakah Anda yakin ingin menghapus data prajuru?", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14
-                      ), textAlign: TextAlign.center),
-                      margin: EdgeInsets.only(top: 10),
-                    )
-                  ]
-                )
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: (){
-                    var body = jsonEncode({
-                      "prajuru_banjar_adat_id" : selectedIdPrajuruBanjarAdat,
-                      "penduduk_id" : selectedIdPenduduk
-                    });
-                    http.post(Uri.parse(apiURLDeletePrajuruBanjarAdat),
-                      headers : {"Content-Type" : "application/json"},
-                      body: body
-                    ).then((http.Response response) {
-                      var responseValue = response.statusCode;
-                      if(responseValue == 200) {
-                        refreshListPrajuruBanjarAdatAktif();
-                        refreshListPrajuruBanjarAdatTidakAktif();
-                        Fluttertoast.showToast(
-                          msg: "Data prajuru berhasil dihapus",
-                          fontSize: 14,
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER
-                        );
-                        Navigator.of(context).pop();
-                      }
-                    });
-                  },
-                  child: Text("Ya", style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.w700,
-                      color: HexColor("#025393")
-                  )),
-                ),
-                TextButton(
-                  onPressed: (){Navigator.of(context).pop();},
-                  child: Text("Tidak", style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontWeight: FontWeight.w700,
-                    color: HexColor("#025393")
-                  ))
-                )
-              ]
-            );
-          }
-        );
-        break;
-
       case 2:
         showDialog(
           context: context,
@@ -649,11 +567,32 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                       if(responseValue == 200) {
                         refreshListPrajuruBanjarAdatAktif();
                         refreshListPrajuruBanjarAdatTidakAktif();
-                        Fluttertoast.showToast(
-                          msg: "Prajuru berhasil dinonaktifkan!",
-                          fontSize: 14,
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER
+                        ftoast.showToast(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: Colors.green
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.done),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 15),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.65,
+                                      child: Text("Prajuru Banjar Adat berhasil dinonaktifkan", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white
+                                      )),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            toastDuration: Duration(seconds: 3)
                         );
                         Navigator.of(context).pop();
                       }

@@ -31,6 +31,7 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
   String selectedMasaBerakhirValue;
   DateTime masaMulai;
   DateTime masaBerakhir;
+  DateTime sekarang = DateTime.now();
   var apiURLShowDetailPrajuruBanjarAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
   var apiURLSimpanPrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/edit/up";
   var apiURLUploadFileSKPrajuru = "http://192.168.18.10/sirada-api/upload-file-sk-prajuru.php";
@@ -41,6 +42,7 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
   File file;
   String namaFile;
   String filePath;
+  FToast ftoast;
 
   getPrajuruBanjarAdatInfo() async {
     http.get(Uri.parse(apiURLShowDetailPrajuruBanjarAdat),
@@ -86,6 +88,7 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
 
   void selectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
+      masaBerakhir = args.value.endDate;
       selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
       selectedMasaMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
       selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
@@ -102,6 +105,8 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
     selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(masaMulai == null ? sekarang : masaMulai).toString();
     selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(masaBerakhir == null ? sekarang : masaBerakhir).toString();
     controllerMasaAktif.selectedRange = PickerDateRange(masaMulai == null ? sekarang : masaMulai, masaBerakhir == null ? sekarang : masaBerakhir);
+    ftoast = FToast();
+    ftoast.init(this.context);
   }
 
   @override
@@ -285,59 +290,33 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
               Container(
                 child: FlatButton(
                   onPressed: () async {
-                    if(masaBerakhir.isBefore(masaMulai)) {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context){
-                            return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
+                    if(masaBerakhir.isBefore(sekarang)) {
+                      ftoast.showToast(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: Colors.redAccent
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              Icon(Icons.close),
+                              Container(
+                                margin: EdgeInsets.only(left: 15),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width * 0.65,
+                                  child: Text("Masa jabatan tidak valid. Silahkan masukkan tanggal masa akhir setelah tanggal hari ini dan coba lagi", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white
+                                  )),
                                 ),
-                                content: Container(
-                                  child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Container(
-                                            child: Image.asset(
-                                              'images/alert.png',
-                                              height: 50,
-                                              width: 50,
-                                            )
-                                        ),
-                                        Container(
-                                            child: Text("Tanggal masa berakhir tidak valid", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("#025393")
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10)
-                                        ),
-                                        Container(
-                                            child: Text("Tanggal masa berakhir tidak valid. Silahkan masukkan tanggal masa berakhir karyawan di hari setelah masa mulai karyawan dan coba lagi", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 14
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10)
-                                        )
-                                      ]
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text("OK", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontWeight: FontWeight.w700,
-                                        color: HexColor("#025393")
-                                    )),
-                                    onPressed: (){Navigator.of(context).pop();},
-                                  )
-                                ]
-                            );
-                          }
+                              )
+                            ],
+                          ),
+                        ),
+                        toastDuration: Duration(seconds: 3)
                       );
                     }else{
                       setState(() {
@@ -370,11 +349,32 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
                               setState(() {
                                 Loading = false;
                               });
-                              Fluttertoast.showToast(
-                                  msg: "Data prajuru berhasil diperbaharui",
-                                  fontSize: 14,
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER
+                              ftoast.showToast(
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: Colors.green
+                                    ),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.done),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 15),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.65,
+                                            child: Text("Data Prajuru Banjar Adat berhasil diperbaharui", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white
+                                            )),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  toastDuration: Duration(seconds: 3)
                               );
                               Navigator.of(context).pop(true);
                             }
@@ -398,11 +398,32 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
                             setState(() {
                               Loading = false;
                             });
-                            Fluttertoast.showToast(
-                                msg: "Data prajuru berhasil diperbaharui",
-                                fontSize: 14,
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER
+                            ftoast.showToast(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Colors.green
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.done),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.65,
+                                          child: Text("Data Prajuru Banjar Adat berhasil diperbaharui", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white
+                                          )),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                toastDuration: Duration(seconds: 3)
                             );
                             Navigator.of(context).pop(true);
                           }
