@@ -32,6 +32,7 @@ class _editProfileKramaState extends State<editProfileKrama> {
   String selectedPendidikanTerakhir = kramaProfile.pendidikanTerakhir;
   bool Loading = false;
   var apiURLEditProfile = "http://192.168.18.10:8000/api/data/userdata/edit";
+  var apiURLUploadProfilePicture = "http://192.168.18.10:8000/api/upload/profile-picture";
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   FToast ftoast;
 
@@ -44,18 +45,50 @@ class _editProfileKramaState extends State<editProfileKrama> {
   }
 
   Future uploadImage() async {
-    final uri = Uri.parse("http://192.168.18.10/siraja-api-skripsi-new/upload-profile-picture.php");
-    var request = http.MultipartRequest('POST', uri);
-    request.fields['user_id'] = loginPage.userId.toString();
-    var pic = await http.MultipartFile.fromPath("image", image.path);
-    request.files.add(pic);
+    Map<String, String> headers = {
+      'Content-Type' : 'multipart/form-data'
+    };
+    Map<String, String> body = {
+      'user_id' : loginPage.userId.toString()
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(apiURLUploadProfilePicture))
+      ..fields.addAll(body)
+      ..headers.addAll(headers)
+      ..files.add(await http.MultipartFile.fromPath('image', image.path));
     var response = await request.send();
     if(response.statusCode == 200) {
       setState(() {
         Loading = false;
       });
+      ftoast.showToast(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: Colors.green
+            ),
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.done),
+                Container(
+                  margin: EdgeInsets.only(left: 15),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.65,
+                    child: Text("Profil berhasil diperbaharui", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white
+                    )),
+                  ),
+                )
+              ],
+            ),
+          ),
+          toastDuration: Duration(seconds: 3)
+      );
       Navigator.pop(context, true);
-    }else{
+    }else {
       print("Gambar gagal diupload");
     }
   }
@@ -127,7 +160,7 @@ class _editProfileKramaState extends State<editProfileKrama> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: NetworkImage('http://192.168.18.10/siraja-api-skripsi-new/${kramaProfile.profilePicture}')
+                        image: NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/profile/${kramaProfile.profilePicture}')
                       )
                     )
                   )
@@ -340,6 +373,33 @@ class _editProfileKramaState extends State<editProfileKrama> {
                             setState(() {
                               Loading = false;
                             });
+                            ftoast.showToast(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Colors.green
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.done),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.65,
+                                          child: Text("Profil berhasil diperbaharui", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white
+                                          )),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                toastDuration: Duration(seconds: 3)
+                            );
                             Navigator.pop(context, true);
                           }else{
                             uploadImage();

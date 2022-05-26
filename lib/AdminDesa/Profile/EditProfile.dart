@@ -32,6 +32,7 @@ class _editProfileAdminState extends State<editProfileAdmin> {
   String selectedPendidikanTerakhir = adminProfile.pendidikanTerakhir;
   bool Loading = false;
   var apiURLEditProfile = "http://192.168.18.10:8000/api/data/userdata/edit";
+  var apiURLUploadProfilePicture = "http://192.168.18.10:8000/api/upload/profile-picture";
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   FToast ftoast;
 
@@ -60,18 +61,50 @@ class _editProfileAdminState extends State<editProfileAdmin> {
   }
 
   Future uploadImage() async {
-    final uri = Uri.parse("http://192.168.18.10/siraja-api-skripsi-new/upload-profile-picture.php");
-    var request = http.MultipartRequest('POST', uri);
-    request.fields['user_id'] = loginPage.userId.toString();
-    var pic = await http.MultipartFile.fromPath("image", image.path);
-    request.files.add(pic);
+    Map<String, String> headers = {
+      'Content-Type' : 'multipart/form-data'
+    };
+    Map<String, String> body = {
+      'user_id' : loginPage.userId.toString()
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(apiURLUploadProfilePicture))
+                  ..fields.addAll(body)
+                  ..headers.addAll(headers)
+                  ..files.add(await http.MultipartFile.fromPath('image', image.path));
     var response = await request.send();
     if(response.statusCode == 200) {
       setState(() {
         Loading = false;
       });
+      ftoast.showToast(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: Colors.green
+          ),
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.done),
+              Container(
+                margin: EdgeInsets.only(left: 15),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.65,
+                  child: Text("Profil berhasil diperbaharui", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white
+                  )),
+                ),
+              )
+            ],
+          ),
+        ),
+        toastDuration: Duration(seconds: 3)
+      );
       Navigator.pop(context, true);
-    }else{
+    }else {
       print("Gambar gagal diupload");
     }
   }
@@ -128,7 +161,7 @@ class _editProfileAdminState extends State<editProfileAdmin> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image: NetworkImage('http://192.168.18.10/siraja-api-skripsi-new/${adminProfile.profilePicture}')
+                              image: NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/profile/${adminProfile.profilePicture}')
                           )
                       ),
                     ),
@@ -340,6 +373,33 @@ class _editProfileAdminState extends State<editProfileAdmin> {
                               setState(() {
                                 Loading = false;
                               });
+                              ftoast.showToast(
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: Colors.green
+                                    ),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.done),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 15),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.65,
+                                            child: Text("Profil berhasil diperbaharui", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white
+                                            )),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  toastDuration: Duration(seconds: 3)
+                              );
                               Navigator.pop(context, true);
                             }else{
                               uploadImage();
@@ -348,115 +408,63 @@ class _editProfileAdminState extends State<editProfileAdmin> {
                             setState(() {
                               Loading = false;
                             });
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                    ),
-                                    content: Container(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Container(
-                                            child: Image.asset(
-                                              'images/alert.png',
-                                              height: 50,
-                                              width: 50,
-                                            ),
-                                          ),
-                                          Container(
-                                            child: Text("Username telah dipakai", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("#025393")
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10),
-                                          ),
-                                          Container(
-                                            child: Text("Username yang Anda masukkan sudah terdaftar sebelumnya. Silahkan gunakan username yang lain", style: TextStyle(
+                            ftoast.showToast(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Colors.redAccent
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.close),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.65,
+                                          child: Text("Username telah digunakan", style: TextStyle(
                                               fontFamily: "Poppins",
                                               fontSize: 14,
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: Text("OK", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.w700,
-                                            color: HexColor("#025393")
-                                        )),
-                                        onPressed: (){Navigator.of(context).pop();},
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white
+                                          )),
+                                        ),
                                       )
                                     ],
-                                  );
-                                }
+                                  ),
+                                ),
+                                toastDuration: Duration(seconds: 3)
                             );
                           }else if(responseValue == 502){
                             setState(() {
                               Loading = false;
                             });
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                      ),
-                                      content: Container(
-                                          child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                Container(
-                                                    child: Image.asset(
-                                                        'images/alert.png',
-                                                        height: 50,
-                                                        width: 50
-                                                    )
-                                                ),
-                                                Container(
-                                                    child: Text("Password Anda salah", style: TextStyle(
-                                                        fontFamily: "Poppins",
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.w700,
-                                                        color: HexColor("#025393")
-                                                    ), textAlign: TextAlign.center),
-                                                    margin: EdgeInsets.only(top: 10)
-                                                ),
-                                                Container(
-                                                    child: Text("Password Anda salah. Silahkan inputkan ulang password Anda sebelum dapat melakukan proses edit profil", style: TextStyle(
-                                                        fontFamily: "Poppins",
-                                                        fontSize: 14
-                                                    ), textAlign: TextAlign.center),
-                                                    margin: EdgeInsets.only(top: 10)
-                                                )
-                                              ]
-                                          )
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                            child: Text("OK", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("#025393")
-                                            )),
-                                            onPressed: (){Navigator.of(context).pop();}
-                                        )
-                                      ]
-                                  );
-                                }
+                            ftoast.showToast(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Colors.redAccent
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.close),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.65,
+                                          child: Text("Password Anda salah", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white
+                                          )),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                toastDuration: Duration(seconds: 3)
                             );
                           }
                         });

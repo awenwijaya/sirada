@@ -20,6 +20,7 @@ class _editStrukturKepemimpinanDesaAdminState extends State<editStrukturKepemimp
   File image;
   final picker = ImagePicker();
   bool Loading = false;
+  var apiURLUploadStrukturDesa = "http://192.168.18.10:8000/api/upload/struktur_desa";
 
   Future choiceImage() async {
     var pickedImage = await picker.pickImage(source: ImageSource.gallery);
@@ -29,18 +30,23 @@ class _editStrukturKepemimpinanDesaAdminState extends State<editStrukturKepemimp
   }
 
   Future uploadImage() async {
-    final uri = Uri.parse("http://192.168.18.10/siraja-api-skripsi-new/upload-struktur-desa.php");
-    var request = http.MultipartRequest('POST', uri);
-    request.fields['desa_id'] = loginPage.desaId.toString();
-    var pic = await http.MultipartFile.fromPath("image", image.path);
-    request.files.add(pic);
+    Map<String, String> headers = {
+      'Content-Type' : 'multipart/form-data'
+    };
+    Map<String, String> body = {
+      'desa_id' : loginPage.desaId.toString()
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(apiURLUploadStrukturDesa))
+      ..fields.addAll(body)
+      ..headers.addAll(headers)
+      ..files.add(await http.MultipartFile.fromPath('image', image.path));
     var response = await request.send();
     if(response.statusCode == 200) {
       setState(() {
         Loading = false;
       });
       Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => dashboardAdminDesa()), (route) => false);
-    }else{
+    }else {
       print("Gambar gagal diupload");
     }
   }

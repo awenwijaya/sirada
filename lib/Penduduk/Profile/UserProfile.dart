@@ -104,7 +104,7 @@ class _kramaProfileState extends State<kramaProfile> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: NetworkImage('http://192.168.18.10/siraja-api-skripsi-new/${kramaProfile.profilePicture}')
+                      image: NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/profile/${kramaProfile.profilePicture}')
                     )
                   )
                 ),

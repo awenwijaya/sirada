@@ -32,6 +32,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
   final CarouselController controller = CarouselController();
   int current = 0;
   var apiURLGetDataUser = "http://192.168.18.10:8000/api/data/userdata/${loginPage.userId}";
+  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/userdata/desa/${loginPage.desaId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -43,8 +44,23 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
         var parsedJson = json.decode(jsonData);
         setState(() {
           nama = parsedJson['nama'];
-          namaDesa = parsedJson['desadat_nama'];
           profilePicture = parsedJson['foto'];
+        });
+      }
+    });
+  }
+
+  getDesaInfo() async {
+    http.get(Uri.parse(apiURLGetDetailDesaById),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          namaDesa = parsedJson['desadat_nama'];
+          dashboardPenduduk.logoDesa = parsedJson['desadat_logo'].toString();
         });
       }
     });
@@ -55,6 +71,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
     // TODO: implement initState
     super.initState();
     getUserInfo();
+    getDesaInfo();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
@@ -67,7 +84,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
             android: AndroidNotificationDetails(
               channel.id,
               channel.name,
-              color: Colors.blue,
+              color: Colors.white,
               playSound: true,
               icon: '@mipmap/ic_launcher'
             )
@@ -75,7 +92,6 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
         );
       }
     });
-
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
       RemoteNotification notification = message.notification;
@@ -127,7 +143,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                    image: AssetImage('images/profilepic.png'),
+                                    image: profilePicture == null ? AssetImage('images/profilepic.png') : NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/profile/${profilePicture}'),
                                     fit: BoxFit.fill
                                 )
                             )
@@ -176,7 +192,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                    image: AssetImage('images/noimage.png'),
+                                    image: dashboardPenduduk.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/logo-desa/${dashboardPenduduk.logoDesa}'),
                                     fit: BoxFit.fill
                                 )
                             ),

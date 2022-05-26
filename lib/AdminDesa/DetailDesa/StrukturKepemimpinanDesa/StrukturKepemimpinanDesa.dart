@@ -88,7 +88,7 @@ class _strukturKepemimpinanDesaAdminState extends State<strukturKepemimpinanDesa
               clipBehavior: Clip.none,
               child: ClipRRect(
                 child: Image.network(
-                  'http://192.168.18.10/siraja-api-skripsi/${strukturKepemimpinanDesaAdmin.strukturKepemimpinan}',
+                  'http://192.168.18.10/SirajaProject/public/assets/img/struktur-desa/${strukturKepemimpinanDesaAdmin.strukturKepemimpinan}',
                   fit: BoxFit.cover,
                 ),
               ),

@@ -16,6 +16,9 @@ import 'package:surat/AdminDesa/Profile/AdminProfile.dart';
 import 'package:surat/WelcomeScreen.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:surat/main.dart';
 
 class dashboardAdminDesa extends StatefulWidget {
   static var logoDesa;
@@ -30,6 +33,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var namaAdmin;
   var namaDesa;
   var apiURLGetDataUser = "http://192.168.18.10:8000/api/data/userdata/${loginPage.userId}";
+  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/userdata/desa/${loginPage.desaId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -41,8 +45,23 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
         var parsedJson = json.decode(jsonData);
         setState(() {
           namaAdmin = parsedJson['nama'];
-          namaDesa = parsedJson['desadat_nama'];
           profilePicture = parsedJson['foto'];
+        });
+      }
+    });
+  }
+
+  getDesaInfo() async {
+    http.get(Uri.parse(apiURLGetDetailDesaById),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          namaDesa = parsedJson['desadat_nama'];
+          dashboardAdminDesa.logoDesa = parsedJson['desadat_logo'].toString();
         });
       }
     });
@@ -53,6 +72,27 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
     // TODO: implement initState
     super.initState();
     getUserInfo();
+    getDesaInfo();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if(notification!=null && android!=null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+                android: AndroidNotificationDetails(
+                    channel.id,
+                    channel.name,
+                    color: Colors.white,
+                    playSound: true,
+                    icon: '@mipmap/ic_launcher'
+                )
+            )
+        );
+      }
+    });
   }
 
   @override
@@ -195,7 +235,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: NetworkImage('http://192.168.18.10/siraja-api-skripsi-new/${profilePicture}'),
+                            image: NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/profile/${profilePicture}'),
                             fit: BoxFit.fill,
                           )
                         ),
@@ -259,7 +299,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  image: NetworkImage('http://192.168.18.10/siraja-api-skripsi/${dashboardAdminDesa.logoDesa}')
+                                  image: NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/logo-desa/${dashboardAdminDesa.logoDesa}')
                               )
                           ),
                         ),

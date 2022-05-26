@@ -53,6 +53,7 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
           detailDesaAdmin.kontakWADesa2 = parsedJson['desadat_wa_kontak_2'];
           sejarahDesaAdmin.sejarahDesa = parsedJson['desadat_sejarah'];
           strukturKepemimpinanDesaAdmin.strukturKepemimpinan = parsedJson['desadat_file_struktur_pem'];
+          detailDesaAdmin.logoDesa = parsedJson['desadat_logo'].toString();
         });
       }
     });
@@ -88,7 +89,9 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
               icon: Icon(Icons.edit),
               color: HexColor("#025393"),
               onPressed: (){
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => editLogoDesaAdmin()));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => editLogoDesaAdmin())).then((value) {
+                  getDesaInfo();
+                });
               },
             )
           ],
@@ -112,7 +115,7 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.18.10/siraja-api-skripsi/${detailDesaAdmin.logoDesa}')
+                                image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/logo-desa/${detailDesaAdmin.logoDesa}')
                               )
                             ),
                           ),

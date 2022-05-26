@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class editLogoDesaAdmin extends StatefulWidget {
   const editLogoDesaAdmin({Key key}) : super(key: key);
@@ -20,29 +22,88 @@ class _editLogoDesaAdminState extends State<editLogoDesaAdmin> {
   File image;
   final picker = ImagePicker();
   bool Loading = false;
+  FToast ftoast;
+  var apiURLUploadLogoDesa = "http://192.168.18.10:8000/api/upload/logo-desa";
 
   Future choiceImage() async {
     var pickedImage = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
       image = File(pickedImage.path);
     });
+    cropImage();
   }
 
   Future uploadImage() async {
-    final uri = Uri.parse("http://192.168.18.10/siraja-api-skripsi/upload-logo-desa.php");
-    var request = http.MultipartRequest('POST', uri);
-    request.fields['desa_id'] = loginPage.desaId.toString();
-    var pic = await http.MultipartFile.fromPath("image", image.path);
-    request.files.add(pic);
+    Map<String, String> headers = {
+      'Content-Type' : 'multipart/form-data'
+    };
+    Map<String, String> body = {
+      'desa_id' : loginPage.desaId.toString()
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(apiURLUploadLogoDesa))
+      ..fields.addAll(body)
+      ..headers.addAll(headers)
+      ..files.add(await http.MultipartFile.fromPath('image', image.path));
     var response = await request.send();
     if(response.statusCode == 200) {
       setState(() {
         Loading = false;
       });
-      Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => dashboardAdminDesa()), (route) => false);
-    }else{
+      ftoast.showToast(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: Colors.green
+            ),
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.done),
+                Container(
+                  margin: EdgeInsets.only(left: 15),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.65,
+                    child: Text("Logo Desa berhasil diperbaharui", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white
+                    )),
+                  ),
+                )
+              ],
+            ),
+          ),
+          toastDuration: Duration(seconds: 3)
+      );
+      Navigator.pop(context, true);
+    }else {
       print("Gambar gagal diupload");
     }
+  }
+
+  Future<void> cropImage() async {
+    final cropped = await ImageCropper().cropImage(
+      sourcePath: image.path,
+      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1)
+    );
+    if(cropped == null) {
+      setState(() {
+        image = null;
+      });
+    }else {
+      setState(() {
+        image = File(cropped.path);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ftoast = FToast();
+    ftoast.init(context);
   }
 
   @override
@@ -73,7 +134,7 @@ class _editLogoDesaAdminState extends State<editLogoDesaAdmin> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: image == null ? DecorationImage(
-                        image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.18.10/siraja-api-skripsi/${detailDesaAdmin.logoDesa}')
+                        image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/logo-desa/${detailDesaAdmin.logoDesa}')
                     ) : DecorationImage(
                       image: FileImage(image)
                     )

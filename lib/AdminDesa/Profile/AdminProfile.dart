@@ -105,7 +105,7 @@ class _adminProfileState extends State<adminProfile> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: NetworkImage('http://192.168.122.149/siraja-api-skripsi-new/${adminProfile.profilePicture}')
+                      image: NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/profile/${adminProfile.profilePicture}')
                     )
                   ),
                 ),

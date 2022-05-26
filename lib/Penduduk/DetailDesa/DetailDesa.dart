@@ -51,6 +51,7 @@ class _detailDesaKramaState extends State<detailDesaKrama> {
           namaKecamatan = parsedJson['name'];
           detailDesaKrama.kontakWADesa1 = parsedJson['desadat_wa_kontak_1'];
           detailDesaKrama.kontakWADesa2 = parsedJson['desadat_wa_kontak_2'];
+          detailDesaKrama.logoDesa = parsedJson['desadat_logo'].toString();
         });
       }
     });
@@ -100,7 +101,7 @@ class _detailDesaKramaState extends State<detailDesaKrama> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  image: detailDesaKrama.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.108.149/siraja-api-skripsi/${detailDesaKrama.logoDesa}')
+                                  image: detailDesaKrama.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/logo-desa/${detailDesaKrama.logoDesa}')
                               )
                             ),
                           ),
