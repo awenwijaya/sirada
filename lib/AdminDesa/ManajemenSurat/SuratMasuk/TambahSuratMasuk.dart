@@ -612,68 +612,59 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                                 setState(() {
                                   Loading = true;
                                 });
-                                var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
-                                var length = await file.length();
-                                var url = Uri.parse('http://192.168.18.10/sirada-api/upload-file-surat-masuk.php');
-                                var request = http.MultipartRequest("POST", url);
-                                var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
-                                request.files.add(multipartFile);
+                                Map<String, String> headers = {
+                                  'Content-Type' : 'multipart/form-data'
+                                };
+                                Map<String, String> body = {
+                                  "master_surat_id" : selectedKodeSurat.toString(),
+                                  "perihal" : controllerParindikan.text,
+                                  "asal_surat" : controllerAsalSurat.text,
+                                  "tanggal_surat" : tanggalSuratValue.toString(),
+                                  "tanggal_kegiatan_mulai" : tanggalMulaiValue.toString() == null ? null : tanggalMulaiValue.toString(),
+                                  "tanggal_kegiatan_berakhir" : tanggalMulaiValue.toString() == null ? null : tanggalBerakhir.toString() == null ? tanggalMulaiValue.toString() : tanggalBerakhirValue.toString(),
+                                  "waktu_kegiatan_mulai" : startTime == null ? null : "${startTime.hour}:${startTime.minute}",
+                                  "waktu_kegiatan_selesai" : startTime == null ? null : endTime == null ? "${startTime.hour}:${startTime.minute}" : "${endTime.hour}:${endTime.minute}",
+                                  "desa_adat_id" : loginPage.desaId.toString(),
+                                  "prajuru_desa_adat_id" : loginPage.prajuruId.toString(),
+                                  "nomor_surat" : controllerNomorSurat.text
+                                };
+                                var request = http.MultipartRequest('POST', Uri.parse(apiURLSimpanSurat))
+                                                  ..fields.addAll(body)
+                                                  ..headers.addAll(headers)
+                                                  ..files.add(await http.MultipartFile.fromPath('surat', file.path));
                                 var response = await request.send();
-                                print(response.statusCode);
                                 if(response.statusCode == 200) {
-                                  var body = jsonEncode({
-                                    "master_surat_id" : selectedKodeSurat,
-                                    "perihal" : controllerParindikan.text,
-                                    "asal_surat" : controllerAsalSurat.text,
-                                    "tanggal_surat" : tanggalSuratValue,
-                                    "tanggal_kegiatan_mulai" : tanggalMulaiValue == null ? null : tanggalMulaiValue,
-                                    "tanggal_kegiatan_berakhir" : tanggalMulaiValue == null ? null : tanggalBerakhir == null ? tanggalMulaiValue : tanggalBerakhirValue,
-                                    "waktu_kegiatan_mulai" : startTime == null ? null : "${startTime.hour}:${startTime.minute}",
-                                    "waktu_kegiatan_selesai" : startTime == null ? null : endTime == null ? "${startTime.hour}:${startTime.minute}" : "${endTime.hour}:${endTime.minute}",
-                                    "file" : namaFile,
-                                    "desa_adat_id" : loginPage.desaId,
-                                    "prajuru_desa_adat_id" : loginPage.prajuruId,
-                                    "nomor_surat" : controllerNomorSurat.text
+                                  setState(() {
+                                    Loading = false;
                                   });
-                                  http.post(Uri.parse(apiURLSimpanSurat),
-                                      headers: {"Content-Type" : "application/json"},
-                                      body: body
-                                  ).then((http.Response response) {
-                                    var responseValue = response.statusCode;
-                                    if(responseValue == 200) {
-                                      setState(() {
-                                        Loading = false;
-                                      });
-                                      ftoast.showToast(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                          decoration: BoxDecoration(
+                                  ftoast.showToast(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                        decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(25),
                                             color: Colors.green
-                                          ),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Icon(Icons.done),
-                                              Container(
-                                                margin: EdgeInsets.only(left: 15),
-                                                child: SizedBox(
-                                                  width: MediaQuery.of(context).size.width * 0.65,
-                                                  child: Text("Data surat masuk berhasil ditambahkan", style: TextStyle(
+                                        ),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(Icons.done),
+                                            Container(
+                                              margin: EdgeInsets.only(left: 15),
+                                              child: SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.65,
+                                                child: Text("Data surat masuk berhasil ditambahkan", style: TextStyle(
                                                     fontFamily: "Poppins",
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w700,
                                                     color: Colors.white
-                                                  )),
-                                                ),
-                                              )
-                                            ],
-                                          ),
+                                                )),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                        toastDuration: Duration(seconds: 3)
-                                      );
-                                      Navigator.of(context).pop(true);
-                                    }
-                                  });
+                                      ),
+                                      toastDuration: Duration(seconds: 3)
+                                  );
+                                  Navigator.of(context).pop(true);
                                 }
                               }else {
                                 ftoast.showToast(

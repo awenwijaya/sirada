@@ -22,21 +22,10 @@
       <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/profilepic.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/profilepic.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/Dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/Dashboard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/DetailDesa/DetailDesa.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/DetailDesa/DetailDesa.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/DetailDesa/EditLogoDesa.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/DetailDesa/EditLogoDesa.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/DetailDesa/StrukturKepemimpinanDesa/AddStrukturKepemimpinanDesa.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/DetailDesa/StrukturKepemimpinanDesa/AddStrukturKepemimpinanDesa.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/DetailDesa/StrukturKepemimpinanDesa/EditStrukturKepemimpinanDesa.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/DetailDesa/StrukturKepemimpinanDesa/EditStrukturKepemimpinanDesa.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/DetailDesa/StrukturKepemimpinanDesa/StrukturKepemimpinanDesa.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/DetailDesa/StrukturKepemimpinanDesa/StrukturKepemimpinanDesa.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/Profile/AdminProfile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/Profile/AdminProfile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/Profile/EditProfile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/Profile/EditProfile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Dashboard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Penduduk/DetailDesa/DetailDesa.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/DetailDesa/DetailDesa.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Profile/EditProfile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Profile/EditProfile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Penduduk/Profile/UserProfile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Penduduk/Profile/UserProfile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/AgendaAcara/AgendaAcara.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/AgendaAcara/AgendaAcara.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratMasuk/TambahSuratMasuk.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratMasuk/TambahSuratMasuk.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
