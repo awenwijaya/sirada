@@ -81,8 +81,7 @@ class _kramaProfileState extends State<kramaProfile> {
             fontWeight: FontWeight.w700,
             color: Colors.white
           )),
-          backgroundColor: HexColor("#025393"),
-          centerTitle: true
+          backgroundColor: HexColor("#025393")
         ),
         body: kramaProfile.namaPenduduk == null ? ProfilePageShimmer() : SingleChildScrollView(
           child: Column(

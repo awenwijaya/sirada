@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
+import 'package:surat/KramaPanitia/BottomNavigationBar.dart';
 import 'package:surat/KramaPanitia/Dashboard.dart';
 import 'package:surat/LoginAndRegistration/LupaPassword.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
@@ -464,7 +465,36 @@ class _loginPageState extends State<loginPage> {
                                           });
                                         }
                                       }else if(parsedJson['role'] == "Panitia") {
-                                        Navigator.of(context).pushAndRemoveUntil(createRouteKramaPanitiaDashboard(), (route) => false);
+                                        setState(() {
+                                          loginPage.pendudukId = parsedJson['penduduk_id'];
+                                          loginPage.userEmail = parsedJson['email'];
+                                          loginPage.desaId = parsedJson['desa_adat_id'];
+                                          loginPage.userId = parsedJson['user_id'];
+                                          loginPage.role = parsedJson['role'];
+                                        });
+                                        final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+                                        sharedpref.setInt('userId', loginPage.userId);
+                                        sharedpref.setInt('pendudukId', loginPage.pendudukId);
+                                        sharedpref.setInt('desaId', loginPage.desaId);
+                                        sharedpref.setString('email', loginPage.userEmail);
+                                        sharedpref.setString('role', loginPage.role);
+                                        sharedpref.setString('status', 'login');
+                                        var bodyFCM = jsonEncode({
+                                          "user_id" : loginPage.userId,
+                                          "token" : loginPage.token
+                                        });
+                                        http.post(Uri.parse(apiURLUploadFCMToken),
+                                          headers: {"Content-Type" : "application/json"},
+                                          body: bodyFCM
+                                        ).then((http.Response response) {
+                                          var data = response.statusCode;
+                                          if(data == 200) {
+                                            setState(() {
+                                              Loading = false;
+                                            });
+                                            Navigator.of(context).pushAndRemoveUntil(createRouteKramaPanitiaDashboard(), (route) => false);
+                                          }
+                                        });
                                       }
                                     }else{
                                       setState(() {
@@ -763,7 +793,7 @@ Route createRouteAdminDesaDashboard() {
 
 Route createRouteKramaPanitiaDashboard() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const dashboardKramaPanitia(),
+    pageBuilder: (context, animation, secondaryAnimation) => const bottomNavigationBarPanitia(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);
       const end = Offset.zero;

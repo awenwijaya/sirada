@@ -1,8 +1,16 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:http/http.dart' as http;
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:surat/main.dart';
 
 class dashboardKramaPanitia extends StatefulWidget {
+  static var logoDesa;
   const dashboardKramaPanitia({Key key}) : super(key: key);
 
   @override
@@ -10,6 +18,92 @@ class dashboardKramaPanitia extends StatefulWidget {
 }
 
 class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
+  var profilePicture;
+  var nama;
+  var namaDesa;
+  var apiURLGetDataUser = "http://192.168.18.10:8000/api/data/userdata/${loginPage.userId}";
+  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/userdata/desa/${loginPage.desaId}";
+
+  getUserInfo() async {
+    http.get(Uri.parse(apiURLGetDataUser),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          nama = parsedJson['nama'];
+          profilePicture = parsedJson['foto'];
+        });
+      }
+    });
+  }
+
+  getDesaInfo() async {
+    http.get(Uri.parse(apiURLGetDetailDesaById),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = response.body;
+        var parsedJson = json.decode(jsonData);
+        setState(() {
+          namaDesa = parsedJson['desadat_nama'];
+          dashboardKramaPanitia.logoDesa = parsedJson['desadat_logo'].toString();
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserInfo();
+    getDesaInfo();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if(notification!=null && android!=null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+                android: AndroidNotificationDetails(
+                    channel.id,
+                    channel.name,
+                    color: Colors.white,
+                    playSound: true,
+                    icon: '@mipmap/ic_launcher'
+                )
+            )
+        );
+      }
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if(notification!=null && android != null) {
+        showDialog(
+            context: context,
+            builder: (_){
+              return AlertDialog(
+                title: Text(notification.title),
+                content: SingleChildScrollView(child: Column(
+                  children: <Widget>[
+                    Text(notification.body)
+                  ],
+                )),
+              );
+            }
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery
@@ -58,7 +152,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: AssetImage('images/profilepic.png'),
+                            image: profilePicture == null ? AssetImage('images/profilepic.png') : NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/profile/${profilePicture}'),
                             fit: BoxFit.fill
                           )
                         ),
@@ -74,7 +168,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                       ),
                       Container(
                         margin: EdgeInsets.only(bottom: 10),
-                        child: Text("Panitia", style: TextStyle(
+                        child: Text(nama == null ? "" : nama, style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 16,
                           color: Colors.white
@@ -98,7 +192,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                     alignment: Alignment.topLeft,
                   ),
                   Container(
-                    child: Row(
+                    child: namaDesa == null ? ProfileShimmer() : Row(
                       children: <Widget>[
                         Container(
                           width: 50,
@@ -106,7 +200,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
-                              image: AssetImage('images/noimage.png'),
+                              image: dashboardKramaPanitia.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/logo-desa/${dashboardKramaPanitia.logoDesa}'),
                               fit: BoxFit.fill
                             )
                           ),
@@ -118,7 +212,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Container(
-                                child: Text("Nama Desa", style: TextStyle(
+                                child: Text(namaDesa, style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700
@@ -159,13 +253,119 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                   ),
                   Container(
                     alignment: Alignment.topLeft,
-                    child: Text("Validasi Surat", style: TextStyle(
+                    child: Text("Status Surat", style: TextStyle(
                       fontFamily: "Poppins",
                       fontSize: 14,
                       fontWeight: FontWeight.bold
                     )),
                     margin: EdgeInsets.only(top: 20, left: 15)
                   ),
+                  Container(
+                    child: FlatButton(
+                      onPressed: (){},
+                      child: Text("Tambah Surat Keluar", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: HexColor("#025393")
+                      )),
+                      color: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        side: BorderSide(color: HexColor("#025393"), width: 2)
+                      ),
+                      padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                    ),
+                    margin: EdgeInsets.only(top: 15),
+                  ),
+                  Container(
+                    child: SafeArea(
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            DefaultTabController(
+                              length: 3,
+                              initialIndex: 0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  Container(
+                                    child: TabBar(
+                                      labelColor: HexColor("#025393"),
+                                      unselectedLabelColor: Colors.black,
+                                      tabs: [
+                                        Tab(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Icon(CupertinoIcons.hourglass_bottomhalf_fill),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.55,
+                                                child: Text(
+                                                  "Menunggu", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontWeight: FontWeight.w700
+                                                ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.fade,
+                                                  softWrap: false,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Icon(CupertinoIcons.archivebox_fill),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.55,
+                                                child: Text(
+                                                  "Perlu Dikonfirmasi", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontWeight: FontWeight.w700
+                                                ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.fade,
+                                                  softWrap: false,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Icon(Icons.done),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.55,
+                                                child: Text(
+                                                  "Dikonfirmasi", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontWeight: FontWeight.w700
+                                                ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.fade,
+                                                  softWrap: false,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             )

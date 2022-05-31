@@ -169,7 +169,6 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                   )
                 )
               ),
-              centerTitle: true,
             ),
             SliverToBoxAdapter(
               child: Column(

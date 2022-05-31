@@ -132,7 +132,6 @@ class _editProfileKramaState extends State<editProfileKrama> {
             color: Colors.white
           )),
           backgroundColor: HexColor("#025393"),
-          centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: (){Navigator.of(context).pop();},

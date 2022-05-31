@@ -75,7 +75,6 @@ class _detailDesaKramaState extends State<detailDesaKrama> {
             color: Colors.white
           )),
           backgroundColor: HexColor("#025393"),
-          centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             color: Colors.white,
@@ -638,7 +637,6 @@ class _kontakWADesaKramaState extends State<kontakWADesaKrama> {
             fontWeight: FontWeight.w700
           )),
           backgroundColor: HexColor("#025393"),
-          centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             color: Colors.white,

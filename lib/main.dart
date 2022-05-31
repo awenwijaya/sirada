@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
+import 'package:surat/KramaPanitia/BottomNavigationBar.dart';
 import 'package:surat/KramaPanitia/Dashboard.dart';
 import 'package:surat/Penduduk/BottomNavigationBar.dart';
 import 'package:surat/WelcomeScreen.dart';
@@ -128,6 +129,13 @@ class _splashScreenState extends State<splashScreen> {
             loginPage.pendudukId = pendudukId;
             loginPage.kramaId = kramaId;
           });
+        }else if(role == "Panitia") {
+          setState(() {
+            loginPage.userId = userId;
+            loginPage.userEmail =  userEmail;
+            loginPage.desaId = desaId;
+            loginPage.pendudukId = pendudukId;
+          });
         }
         if(role == "Krama") {
           return Timer(duration, navigatorPendudukHomePage);
@@ -155,7 +163,7 @@ class _splashScreenState extends State<splashScreen> {
   }
 
   void navigatorKramaPanitiaHomePage() {
-    Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardKramaPanitia(), type: PageTransitionType.fade), (route) => false);
+    Navigator.pushAndRemoveUntil(context, PageTransition(child: bottomNavigationBarPanitia(), type: PageTransitionType.fade), (route) => false);
   }
 
   @override

@@ -21,7 +21,6 @@ class _suratPengumumanKramaState extends State<suratPengumumanKrama> {
             color: Colors.white
           )),
           backgroundColor: HexColor("#025393"),
-          centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             color: Colors.white,
