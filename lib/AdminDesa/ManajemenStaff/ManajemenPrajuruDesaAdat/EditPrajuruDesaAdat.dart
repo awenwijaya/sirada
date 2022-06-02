@@ -32,9 +32,9 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   DateTime masaBerakhir;
   DateTime sekarang = DateTime.now();
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
-  var apiURLShowDetailPrajuruDesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/edit/up";
-  var apiURLUploadFileSKPrajuru = "http://192.168.18.10/sirada-api/upload-file-sk-prajuru.php";
+  var apiURLShowDetailPrajuruDesaAdat = "http://172.16.58.139:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruDesaAdat = "http://172.16.58.139:8000/api/admin/prajuru/desa_adat/edit/up";
+  var apiURLUploadFileSKPrajuru = "http://172.16.58.139:8000/api/upload/sk-prajuru";
   var selectedIdPenduduk;
   var selectedRole;
   bool Loading = false;
@@ -337,14 +337,13 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                         });
                       }
                       if(file!=null) {
-                        var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
-                        var length = await file.length();
-                        var url = Uri.parse(apiURLUploadFileSKPrajuru);
-                        var request = http.MultipartRequest("POST", url);
-                        var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
-                        request.files.add(multipartFile);
+                        Map<String, String> headers = {
+                          'Content-Type' : 'multipart/form-data'
+                        };
+                        var request = http.MultipartRequest('POST', Uri.parse(apiURLUploadFileSKPrajuru))
+                                          ..headers.addAll(headers)
+                                          ..files.add(await http.MultipartFile.fromPath('file', filePath));
                         var response = await request.send();
-                        print(response.statusCode);
                         if(response.statusCode == 200) {
                           var body = jsonEncode({
                             "prajuru_desa_adat_id" : editPrajuruDesaAdatAdmin.idPegawai,

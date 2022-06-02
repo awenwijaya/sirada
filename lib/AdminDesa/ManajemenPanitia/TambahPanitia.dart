@@ -16,7 +16,7 @@ class tambahPanitiaKegiatanAdmin extends StatefulWidget {
 class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin> {
   var selectedIdPanitiaKegiatan;
   List panitiaKegiatanList = List();
-  var apiURLGetPanitiaKegiatan = "http://192.168.18.10:8000/api/panitia/kegiatan/view";
+  var apiURLGetPanitiaKegiatan = "http://siradaskripsi.my.id/api/panitia/kegiatan/view";
   bool availablePanitiaKegiatan = false;
   bool LoadingPanitiaKegiatan = true;
   bool Loading = false;

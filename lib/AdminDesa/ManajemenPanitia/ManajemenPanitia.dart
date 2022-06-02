@@ -16,8 +16,8 @@ class manajemenPanitiaDesaAdatAdmin extends StatefulWidget {
 }
 
 class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdatAdmin> {
-  var apiURLGetDataTimKegiatanAktif = "http://192.168.18.10:8000/api/panitia/1487/aktif";
-  var apiURLGetDataTimKegiatanTidakAktif = "http://192.168.18.10:8000/api/panitia/1487/tidak-aktif";
+  var apiURLGetDataTimKegiatanAktif = "http://siradaskripsi.my.id/api/panitia/1487/aktif";
+  var apiURLGetDataTimKegiatanTidakAktif = "http://siradaskripsi.my.id/api/panitia/1487/tidak-aktif";
   FToast ftoast;
 
   //list aktif

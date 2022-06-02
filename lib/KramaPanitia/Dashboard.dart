@@ -22,8 +22,8 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
   var profilePicture;
   var nama;
   var namaDesa;
-  var apiURLGetDataUser = "http://192.168.18.10:8000/api/data/userdata/${loginPage.userId}";
-  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/userdata/desa/${loginPage.desaId}";
+  var apiURLGetDataUser = "http://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
+  var apiURLGetDetailDesaById = "http://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -153,7 +153,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: profilePicture == null ? AssetImage('images/profilepic.png') : NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/profile/${profilePicture}'),
+                            image: profilePicture == null ? AssetImage('images/profilepic.png') : NetworkImage('http://storage.siradaskripsi.my.id/img/profile/${profilePicture}'),
                             fit: BoxFit.fill
                           )
                         ),
@@ -201,7 +201,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
-                              image: dashboardKramaPanitia.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/logo-desa/${dashboardKramaPanitia.logoDesa}'),
+                              image: dashboardKramaPanitia.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://storage.siradaskripsi.my.id/img/logo-desa/${dashboardKramaPanitia.logoDesa}'),
                               fit: BoxFit.fill
                             )
                           ),

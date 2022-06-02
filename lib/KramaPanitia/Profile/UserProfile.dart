@@ -33,8 +33,8 @@ class kramaPanitiaProfile extends StatefulWidget {
 }
 
 class _kramaPanitiaProfileState extends State<kramaPanitiaProfile> {
-  var apiURLUserProfile = "http://192.168.18.10:8000/api/data/userdata/${loginPage.userId}";
-  var apiURLRemoveFCMToken = "http://192.168.18.10:8000/api/autentikasi/login/token/remove";
+  var apiURLUserProfile = "http://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
+  var apiURLRemoveFCMToken = "http://siradaskripsi.my.id/api/autentikasi/login/token/remove";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLUserProfile),
@@ -103,7 +103,7 @@ class _kramaPanitiaProfileState extends State<kramaPanitiaProfile> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/profile/${kramaPanitiaProfile.profilePicture}')
+                      image: NetworkImage('http://storage.siradaskripsi.my.id/img/profile/${kramaPanitiaProfile.profilePicture}')
                     )
                   ),
                 ),

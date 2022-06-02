@@ -32,9 +32,9 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
   DateTime masaMulai;
   DateTime masaBerakhir;
   DateTime sekarang = DateTime.now();
-  var apiURLShowDetailPrajuruBanjarAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/edit/up";
-  var apiURLUploadFileSKPrajuru = "http://192.168.18.10/sirada-api/upload-file-sk-prajuru.php";
+  var apiURLShowDetailPrajuruBanjarAdat = "http://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruBanjarAdat = "http://siradaskripsi.my.id/api/admin/prajuru/banjar_adat/edit/up";
+  var apiURLUploadFileSKPrajuru = "http://siradaskripsi.my.id/api/upload/sk-prajuru";
   var selectedIdPenduduk;
   bool Loading = false;
   final controllerEmail = TextEditingController();
@@ -323,14 +323,13 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
                         Loading = true;
                       });
                       if(file!=null) {
-                        var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
-                        var length = await file.length();
-                        var url = Uri.parse(apiURLUploadFileSKPrajuru);
-                        var request = http.MultipartRequest("POST", url);
-                        var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
-                        request.files.add(multipartFile);
+                        Map<String, String> headers = {
+                          'Content-Type' : 'multipart/form-data'
+                        };
+                        var request = http.MultipartRequest('POST', Uri.parse(apiURLUploadFileSKPrajuru))
+                          ..headers.addAll(headers)
+                          ..files.add(await http.MultipartFile.fromPath('file', filePath));
                         var response = await request.send();
-                        print(response.statusCode);
                         if(response.statusCode == 200) {
                           var body = jsonEncode({
                             "prajuru_banjar_adat_id" : editPrajuruBanjarAdatAdmin.idPegawai,

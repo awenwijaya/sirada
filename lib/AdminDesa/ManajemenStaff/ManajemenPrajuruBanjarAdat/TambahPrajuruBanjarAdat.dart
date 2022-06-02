@@ -44,8 +44,7 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
   var banjarID;
   var namaBanjar;
   var selectedRole;
-  var apiURLUpDataPrajuruBanjarAdat = "http://192.168.18.10:8000/api/admin/prajuru/banjar_adat/up";
-  var apiURLUploadFileSKPrajuru = "http://192.168.18.10/sirada-api/upload-file-sk-prajuru.php";
+  var apiURLUpDataPrajuruBanjarAdat = "http://siradaskripsi.my.id/api/admin/prajuru/banjar_adat/up";
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
   File file;
   String namaFile;
@@ -570,131 +569,121 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
                                           statusValue = "aktif";
                                           Loading = true;
                                         });
-                                        var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
-                                        var length = await file.length();
-                                        var url = Uri.parse(apiURLUploadFileSKPrajuru);
-                                        var request = http.MultipartRequest("POST", url);
-                                        var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
-                                        request.files.add(multipartFile);
+                                        Map<String, String> headers = {
+                                          'Content-Type' : 'multipart/form-data'
+                                        };
+                                        Map<String, String> body = {
+                                          "krama_mipil_id" : kramaMipilID.toString(),
+                                          "banjar_id" : banjarID.toString(),
+                                          "status" : statusValue.toString(),
+                                          "jabatan" : selectedJabatan.toString(),
+                                          "tanggal_mulai_menjabat" : selectedMasaMulaiValue.toString(),
+                                          "tanggal_akhir_menjabat" : selectedMasaBerakhirValue.toString(),
+                                          "email" : controllerEmail.text.toString(),
+                                          "password" : controllerPassword.text.toString(),
+                                          "desa_adat_id" : loginPage.desaId.toString(),
+                                          "penduduk_id" : pegawaiID.toString(),
+                                          "role" : "Admin"
+                                        };
+                                        var request = http.MultipartRequest('POST', Uri.parse(apiURLUpDataPrajuruBanjarAdat))
+                                                          ..fields.addAll(body)
+                                                          ..headers.addAll(headers)
+                                                          ..files.add(await http.MultipartFile.fromPath('file', filePath));
                                         var response = await request.send();
-                                        print(response.statusCode);
-                                        if(response.statusCode == 200) {
-                                          var body = jsonEncode({
-                                            "krama_mipil_id" : kramaMipilID,
-                                            "banjar_id" : banjarID,
-                                            "status" : statusValue,
-                                            "jabatan" : selectedJabatan,
-                                            "tanggal_mulai_menjabat" : selectedMasaMulaiValue,
-                                            "tanggal_akhir_menjabat" : selectedMasaBerakhirValue,
-                                            "email" : controllerEmail.text,
-                                            "password" : controllerPassword.text,
-                                            "desa_adat_id" : loginPage.desaId,
-                                            "penduduk_id" : pegawaiID,
-                                            "role" : "Admin",
-                                            "sk_prajuru" : namaFile
+                                        if(response.statusCode == 501) {
+                                          setState(() {
+                                            Loading = false;
                                           });
-                                          http.post(Uri.parse(apiURLUpDataPrajuruBanjarAdat),
-                                              headers: {"Content-Type" : "application/json"},
-                                              body: body
-                                          ).then((http.Response response) {
-                                            var responseValue = response.statusCode;
-                                            print(responseValue);
-                                            if(responseValue == 501) {
-                                              setState(() {
-                                                Loading = false;
-                                              });
-                                              ftoast.showToast(
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                                  decoration: BoxDecoration(
+                                          ftoast.showToast(
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                decoration: BoxDecoration(
                                                     borderRadius: BorderRadius.circular(25),
                                                     color: Colors.redAccent
-                                                  ),
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      Icon(Icons.close),
-                                                      Container(
-                                                        margin: EdgeInsets.only(left: 15),
-                                                        child: SizedBox(
-                                                          width: MediaQuery.of(context).size.width * 0.65,
-                                                          child: Text("Prajuru sudah terdaftar", style: TextStyle(
+                                                ),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(Icons.close),
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: 15),
+                                                      child: SizedBox(
+                                                        width: MediaQuery.of(context).size.width * 0.65,
+                                                        child: Text("Prajuru sudah terdaftar", style: TextStyle(
                                                             fontFamily: "Poppins",
                                                             fontSize: 14,
                                                             fontWeight: FontWeight.w700,
                                                             color: Colors.white
-                                                          )),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
+                                                        )),
+                                                      ),
+                                                    )
+                                                  ],
                                                 ),
-                                                toastDuration: Duration(seconds: 3)
-                                              );
-                                            }else if(responseValue == 502) {
-                                              setState(() {
-                                                Loading = false;
-                                              });
-                                              ftoast.showToast(
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(25),
-                                                        color: Colors.redAccent
-                                                    ),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Icon(Icons.close),
-                                                        Container(
-                                                          margin: EdgeInsets.only(left: 15),
-                                                          child: SizedBox(
-                                                            width: MediaQuery.of(context).size.width * 0.65,
-                                                            child: Text("Email sudah terdaftar. Silahkan gunakan email lain dan coba lagi", style: TextStyle(
-                                                                fontFamily: "Poppins",
-                                                                fontSize: 14,
-                                                                fontWeight: FontWeight.w700,
-                                                                color: Colors.white
-                                                            )),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  toastDuration: Duration(seconds: 3)
-                                              );
-                                            }else if(responseValue == 200){
-                                              setState(() {
-                                                Loading = false;
-                                              });
-                                              ftoast.showToast(
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(25),
-                                                        color: Colors.green
-                                                    ),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Icon(Icons.done),
-                                                        Container(
-                                                          margin: EdgeInsets.only(left: 15),
-                                                          child: SizedBox(
-                                                            width: MediaQuery.of(context).size.width * 0.65,
-                                                            child: Text("Prajuru Banjar Adat berhasil terdaftar", style: TextStyle(
-                                                                fontFamily: "Poppins",
-                                                                fontSize: 14,
-                                                                fontWeight: FontWeight.w700,
-                                                                color: Colors.white
-                                                            )),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  toastDuration: Duration(seconds: 3)
-                                              );
-                                              Navigator.of(context).pop(true);
-                                            }
+                                              ),
+                                              toastDuration: Duration(seconds: 3)
+                                          );
+                                        }else if(response.statusCode == 502) {
+                                          setState(() {
+                                            Loading = false;
                                           });
+                                          ftoast.showToast(
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(25),
+                                                    color: Colors.redAccent
+                                                ),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(Icons.close),
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: 15),
+                                                      child: SizedBox(
+                                                        width: MediaQuery.of(context).size.width * 0.65,
+                                                        child: Text("Email sudah terdaftar. Silahkan gunakan email lain dan coba lagi", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: Colors.white
+                                                        )),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              toastDuration: Duration(seconds: 3)
+                                          );
+                                        }else if(response.statusCode == 200) {
+                                          setState(() {
+                                            Loading = false;
+                                          });
+                                          ftoast.showToast(
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(25),
+                                                    color: Colors.green
+                                                ),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(Icons.done),
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: 15),
+                                                      child: SizedBox(
+                                                        width: MediaQuery.of(context).size.width * 0.65,
+                                                        child: Text("Prajuru Banjar Adat berhasil terdaftar", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: Colors.white
+                                                        )),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              toastDuration: Duration(seconds: 3)
+                                          );
+                                          Navigator.of(context).pop(true);
                                         }
                                       }
                                     }else{
@@ -731,131 +720,121 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
                                           statusValue = "tidak aktif";
                                           Loading = true;
                                         });
-                                        var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
-                                        var length = await file.length();
-                                        var url = Uri.parse(apiURLUploadFileSKPrajuru);
-                                        var request = http.MultipartRequest("POST", url);
-                                        var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
-                                        request.files.add(multipartFile);
+                                        Map<String, String> headers = {
+                                          'Content-Type' : 'multipart/form-data'
+                                        };
+                                        Map<String, String> body = {
+                                          "krama_mipil_id" : kramaMipilID.toString(),
+                                          "banjar_id" : banjarID.toString(),
+                                          "status" : statusValue.toString(),
+                                          "jabatan" : selectedJabatan.toString(),
+                                          "tanggal_mulai_menjabat" : selectedMasaMulaiValue.toString(),
+                                          "tanggal_akhir_menjabat" : selectedMasaBerakhirValue.toString(),
+                                          "email" : controllerEmail.text.toString(),
+                                          "password" : controllerPassword.text.toString(),
+                                          "desa_adat_id" : loginPage.desaId.toString(),
+                                          "penduduk_id" : pegawaiID.toString(),
+                                          "role" : "Admin"
+                                        };
+                                        var request = http.MultipartRequest('POST', Uri.parse(apiURLUpDataPrajuruBanjarAdat))
+                                          ..fields.addAll(body)
+                                          ..headers.addAll(headers)
+                                          ..files.add(await http.MultipartFile.fromPath('file', filePath));
                                         var response = await request.send();
-                                        print(response.statusCode);
-                                        if(response.statusCode == 200) {
-                                          var body = jsonEncode({
-                                            "krama_mipil_id" : kramaMipilID,
-                                            "banjar_id" : banjarID,
-                                            "status" : statusValue,
-                                            "jabatan" : selectedJabatan,
-                                            "tanggal_mulai_menjabat" : selectedMasaMulaiValue,
-                                            "tanggal_akhir_menjabat" : selectedMasaBerakhirValue,
-                                            "email" : controllerEmail.text,
-                                            "password" : controllerPassword.text,
-                                            "desa_adat_id" : loginPage.desaId,
-                                            "penduduk_id" : pegawaiID,
-                                            "role" : "Admin",
-                                            "sk_prajuru" : namaFile
+                                        if(response.statusCode == 501) {
+                                          setState(() {
+                                            Loading = false;
                                           });
-                                          http.post(Uri.parse(apiURLUpDataPrajuruBanjarAdat),
-                                              headers: {"Content-Type" : "application/json"},
-                                              body: body
-                                          ).then((http.Response response) {
-                                            var responseValue = response.statusCode;
-                                            print(responseValue);
-                                            if(responseValue == 501) {
-                                              setState(() {
-                                                Loading = false;
-                                              });
-                                              ftoast.showToast(
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(25),
-                                                        color: Colors.redAccent
-                                                    ),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Icon(Icons.close),
-                                                        Container(
-                                                          margin: EdgeInsets.only(left: 15),
-                                                          child: SizedBox(
-                                                            width: MediaQuery.of(context).size.width * 0.65,
-                                                            child: Text("Prajuru sudah terdaftar", style: TextStyle(
-                                                                fontFamily: "Poppins",
-                                                                fontSize: 14,
-                                                                fontWeight: FontWeight.w700,
-                                                                color: Colors.white
-                                                            )),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  toastDuration: Duration(seconds: 3)
-                                              );
-                                            }else if(responseValue == 502) {
-                                              setState(() {
-                                                Loading = false;
-                                              });
-                                              ftoast.showToast(
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(25),
-                                                        color: Colors.redAccent
-                                                    ),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Icon(Icons.close),
-                                                        Container(
-                                                          margin: EdgeInsets.only(left: 15),
-                                                          child: SizedBox(
-                                                            width: MediaQuery.of(context).size.width * 0.65,
-                                                            child: Text("Email sudah terdaftar. Silahkan gunakan email lain dan coba lagi", style: TextStyle(
-                                                                fontFamily: "Poppins",
-                                                                fontSize: 14,
-                                                                fontWeight: FontWeight.w700,
-                                                                color: Colors.white
-                                                            )),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  toastDuration: Duration(seconds: 3)
-                                              );
-                                            }else if(responseValue == 200){
-                                              setState(() {
-                                                Loading = false;
-                                              });
-                                              ftoast.showToast(
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(25),
-                                                        color: Colors.green
-                                                    ),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Icon(Icons.done),
-                                                        Container(
-                                                          margin: EdgeInsets.only(left: 15),
-                                                          child: SizedBox(
-                                                            width: MediaQuery.of(context).size.width * 0.65,
-                                                            child: Text("Prajuru Banjar Adat berhasil terdaftar", style: TextStyle(
-                                                                fontFamily: "Poppins",
-                                                                fontSize: 14,
-                                                                fontWeight: FontWeight.w700,
-                                                                color: Colors.white
-                                                            )),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  toastDuration: Duration(seconds: 3)
-                                              );
-                                              Navigator.of(context).pop(true);
-                                            }
+                                          ftoast.showToast(
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(25),
+                                                    color: Colors.redAccent
+                                                ),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(Icons.close),
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: 15),
+                                                      child: SizedBox(
+                                                        width: MediaQuery.of(context).size.width * 0.65,
+                                                        child: Text("Prajuru sudah terdaftar", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: Colors.white
+                                                        )),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              toastDuration: Duration(seconds: 3)
+                                          );
+                                        }else if(response.statusCode == 502) {
+                                          setState(() {
+                                            Loading = false;
                                           });
+                                          ftoast.showToast(
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(25),
+                                                    color: Colors.redAccent
+                                                ),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(Icons.close),
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: 15),
+                                                      child: SizedBox(
+                                                        width: MediaQuery.of(context).size.width * 0.65,
+                                                        child: Text("Email sudah terdaftar. Silahkan gunakan email lain dan coba lagi", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: Colors.white
+                                                        )),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              toastDuration: Duration(seconds: 3)
+                                          );
+                                        }else if(response.statusCode == 200) {
+                                          setState(() {
+                                            Loading = false;
+                                          });
+                                          ftoast.showToast(
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(25),
+                                                    color: Colors.green
+                                                ),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(Icons.done),
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: 15),
+                                                      child: SizedBox(
+                                                        width: MediaQuery.of(context).size.width * 0.65,
+                                                        child: Text("Prajuru Banjar Adat berhasil terdaftar", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 14,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: Colors.white
+                                                        )),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              toastDuration: Duration(seconds: 3)
+                                          );
+                                          Navigator.of(context).pop(true);
                                         }
                                       }
                                     }
@@ -954,7 +933,7 @@ class pilihDataPrajuruBanjarAdat extends StatefulWidget {
 }
 
 class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat> {
-  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "http://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}";
   var nikPegawai = [];
   var namaPegawai = [];
   var kramaMipilID = [];
@@ -1099,7 +1078,7 @@ class pilihDataBanjar extends StatefulWidget {
 }
 
 class _pilihDataBanjarState extends State<pilihDataBanjar> {
-  var apiURLGetDataBanjar = "http://192.168.18.10:8000/api/data/banjar/${loginPage.desaId}";
+  var apiURLGetDataBanjar = "http://siradaskripsi.my.id/api/data/banjar/${loginPage.desaId}";
   var idBanjar = [];
   var namaBanjar = [];
   bool Loading = true;
