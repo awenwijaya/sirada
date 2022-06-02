@@ -41,7 +41,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
   var kramaMipilID;
   var pegawaiID;
   var selectedRole;
-  var apiURLUpDataPrajuruDesaAdat = "http://192.168.18.10:8000/api/admin/prajuru/desa_adat/up";
+  var apiURLUpDataPrajuruDesaAdat = "http://siradaskripsi.my.id/api/admin/prajuru/desa_adat/up";
   var apiURLUploadFileSKPrajuru = "http://192.168.18.10/sirada-api/upload-file-sk-prajuru.php";
   bool Loading = false;
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();

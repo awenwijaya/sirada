@@ -32,9 +32,9 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
-  var apiURLLogin = "http://192.168.18.10:8000/api/autentikasi/login";
-  var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
-  var apiURLUploadFCMToken = "http://192.168.18.10:8000/api/autentikasi/login/token";
+  var apiURLLogin = "http://siradaskripsi.my.id/api/autentikasi/login";
+  var apiURLKonfirmasiEmail = "http://siradaskripsi.my.id/api/autentikasi/registrasi/konfirmasi_email";
+  var apiURLUploadFCMToken = "http://siradaskripsi.my.id/api/autentikasi/login/token";
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   bool Loading = false;
@@ -317,7 +317,7 @@ class _loginPageState extends State<loginPage> {
                                   if(parsedJson['is_verified'] == "Verified") {
                                     if(parsedJson['desadat_status_register'] == 'Terdaftar') {
                                       if(parsedJson['role'] == "Admin" || parsedJson['role'] == 'Bendesa' || parsedJson['role'] == 'Penyarikan') {
-                                        var response = await http.get(Uri.parse("http://192.168.18.10:8000/api/autentikasi/login/status/prajuru_desa_adat/${tempPendudukId}"));
+                                        var response = await http.get(Uri.parse("http://siradaskripsi.my.id/api/autentikasi/login/status/prajuru_desa_adat/${tempPendudukId}"));
                                         if(response.statusCode == 200) {
                                           var jsonDataPrajuru = response.body;
                                           var parsedJsonPrajuru = json.decode(jsonDataPrajuru);
@@ -425,7 +425,7 @@ class _loginPageState extends State<loginPage> {
                                           }
                                         }
                                       }else if(parsedJson['role'] == "Krama") {
-                                        var response = await http.get(Uri.parse("http://192.168.18.10:8000/api/krama/mipil/${tempPendudukId}"));
+                                        var response = await http.get(Uri.parse("http://siradaskripsi.my.id/api/krama/mipil/${tempPendudukId}"));
                                         if(response.statusCode == 200) {
                                           var jsonDataKrama = response.body;
                                           var parsedJsonKrama = json.decode(jsonDataKrama);

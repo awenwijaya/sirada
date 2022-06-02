@@ -16,8 +16,8 @@ class lupaPasswordPage extends StatefulWidget {
 
 class _lupaPasswordPageState extends State<lupaPasswordPage> {
   final controllerEmail = TextEditingController();
-  var apiURLCekEmail = "http://192.168.18.10:8000/api/autentikasi/lupapassword/cek_email";
-  var apiURLKirimEmailForgetPassword = "http://192.168.18.10:8000/api/autentikasi/lupapassword/send_email";
+  var apiURLCekEmail = "http://siradaskripsi.my.id/api/autentikasi/lupapassword/cek_email";
+  var apiURLKirimEmailForgetPassword = "http://siradaskripsi.my.id/api/autentikasi/lupapassword/send_email";
   bool Loading = false;
 
   @override

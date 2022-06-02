@@ -9,15 +9,18 @@ import 'package:surat/AdminDesa/ManajemenSurat/SuratMasuk/ViewSuratMasuk.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class detailSuratMasukAdmin extends StatefulWidget {
-  static var idSurat;
-  const detailSuratMasukAdmin({Key key}) : super(key: key);
+  final int idSurat;
+  static int idSuratStatic;
+  detailSuratMasukAdmin(this.idSurat);
+  _detailSuratMasukAdminState createState() => new _detailSuratMasukAdminState();
 
-  @override
-  State<detailSuratMasukAdmin> createState() => _detailSuratMasukAdminState();
+  // @override
+  // State<detailSuratMasukAdmin> createState() => _detailSuratMasukAdminState();
 }
 
 class _detailSuratMasukAdminState extends State<detailSuratMasukAdmin> {
-  var apiURLShowDetailSuratMasuk = "http://192.168.18.10:8000/api/data/admin/surat/keluar/view/${detailSuratMasukAdmin.idSurat}";
+
+  var apiURLShowDetailSuratMasuk = "http://192.168.18.10:8000/api/data/admin/surat/keluar/view/${detailSuratMasukAdmin.idSuratStatic}";
   var kodeSurat;
   var parindikan;
   var tanggalSurat;
@@ -26,6 +29,7 @@ class _detailSuratMasukAdminState extends State<detailSuratMasukAdmin> {
   var namaPrajuru;
   var namaFile;
   bool LoadingData = true;
+  bool shouldPop = true;
 
   Future getDetailSurat() {
     http.get(Uri.parse(apiURLShowDetailSuratMasuk),

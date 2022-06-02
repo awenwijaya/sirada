@@ -25,14 +25,14 @@ class _viewSuratMasukAdminState extends State<viewSuratMasukAdmin> {
               Navigator.of(context).pop();
             },
           ),
-          title: Text(viewSuratMasukAdmin.namaFile, style: TextStyle(
+          title: Text("Berkas Surat", style: TextStyle(
               fontFamily: "Poppins",
               fontWeight: FontWeight.w700,
               color: HexColor("#025393")
           )),
         ),
         body: Container(
-          child: SfPdfViewer.network("http://192.168.18.10/sirada-api/public/assets/file/surat-masuk/${viewSuratMasukAdmin.namaFile}"),
+          child: SfPdfViewer.network("http://storage.siradaskripsi.my.id/file/surat-masuk/${viewSuratMasukAdmin.namaFile}"),
         )
       )
     );

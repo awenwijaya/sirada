@@ -23,11 +23,11 @@ class tambahSuratKeluarNonPanitiaAdmin extends StatefulWidget {
 }
 
 class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonPanitiaAdmin> {
-  var apiURLShowKodeSurat = "http://192.168.1.193:8000/api/data/admin/surat/non-panitia/kode/${loginPage.desaId}";
-  var apiURLShowKomponenNomorSurat = "http://192.168.1.193:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
-  var apiURLGetDataBendesaAdat = "http://192.168.1.193:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
-  var apiURLGetDataPenyarikan = "http://192.168.1.193:8000/api/data/staff/prajuru/desa_adat/penyarikan/${loginPage.desaId}";
-  var apiURLUpDataSuratNonPanitia = "http://192.168.1.193:8000/api/admin/surat/keluar/non-panitia/up";
+  var apiURLShowKodeSurat = "http://siradaskripsi.my.id/api/data/admin/surat/non-panitia/kode/${loginPage.desaId}";
+  var apiURLShowKomponenNomorSurat = "http://siradaskripsi.my.id/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
+  var apiURLGetDataBendesaAdat = "http://siradaskripsi.my.id/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
+  var apiURLGetDataPenyarikan = "http://siradaskripsi.my.id/api/data/staff/prajuru/desa_adat/penyarikan/${loginPage.desaId}";
+  var apiURLUpDataSuratNonPanitia = "http://siradaskripsi.my.id/api/admin/surat/keluar/non-panitia/up";
   var apiURLUpFileLampiran = 'http://192.168.1.193/siraja-api-skripsi-new/upload-file-lampiran.php';
   var kodeSurat;
   var selectedKodeSurat;

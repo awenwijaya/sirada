@@ -19,9 +19,9 @@ class suratMasukAdmin extends StatefulWidget {
 }
 
 class _suratMasukAdminState extends State<suratMasukAdmin> {
-  var apiURLShowListSuratMasuk = "http://192.168.18.10:8000/api/data/admin/surat/masuk/${loginPage.desaId}";
-  var apiURLDeleteSuratMasuk = "http://192.168.18.10:8000/api/admin/surat/masuk/delete";
-  var idSuratMasuk = [];
+  var apiURLShowListSuratMasuk = "http://siradaskripsi.my.id/api/data/admin/surat/masuk/${loginPage.desaId}";
+  var apiURLDeleteSuratMasuk = "http://siradaskripsi.my.id/api/admin/surat/masuk/delete";
+  List<int> idSuratMasuk = [];
   var perihalSuratMasuk = [];
   var asalSuratMasuk = [];
   var selectedIdSuratMasuk;
@@ -89,9 +89,9 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
               return GestureDetector(
                 onTap: (){
                   setState(() {
-                    detailSuratMasukAdmin.idSurat = idSuratMasuk[index];
+                    detailSuratMasukAdmin.idSuratStatic = idSuratMasuk[index];
                   });
-                  Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratMasukAdmin()));
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratMasukAdmin(idSuratMasuk[index])));
                 },
                 child: Container(
                   child: Stack(

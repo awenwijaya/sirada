@@ -348,7 +348,6 @@ class _editProfileKramaState extends State<editProfileKrama> {
                   ),
                 )
               ),
-
               Container(
                 child: FlatButton(
                   onPressed: (){

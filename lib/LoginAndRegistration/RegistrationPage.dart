@@ -21,7 +21,7 @@ class _registrationPageState extends State<registrationPage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool Loading = false;
   FToast ftoast;
-  var apiURLcekPenduduk = "http://192.168.18.10:8000/api/autentikasi/registrasi/cek_nik";
+  var apiURLcekPenduduk = "http://siradaskripsi.my.id/api/autentikasi/registrasi/cek_nik";
 
   @override
   void initState() {
@@ -488,8 +488,8 @@ class _enterEmailState extends State<enterEmail> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   FToast ftoast;
   bool Loading = false;
-  var apiURLRegistrasiAkun = "http://192.168.18.10:8000/api/autentikasi/registrasi/post";
-  var apiURLKonfirmasiEmail = "http://192.168.18.10:8000/api/autentikasi/registrasi/konfirmasi_email";
+  var apiURLRegistrasiAkun = "http://siradaskripsi.my.id/api/autentikasi/registrasi/post";
+  var apiURLKonfirmasiEmail = "http://siradaskripsi.my.id/api/autentikasi/registrasi/konfirmasi_email";
 
   @override
   void initState() {

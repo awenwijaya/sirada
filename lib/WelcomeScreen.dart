@@ -39,7 +39,7 @@ class welcomeScreen extends StatelessWidget {
               ),
               Container(
                 child: Text(
-                  "Kelola berkas administrasi Anda secara online dan mulus",
+                  "Kelola berkas surat pada Desa Adat secara online",
                   style: TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 16,

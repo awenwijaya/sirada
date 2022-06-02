@@ -25,8 +25,8 @@ class tambahSuratMasukAdmin extends StatefulWidget {
 class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
   var selectedKodeSurat;
   List kodeSuratList = List();
-  var apiURLGetKodeSurat = "http://192.168.18.10:8000/api/data/nomorsurat";
-  var apiURLSimpanSurat = "http://192.168.18.10:8000/api/admin/surat/masuk/up";
+  var apiURLGetKodeSurat = "http://siradaskripsi.my.id/api/data/nomorsurat";
+  var apiURLSimpanSurat = "http://siradaskripsi.my.id/api/admin/surat/masuk/up";
   bool availableKodeSurat = false;
   bool KodeSuratLoading = true;
   bool Loading = false;

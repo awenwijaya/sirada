@@ -32,8 +32,8 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var profilePicture;
   var namaAdmin;
   var namaDesa;
-  var apiURLGetDataUser = "http://192.168.18.10:8000/api/data/userdata/${loginPage.userId}";
-  var apiURLGetDetailDesaById = "http://192.168.18.10:8000/api/data/userdata/desa/${loginPage.desaId}";
+  var apiURLGetDataUser = "http://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
+  var apiURLGetDetailDesaById = "http://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -235,7 +235,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/profile/${profilePicture}'),
+                            image: NetworkImage('http://storage.siradaskripsi.my.id/img/profile/${profilePicture}'),
                             fit: BoxFit.fill,
                           )
                         ),
@@ -299,7 +299,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  image: NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/logo-desa/${dashboardAdminDesa.logoDesa}')
+                                  image: NetworkImage('http://storage.siradaskripsi.my.id/img/logo-desa/${dashboardAdminDesa.logoDesa}')
                               )
                           ),
                         ),
@@ -355,7 +355,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
               ),
               Container(
                 alignment: Alignment.topLeft,
-                child: Text("Manajemen Data Desa", style: TextStyle(
+                child: Text("Manajemen Pengguna", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.bold
@@ -462,7 +462,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                               )
                             ),
                             Container(
-                              child: Text("Panitia Desa Adat", style: TextStyle(
+                              child: Text("Panitia Kegiatan", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700

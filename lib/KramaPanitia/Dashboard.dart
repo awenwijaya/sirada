@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:surat/KramaPanitia/DetailDesa/DetailDesa.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -227,7 +228,9 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                     fontWeight: FontWeight.w700,
                                     color: HexColor("#025393")
                                   )),
-                                  onPressed: (){},
+                                  onPressed: (){
+                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => detailDesaKramaPanitia()));
+                                  },
                                 ),
                                 margin: EdgeInsets.only(left: 15)
                               )

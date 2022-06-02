@@ -26,9 +26,9 @@ class editSuratMasukAdmin extends StatefulWidget {
 class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
   var selectedKodeSurat;
   List kodeSuratList = List();
-  var apiURLGetKodeSurat = "http://192.168.18.10:8000/api/data/nomorsurat";
-  var apiURLSimpanSurat = "http://192.168.18.10:8000/api/admin/surat/masuk/edit/up";
-  var apiURLGetDataSurat = "http://192.168.18.10:8000/api/admin/surat/masuk/edit/${editSuratMasukAdmin.idSuratMasuk}";
+  var apiURLGetKodeSurat = "http://siradaskripsi.my.id/api/data/nomorsurat";
+  var apiURLSimpanSurat = "http://siradaskripsi.my.id/api/admin/surat/masuk/edit/up";
+  var apiURLGetDataSurat = "http://siradaskripsi.my.id/api/admin/surat/masuk/edit/${editSuratMasukAdmin.idSuratMasuk}";
   bool availableKodeSurat = false;
   bool KodeSuratLoading = true;
   bool Loading = false;

@@ -31,7 +31,7 @@ class adminProfile extends StatefulWidget {
 }
 
 class _adminProfileState extends State<adminProfile> {
-  var apiURLUserProfile = "http://192.168.18.10:8000/api/data/userdata/${loginPage.userId}";
+  var apiURLUserProfile = "http://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLUserProfile),
@@ -105,7 +105,7 @@ class _adminProfileState extends State<adminProfile> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/profile/${adminProfile.profilePicture}')
+                      image: NetworkImage('http://storage.siradaskripsi.my.id/img/profile/${adminProfile.profilePicture}')
                     )
                   ),
                 ),

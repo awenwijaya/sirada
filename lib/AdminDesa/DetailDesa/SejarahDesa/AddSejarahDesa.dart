@@ -18,7 +18,7 @@ class addSejarahDesaAdmin extends StatefulWidget {
 
 class _addSejarahDesaAdminState extends State<addSejarahDesaAdmin> {
   final controllerSejarahDesa = TextEditingController();
-  var apiURLSejarahDesa = "http://192.168.18.10:8000/api/admin/desa/up_sejarah_desa";
+  var apiURLSejarahDesa = "http://siradaskripsi.my.id/api/admin/desa/up_sejarah_desa";
   bool Loading = false;
   FToast ftoast;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -65,7 +65,7 @@ class _addSejarahDesaAdminState extends State<addSejarahDesaAdmin> {
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
-                                image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.18.10/siraja-api-skripsi/${detailDesaAdmin.logoDesa}')
+                                image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://storage.siradaskripsi.my.id/img/logo-desa/${detailDesaAdmin.logoDesa}')
                             )
                         ),
                         margin: EdgeInsets.only(top: 20),

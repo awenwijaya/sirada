@@ -23,7 +23,7 @@ class _editLogoDesaAdminState extends State<editLogoDesaAdmin> {
   final picker = ImagePicker();
   bool Loading = false;
   FToast ftoast;
-  var apiURLUploadLogoDesa = "http://192.168.18.10:8000/api/upload/logo-desa";
+  var apiURLUploadLogoDesa = "http://siradaskripsi.my.id/api/upload/logo-desa";
 
   Future choiceImage() async {
     var pickedImage = await picker.pickImage(source: ImageSource.gallery);
@@ -134,7 +134,7 @@ class _editLogoDesaAdminState extends State<editLogoDesaAdmin> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: image == null ? DecorationImage(
-                        image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://192.168.18.10/SirajaProject/public/assets/img/logo-desa/${detailDesaAdmin.logoDesa}')
+                        image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://storage.siradaskripsi.my.id/img/logo-desa/${detailDesaAdmin.logoDesa}')
                     ) : DecorationImage(
                       image: FileImage(image)
                     )

@@ -27,7 +27,7 @@ class _agendaAcaraAdminState extends State<agendaAcaraAdmin> {
   List<Meeting> agendaUndangan = [];
 
   Future<List<Meeting>> getAgendaUndangan() async {
-    var data = await http.get(Uri.parse("http://192.168.18.10:8000/api/agenda/1465/undangan"));
+    var data = await http.get(Uri.parse("http://siradaskripsi.my.id/api/agenda/1465/undangan"));
     var jsonData = json.decode(data.body);
     agendaUndangan = [];
     if(data.statusCode == 200) {
@@ -55,7 +55,7 @@ class _agendaAcaraAdminState extends State<agendaAcaraAdmin> {
   }
 
   Future<List<Meeting>> getAgendaInternal() async {
-    var data = await http.get(Uri.parse("http://192.168.18.10:8000/api/agenda/1465/internal"));
+    var data = await http.get(Uri.parse("http://siradaskripsi.my.id1650114734.pdf/api/agenda/1465/internal"));
     var jsonData = json.decode(data.body);
     agendaInternal = [];
     if(data.statusCode == 200) {

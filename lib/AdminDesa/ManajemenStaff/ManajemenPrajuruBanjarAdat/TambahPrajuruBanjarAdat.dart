@@ -209,40 +209,10 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
                   Container(
                       child: FlatButton(
                         onPressed: (){
-                          if(banjarID == null) {
-                            ftoast.showToast(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  color: Colors.redAccent
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(Icons.close),
-                                    Container(
-                                      margin: EdgeInsets.only(left: 15),
-                                      child: SizedBox(
-                                        width: MediaQuery.of(context).size.width * 0.65,
-                                        child: Text("Banjar belum terpilih", style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white
-                                        )),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              toastDuration: Duration(seconds: 3)
-                            );
-                          }else{
-                            setState(() {
-                              pilihDataPrajuruBanjarAdat.banjarId = banjarID;
-                            });
-                            navigatePilihDataPrajuruBanjarAdat(context);
-                          }
+                          setState(() {
+                            pilihDataPrajuruBanjarAdat.banjarId = banjarID;
+                          });
+                          navigatePilihDataPrajuruBanjarAdat(context);
                         },
                         child: Text("Pilih Data Prajuru", style: TextStyle(
                             fontFamily: "Poppins",
@@ -984,7 +954,7 @@ class pilihDataPrajuruBanjarAdat extends StatefulWidget {
 }
 
 class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat> {
-  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/banjar_adat/${pilihDataPrajuruBanjarAdat.banjarId}";
+  var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
   var nikPegawai = [];
   var namaPegawai = [];
   var kramaMipilID = [];
