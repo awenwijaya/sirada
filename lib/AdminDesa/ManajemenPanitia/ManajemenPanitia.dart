@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/AdminDesa/ManajemenPanitia/TambahPanitia.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class manajemenPanitiaDesaAdatAdmin extends StatefulWidget {
   const manajemenPanitiaDesaAdatAdmin({Key key}) : super(key: key);
@@ -16,8 +17,8 @@ class manajemenPanitiaDesaAdatAdmin extends StatefulWidget {
 }
 
 class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdatAdmin> {
-  var apiURLGetDataTimKegiatanAktif = "http://siradaskripsi.my.id/api/panitia/1487/aktif";
-  var apiURLGetDataTimKegiatanTidakAktif = "http://siradaskripsi.my.id/api/panitia/1487/tidak-aktif";
+  var apiURLGetDataTimKegiatanAktif = "http://siradaskripsi.my.id/api/panitia/${loginPage.desaId}/aktif";
+  var apiURLGetDataTimKegiatanTidakAktif = "http://siradaskripsi.my.id/api/panitia/${loginPage.desaId}/tidak-aktif";
   FToast ftoast;
 
   //list aktif
