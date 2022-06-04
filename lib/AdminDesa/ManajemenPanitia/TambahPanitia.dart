@@ -44,8 +44,8 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
   DateTime sekarang = DateTime.now();
 
   //URL
-  var apiURLGetPanitiaKegiatan = "http://siradaskripsi.my.id/api/panitia/kegiatan/view";
-  var apiURLSimpanPanitiaKegiatan = "http://192.168.18.10:8000/api/panitia/save";
+  var apiURLGetPanitiaKegiatan = "https://siradaskripsi.my.id/api/panitia/kegiatan/view";
+  var apiURLSimpanPanitiaKegiatan = "https://192.168.18.10:8000/api/panitia/save";
 
   //Bool
   bool availablePanitiaKegiatan = false;
@@ -61,6 +61,7 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   final DateRangePickerController controllerPeriode = DateRangePickerController();
+  final controllerNamaPanitia = TextEditingController();
 
   Future getPanitiaKegiatan() async {
     Uri uri = Uri.parse(apiURLGetPanitiaKegiatan);
@@ -312,13 +313,26 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
                   margin: EdgeInsets.only(top: 10),
                 ),
                 Container(
-                  alignment: Alignment.center,
-                  child: Text(namaPanitia == null ? "Panitia belum terpilih" : namaPanitia, style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold
-                  )),
-                  margin: EdgeInsets.only(top: 20)
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 28,vertical: 8),
+                    child: TextField(
+                      controller: controllerNamaPanitia,
+                      enabled: false,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                          borderSide: BorderSide(color: HexColor("#025393"))
+                        ),
+                        hintText: "Data Panitia belum terpilih",
+                        prefixIcon: Icon(CupertinoIcons.person_alt)
+                      ),
+                      style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                      ),
+                    ),
+                  ),
+                  margin: EdgeInsets.only(top: 10),
                 ),
                 Container(
                   child: FlatButton(
@@ -768,6 +782,7 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
         namaPanitia = result;
         kramaMipilId = pilihDataPanitia.selectedKramaMipilId;
         pendudukId = pilihDataPanitia.selectedPendudukId;
+        controllerNamaPanitia.text = "${pilihDataPanitia.selectedNIK} - ${namaPanitia}";
         controllerPassword.text = pilihDataPanitia.selectedNIK;
       });
     }
@@ -785,7 +800,7 @@ class pilihDataPanitia extends StatefulWidget {
 }
 
 class _pilihDataPanitiaState extends State<pilihDataPanitia> {
-  var apiURLGetDataPenduduk = "http://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "https://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}";
   var nikPenduduk = [];
   var namaPenduduk = [];
   var kramaMipilID = [];

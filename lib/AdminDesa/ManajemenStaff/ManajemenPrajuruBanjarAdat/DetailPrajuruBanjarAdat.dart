@@ -32,7 +32,7 @@ class _detailPrajuruBanjarAdatAdminState extends State<detailPrajuruBanjarAdatAd
   var alamat;
   var profesi;
 
-  var apiURLDetailPrajuruBanjarAdat = "http://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/detail/${detailPrajuruBanjarAdatAdmin.prajuruBanjarAdatId}";
+  var apiURLDetailPrajuruBanjarAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/detail/${detailPrajuruBanjarAdatAdmin.prajuruBanjarAdatId}";
 
   getPrajuruBanjarAdatInfo() async {
     http.get(Uri.parse(apiURLDetailPrajuruBanjarAdat),

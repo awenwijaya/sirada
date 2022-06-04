@@ -19,7 +19,7 @@ class detailDesaKrama extends StatefulWidget {
 }
 
 class _detailDesaKramaState extends State<detailDesaKrama> {
-  var apiURLGetDetailDesaById = "http://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
+  var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
   var namaDesa;
   var status;
   var kodePos;
@@ -100,7 +100,7 @@ class _detailDesaKramaState extends State<detailDesaKrama> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  image: detailDesaKrama.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://storage.siradaskripsi.my.id/img/logo-desa/${detailDesaKrama.logoDesa}')
+                                  image: detailDesaKrama.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('https://storage.siradaskripsi.my.id/img/logo-desa/${detailDesaKrama.logoDesa}')
                               )
                             ),
                           ),

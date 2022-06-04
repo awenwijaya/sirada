@@ -34,10 +34,10 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
   bool availableDataTidakAktif = false;
   var selectedIdPrajuruDesaAdat;
   var selectedIdPenduduk;
-  var apiURLShowListPrajuruDesaAdatAktif = "http://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/aktif/${loginPage.desaId}";
-  var apiURLShowListPrajuruDesaAdatTidakAktif = "http://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/tidak_aktif/${loginPage.desaId}";
-  var apiURLDeletePrajuruDesaAdat = "http://siradaskripsi.my.id/api/admin/prajuru/desa_adat/delete";
-  var apiURLSetPrajuruTidakAktif = "http://siradaskripsi.my.id/api/admin/prajuru/desa_adat/set_tidak_aktif";
+  var apiURLShowListPrajuruDesaAdatAktif = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/aktif/${loginPage.desaId}";
+  var apiURLShowListPrajuruDesaAdatTidakAktif = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/tidak_aktif/${loginPage.desaId}";
+  var apiURLDeletePrajuruDesaAdat = "https://siradaskripsi.my.id/api/admin/prajuru/desa_adat/delete";
+  var apiURLSetPrajuruTidakAktif = "https://siradaskripsi.my.id/api/admin/prajuru/desa_adat/set_tidak_aktif";
   FToast ftoast;
 
   Future refreshListPrajuruDesaAdatAktif() async {

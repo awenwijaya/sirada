@@ -31,8 +31,8 @@ class _editProfileAdminState extends State<editProfileAdmin> {
   String selectedStatusPerkawinan = adminProfile.statusPerkawinan;
   String selectedPendidikanTerakhir = adminProfile.pendidikanTerakhir;
   bool Loading = false;
-  var apiURLEditProfile = "http://siradaskripsi.my.id/api/data/userdata/edit";
-  var apiURLUploadProfilePicture = "http://siradaskripsi.my.id/api/upload/profile-picture";
+  var apiURLEditProfile = "https://siradaskripsi.my.id/api/data/userdata/edit";
+  var apiURLUploadProfilePicture = "https://siradaskripsi.my.id/api/upload/profile-picture";
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   FToast ftoast;
 
@@ -161,7 +161,7 @@ class _editProfileAdminState extends State<editProfileAdmin> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image: NetworkImage('http://storage.siradaskripsi.my.id/img/profile/${adminProfile.profilePicture}')
+                              image: NetworkImage('https://storage.siradaskripsi.my.id/img/profile/${adminProfile.profilePicture}')
                           )
                       ),
                     ),

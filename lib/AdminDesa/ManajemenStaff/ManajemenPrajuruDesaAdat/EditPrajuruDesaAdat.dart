@@ -32,13 +32,14 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   DateTime masaBerakhir;
   DateTime sekarang = DateTime.now();
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
-  var apiURLShowDetailPrajuruDesaAdat = "http://172.16.58.139:8000/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruDesaAdat = "http://172.16.58.139:8000/api/admin/prajuru/desa_adat/edit/up";
-  var apiURLUploadFileSKPrajuru = "http://172.16.58.139:8000/api/upload/sk-prajuru";
+  var apiURLShowDetailPrajuruDesaAdat = "http://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruDesaAdat = "http://siradaskripsi.my.id/api/admin/prajuru/desa_adat/edit/up";
+  var apiURLUploadFileSKPrajuru = "http://siradaskripsi.my.id/api/upload/sk-prajuru";
   var selectedIdPenduduk;
   var selectedRole;
   bool Loading = false;
   final controllerEmail = TextEditingController();
+  final controllerNamaFile = TextEditingController();
   File file;
   String namaFile;
   String filePath;
@@ -64,6 +65,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
           controllerEmail.text = parsedJson['email'];
           selectedIdPenduduk = parsedJson['penduduk_id'];
           namaFile = parsedJson['sk_prajuru'];
+          controllerNamaFile.text = namaFile.toString();
         });
       }
     });
@@ -235,12 +237,12 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                         ),
                         Container(
                             child: Card(
-                                margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
+                                margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
                                 child: SfDateRangePicker(
                                   controller: controllerMasaAktif,
                                   selectionMode: DateRangePickerSelectionMode.range,
                                   onSelectionChanged: selectionChanged,
-                                  allowViewNavigation: false,
+                                  allowViewNavigation: true,
                                 )
                             )
                         )
@@ -257,16 +259,26 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                 margin: EdgeInsets.only(top: 30, left: 20)
               ),
               Container(
-                child: namaFile == null ? Text("Berkas lampiran belum terpilih", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700
-                )) : Text("Nama Berkas : ${namaFile}",style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700
-                )),
-                margin: EdgeInsets.only(top: 10)
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                  child: TextField(
+                    controller: controllerNamaFile,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide(color: HexColor("#025393"))
+                      ),
+                      hintText: "Berkas lampiran SK belum terpilih",
+                      prefixIcon: Icon(CupertinoIcons.paperclip)
+                    ),
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                    ),
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 10),
               ),
               Container(
                 child: FlatButton(

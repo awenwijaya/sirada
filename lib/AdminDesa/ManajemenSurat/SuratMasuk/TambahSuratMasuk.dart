@@ -25,8 +25,8 @@ class tambahSuratMasukAdmin extends StatefulWidget {
 class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
   var selectedKodeSurat;
   List kodeSuratList = List();
-  var apiURLGetKodeSurat = "http://siradaskripsi.my.id/api/data/nomorsurat";
-  var apiURLSimpanSurat = "http://siradaskripsi.my.id/api/admin/surat/masuk/up";
+  var apiURLGetKodeSurat = "https://siradaskripsi.my.id/api/data/nomorsurat";
+  var apiURLSimpanSurat = "https://siradaskripsi.my.id/api/admin/surat/masuk/up";
   bool availableKodeSurat = false;
   bool KodeSuratLoading = true;
   bool Loading = false;
@@ -46,6 +46,7 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
   final controllerNomorSurat = TextEditingController();
   final controllerParindikan = TextEditingController();
   final controllerAsalSurat = TextEditingController();
+  final controllerBerkasSurat = TextEditingController();
   FToast ftoast;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -78,6 +79,7 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
         filePath = result.files.first.path;
         namaFile = result.files.first.name;
         file = File(result.files.single.path);
+        controllerBerkasSurat.text = namaFile;
       });
       print(filePath);
       print(namaFile);
@@ -546,16 +548,26 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                         margin: EdgeInsets.only(top: 20, left: 20),
                       ),
                       Container(
-                          child: namaFile == null ? Text("Berkas lampiran belum terpilih", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700
-                          )) : Text("Nama berkas: ${namaFile}", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700
-                          )),
-                          margin: EdgeInsets.only(top: 10)
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                            child: TextField(
+                              controller: controllerBerkasSurat,
+                              enabled: false,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  borderSide: BorderSide(color: HexColor("#025393"))
+                                ),
+                                hintText: "Berkas surat belum terpilih",
+                                prefixIcon: Icon(CupertinoIcons.paperclip)
+                              ),
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                              ),
+                            ),
+                          ),
+                        margin: EdgeInsets.only(top: 10),
                       ),
                       Container(
                         child: FlatButton(

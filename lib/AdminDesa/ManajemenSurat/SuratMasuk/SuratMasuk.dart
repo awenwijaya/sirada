@@ -19,8 +19,8 @@ class suratMasukAdmin extends StatefulWidget {
 }
 
 class _suratMasukAdminState extends State<suratMasukAdmin> {
-  var apiURLShowListSuratMasuk = "http://siradaskripsi.my.id/api/data/admin/surat/masuk/${loginPage.desaId}";
-  var apiURLDeleteSuratMasuk = "http://siradaskripsi.my.id/api/admin/surat/masuk/delete";
+  var apiURLShowListSuratMasuk = "https://siradaskripsi.my.id/api/data/admin/surat/masuk/${loginPage.desaId}";
+  var apiURLDeleteSuratMasuk = "https://siradaskripsi.my.id/api/admin/surat/masuk/delete";
   List<int> idSuratMasuk = [];
   var perihalSuratMasuk = [];
   var asalSuratMasuk = [];

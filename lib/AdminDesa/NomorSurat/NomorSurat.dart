@@ -28,15 +28,15 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
   var controllerKodeSuratEdit = TextEditingController();
   final controllerKeterangan = TextEditingController();
   var controllerKeteranganEdit = TextEditingController();
-  var apiURLUpNomorSurat = "http://siradaskripsi.my.id/api/admin/nomor_surat/up_nomor_surat";
-  var apiURLEditNomorSurat = "http://siradaskripsi.my.id/api/admin/nomor_surat/edit_nomor_surat";
-  var apiURLDeleteNomorSurat = "http://siradaskripsi.my.id/api/admin/nomor_surat/delete_nomor_surat";
+  var apiURLUpNomorSurat = "https://siradaskripsi.my.id/api/admin/nomor_surat/up_nomor_surat";
+  var apiURLEditNomorSurat = "https://siradaskripsi.my.id/api/admin/nomor_surat/edit_nomor_surat";
+  var apiURLDeleteNomorSurat = "https://siradaskripsi.my.id/api/admin/nomor_surat/delete_nomor_surat";
   final GlobalKey<FormState> addFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> editFormKey = GlobalKey<FormState>();
   FToast ftoast;
 
   Future refreshListNomorSurat() async {
-    Uri uri = Uri.parse('http://siradaskripsi.my.id/api/data/nomorsurat/${loginPage.desaId}');
+    Uri uri = Uri.parse('https://siradaskripsi.my.id/api/data/nomorsurat/${loginPage.desaId}');
     final response = await http.get(uri);
     if(response.statusCode == 200) {
       var data = json.decode(response.body);

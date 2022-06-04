@@ -32,7 +32,7 @@ class _viewSuratMasukAdminState extends State<viewSuratMasukAdmin> {
           )),
         ),
         body: Container(
-          child: SfPdfViewer.network("http://storage.siradaskripsi.my.id/file/surat-masuk/${viewSuratMasukAdmin.namaFile}"),
+          child: SfPdfViewer.network("https://storage.siradaskripsi.my.id/file/surat-masuk/${viewSuratMasukAdmin.namaFile}"),
         )
       )
     );

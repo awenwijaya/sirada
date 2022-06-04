@@ -22,8 +22,8 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
   var profilePicture;
   var nama;
   var namaDesa;
-  var apiURLGetDataUser = "http://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
-  var apiURLGetDetailDesaById = "http://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
+  var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
+  var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -153,7 +153,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: profilePicture == null ? AssetImage('images/profilepic.png') : NetworkImage('http://storage.siradaskripsi.my.id/img/profile/${profilePicture}'),
+                            image: profilePicture == null ? AssetImage('images/profilepic.png') : NetworkImage('https://storage.siradaskripsi.my.id/img/profile/${profilePicture}'),
                             fit: BoxFit.fill
                           )
                         ),

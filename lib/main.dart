@@ -81,7 +81,7 @@ class _splashScreenState extends State<splashScreen> {
     userEmail = sharedpref.getString('email');
     userId = sharedpref.getInt('userId');
     desaId = sharedpref.getInt('desaId');
-    pendudukId = sharedpref.getInt('pendudukId');
+    pendudukId = sharedpref.getString('pendudukId');
     userStatus = sharedpref.getString('status');
     role = sharedpref.getString('role');
     kramaId = sharedprefkrama.getInt('kramaId');

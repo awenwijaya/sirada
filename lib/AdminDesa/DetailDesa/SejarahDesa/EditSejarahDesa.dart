@@ -19,7 +19,7 @@ class editSejarahDesaAdmin extends StatefulWidget {
 
 class _editSejarahDesaAdminState extends State<editSejarahDesaAdmin> {
   TextEditingController controllerSejarahDesa;
-  var apiURLSejarahDesa = "http://siradaskripsi.my.id/api/admin/desa/up_sejarah_desa";
+  var apiURLSejarahDesa = "https://siradaskripsi.my.id/api/admin/desa/up_sejarah_desa";
   bool Loading = false;
 
   @override
@@ -59,7 +59,7 @@ class _editSejarahDesaAdminState extends State<editSejarahDesaAdmin> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://storage.siradaskripsi.my.id/img/logo-desa/${detailDesaAdmin.logoDesa}')
+                            image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('https://storage.siradaskripsi.my.id/img/logo-desa/${detailDesaAdmin.logoDesa}')
                         )
                       ),
                       margin: EdgeInsets.only(top: 20),

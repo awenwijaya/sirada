@@ -32,7 +32,7 @@ class _viewSKPrajuruState extends State<viewSKPrajuru> {
           )),
         ),
         body: Container(
-          child: SfPdfViewer.network('http://storage.siradaskripsi.my.id/img/SK/${viewSKPrajuru.namaFile}'),
+          child: SfPdfViewer.network('https://storage.siradaskripsi.my.id/img/SK/${viewSKPrajuru.namaFile}'),
         ),
       ),
     );

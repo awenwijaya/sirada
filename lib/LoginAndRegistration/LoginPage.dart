@@ -32,9 +32,9 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
-  var apiURLLogin = "http://192.168.18.10:8000/api/autentikasi/login";
-  var apiURLKonfirmasiEmail = "http://siradaskripsi.my.id/api/autentikasi/registrasi/konfirmasi_email";
-  var apiURLUploadFCMToken = "http://192.168.18.10:8000/api/autentikasi/login/token";
+  var apiURLLogin = "https://siradaskripsi.my.id/api/autentikasi/login";
+  var apiURLKonfirmasiEmail = "https://siradaskripsi.my.id/api/autentikasi/registrasi/konfirmasi_email";
+  var apiURLUploadFCMToken = "https://siradaskripsi.my.id/api/autentikasi/login/token";
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   bool Loading = false;
@@ -180,6 +180,7 @@ class _loginPageState extends State<loginPage> {
                                 body: body
                             ).then((http.Response response) async {
                               var data = response.statusCode;
+                              print(data);
                               if(data == 500) {
                                 setState(() {
                                   Loading = false;
@@ -317,7 +318,8 @@ class _loginPageState extends State<loginPage> {
                                   if(parsedJson['is_verified'] == "Verified") {
                                     if(parsedJson['desadat_status_register'] == 'Terdaftar') {
                                       if(parsedJson['role'] == "Admin" || parsedJson['role'] == 'Bendesa' || parsedJson['role'] == 'Penyarikan') {
-                                        var response = await http.get(Uri.parse("http://192.168.18.10:8000/api/autentikasi/login/status/prajuru_desa_adat/${tempPendudukId}"));
+                                        var response = await http.get(Uri.parse("https://siradaskripsi.my.id/api/autentikasi/login/status/prajuru_desa_adat/${tempPendudukId}"));
+                                        print(response.statusCode);
                                         if(response.statusCode == 200) {
                                           var jsonDataPrajuru = response.body;
                                           var parsedJsonPrajuru = json.decode(jsonDataPrajuru);
@@ -333,12 +335,12 @@ class _loginPageState extends State<loginPage> {
                                             final SharedPreferences sharedpref = await SharedPreferences.getInstance();
                                             final SharedPreferences sharedprefadmin = await SharedPreferences.getInstance();
                                             sharedpref.setInt('userId', loginPage.userId);
-                                            sharedpref.setInt('pendudukId', loginPage.pendudukId);
-                                            sharedpref.setInt('desaId', loginPage.desaId);
+                                            sharedpref.setString('pendudukId', loginPage.pendudukId);
+                                            sharedpref.setString('desaId', loginPage.desaId);
                                             sharedpref.setString('email', loginPage.userEmail);
                                             sharedpref.setString('role', loginPage.role);
                                             sharedpref.setString('status', 'login');
-                                            sharedprefadmin.setInt('prajuru_adat_id', loginPage.prajuruId);
+                                            sharedprefadmin.setString('prajuru_adat_id', loginPage.prajuruId);
                                             var bodyToken = jsonEncode({
                                               "user_id" : tempUserId,
                                               "token" : loginPage.token
@@ -425,7 +427,7 @@ class _loginPageState extends State<loginPage> {
                                           }
                                         }
                                       }else if(parsedJson['role'] == "Krama") {
-                                        var response = await http.get(Uri.parse("http://siradaskripsi.my.id/api/krama/mipil/${tempPendudukId}"));
+                                        var response = await http.get(Uri.parse("https://siradaskripsi.my.id/api/krama/mipil/${tempPendudukId}"));
                                         if(response.statusCode == 200) {
                                           var jsonDataKrama = response.body;
                                           var parsedJsonKrama = json.decode(jsonDataKrama);
@@ -441,12 +443,12 @@ class _loginPageState extends State<loginPage> {
                                           final SharedPreferences sharedpref = await SharedPreferences.getInstance();
                                           final SharedPreferences sharedprefkrama = await SharedPreferences.getInstance();
                                           sharedpref.setInt('userId', loginPage.userId);
-                                          sharedpref.setInt('pendudukId', loginPage.pendudukId);
-                                          sharedpref.setInt('desaId', loginPage.desaId);
+                                          sharedpref.setString('pendudukId', loginPage.pendudukId);
+                                          sharedpref.setString('desaId', loginPage.desaId);
                                           sharedpref.setString('email', loginPage.userEmail);
                                           sharedpref.setString('role', loginPage.role);
                                           sharedpref.setString('status', 'login');
-                                          sharedprefkrama.setInt('kramaId', loginPage.kramaId);
+                                          sharedprefkrama.setString('kramaId', loginPage.kramaId);
                                           var bodyFCM = jsonEncode({
                                             "user_id" : loginPage.userId,
                                             "token" : loginPage.token
@@ -474,8 +476,8 @@ class _loginPageState extends State<loginPage> {
                                         });
                                         final SharedPreferences sharedpref = await SharedPreferences.getInstance();
                                         sharedpref.setInt('userId', loginPage.userId);
-                                        sharedpref.setInt('pendudukId', loginPage.pendudukId);
-                                        sharedpref.setInt('desaId', loginPage.desaId);
+                                        sharedpref.setString('pendudukId', loginPage.pendudukId);
+                                        sharedpref.setString('desaId', loginPage.desaId);
                                         sharedpref.setString('email', loginPage.userEmail);
                                         sharedpref.setString('role', loginPage.role);
                                         sharedpref.setString('status', 'login');

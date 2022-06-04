@@ -7,6 +7,7 @@ import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class agendaAcaraAdmin extends StatefulWidget {
   const agendaAcaraAdmin({Key key}) : super(key: key);
@@ -27,7 +28,7 @@ class _agendaAcaraAdminState extends State<agendaAcaraAdmin> {
   List<Meeting> agendaUndangan = [];
 
   Future<List<Meeting>> getAgendaUndangan() async {
-    var data = await http.get(Uri.parse("http://siradaskripsi.my.id/api/agenda/1465/undangan"));
+    var data = await http.get(Uri.parse("https://siradaskripsi.my.id/api/agenda/${loginPage.desaId}/undangan"));
     var jsonData = json.decode(data.body);
     agendaUndangan = [];
     if(data.statusCode == 200) {
@@ -55,7 +56,7 @@ class _agendaAcaraAdminState extends State<agendaAcaraAdmin> {
   }
 
   Future<List<Meeting>> getAgendaInternal() async {
-    var data = await http.get(Uri.parse("http://siradaskripsi.my.id1650114734.pdf/api/agenda/1465/internal"));
+    var data = await http.get(Uri.parse("https://siradaskripsi.my.id/api/agenda/${loginPage.desaId}/internal"));
     var jsonData = json.decode(data.body);
     agendaInternal = [];
     if(data.statusCode == 200) {
@@ -152,7 +153,7 @@ class _agendaAcaraAdminState extends State<agendaAcaraAdmin> {
                                           "\nKegiatan pada Desa Adat dapat berasal dari Surat Undangan ataupun dari acara yang dilaksanakan oleh Kantor Desa Adat"
                                           "\nAgenda acara terbagi menjadi 2 yaitu:"
                                           "\n\n1. Agenda Internal: Agenda yang dilaksanakan oleh Kantor Desa Adat dan berasal dari data Surat Keluar"
-                                          "\n\n2. Agenda Undangan: Agenda yang dilaksanakan oleh instansi lain dan berasal dari data Surat Masuk", style: TextStyle(
+                                          "\n\n2. Agenda External: Agenda yang dilaksanakan oleh instansi lain dan berasal dari data Surat Masuk", style: TextStyle(
                                       fontFamily: "Poppins",
                                       fontSize: 14
                                     ),
@@ -214,7 +215,7 @@ class _agendaAcaraAdminState extends State<agendaAcaraAdmin> {
                               child: Column(
                                 children: <Widget>[
                                   Icon(CupertinoIcons.mail),
-                                  Text("Undangan", style: TextStyle(
+                                  Text("External", style: TextStyle(
                                       fontFamily: "Poppins",
                                       fontWeight: FontWeight.w700
                                   ))
@@ -316,7 +317,7 @@ class _agendaAcaraAdminState extends State<agendaAcaraAdmin> {
                                             ),
                                           ),
                                           Container(
-                                            child: Text("Tidak ada Agenda Undangan", style: TextStyle(
+                                            child: Text("Tidak ada Agenda External", style: TextStyle(
                                               fontFamily: "Poppins",
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,

@@ -37,11 +37,13 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
   DateTime sekarang = DateTime.now();
   final controllerPassword = TextEditingController();
   final controllerEmail = TextEditingController();
+  final controllerNamaFile = TextEditingController();
+  final controllerNamaPrajuru = TextEditingController();
   var namaPegawai;
   var kramaMipilID;
   var pegawaiID;
   var selectedRole;
-  var apiURLUpDataPrajuruDesaAdat = "http://siradaskripsi.my.id/api/admin/prajuru/desa_adat/up";
+  var apiURLUpDataPrajuruDesaAdat = "https://siradaskripsi.my.id/api/admin/prajuru/desa_adat/up";
   bool Loading = false;
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
   File file;
@@ -71,6 +73,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
         filePath = result.files.first.path;
         namaFile = result.files.first.name;
         file = File(result.files.single.path);
+        controllerNamaFile.text = namaFile;
       });
       print(filePath);
       print(namaFile);
@@ -146,14 +149,26 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                       margin: EdgeInsets.only(top: 10)
                   ),
                   Container(
-                    alignment: Alignment.center,
-                    child: Text(namaPegawai == null ? "Data prajuru belum terpilih" : "${namaPegawai}",
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                      child: TextField(
+                        controller: controllerNamaPrajuru,
+                        enabled: false,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                            borderSide: BorderSide(color: HexColor("#025393"))
+                          ),
+                          hintText: "Data Prajuru belum terpilih",
+                          prefixIcon: Icon(CupertinoIcons.person_alt)
+                        ),
                         style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold
-                        )),
-                    margin: EdgeInsets.only(top: 20),
+                          fontFamily: "Poppins",
+                          fontSize: 14
+                        ),
+                      ),
+                    ),
+                    margin: EdgeInsets.only(top: 10)
                   ),
                   Container(
                       child: FlatButton(
@@ -237,7 +252,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                     ))
                                 )).toList(),
                               ),
-                              margin: EdgeInsets.only(top: 20),
+                              margin: EdgeInsets.only(top: 10),
                             )
                           ]
                       )
@@ -295,7 +310,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                     ))
                                 )).toList(),
                               ),
-                              margin: EdgeInsets.only(top: 20),
+                              margin: EdgeInsets.only(top: 10),
                             ),
                             Container(
                                 child: Column(
@@ -318,12 +333,12 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                       ),
                                       Container(
                                           child: Card(
-                                              margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
+                                              margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
                                               child: SfDateRangePicker(
                                                 controller: controllerMasaAktif,
                                                 selectionMode: DateRangePickerSelectionMode.range,
                                                 onSelectionChanged: selectionChanged,
-                                                allowViewNavigation: false,
+                                                allowViewNavigation: true,
                                               )
                                           )
                                       )
@@ -377,7 +392,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                     ),
                                   )
                               ),
-                              margin: EdgeInsets.only(top: 20),
+                              margin: EdgeInsets.only(top: 10),
                             ),
                             Container(
                                 child: Padding(
@@ -419,16 +434,26 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                 margin: EdgeInsets.only(top: 10)
                             ),
                             Container(
-                                child: namaFile == null ? Text("Berkas lampiran belum terpilih", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700
-                                )) : Text("Nama berkas: ${namaFile}", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700
-                                )),
-                                margin: EdgeInsets.only(top: 10)
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                  child: TextField(
+                                    controller: controllerNamaFile,
+                                    enabled: false,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393"))
+                                      ),
+                                      hintText: "Berkas SK belum terpilih",
+                                      prefixIcon: Icon(CupertinoIcons.paperclip)
+                                    ),
+                                    style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                    ),
+                                  ),
+                                ),
+                              margin: EdgeInsets.only(top: 10),
                             ),
                             Container(
                                 child: FlatButton(
@@ -448,7 +473,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                     ),
                                     padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
                                 ),
-                                margin: EdgeInsets.only(top: 20)
+                                margin: EdgeInsets.only(top: 10)
                             ),
                             Container(
                               child: FlatButton(
@@ -875,6 +900,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
         kramaMipilID = pilihDataPegawai.selectedId;
         pegawaiID = pilihDataPegawai.selectedPegawaiId;
         controllerPassword.text = pilihDataPegawai.selectedNIK;
+        controllerNamaPrajuru.text = "${pilihDataPegawai.selectedNIK} - ${namaPegawai}";
       });
     }
   }
@@ -891,7 +917,7 @@ class pilihDataPegawai extends StatefulWidget {
 }
 
 class _pilihDataPegawaiState extends State<pilihDataPegawai> {
-  var apiURLGetDataPenduduk = "http://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "https://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}";
   var nikPegawai = [];
   var namaPegawai = [];
   var kramaMipilID = [];

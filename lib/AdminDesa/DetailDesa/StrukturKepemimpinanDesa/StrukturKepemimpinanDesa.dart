@@ -88,7 +88,7 @@ class _strukturKepemimpinanDesaAdminState extends State<strukturKepemimpinanDesa
               clipBehavior: Clip.none,
               child: ClipRRect(
                 child: Image.network(
-                  'http://storage.siradaskripsi.my.id/img/struktur-desa/${strukturKepemimpinanDesaAdmin.strukturKepemimpinan}',
+                  'https://storage.siradaskripsi.my.id/img/struktur-desa/${strukturKepemimpinanDesaAdmin.strukturKepemimpinan}',
                   fit: BoxFit.cover,
                 ),
               ),

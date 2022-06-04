@@ -26,9 +26,10 @@ class editSuratMasukAdmin extends StatefulWidget {
 class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
   var selectedKodeSurat;
   List kodeSuratList = List();
-  var apiURLGetKodeSurat = "http://siradaskripsi.my.id/api/data/nomorsurat";
-  var apiURLSimpanSurat = "http://siradaskripsi.my.id/api/admin/surat/masuk/edit/up";
-  var apiURLGetDataSurat = "http://siradaskripsi.my.id/api/admin/surat/masuk/edit/${editSuratMasukAdmin.idSuratMasuk}";
+  var apiURLGetKodeSurat = "https://siradaskripsi.my.id/api/data/nomorsurat";
+  var apiURLSimpanSurat = "https://siradaskripsi.my.id/api/admin/surat/masuk/edit/up";
+  var apiURLGetDataSurat = "https://siradaskripsi.my.id/api/admin/surat/masuk/edit/${editSuratMasukAdmin.idSuratMasuk}";
+  var apiURLUploadFileSurat = "http://192.168.18.10:8000/api/upload/surat-masuk";
   bool availableKodeSurat = false;
   bool KodeSuratLoading = true;
   bool Loading = false;
@@ -64,7 +65,7 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
         controllerNomorSurat.text = parsedJson['nomor_surat'];
         controllerParindikan.text = parsedJson['perihal'];
         controllerAsalSurat.text = parsedJson['asal_surat'];
-        selectedKodeSurat = parsedJson['master_surat_id'];
+        selectedKodeSurat = int.parse(parsedJson['master_surat_id']);
         tanggalAkhirKegiatan = parsedJson['tanggal_kegiatan_berakhir'] == null ? null : DateTime.parse(parsedJson['tanggal_kegiatan_berakhir']);
         tanggalMulaiKegiatan = parsedJson['tanggal_kegiatan_mulai'] == null ? null : DateTime.parse(parsedJson['tanggal_kegiatan_mulai']);
         if(tanggalAkhirKegiatan != null || tanggalMulaiKegiatan != null) {
@@ -644,14 +645,14 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
                                   Loading = true;
                                 });
                                 if(file != null) {
-                                  var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
-                                  var length = await file.length();
-                                  var url = Uri.parse('http://192.168.122.149/siraja-api-skripsi-new/upload-file-surat-masuk.php');
-                                  var request = http.MultipartRequest("POST", url);
-                                  var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
-                                  request.files.add(multipartFile);
+                                  Map<String, String> headers = {
+                                    'Content-Type' : 'multipart/form-data'
+                                  };
+                                  var request = http.MultipartRequest('POST', Uri.parse(apiURLUploadFileSurat))
+                                                    ..headers.addAll(headers)
+                                                    ..files.add(await http.MultipartFile.fromPath('file', filePath));
                                   var response = await request.send();
-                                  print(response.statusCode);
+                                  print(response.statusCode.toString());
                                   if(response.statusCode == 200) {
                                     var body = jsonEncode({
                                       "surat_keluar_id" : editSuratMasukAdmin.idSuratMasuk,

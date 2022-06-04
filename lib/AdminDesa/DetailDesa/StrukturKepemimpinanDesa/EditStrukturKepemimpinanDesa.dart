@@ -20,7 +20,7 @@ class _editStrukturKepemimpinanDesaAdminState extends State<editStrukturKepemimp
   File image;
   final picker = ImagePicker();
   bool Loading = false;
-  var apiURLUploadStrukturDesa = "http://siradaskripsi.my.id/api/upload/struktur_desa";
+  var apiURLUploadStrukturDesa = "https://siradaskripsi.my.id/api/upload/struktur_desa";
 
   Future choiceImage() async {
     var pickedImage = await picker.pickImage(source: ImageSource.gallery);
@@ -81,7 +81,7 @@ class _editStrukturKepemimpinanDesaAdminState extends State<editStrukturKepemimp
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://siradaskripsi.my.id/img/logo-desa/${detailDesaAdmin.logoDesa}')
+                            image: detailDesaAdmin.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('https://storage.siradaskripsi.my.id/img/logo-desa/${detailDesaAdmin.logoDesa}')
                         )
                       ),
                       margin: EdgeInsets.only(top: 20),

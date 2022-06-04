@@ -32,12 +32,13 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
   DateTime masaMulai;
   DateTime masaBerakhir;
   DateTime sekarang = DateTime.now();
-  var apiURLShowDetailPrajuruBanjarAdat = "http://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruBanjarAdat = "http://siradaskripsi.my.id/api/admin/prajuru/banjar_adat/edit/up";
-  var apiURLUploadFileSKPrajuru = "http://siradaskripsi.my.id/api/upload/sk-prajuru";
+  var apiURLShowDetailPrajuruBanjarAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruBanjarAdat = "https://siradaskripsi.my.id/api/admin/prajuru/banjar_adat/edit/up";
+  var apiURLUploadFileSKPrajuru = "https://siradaskripsi.my.id/api/upload/sk-prajuru";
   var selectedIdPenduduk;
   bool Loading = false;
   final controllerEmail = TextEditingController();
+  final controllerNamaFile = TextEditingController();
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
   File file;
   String namaFile;
@@ -64,6 +65,7 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
           controllerEmail.text = parsedJson['email'];
           selectedIdPenduduk = parsedJson['penduduk_id'];
           namaFile = parsedJson['sk_prajuru_banjar'];
+          controllerNamaFile.text = parsedJson['sk_prajuru_banjar'];
         });
       }
     });
@@ -80,6 +82,7 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
         filePath = result.files.first.path;
         namaFile = result.files.first.name;
         file = File(result.files.single.path);
+        controllerNamaFile.text = namaFile;
       });
       print(filePath);
       print(namaFile);
@@ -234,12 +237,12 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
                         ),
                         Container(
                             child: Card(
-                                margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
+                                margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
                                 child: SfDateRangePicker(
                                   controller: controllerMasaAktif,
                                   selectionMode: DateRangePickerSelectionMode.range,
                                   onSelectionChanged: selectionChanged,
-                                  allowViewNavigation: false,
+                                  allowViewNavigation: true,
                                 )
                             )
                         )
@@ -256,16 +259,26 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
                 margin: EdgeInsets.only(top: 30, left: 20),
               ),
               Container(
-                child: namaFile == null ? Text("Berkas lampiran belum terpilih", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700
-                )) : Text("Nama Berkas: ${namaFile}", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700
-                )),
-                margin: EdgeInsets.only(top: 10)
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                  child: TextField(
+                    controller: controllerNamaFile,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide(color: HexColor("#025393"))
+                      ),
+                      hintText: "Berkas SK belum terpilih",
+                      prefixIcon: Icon(CupertinoIcons.paperclip)
+                    ),
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                    ),
+                  ),
+                ),
+                margin: EdgeInsets.only(top: 10),
               ),
               Container(
                 child: FlatButton(

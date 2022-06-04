@@ -31,8 +31,8 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
   var countSuratPanitia;
   final CarouselController controller = CarouselController();
   int current = 0;
-  var apiURLGetDataUser = "http://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
-  var apiURLGetDetailDesaById = "http://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
+  var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
+  var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -143,7 +143,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                    image: profilePicture == null ? AssetImage('images/profilepic.png') : NetworkImage('http://storage.siradaskripsi.my.id/img/profile/${profilePicture}'),
+                                    image: profilePicture == null ? AssetImage('images/profilepic.png') : NetworkImage('https://storage.siradaskripsi.my.id/img/profile/${profilePicture}'),
                                     fit: BoxFit.fill
                                 )
                             )
@@ -191,7 +191,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                    image: dashboardPenduduk.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://storage.siradaskripsi.my.id/img/logo-desa/${dashboardPenduduk.logoDesa}'),
+                                    image: dashboardPenduduk.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('https://storage.siradaskripsi.my.id/img/logo-desa/${dashboardPenduduk.logoDesa}'),
                                     fit: BoxFit.fill
                                 )
                             ),

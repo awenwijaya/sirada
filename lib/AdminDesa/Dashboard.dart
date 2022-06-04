@@ -33,8 +33,8 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var profilePicture;
   var namaAdmin;
   var namaDesa;
-  var apiURLGetDataUser = "http://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
-  var apiURLGetDetailDesaById = "http://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
+  var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
+  var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -236,7 +236,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: NetworkImage('http://storage.siradaskripsi.my.id/img/profile/${profilePicture}'),
+                            image: NetworkImage('https://storage.siradaskripsi.my.id/img/profile/${profilePicture}'),
                             fit: BoxFit.fill,
                           )
                         ),
@@ -300,7 +300,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  image: NetworkImage('http://storage.siradaskripsi.my.id/img/logo-desa/${dashboardAdminDesa.logoDesa}')
+                                  image: NetworkImage('https://storage.siradaskripsi.my.id/img/logo-desa/${dashboardAdminDesa.logoDesa}')
                               )
                           ),
                         ),
