@@ -39,6 +39,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
   final controllerEmail = TextEditingController();
   final controllerNamaFile = TextEditingController();
   final controllerNamaPrajuru = TextEditingController();
+  final controllerMasaMenjabat = TextEditingController();
   var namaPegawai;
   var kramaMipilID;
   var pegawaiID;
@@ -59,6 +60,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
       selectedMasaMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
       selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
       selectedMasaBerakhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      controllerMasaMenjabat.text = selectedMasaBerakhirValue == null ? "$selectedMasaMulai - $selectedMasaMulai" : "$selectedMasaMulai - $selectedMasaBerakhir";
     });
   }
 
@@ -114,30 +116,13 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
             child: Column(
                 children: <Widget>[
                   Container(
-                      alignment: Alignment.center,
-                      child: Image.asset(
-                          'images/person.png',
-                          height: 100,
-                          width: 100
-                      ),
-                      margin: EdgeInsets.only(top: 30)
-                  ),
-                  Container(
-                      child: Text("* = diperlukan", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700
-                      ), textAlign: TextAlign.center),
-                      margin: EdgeInsets.only(top: 20)
-                  ),
-                  Container(
                       alignment: Alignment.topLeft,
                       child: Text("1. Data Prajuru *", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14,
                           fontWeight: FontWeight.w700
                       )),
-                      margin: EdgeInsets.only(top: 30, left: 20)
+                      margin: EdgeInsets.only(top: 20, left: 20)
                   ),
                   Container(
                       alignment: Alignment.topLeft,
@@ -324,12 +309,26 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                         margin: EdgeInsets.only(top: 20, left: 20),
                                       ),
                                       Container(
-                                          child: Text(selectedMasaMulaiValue == null ? "Masa aktif belum terpilih" : selectedMasaBerakhirValue == null ? "$selectedMasaMulai - $selectedMasaMulai" : "$selectedMasaMulai - $selectedMasaBerakhir", style: TextStyle(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                          child: TextField(
+                                            controller: controllerMasaMenjabat,
+                                            enabled: false,
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(50.0),
+                                                borderSide: BorderSide(color: HexColor("#025393"))
+                                              ),
+                                              hintText: "Masa menjabat belum terpilih",
+                                              prefixIcon: Icon(CupertinoIcons.calendar)
+                                            ),
+                                            style: TextStyle(
                                               fontFamily: "Poppins",
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700
-                                          )),
-                                          margin: EdgeInsets.only(top: 10)
+                                              fontSize: 14
+                                            ),
+                                          ),
+                                        ),
+                                        margin: EdgeInsets.only(top: 10),
                                       ),
                                       Container(
                                           child: Card(

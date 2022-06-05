@@ -45,7 +45,7 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
 
   //URL
   var apiURLGetPanitiaKegiatan = "https://siradaskripsi.my.id/api/panitia/kegiatan/view";
-  var apiURLSimpanPanitiaKegiatan = "https://192.168.18.10:8000/api/panitia/save";
+  var apiURLSimpanPanitiaKegiatan = "https://siradaskripsi.my.id/api/panitia/save";
 
   //Bool
   bool availablePanitiaKegiatan = false;
@@ -62,6 +62,7 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
   final controllerPassword = TextEditingController();
   final DateRangePickerController controllerPeriode = DateRangePickerController();
   final controllerNamaPanitia = TextEditingController();
+  final controllerMasaMenjabat = TextEditingController();
 
   Future getPanitiaKegiatan() async {
     Uri uri = Uri.parse(apiURLGetPanitiaKegiatan);
@@ -89,7 +90,8 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
       selectedPeriodeMulai = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
       selectedPeriodeMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
       selectedPeriodeBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate?? args.value.startDate).toString();
-      selectedPeriodeBerakhirValue = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedPeriodeBerakhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      controllerMasaMenjabat.text = selectedPeriodeBerakhirValue == null ? "$selectedPeriodeMulai - $selectedPeriodeMulai" : "$selectedPeriodeMulai - $selectedPeriodeBerakhir";
     });
   }
 
@@ -137,15 +139,7 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
                     height: 100,
                     width: 100,
                   ),
-                  margin: EdgeInsets.only(top: 30)
-                ),
-                Container(
-                  child: Text("* = diperlukan", style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700
-                  ), textAlign: TextAlign.center),
-                  margin: EdgeInsets.only(top: 20),
+                  margin: EdgeInsets.only(top: 30),
                 ),
                 Container(
                   alignment: Alignment.topLeft,
@@ -480,11 +474,25 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
                         margin: EdgeInsets.only(top: 20, left: 20),
                       ),
                       Container(
-                        child: Text(selectedPeriodeMulaiValue == null ? "Masa periode menjabat belum terpilih" : selectedPeriodeBerakhirValue == null ? "$selectedPeriodeMulai - $selectedPeriodeMulai" : "$selectedPeriodeMulai - $selectedPeriodeBerakhir", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700
-                        )),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          child: TextField(
+                            controller: controllerMasaMenjabat,
+                            enabled: false,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    borderSide: BorderSide(color: HexColor("#025393"))
+                                ),
+                                hintText: "Periode menjabat belum terpilih",
+                                prefixIcon: Icon(CupertinoIcons.calendar)
+                            ),
+                            style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            ),
+                          ),
+                        ),
                         margin: EdgeInsets.only(top: 10),
                       ),
                       Container(

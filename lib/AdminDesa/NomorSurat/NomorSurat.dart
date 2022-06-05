@@ -295,11 +295,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                                       child: TextFormField(
                                         autovalidateMode: AutovalidateMode.onUserInteraction,
                                         validator: (value) {
-                                          if(value.isEmpty) {
-                                            return "Data tidak boleh kosong";
-                                          }else {
-                                            return null;
-                                          }
+                                          return null;
                                         },
                                         controller: controllerKodeSurat,
                                         decoration: InputDecoration(
@@ -323,11 +319,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                                       child: TextFormField(
                                         autovalidateMode: AutovalidateMode.onUserInteraction,
                                         validator: (value) {
-                                          if(value.isEmpty) {
-                                            return "Data tidak boleh kosong";
-                                          }else {
-                                            return null;
-                                          }
+                                          return null;
                                         },
                                         controller: controllerKeterangan,
                                         decoration: InputDecoration(
@@ -361,7 +353,35 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                         color: HexColor("#025393")
                       )),
                       onPressed: (){
-                        if(addFormKey.currentState.validate()) {
+                        if(controllerKodeSurat.text == "" || controllerKeterangan.text == "") {
+                          ftoast.showToast(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    color: Colors.redAccent
+                                ),
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.close),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 15),
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.65,
+                                        child: Text("Masih terdapat data yang kosong. Silahkan diperiksa kembali", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white
+                                        )),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              toastDuration: Duration(seconds: 3)
+                          );
+                        }else {
                           setState(() {
                             LoadingProses = true;
                           });
@@ -382,31 +402,31 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                                 controllerKeterangan.text = "";
                               });
                               ftoast.showToast(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: Colors.green
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: Colors.green
+                                    ),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.done),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 15),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.65,
+                                            child: Text("Kode surat berhasil ditambahkan", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white
+                                            )),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Icon(Icons.done),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 15),
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context).size.width * 0.65,
-                                          child: Text("Kode surat berhasil ditambahkan", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white
-                                          )),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                toastDuration: Duration(seconds: 3)
+                                  toastDuration: Duration(seconds: 3)
                               );
                               refreshListNomorSurat();
                               Navigator.of(context).pop();
@@ -415,62 +435,34 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                                 LoadingProses = false;
                               });
                               ftoast.showToast(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: Colors.redAccent
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: Colors.redAccent
+                                    ),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.close),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 15),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.65,
+                                            child: Text("Kode surat sudah terdaftar. Silahkan gunakan kode surat lain dan coba lagi", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white
+                                            )),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Icon(Icons.close),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 15),
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context).size.width * 0.65,
-                                          child: Text("Kode surat sudah terdaftar. Silahkan gunakan kode surat lain dan coba lagi", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white
-                                          )),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                toastDuration: Duration(seconds: 3)
+                                  toastDuration: Duration(seconds: 3)
                               );
                             }
                           });
-                        }else {
-                          ftoast.showToast(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: Colors.redAccent
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.close),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 15),
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width * 0.65,
-                                      child: Text("Masih terdapat data yang kosong. Silahkan diperiksa kembali", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white
-                                      )),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            toastDuration: Duration(seconds: 3)
-                          );
                         }
                       },
                     ),

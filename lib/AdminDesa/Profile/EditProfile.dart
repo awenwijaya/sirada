@@ -281,7 +281,7 @@ class _editProfileAdminState extends State<editProfileAdmin> {
                           child: TextFormField(
                             autovalidateMode: AutovalidateMode.onUserInteraction,
                             validator: (value) {
-                              if(value.isNotEmpty && value.length > 8) {
+                              if(value.isNotEmpty && value.length < 8) {
                                 return "Password tidak boleh kurang dari 8 karakter";
                               }else {
                                 return null;

@@ -29,7 +29,7 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
   var apiURLGetKodeSurat = "https://siradaskripsi.my.id/api/data/nomorsurat";
   var apiURLSimpanSurat = "https://siradaskripsi.my.id/api/admin/surat/masuk/edit/up";
   var apiURLGetDataSurat = "https://siradaskripsi.my.id/api/admin/surat/masuk/edit/${editSuratMasukAdmin.idSuratMasuk}";
-  var apiURLUploadFileSurat = "http://192.168.18.10:8000/api/upload/surat-masuk";
+  var apiURLUploadFileSurat = "https://siradaskripsi.my.id/api/upload/surat-masuk";
   bool availableKodeSurat = false;
   bool KodeSuratLoading = true;
   bool Loading = false;
@@ -52,6 +52,10 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
   final controllerNomorSurat = TextEditingController();
   final controllerParindikan = TextEditingController();
   final controllerAsalSurat = TextEditingController();
+  final controllerWaktuKegiatan = TextEditingController();
+  final controllerTanggalKegiatanText = TextEditingController();
+  final controllerTanggalSurat = TextEditingController();
+  final controllerBerkasSurat = TextEditingController();
   FToast ftoast;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -74,14 +78,18 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
           tanggalMulaiValue = DateFormat("yyyy-MM-dd").format(tanggalMulaiKegiatan).toString();
           tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(tanggalAkhirKegiatan).toString();
           tanggalBerakhirValue = DateFormat("yyyy-MM-dd").format(tanggalAkhirKegiatan).toString();
+          controllerTanggalKegiatanText.text = tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir";
         }
         startTime = parsedJson['waktu_kegiatan_mulai'] == null ? null : TimeOfDay(hour: int.parse(parsedJson['waktu_kegiatan_mulai'].split(":")[0]), minute: int.parse(parsedJson['waktu_kegiatan_mulai'].split(":")[1]));
         endTime = parsedJson['waktu_kegiatan_selesai'] == null ? null : TimeOfDay(hour: int.parse(parsedJson['waktu_kegiatan_selesai'].split(":")[0]), minute: int.parse(parsedJson['waktu_kegiatan_selesai'].split(":")[1]));
         selectedTanggalSurat = DateTime.parse(parsedJson['tanggal_surat']);
         tanggalSurat = DateFormat("dd-MMM-yyyy").format(selectedTanggalSurat).toString();
         tanggalSuratValue = DateFormat("yyyy-MM-dd").format(selectedTanggalSurat).toString();
+        controllerTanggalSurat.text = tanggalSurat;
+        controllerWaktuKegiatan.text = startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}";
         LoadingData = false;
         namaFile = parsedJson['file'];
+        controllerBerkasSurat.text = namaFile;
       });
     }
   }
@@ -115,6 +123,7 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
         filePath = result.files.first.path;
         namaFile = result.files.first.name;
         file = File(result.files.single.path);
+        controllerBerkasSurat.text = namaFile;
       });
       print(filePath);
       print(namaFile);
@@ -127,6 +136,7 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
       tanggalMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
       tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
       tanggalBerakhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      controllerTanggalKegiatanText.text = tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir";
     });
   }
 
@@ -435,12 +445,26 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
                                     margin: EdgeInsets.only(top: 20, left: 20)
                                 ),
                                 Container(
-                                    child: Text(tanggalSurat, style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700
-                                    )),
-                                    margin: EdgeInsets.only(top: 10)
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                    child: TextField(
+                                      controller: controllerTanggalSurat,
+                                      enabled: false,
+                                      decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(50.0),
+                                              borderSide: BorderSide(color: HexColor("#025393"))
+                                          ),
+                                          hintText: "Tanggal surat belum terpilih",
+                                          prefixIcon: Icon(CupertinoIcons.calendar)
+                                      ),
+                                      style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      ),
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.only(top: 10),
                                 ),
                                 Container(
                                     child: FlatButton(
@@ -455,6 +479,7 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
                                               selectedTanggalSurat = value;
                                               tanggalSurat = DateFormat("dd-MMM-yyyy").format(selectedTanggalSurat).toString();
                                               tanggalSuratValue = DateFormat("yyyy-MM-dd").format(selectedTanggalSurat).toString();
+                                              controllerTanggalSurat.text = tanggalSurat;
                                             });
                                           });
                                         },
@@ -496,12 +521,26 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
                                     margin: EdgeInsets.only(top: 20, left: 20)
                                 ),
                                 Container(
-                                    child: Text(tanggalMulaiValue == null ? "Tanggal kegiatan belum terpilih" : tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                    )),
-                                    margin: EdgeInsets.only(top: 20, left: 20)
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                    child: TextField(
+                                      controller: controllerTanggalKegiatanText,
+                                      enabled: false,
+                                      decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(50.0),
+                                              borderSide: BorderSide(color: HexColor("#025393"))
+                                          ),
+                                          hintText: "Tanggal kegiatan belum terpilih",
+                                          prefixIcon: Icon(CupertinoIcons.calendar)
+                                      ),
+                                      style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      ),
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.only(top: 10),
                                 ),
                                 Container(
                                     child: Card(
@@ -529,12 +568,26 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
                                 margin: EdgeInsets.only(top: 20, left: 20),
                               ),
                               Container(
-                                child: Text(startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700
-                                )),
-                                margin: EdgeInsets.only(top: 15),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                  child: TextField(
+                                    controller: controllerWaktuKegiatan,
+                                    enabled: false,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(50.0),
+                                            borderSide: BorderSide(color: HexColor("#025393"))
+                                        ),
+                                        hintText: "Waktu Kegiatan",
+                                        prefixIcon: Icon(CupertinoIcons.clock_fill)
+                                    ),
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    ),
+                                  ),
+                                ),
+                                margin: EdgeInsets.only(top: 10),
                               ),
                               Container(
                                 child: FlatButton(
@@ -548,6 +601,7 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
                                           setState(() {
                                             startTime = value.startTime;
                                             endTime = value.endTime;
+                                            controllerWaktuKegiatan.text = startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}";
                                           });
                                         }
                                     );
@@ -578,16 +632,26 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
                         margin: EdgeInsets.only(top: 20, left: 20),
                       ),
                       Container(
-                          child: namaFile == null ? Text("Berkas lampiran belum terpilih", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700
-                          )) : Text("Nama berkas: ${namaFile}", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700
-                          )),
-                          margin: EdgeInsets.only(top: 10)
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                          child: TextField(
+                            controller: controllerBerkasSurat,
+                            enabled: false,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    borderSide: BorderSide(color: HexColor("#025393"))
+                                ),
+                                hintText: "Berkas surat belum terpilih",
+                                prefixIcon: Icon(CupertinoIcons.paperclip)
+                            ),
+                            style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            ),
+                          ),
+                        ),
+                        margin: EdgeInsets.only(top: 10),
                       ),
                       Container(
                         child: FlatButton(
@@ -657,6 +721,7 @@ class _editSuratMasukAdminState extends State<editSuratMasukAdmin> {
                                     var body = jsonEncode({
                                       "surat_keluar_id" : editSuratMasukAdmin.idSuratMasuk,
                                       "master_surat_id" : selectedKodeSurat,
+                                      "nomor_surat" : controllerNomorSurat.text,
                                       "perihal" : controllerParindikan.text,
                                       "asal_surat" : controllerAsalSurat.text,
                                       "tanggal_surat" : tanggalSuratValue,

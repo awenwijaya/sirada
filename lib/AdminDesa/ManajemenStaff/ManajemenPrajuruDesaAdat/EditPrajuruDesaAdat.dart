@@ -32,14 +32,15 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   DateTime masaBerakhir;
   DateTime sekarang = DateTime.now();
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
-  var apiURLShowDetailPrajuruDesaAdat = "http://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
-  var apiURLSimpanPrajuruDesaAdat = "http://siradaskripsi.my.id/api/admin/prajuru/desa_adat/edit/up";
-  var apiURLUploadFileSKPrajuru = "http://siradaskripsi.my.id/api/upload/sk-prajuru";
+  var apiURLShowDetailPrajuruDesaAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
+  var apiURLSimpanPrajuruDesaAdat = "https://siradaskripsi.my.id/api/admin/prajuru/desa_adat/edit/up";
+  var apiURLUploadFileSKPrajuru = "https://siradaskripsi.my.id/api/upload/sk-prajuru";
   var selectedIdPenduduk;
   var selectedRole;
   bool Loading = false;
   final controllerEmail = TextEditingController();
   final controllerNamaFile = TextEditingController();
+  final controllerMasaMenjabat = TextEditingController();
   File file;
   String namaFile;
   String filePath;
@@ -61,6 +62,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
           selectedMasaBerakhirValue = DateFormat("yyyy-MM-dd").format(masaBerakhir).toString();
           selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(masaMulai).toString();
           selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(masaBerakhir).toString();
+          controllerMasaMenjabat.text = selectedMasaBerakhirValue == null ? "$selectedMasaMulai - $selectedMasaMulai" : "$selectedMasaMulai - $selectedMasaBerakhir";
           controllerMasaAktif.selectedRange = PickerDateRange(masaMulai, masaBerakhir);
           controllerEmail.text = parsedJson['email'];
           selectedIdPenduduk = parsedJson['penduduk_id'];
@@ -78,6 +80,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
       selectedMasaMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
       selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
       selectedMasaBerakhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      controllerMasaMenjabat.text = selectedMasaBerakhirValue == null ? "$selectedMasaMulai - $selectedMasaMulai" : "$selectedMasaMulai - $selectedMasaBerakhir";
     });
   }
 
@@ -133,30 +136,13 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
           child: Column(
             children: <Widget>[
               Container(
-                alignment: Alignment.center,
-                child: Image.asset(
-                  'images/person.png',
-                  height: 100,
-                  width: 100,
-                ),
-                margin: EdgeInsets.only(top: 30)
-              ),
-              Container(
-                child: Text("* = diperlukan", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700
-                ), textAlign: TextAlign.center),
-                margin: EdgeInsets.only(top: 20),
-              ),
-              Container(
                 alignment: Alignment.topLeft,
                 child: Text("1. Data Prajuru", style: TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 14,
                   fontWeight: FontWeight.w700
                 )),
-                margin: EdgeInsets.only(top: 30, left: 20)
+                margin: EdgeInsets.only(top: 20, left: 20)
               ),
               Container(
                 child: Column(
@@ -228,12 +214,26 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                           margin: EdgeInsets.only(top: 20, left: 20),
                         ),
                         Container(
-                            child: Text(selectedMasaMulaiValue == null ? "Masa aktif belum terpilih" : selectedMasaBerakhirValue == null ? "$selectedMasaMulai - $selectedMasaMulai" : "$selectedMasaMulai - $selectedMasaBerakhir", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700
-                            )),
-                            margin: EdgeInsets.only(top: 10)
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                            child: TextField(
+                              controller: controllerMasaMenjabat,
+                              enabled: false,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      borderSide: BorderSide(color: HexColor("#025393"))
+                                  ),
+                                  hintText: "Masa menjabat belum terpilih",
+                                  prefixIcon: Icon(CupertinoIcons.calendar)
+                              ),
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              ),
+                            ),
+                          ),
+                          margin: EdgeInsets.only(top: 10),
                         ),
                         Container(
                             child: Card(

@@ -80,15 +80,15 @@ class _splashScreenState extends State<splashScreen> {
     final SharedPreferences sharedprefkrama = await SharedPreferences.getInstance();
     userEmail = sharedpref.getString('email');
     userId = sharedpref.getInt('userId');
-    desaId = sharedpref.getInt('desaId');
+    desaId = sharedpref.getString('desaId');
     pendudukId = sharedpref.getString('pendudukId');
     userStatus = sharedpref.getString('status');
     role = sharedpref.getString('role');
     kramaId = sharedprefkrama.getInt('kramaId');
     if(role == "Admin" || role == "Bendesa") {
-      prajuruId = sharedprefadmin.getInt('prajuru_adat_id');
+      prajuruId = sharedprefadmin.getString('prajuru_adat_id');
     }else if(role == "Krama") {
-      kramaId = sharedprefkrama.getInt('kramaId');
+      kramaId = sharedprefkrama.getString('kramaId');
     }
     setState(() {
       status = userStatus;

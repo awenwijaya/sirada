@@ -47,6 +47,9 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
   final controllerParindikan = TextEditingController();
   final controllerAsalSurat = TextEditingController();
   final controllerBerkasSurat = TextEditingController();
+  final controllerTanggalSurat = TextEditingController();
+  final controllerTanggalKegiatanText = TextEditingController();
+  final controllerWaktuKegiatan = TextEditingController();
   FToast ftoast;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -92,6 +95,7 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
       tanggalMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
       tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
       tanggalBerakhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      controllerTanggalKegiatanText.text = tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir";
     });
   }
 
@@ -142,14 +146,6 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                     width: 100,
                   ),
                   margin: EdgeInsets.only(top: 30),
-                ),
-                Container(
-                  child: Text("* = diperlukan", style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  ), textAlign: TextAlign.center),
-                  margin: EdgeInsets.only(top: 20, left: 20),
                 ),
                 Container(
                   alignment: Alignment.topLeft,
@@ -284,10 +280,8 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                             validator: (value) {
                               if(value.isEmpty) {
                                 return "Data tidak boleh kosong";
-                              }else if(value.isNotEmpty && RegExp(r"[0-9]+/[A-Z- a-z]+/[A-Z]+/[0-9]").hasMatch(value)) {
-                                return null;
                               }else {
-                                return "Masukkan data nomor surat yang valid";
+                                return null;
                               }
                             },
                             controller: controllerNomorSurat,
@@ -402,12 +396,26 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                               margin: EdgeInsets.only(top: 20, left: 20)
                           ),
                           Container(
-                              child: Text(tanggalSurat, style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700
-                              )),
-                              margin: EdgeInsets.only(top: 10)
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                              child: TextField(
+                                controller: controllerTanggalSurat,
+                                enabled: false,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393"))
+                                    ),
+                                    hintText: "Tanggal surat belum terpilih",
+                                    prefixIcon: Icon(CupertinoIcons.calendar)
+                                ),
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ),
+                              ),
+                            ),
+                            margin: EdgeInsets.only(top: 10),
                           ),
                           Container(
                               child: FlatButton(
@@ -422,6 +430,7 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                                         selectedTanggalSurat = value;
                                         tanggalSurat = DateFormat("dd-MMM-yyyy").format(selectedTanggalSurat).toString();
                                         tanggalSuratValue = DateFormat("yyyy-MM-dd").format(selectedTanggalSurat).toString();
+                                        controllerTanggalSurat.text = tanggalSurat;
                                       });
                                     });
                                   },
@@ -463,16 +472,30 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                               margin: EdgeInsets.only(top: 20, left: 20)
                           ),
                           Container(
-                              child: Text(tanggalMulaiValue == null ? "Tanggal kegiatan belum terpilih" : tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                              )),
-                              margin: EdgeInsets.only(top: 20, left: 20)
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                              child: TextField(
+                                controller: controllerTanggalKegiatanText,
+                                enabled: false,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393"))
+                                    ),
+                                    hintText: "Tanggal kegiatan belum terpilih",
+                                    prefixIcon: Icon(CupertinoIcons.calendar)
+                                ),
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ),
+                              ),
+                            ),
+                            margin: EdgeInsets.only(top: 10),
                           ),
                           Container(
                               child: Card(
-                                  margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
+                                  margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
                                   child: SfDateRangePicker(
                                     controller: controllerTanggalKegiatan,
                                     selectionMode: DateRangePickerSelectionMode.range,
@@ -496,12 +519,26 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                           margin: EdgeInsets.only(top: 20, left: 20),
                         ),
                         Container(
-                          child: Text(startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700
-                          )),
-                          margin: EdgeInsets.only(top: 15),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                            child: TextField(
+                              controller: controllerWaktuKegiatan,
+                              enabled: false,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      borderSide: BorderSide(color: HexColor("#025393"))
+                                  ),
+                                  hintText: "Waktu Kegiatan",
+                                  prefixIcon: Icon(CupertinoIcons.clock_fill)
+                              ),
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              ),
+                            ),
+                          ),
+                          margin: EdgeInsets.only(top: 10),
                         ),
                         Container(
                           child: FlatButton(
@@ -515,6 +552,7 @@ class _tambahSuratMasukAdminState extends State<tambahSuratMasukAdmin> {
                                     setState(() {
                                       startTime = value.startTime;
                                       endTime = value.endTime;
+                                      controllerWaktuKegiatan.text = startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}";
                                     });
                                   }
                               );

@@ -8,7 +8,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
 import 'package:surat/KramaPanitia/BottomNavigationBar.dart';
-import 'package:surat/KramaPanitia/Dashboard.dart';
 import 'package:surat/LoginAndRegistration/LupaPassword.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
 import 'package:surat/Penduduk/BottomNavigationBar.dart';
@@ -38,6 +37,7 @@ class _loginPageState extends State<loginPage> {
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   bool Loading = false;
+  bool isObscure = true;
   var statusPrajuru;
   var tempPendudukId;
   var tempEmail;
@@ -145,13 +145,23 @@ class _loginPageState extends State<loginPage> {
                                   borderSide: BorderSide(color: HexColor("#025393")),
                                 ),
                                 prefixIcon: Icon(Icons.lock_rounded),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    isObscure ? Icons.visibility : Icons.visibility_off
+                                  ),
+                                  onPressed: (){
+                                    setState(() {
+                                      isObscure = !isObscure;
+                                    });
+                                  },
+                                ),
                                 hintText: "Password"
                             ),
                             style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14
                             ),
-                            obscureText: true,
+                            obscureText: isObscure,
                           ),
                         ),
                         margin: EdgeInsets.only(top: 10),
