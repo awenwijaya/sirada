@@ -8,6 +8,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
 
 class nomorSuratAdmin extends StatefulWidget {
   const nomorSuratAdmin({Key key}) : super(key: key);
@@ -34,6 +35,11 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
   final GlobalKey<FormState> addFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> editFormKey = GlobalKey<FormState>();
   FToast ftoast;
+  SearchBar searchBar;
+  final controllerSearch = TextEditingController();
+  var apiURLSearchKodeSurat = "https://siradaskripsi.my.id/api/data/nomorsurat/${loginPage.desaId}/search";
+  bool isSearchBar = false;
+  bool isSearch = false;
 
   Future refreshListNomorSurat() async {
     Uri uri = Uri.parse('https://siradaskripsi.my.id/api/data/nomorsurat/${loginPage.desaId}');
@@ -60,6 +66,42 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
     }
   }
 
+  Future refreshListSearch() async {
+    setState(() {
+      Loading = true;
+      isSearch = true;
+    });
+    var body = jsonEncode({
+      "search_query" : controllerSearch.text
+    });
+    http.post(Uri.parse(apiURLSearchKodeSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      var statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var data = json.decode(response.body);
+        this.idNomorSurat = [];
+        this.nomorSurat = [];
+        this.keteranganSurat = [];
+        setState(() {
+          Loading = false;
+          availableData = true;
+          for(var i = 0; i < data.length; i++) {
+            this.idNomorSurat.add(data[i]['master_surat_id']);
+            this.nomorSurat.add(data[i]['kode_nomor_surat']);
+            this.keteranganSurat.add(data[i]['keterangan']);
+          }
+        });
+      }else {
+        setState(() {
+          Loading = false;
+          availableData = false;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
      // TODO: implement initState
@@ -82,136 +124,184 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
               Navigator.of(context).pop();
             },
           ),
-          title: Text("Nomor Surat", style: TextStyle(
-            fontFamily: "Poppins",
-            fontWeight: FontWeight.w700,
-            color: HexColor("#025393")
+          title: isSearchBar ? Container(
+            child: TextField(
+              controller: controllerSearch,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                    borderSide: BorderSide(color: HexColor("#025393"))
+                ),
+                hintText: "Cari kode surat atau keterangan",
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: (){
+                      if(controllerSearch.text != "") {
+                        setState(() {
+                          isSearch = true;
+                        });
+                        refreshListSearch();
+                      }
+                    },
+                  )
+              ),
+              style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 14
+              ),
+            ),
+            height: 40
+          ) : Text("Nomor Surat", style: TextStyle(
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w700,
+              color: HexColor("#025393")
           )),
+          actions: <Widget>[
+            isSearchBar ? IconButton(
+              icon: Icon(Icons.close),
+              color: HexColor("#025393"),
+              onPressed: (){
+                setState(() {
+                  isSearch = false;
+                  isSearchBar = false;
+                });
+                refreshListNomorSurat();
+              },
+            ) : IconButton(
+              icon: Icon(Icons.search),
+              color: HexColor("#025393"),
+              onPressed: (){
+                setState(() {
+                  isSearchBar = true;
+                });
+              },
+            )
+          ],
         ),
         body: Loading ? ListTileShimmer() : availableData ? RefreshIndicator(
-          onRefresh: refreshListNomorSurat,
-          child: ListView.builder(
-            itemCount: idNomorSurat.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: (){},
-                child: Container(
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                child: Image.asset(
-                                    'images/paper.png',
-                                    height: 40,
-                                    width: 40
-                                )
-                            ),
-                            Container(
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(
-                                        child: Text("${nomorSurat[index]}", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: HexColor("#025393")
-                                        )),
-                                      ),
-                                      Container(
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.55,
-                                            child: Text("${keteranganSurat[index]}", style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14,
-                                            ))
-                                          )
-                                      )
-                                    ]
+            onRefresh: isSearch ? refreshListSearch : refreshListNomorSurat,
+            child: ListView.builder(
+                itemCount: idNomorSurat.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                      onTap: (){},
+                      child: Container(
+                        child: Stack(
+                            children: <Widget>[
+                              Container(
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                        child: Image.asset(
+                                            'images/paper.png',
+                                            height: 40,
+                                            width: 40
+                                        )
+                                    ),
+                                    Container(
+                                        child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Container(
+                                                child: Text("${nomorSurat[index]}", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: HexColor("#025393")
+                                                )),
+                                              ),
+                                              Container(
+                                                  child: SizedBox(
+                                                      width: MediaQuery.of(context).size.width * 0.55,
+                                                      child: Text("${keteranganSurat[index]}", style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 14,
+                                                      ))
+                                                  )
+                                              )
+                                            ]
+                                        ),
+                                        margin: EdgeInsets.only(left: 15)
+                                    )
+                                  ],
                                 ),
-                                margin: EdgeInsets.only(left: 15)
-                            )
-                          ],
+                              ),
+                              Container(
+                                  alignment: Alignment.centerRight,
+                                  child: PopupMenuButton<int>(
+                                      onSelected: (item) {
+                                        setState(() {
+                                          selectedIdNomorSurat = idNomorSurat[index];
+                                          controllerKodeSuratEdit.text = nomorSurat[index];
+                                          controllerKeteranganEdit.text = keteranganSurat[index];
+                                        });
+                                        onSelected(context, item);
+                                      },
+                                      itemBuilder: (context) => [
+                                        PopupMenuItem<int>(
+                                            value: 0,
+                                            child: Row(
+                                                children: <Widget>[
+                                                  Container(
+                                                      child: Icon(
+                                                          Icons.edit,
+                                                          color: HexColor("#025393")
+                                                      )
+                                                  ),
+                                                  Container(
+                                                      child: Text("Edit", style: TextStyle(
+                                                          fontFamily: "Poppins",
+                                                          fontSize: 14
+                                                      )),
+                                                      margin: EdgeInsets.only(left: 10)
+                                                  )
+                                                ]
+                                            )
+                                        ),
+                                        PopupMenuItem<int>(
+                                            value: 1,
+                                            child: Row(
+                                                children: <Widget>[
+                                                  Container(
+                                                      child: Icon(
+                                                          Icons.delete,
+                                                          color: HexColor("#025393")
+                                                      )
+                                                  ),
+                                                  Container(
+                                                      child: Text("Hapus", style: TextStyle(
+                                                          fontFamily: "Poppins",
+                                                          fontSize: 14
+                                                      )),
+                                                      margin: EdgeInsets.only(left: 10)
+                                                  )
+                                                ]
+                                            )
+                                        )
+                                      ]
+                                  )
+                              )
+                            ]
                         ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerRight,
-                        child: PopupMenuButton<int>(
-                            onSelected: (item) {
-                              setState(() {
-                                selectedIdNomorSurat = idNomorSurat[index];
-                                controllerKodeSuratEdit.text = nomorSurat[index];
-                                controllerKeteranganEdit.text = keteranganSurat[index];
-                              });
-                              onSelected(context, item);
-                            },
-                          itemBuilder: (context) => [
-                            PopupMenuItem<int>(
-                              value: 0,
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: HexColor("#025393")
-                                    )
-                                  ),
-                                  Container(
-                                    child: Text("Edit", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                    )),
-                                    margin: EdgeInsets.only(left: 10)
-                                  )
-                                ]
+                        margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(0,3)
                               )
-                            ),
-                            PopupMenuItem<int>(
-                              value: 1,
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: HexColor("#025393")
-                                    )
-                                  ),
-                                  Container(
-                                    child: Text("Hapus", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14
-                                    )),
-                                    margin: EdgeInsets.only(left: 10)
-                                  )
-                                ]
-                              )
-                            )
-                          ]
-                        )
+                            ]
+                        ),
                       )
-                    ]
-                  ),
-                  margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0,3)
-                      )
-                    ]
-                  ),
-                )
-              );
-            }
-          )
+                  );
+                }
+            )
         ) : Container(
           child: Center(
               child: Column(

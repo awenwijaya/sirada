@@ -200,6 +200,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_search_bar",
+      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_search_bar-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.7"
+    },
+    {
       "name": "flutter_shimmer",
       "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_shimmer-2.1.2",
       "packageUri": "lib/",
@@ -650,7 +656,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2022-05-23T14:59:40.037879Z",
+  "generated": "2022-06-06T15:35:56.401102Z",
   "generator": "pub",
   "generatorVersion": "2.16.2"
 }

@@ -477,13 +477,20 @@ class _loginPageState extends State<loginPage> {
                                           });
                                         }
                                       }else if(parsedJson['role'] == "Panitia") {
-                                        setState(() {
-                                          loginPage.pendudukId = parsedJson['penduduk_id'];
-                                          loginPage.userEmail = parsedJson['email'];
-                                          loginPage.desaId = parsedJson['desa_adat_id'];
-                                          loginPage.userId = parsedJson['user_id'];
-                                          loginPage.role = parsedJson['role'];
-                                        });
+                                        var response = await http.get(Uri.parse("https://siradaskripsi.my.id/api/krama/mipil/${tempPendudukId}"));
+                                        if(response.statusCode == 200) {
+                                          var jsonDataPanitia = response.body;
+                                          var parsedJsonPanitia = json.decode(jsonDataPanitia);
+                                          setState(() {
+                                            loginPage.pendudukId = parsedJson['penduduk_id'];
+                                            loginPage.userEmail = parsedJson['email'];
+                                            loginPage.desaId = parsedJson['desa_adat_id'];
+                                            loginPage.userId = parsedJson['user_id'];
+                                            loginPage.role = parsedJson['role'];
+                                            loginPage.kramaId = parsedJsonPanitia['krama_mipil_id'];
+                                          });
+                                        }
+                                        final SharedPreferences sharedprefpanitia = await SharedPreferences.getInstance();
                                         final SharedPreferences sharedpref = await SharedPreferences.getInstance();
                                         sharedpref.setInt('userId', loginPage.userId);
                                         sharedpref.setString('pendudukId', loginPage.pendudukId);
@@ -491,6 +498,7 @@ class _loginPageState extends State<loginPage> {
                                         sharedpref.setString('email', loginPage.userEmail);
                                         sharedpref.setString('role', loginPage.role);
                                         sharedpref.setString('status', 'login');
+                                        sharedprefpanitia.setString('kramaId', loginPage.kramaId);
                                         var bodyFCM = jsonEncode({
                                           "user_id" : loginPage.userId,
                                           "token" : loginPage.token

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:surat/KramaPanitia/DetailDesa/DetailDesa.dart';
+import 'package:surat/KramaPanitia/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -265,7 +266,9 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                   ),
                   Container(
                     child: FlatButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        Navigator.push(context, CupertinoPageRoute(builder: (context) => tambahSuratKeluarPanitia()));
+                      },
                       child: Text("Tambah Surat Keluar", style: TextStyle(
                         fontFamily: "Poppins",
                         fontSize: 14,
@@ -288,7 +291,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
                             DefaultTabController(
-                              length: 3,
+                              length: 4,
                               initialIndex: 0,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -321,11 +324,11 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                         Tab(
                                           child: Column(
                                             children: <Widget>[
-                                              Icon(CupertinoIcons.archivebox_fill),
+                                              Icon(CupertinoIcons.time_solid),
                                               SizedBox(
                                                 width: MediaQuery.of(context).size.width * 0.55,
                                                 child: Text(
-                                                  "Perlu Dikonfirmasi", style: TextStyle(
+                                                  "Sedang Diproses", style: TextStyle(
                                                     fontFamily: "Poppins",
                                                     fontWeight: FontWeight.w700
                                                 ),
@@ -345,7 +348,27 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                               SizedBox(
                                                 width: MediaQuery.of(context).size.width * 0.55,
                                                 child: Text(
-                                                  "Dikonfirmasi", style: TextStyle(
+                                                  "Telah Dikonfirmasi", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontWeight: FontWeight.w700
+                                                ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.fade,
+                                                  softWrap: false,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Tab(
+                                          child: Column(
+                                            children: <Widget>[
+                                              Icon(Icons.close),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.55,
+                                                child: Text(
+                                                  "Dibatalkan", style: TextStyle(
                                                     fontFamily: "Poppins",
                                                     fontWeight: FontWeight.w700
                                                 ),

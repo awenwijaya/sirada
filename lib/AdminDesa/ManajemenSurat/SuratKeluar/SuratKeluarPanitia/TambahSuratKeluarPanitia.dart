@@ -28,14 +28,17 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
   var selectedSekretarisPanitia;
   var selectedBendesaAdat;
   var selectedKodeSurat;
+
   var apiURLShowKodeSurat = "http://192.168.18.10:8000/api/data/admin/surat/panitia/kode/${loginPage.desaId}";
   var apiURLShowKomponenNomorSurat = "http://192.168.18.10:8000/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
   var apiURLGetDataBendesaAdat = "http://192.168.18.10:8000/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
   var apiURLUpSuratKeluarPanitia = "http://192.168.18.10:8000/api/admin/surat/keluar/panitia/up";
   var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
+
   List bendesaList = List();
   List kodeSuratList = List();
   List pendudukList = List();
+
   bool availableBendesa = false;
   bool availableKodeSurat = false;
   bool LoadingBendesa = true;
@@ -90,6 +93,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
       print(namaFile);
     }
   }
+
 
   Future getListPenduduk() async {
     Uri uri = Uri.parse(apiURLGetDataPenduduk);
@@ -169,6 +173,7 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
     getKodeSurat();
     getKomponenNomorSurat();
     getListPenduduk();
+
     final DateTime sekarang = DateTime.now();
     tanggalMulai = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
     tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(sekarang.add(Duration(days: 7))).toString();
@@ -780,25 +785,6 @@ class _tambahSuratKeluarPanitiaAdminState extends State<tambahSuratKeluarPanitia
                       )),
                       margin: EdgeInsets.only(top: 20, left: 20)
                     ),
-                    Container(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                        child: TextField(
-                          controller: controllerPanitiaAcara,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                              borderSide: BorderSide(color: HexColor("#025393"))
-                            ),
-                            hintText: "Nama Panitia Acara"
-                          ),
-                          style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                          ),
-                        )
-                      )
-                    )
                   ]
                 )
               ),

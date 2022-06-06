@@ -73,22 +73,25 @@ class _splashScreenState extends State<splashScreen> {
   var pendudukId;
   var prajuruId;
   var kramaId;
+  var kramaIdPanitia;
 
   Future getUserInfo() async {
     final SharedPreferences sharedpref = await SharedPreferences.getInstance();
     final SharedPreferences sharedprefadmin = await SharedPreferences.getInstance();
     final SharedPreferences sharedprefkrama = await SharedPreferences.getInstance();
+    final SharedPreferences sharedprefpanitia = await SharedPreferences.getInstance();
     userEmail = sharedpref.getString('email');
     userId = sharedpref.getInt('userId');
     desaId = sharedpref.getString('desaId');
     pendudukId = sharedpref.getString('pendudukId');
     userStatus = sharedpref.getString('status');
     role = sharedpref.getString('role');
-    kramaId = sharedprefkrama.getInt('kramaId');
     if(role == "Admin" || role == "Bendesa") {
       prajuruId = sharedprefadmin.getString('prajuru_adat_id');
     }else if(role == "Krama") {
       kramaId = sharedprefkrama.getString('kramaId');
+    }else if(role == "Panitia") {
+      kramaIdPanitia = sharedprefpanitia.getString('kramaId');
     }
     setState(() {
       status = userStatus;
@@ -135,6 +138,7 @@ class _splashScreenState extends State<splashScreen> {
             loginPage.userEmail =  userEmail;
             loginPage.desaId = desaId;
             loginPage.pendudukId = pendudukId;
+            loginPage.kramaId = kramaIdPanitia;
           });
         }
         if(role == "Krama") {
