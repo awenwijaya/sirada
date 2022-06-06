@@ -973,12 +973,17 @@ class pilihDataPrajuruBanjarAdat extends StatefulWidget {
 }
 
 class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat> {
-  var apiURLGetDataPenduduk = "http://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "https://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLSearch = "https://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}/search";
   var nikPegawai = [];
   var namaPegawai = [];
   var kramaMipilID = [];
   var pegawaiID = [];
   bool Loading = true;
+  bool isSearchBar = false;
+  bool isSearch = false;
+  bool availableData = true;
+  final controllerSearch = TextEditingController();
 
   Future getListPenduduk() async {
     Uri uri = Uri.parse(apiURLGetDataPenduduk);
@@ -990,6 +995,7 @@ class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat>
       this.kramaMipilID = [];
       this.pegawaiID = [];
       setState(() {
+        availableData = true;
         Loading = false;
         for(var i = 0; i < data.length; i++) {
           this.nikPegawai.add(data[i]['nik']);
@@ -999,6 +1005,44 @@ class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat>
         }
       });
     }
+  }
+
+  Future refreshListSearch() async {
+    setState(() {
+      Loading = true;
+      isSearch = true;
+    });
+    var body = jsonEncode({
+      "search_query" : controllerSearch.text
+    });
+    http.post(Uri.parse(apiURLSearch),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      var statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var data = json.decode(response.body);
+        this.nikPegawai = [];
+        this.namaPegawai = [];
+        this.kramaMipilID = [];
+        this.pegawaiID = [];
+        setState(() {
+          Loading = false;
+          availableData = true;
+          for(var i = 0; i < data.length; i++) {
+            this.nikPegawai.add(data[i]['nik']);
+            this.namaPegawai.add(data[i]['nama']);
+            this.kramaMipilID.add(data[i]['krama_mipil_id']);
+            this.pegawaiID.add(data[i]['penduduk_id']);
+          }
+        });
+      }else {
+        setState(() {
+          Loading = false;
+          availableData = false;
+        });
+      }
+    });
   }
 
   @override
@@ -1019,16 +1063,65 @@ class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat>
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop();},
           ),
-          title: Text("Pilih Data Prajuru", style: TextStyle(
+          title: isSearchBar ? Container(
+              child: TextField(
+                controller: controllerSearch,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide(color: HexColor("#025393"))
+                    ),
+                    hintText: "Cari prajuru...",
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: (){
+                        if(controllerSearch.text != "") {
+                          setState(() {
+                            isSearch = true;
+                          });
+                          refreshListSearch();
+                        }
+                      },
+                    )
+                ),
+                style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14
+                ),
+              ),
+              height: 40
+          ) : Text("Pilih Data Prajuru", style: TextStyle(
               fontFamily: "Poppins",
               fontWeight: FontWeight.w700,
               color: HexColor("#025393")
           )),
+          actions: <Widget>[
+            isSearchBar ? IconButton(
+              icon: Icon(Icons.close),
+              color: HexColor("#025393"),
+              onPressed: (){
+                setState(() {
+                  isSearch = false;
+                  isSearchBar = false;
+                  controllerSearch.text = "";
+                });
+                getListPenduduk();
+              },
+            ) : IconButton(
+              icon: Icon(Icons.search),
+              color: HexColor("#025393"),
+              onPressed: (){
+                setState(() {
+                  isSearchBar = true;
+                });
+              },
+            )
+          ],
         ),
         body: Loading ? Center(
             child: Lottie.asset('assets/loading-circle.json')
-        ) : RefreshIndicator(
-            onRefresh: getListPenduduk,
+        ) : availableData ? RefreshIndicator(
+            onRefresh: isSearch ? refreshListSearch : getListPenduduk,
             child: ListView.builder(
               itemCount: kramaMipilID.length,
               itemBuilder: (context, index) {
@@ -1103,6 +1196,32 @@ class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat>
                 );
               },
             )
+        ) : Container(
+          child: Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                        child: Icon(
+                          CupertinoIcons.person_alt,
+                          size: 50,
+                          color: Colors.black26,
+                        )
+                    ),
+                    Container(
+                      child: Text("Tidak ada Data", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black26
+                      ), textAlign: TextAlign.center),
+                      margin: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                    )
+                  ]
+              )
+          ),
+          alignment: Alignment(0.0, 0.0),
         )
       )
     );
@@ -1119,9 +1238,14 @@ class pilihDataBanjar extends StatefulWidget {
 
 class _pilihDataBanjarState extends State<pilihDataBanjar> {
   var apiURLGetDataBanjar = "http://siradaskripsi.my.id/api/data/banjar/${loginPage.desaId}";
+  var apiURLSearch = "https://siradaskripsi.my.id/api/data/banjar/${loginPage.desaId}/search";
   var idBanjar = [];
   var namaBanjar = [];
   bool Loading = true;
+  bool isSearchBar = false;
+  bool isSearch = false;
+  bool availableData = true;
+  final controllerSearch = TextEditingController();
 
   Future getListBanjar() async {
     Uri uri = Uri.parse(apiURLGetDataBanjar);
@@ -1131,6 +1255,7 @@ class _pilihDataBanjarState extends State<pilihDataBanjar> {
       this.idBanjar = [];
       this.namaBanjar = [];
       setState(() {
+        availableData = true;
         Loading = false;
         for(var i = 0; i < data.length; i++) {
           this.idBanjar.add(data[i]['banjar_adat_id']);
@@ -1139,6 +1264,41 @@ class _pilihDataBanjarState extends State<pilihDataBanjar> {
       });
     }
   }
+
+  Future refreshListSearch() async {
+    setState(() {
+      Loading = true;
+      isSearch = true;
+    });
+    var body = jsonEncode({
+      "search_query" : controllerSearch.text
+    });
+    http.post(Uri.parse(apiURLSearch),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      var statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var data = json.decode(response.body);
+        this.idBanjar = [];
+        this.namaBanjar = [];
+        setState(() {
+          availableData = true;
+          Loading = false;
+          for(var i = 0; i < data.length; i++) {
+            this.idBanjar.add(data[i]['banjar_adat_id']);
+            this.namaBanjar.add(data[i]['nama_banjar_adat']);
+          }
+        });
+      }else {
+        setState(() {
+          Loading = false;
+          availableData = false;
+        });
+      }
+    });
+  }
+
 
   @override
   void initState() {
@@ -1158,16 +1318,65 @@ class _pilihDataBanjarState extends State<pilihDataBanjar> {
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop();},
           ),
-          title: Text("Pilih Banjar", style: TextStyle(
-            fontFamily: "Poppins",
-            fontWeight: FontWeight.w700,
-            color: HexColor("#025393")
+          title: isSearchBar ? Container(
+              child: TextField(
+                controller: controllerSearch,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide(color: HexColor("#025393"))
+                    ),
+                    hintText: "Cari prajuru...",
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: (){
+                        if(controllerSearch.text != "") {
+                          setState(() {
+                            isSearch = true;
+                          });
+                          refreshListSearch();
+                        }
+                      },
+                    )
+                ),
+                style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14
+                ),
+              ),
+              height: 40
+          ) : Text("Pilih Data Banjar", style: TextStyle(
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w700,
+              color: HexColor("#025393")
           )),
+          actions: <Widget>[
+            isSearchBar ? IconButton(
+              icon: Icon(Icons.close),
+              color: HexColor("#025393"),
+              onPressed: (){
+                setState(() {
+                  isSearch = false;
+                  isSearchBar = false;
+                  controllerSearch.text = "";
+                });
+                getListBanjar();
+              },
+            ) : IconButton(
+              icon: Icon(Icons.search),
+              color: HexColor("#025393"),
+              onPressed: (){
+                setState(() {
+                  isSearchBar = true;
+                });
+              },
+            )
+          ],
         ),
         body: Loading ? Center(
           child: Lottie.asset('assets/loading-circle.json')
-        ) : RefreshIndicator(
-          onRefresh: getListBanjar,
+        ) : availableData ? RefreshIndicator(
+          onRefresh: isSearch ? refreshListSearch : getListBanjar,
           child: ListView.builder(
             itemCount: idBanjar.length,
             itemBuilder: (context, index) {
@@ -1218,7 +1427,33 @@ class _pilihDataBanjarState extends State<pilihDataBanjar> {
               );
             }
           )
-        )
+        ) : Container(
+          child: Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                        child: Icon(
+                          CupertinoIcons.location_solid,
+                          size: 50,
+                          color: Colors.black26,
+                        )
+                    ),
+                    Container(
+                      child: Text("Tidak ada Data", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black26
+                      ), textAlign: TextAlign.center),
+                      margin: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                    )
+                  ]
+              )
+          ),
+          alignment: Alignment(0.0, 0.0),
+        ),
       )
     );
   }

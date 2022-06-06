@@ -27,7 +27,11 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
   var selectedIdSuratMasuk;
   bool LoadingSuratMasuk = true;
   bool availableSuratMasuk = false;
+  bool isSearchBar = false;
+  bool isSearch = false;
   FToast ftoast;
+  final controllerSearch = TextEditingController();
+  var apiURLSearch = "https://siradaskripsi.my.id/api/data/admin/surat/masuk/${loginPage.desaId}/search";
 
   Future refreshListSuratMasuk() async {
     var response = await http.get(Uri.parse(apiURLShowListSuratMasuk));
@@ -53,6 +57,42 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
     }
   }
 
+  Future refreshListSearch() async {
+    setState(() {
+      LoadingSuratMasuk = true;
+      isSearch = true;
+    });
+    var body = jsonEncode({
+      "search_query" : controllerSearch.text
+    });
+    http.post(Uri.parse(apiURLSearch),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      var statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var data = json.decode(response.body);
+        this.idSuratMasuk = [];
+        this.perihalSuratMasuk = [];
+        this.asalSuratMasuk = [];
+        setState(() {
+          LoadingSuratMasuk = false;
+          availableSuratMasuk = true;
+          for(var i = 0; i < data.length; i++) {
+            this.idSuratMasuk.add(data[i]['surat_masuk_id']);
+            this.perihalSuratMasuk.add(data[i]['perihal']);
+            this.asalSuratMasuk.add(data[i]['asal_surat']);
+          }
+        });
+      }else {
+        setState(() {
+          LoadingSuratMasuk = false;
+          availableSuratMasuk = false;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -75,14 +115,63 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
               Navigator.of(context).pop();
             },
           ),
-          title: Text("Surat Masuk", style: TextStyle(
-            fontFamily: "Poppins",
-            fontWeight: FontWeight.w700,
-            color: HexColor("#025393")
+          title: isSearchBar ? Container(
+              child: TextField(
+                controller: controllerSearch,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide(color: HexColor("#025393"))
+                    ),
+                    hintText: "Cari perihal surat atau pengirim...",
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: (){
+                        if(controllerSearch.text != "") {
+                          setState(() {
+                            isSearch = true;
+                          });
+                          refreshListSearch();
+                        }
+                      },
+                    )
+                ),
+                style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14
+                ),
+              ),
+              height: 40
+          ) : Text("Surat Masuk", style: TextStyle(
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w700,
+              color: HexColor("#025393")
           )),
+          actions: <Widget>[
+            isSearchBar ? IconButton(
+              icon: Icon(Icons.close),
+              color: HexColor("#025393"),
+              onPressed: (){
+                setState(() {
+                  isSearch = false;
+                  isSearchBar = false;
+                  controllerSearch.text = "";
+                });
+                refreshListSuratMasuk();
+              },
+            ) : IconButton(
+              icon: Icon(Icons.search),
+              color: HexColor("#025393"),
+              onPressed: (){
+                setState(() {
+                  isSearchBar = true;
+                });
+              },
+            )
+          ],
         ),
         body: LoadingSuratMasuk ? ListTileShimmer() : availableSuratMasuk ? RefreshIndicator(
-          onRefresh: refreshListSuratMasuk,
+          onRefresh: isSearch ? refreshListSearch : refreshListSuratMasuk,
           child: ListView.builder(
             itemCount: idSuratMasuk.length,
             itemBuilder: (context, index) {

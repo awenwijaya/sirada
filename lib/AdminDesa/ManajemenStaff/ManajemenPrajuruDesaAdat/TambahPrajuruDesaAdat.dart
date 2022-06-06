@@ -917,11 +917,16 @@ class pilihDataPegawai extends StatefulWidget {
 
 class _pilihDataPegawaiState extends State<pilihDataPegawai> {
   var apiURLGetDataPenduduk = "https://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLSearch = "https://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}/search";
   var nikPegawai = [];
   var namaPegawai = [];
   var kramaMipilID = [];
   var pegawaiID = [];
   bool Loading = true;
+  bool isSearchBar = false;
+  bool isSearch = false;
+  bool availableData = true;
+  final controllerSearch = TextEditingController();
 
   Future getListPenduduk() async {
     Uri uri = Uri.parse(apiURLGetDataPenduduk);
@@ -934,6 +939,7 @@ class _pilihDataPegawaiState extends State<pilihDataPegawai> {
       this.pegawaiID = [];
       setState(() {
         Loading = false;
+        availableData = true;
         for(var i = 0; i < data.length; i++) {
           this.nikPegawai.add(data[i]['nik']);
           this.namaPegawai.add(data[i]['nama']);
@@ -942,6 +948,44 @@ class _pilihDataPegawaiState extends State<pilihDataPegawai> {
         }
       });
     }
+  }
+
+  Future refreshListSearch() async {
+    setState(() {
+      Loading = true;
+      isSearch = true;
+    });
+    var body = jsonEncode({
+      "search_query" : controllerSearch.text
+    });
+    http.post(Uri.parse(apiURLSearch),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      var statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var data = json.decode(response.body);
+        this.nikPegawai = [];
+        this.namaPegawai = [];
+        this.kramaMipilID = [];
+        this.pegawaiID = [];
+        setState(() {
+          Loading = false;
+          availableData = true;
+          for(var i = 0; i < data.length; i++) {
+            this.nikPegawai.add(data[i]['nik']);
+            this.namaPegawai.add(data[i]['nama']);
+            this.kramaMipilID.add(data[i]['krama_mipil_id']);
+            this.pegawaiID.add(data[i]['penduduk_id']);
+          }
+        });
+      }else {
+        setState(() {
+          Loading = false;
+          availableData = false;
+        });
+      }
+    });
   }
 
   @override
@@ -962,16 +1006,65 @@ class _pilihDataPegawaiState extends State<pilihDataPegawai> {
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop();},
           ),
-          title: Text("Pilih Data Prajuru", style: TextStyle(
-            fontFamily: "Poppins",
-            fontWeight: FontWeight.w700,
-            color: HexColor("#025393")
+          title: isSearchBar ? Container(
+              child: TextField(
+                controller: controllerSearch,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide(color: HexColor("#025393"))
+                    ),
+                    hintText: "Cari prajuru...",
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: (){
+                        if(controllerSearch.text != "") {
+                          setState(() {
+                            isSearch = true;
+                          });
+                          refreshListSearch();
+                        }
+                      },
+                    )
+                ),
+                style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14
+                ),
+              ),
+              height: 40
+          ) : Text("Pilih Data Prajuru", style: TextStyle(
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w700,
+              color: HexColor("#025393")
           )),
+          actions: <Widget>[
+            isSearchBar ? IconButton(
+              icon: Icon(Icons.close),
+              color: HexColor("#025393"),
+              onPressed: (){
+                setState(() {
+                  isSearch = false;
+                  isSearchBar = false;
+                  controllerSearch.text = "";
+                });
+                getListPenduduk();
+              },
+            ) : IconButton(
+              icon: Icon(Icons.search),
+              color: HexColor("#025393"),
+              onPressed: (){
+                setState(() {
+                  isSearchBar = true;
+                });
+              },
+            )
+          ],
         ),
         body: Loading ? Center(
           child: Lottie.asset('assets/loading-circle.json')
-        ) : RefreshIndicator(
-          onRefresh: getListPenduduk,
+        ) : availableData ? RefreshIndicator(
+          onRefresh: isSearch ? refreshListSearch : getListPenduduk,
           child: ListView.builder(
             itemCount: kramaMipilID.length,
             itemBuilder: (context, index) {
@@ -1046,7 +1139,33 @@ class _pilihDataPegawaiState extends State<pilihDataPegawai> {
               );
             },
           )
-        )
+        ) : Container(
+      child: Center(
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+                child: Icon(
+                  CupertinoIcons.person_alt,
+                  size: 50,
+                  color: Colors.black26,
+                )
+            ),
+            Container(
+              child: Text("Tidak ada Data", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black26
+              ), textAlign: TextAlign.center),
+              margin: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.symmetric(horizontal: 30),
+            )
+          ]
+      )
+    ),
+    alignment: Alignment(0.0, 0.0),
+    ),
       )
     );
   }

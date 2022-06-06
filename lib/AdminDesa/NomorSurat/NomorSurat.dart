@@ -35,7 +35,6 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
   final GlobalKey<FormState> addFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> editFormKey = GlobalKey<FormState>();
   FToast ftoast;
-  SearchBar searchBar;
   final controllerSearch = TextEditingController();
   var apiURLSearchKodeSurat = "https://siradaskripsi.my.id/api/data/nomorsurat/${loginPage.desaId}/search";
   bool isSearchBar = false;
@@ -132,7 +131,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                     borderRadius: BorderRadius.circular(50.0),
                     borderSide: BorderSide(color: HexColor("#025393"))
                 ),
-                hintText: "Cari kode surat atau keterangan",
+                hintText: "Cari kode surat atau keterangan...",
                   suffixIcon: IconButton(
                     icon: Icon(Icons.search),
                     onPressed: (){
@@ -164,6 +163,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                 setState(() {
                   isSearch = false;
                   isSearchBar = false;
+                  controllerSearch.text = "";
                 });
                 refreshListNomorSurat();
               },
