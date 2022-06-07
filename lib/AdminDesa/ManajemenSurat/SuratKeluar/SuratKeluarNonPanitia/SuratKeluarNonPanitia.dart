@@ -18,7 +18,7 @@ class suratKeluarNonPanitiaAdmin extends StatefulWidget {
 }
 
 class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin> {
-  var apiURLShowListSuratKeluar = "http://siradaskripsi.my.id/api/data/admin/surat/non-panitia/${loginPage.desaId}";
+  var apiURLShowListSuratKeluar = "https://siradaskripsi.my.id/api/data/admin/surat/non-panitia/${loginPage.desaId}";
   var selectedIdSuratKeluar;
 
   //loading status

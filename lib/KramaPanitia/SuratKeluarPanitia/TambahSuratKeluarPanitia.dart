@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
+import 'package:surat/main.dart';
 import 'package:surat/shared/KelihanAdat.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:simple_time_range_picker/simple_time_range_picker.dart';
@@ -39,8 +41,6 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   var apiURLShowKomponenNomorSurat = "https://siradaskripsi.my.id/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
   var apiURLGetDataBendesaAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
   var apiURLUpSuratKeluarPanitia = "https://siradaskripsi.my.id/api/admin/surat/keluar/panitia/up";
-  var apiURLGetDataPenduduk = "https://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}";
-  var apiURLCountPanitia = "https://siradaskripsi.my.id/api/panitia/get/count/${loginPage.kramaId}";
   var apiURLGetPanitiaAcara = "https://siradaskripsi.my.id/api/panitia/get/${loginPage.kramaId}";
   var apiURLGetBendesa = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/bendesa";
   var apiURLGetPanitia = "https://siradaskripsi.my.id/api/panitia/get";
@@ -58,7 +58,6 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   //list
   List bendesaList = List();
   List kodeSuratList = List();
-  List pendudukList = List();
   List panitiaAcaraList = List();
   List sekretarisList = List();
   List ketuaList = List();
@@ -68,7 +67,6 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   bool availableKodeSurat = false;
   bool LoadingBendesa = true;
   bool KodeSuratLoading = true;
-  bool LoadingPenduduk = true;
   bool availableKetua = false;
   bool availableSekretaris = false;
   bool LoadingKetua = true;
@@ -78,7 +76,6 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   File file;
   String namaFile;
   String filePath;
-  int jumlahLampiran = 0;
 
   //controllers
   final controllerNomorSurat = TextEditingController();
@@ -92,7 +89,6 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   final controllerBusanaKegiatan = TextEditingController();
   final controllerTanggalKegiatanText = TextEditingController();
   final controllerWaktuKegiatan = TextEditingController();
-  final controllerLepihanText = TextEditingController();
   final controllerPihakLainTetujon = TextEditingController();
   final controllerPihakLainTumusan = TextEditingController();
 
@@ -138,6 +134,19 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
 
   List pihakLain = [];
   List pihakLainTumusan = [];
+
+  void showNotification() {
+    flutterLocalNotificationsPlugin.show(0, "Surat keluar berhasil ditambahkan!", "Surat keluar berhasil ditambahkan! Silahkan tunggu hingga pihak yang terkait melakukan validasi", NotificationDetails(
+        android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            importance: Importance.high,
+            color: Colors.blue,
+            playSound: true,
+            icon: '@mipmap/ic_launcher'
+        )
+    ));
+  }
 
   Future getBendesa() async {
     var response = await http.get(Uri.parse(apiURLGetBendesa));
@@ -189,18 +198,6 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
       });
       print(filePath);
       print(namaFile);
-    }
-  }
-
-  Future getListPenduduk() async {
-    Uri uri = Uri.parse(apiURLGetDataPenduduk);
-    final response = await http.get(uri);
-    if(response.statusCode == 200) {
-      var jsonData = json.decode(response.body);
-      setState(() {
-        pendudukList = jsonData;
-        LoadingPenduduk = false;
-      });
     }
   }
 
@@ -337,13 +334,11 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
     super.initState();
     getBendesaAdat();
     getKodeSurat();
-    getListPenduduk();
     getPanitiaAcaraData();
     getBendesa();
     getKelihanAdat();
     ftoast = FToast();
     ftoast.init(this.context);
-    controllerLepihanText.text = "Jumlah Lepihan: ${jumlahLampiran.toString()}";
     final DateTime sekarang = DateTime.now();
     tanggalMulai = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
     tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(sekarang.add(Duration(days: 7))).toString();
@@ -355,7 +350,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
+      home: Loading ? loading() : Scaffold(
         appBar: AppBar(
           backgroundColor: HexColor("#025393"),
           leading: IconButton(
@@ -956,6 +951,8 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                       setState(() {
                                         selectedIdPanitiaAcara = value;
                                       });
+                                      getKetuaPanitia();
+                                      getSekretarisPanitia();
                                     },
                                   ),
                                   margin: EdgeInsets.only(top: 15)
@@ -1314,7 +1311,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                     ),
                     Container(
                         child: Center(
-                            child: SizedBox(
+                            child: lampiranSurat.isEmpty ? Container() : SizedBox(
                               width: MediaQuery.of(context).size.width * 0.8,
                               height: 150.0,
                               child: ListView.builder(
@@ -1842,12 +1839,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                     setState(() {
                                       Loading = false;
                                     });
-                                    Fluttertoast.showToast(
-                                        msg: "Data surat keluar berhasil ditambahkan",
-                                        fontSize: 14,
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER
-                                    );
+                                    showNotification();
                                     Navigator.of(context).pop(true);
                                   }
                                 });
