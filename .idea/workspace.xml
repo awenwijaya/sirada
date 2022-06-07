@@ -15,9 +15,12 @@
   <component name="ChangeListManager">
     <list default="true" id="ae2c7e7b-ad51-4daf-a323-df3f297432d6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluar.dart" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/SuratKeluarNonPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/SuratKeluarNonPanitia.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/TambahSuratKeluarNonPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/TambahSuratKeluarNonPanitia.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/DetailSurat.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/EditSuratKeluarPanitia.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/SuratKeluarPanitia.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
