@@ -239,6 +239,7 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
                               ],
                             ),
                           ),
+                            margin: EdgeInsets.only(left: 15)
                         )
                       ],
                     ),

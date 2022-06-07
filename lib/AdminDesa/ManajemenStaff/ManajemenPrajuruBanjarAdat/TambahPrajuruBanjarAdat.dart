@@ -1326,7 +1326,7 @@ class _pilihDataBanjarState extends State<pilihDataBanjar> {
                         borderRadius: BorderRadius.circular(50.0),
                         borderSide: BorderSide(color: HexColor("#025393"))
                     ),
-                    hintText: "Cari prajuru...",
+                    hintText: "Cari banjar...",
                     suffixIcon: IconButton(
                       icon: Icon(Icons.search),
                       onPressed: (){

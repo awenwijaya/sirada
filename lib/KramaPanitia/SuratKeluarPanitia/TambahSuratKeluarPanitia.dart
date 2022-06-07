@@ -8,12 +8,14 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
+import 'package:surat/shared/KelihanAdat.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:simple_time_range_picker/simple_time_range_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class tambahSuratKeluarPanitia extends StatefulWidget {
   const tambahSuratKeluarPanitia({Key key}) : super(key: key);
@@ -25,12 +27,12 @@ class tambahSuratKeluarPanitia extends StatefulWidget {
 class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
 
   //selected
-  var selectedKetuaPanitia;
-  var selectedSekretarisPanitia;
   var selectedBendesaAdat;
   var selectedKodeSurat;
   var selectedPanitiaAcara;
   var selectedIdPanitiaAcara;
+  var selectedIdKetuaPanitia;
+  var selectedIdSekretarisPanitia;
 
   //url
   var apiURLShowKodeSurat = "http://192.168.18.10:8000/api/data/nomorsurat/${loginPage.desaId}";
@@ -40,12 +42,17 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   var apiURLGetDataPenduduk = "http://192.168.18.10:8000/api/data/penduduk/desa_adat/${loginPage.desaId}";
   var apiURLCountPanitia = "http://192.168.18.10:8000/api/panitia/get/count/${loginPage.kramaId}";
   var apiURLGetPanitiaAcara = "http://192.168.18.10:8000/api/panitia/get/${loginPage.kramaId}";
+  var apiURLGetBendesa = "http://192.168.18.10:8000/api/data/staff/prajuru_desa_adat/bendesa";
+  var apiURLGetPanitia = "http://192.168.18.10:8000/api/panitia/get";
+  var apiURLGetKelihanAdat = "http://192.168.18.10:8000/api/data/staff/prajuru_banjar_adat/kelihan_adat";
 
   //list
   List bendesaList = List();
   List kodeSuratList = List();
   List pendudukList = List();
   List panitiaAcaraList = List();
+  List sekretarisList = List();
+  List ketuaList = List();
 
   //bools
   bool availableBendesa = false;
@@ -53,11 +60,16 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   bool LoadingBendesa = true;
   bool KodeSuratLoading = true;
   bool LoadingPenduduk = true;
+  bool availableKetua = false;
+  bool availableSekretaris = false;
+  bool LoadingKetua = true;
+  bool LoadingSekretaris = true;
 
   //file
   File file;
   String namaFile;
   String filePath;
+  int jumlahLampiran = 0;
 
   //controllers
   final controllerNomorSurat = TextEditingController();
@@ -72,6 +84,9 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   final controllerTanggalSuratText = TextEditingController();
   final controllerTanggalKegiatanText = TextEditingController();
   final controllerWaktuKegiatan = TextEditingController();
+  final controllerLepihanText = TextEditingController();
+  final controllerPihakLainTetujon = TextEditingController();
+  final controllerPihakLainTumusan = TextEditingController();
 
   //loading
   bool Loading = false;
@@ -89,22 +104,49 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   String tanggalSuratValue;
   DateTime selectedTanggalSurat;
 
-  //pihak penerima
-  List tetujonList = List();
-  List idTetujon = List();
-  List<String> jenisTetujon = ['Prajuru Desa Adat', 'Prajuru Banjar Adat', 'Pihak Lain'];
-  var selectedTetujon;
-
-  //tembusan (tumusan)
-  List tumusanList = List();
-  List idTumusan = List();
-  List<String> jenisTumusan = ['Prajuru Desa Adat', 'Prajuru Banjar Adat'];
-
   //kodesurat
   var nomorUrutSurat;
   var kodeDesa;
   var bulan;
   var tahun;
+
+  bool LoadingPrajuruDesa = true;
+  bool LoadingPrajuruBanjar = true;
+
+  List lampiranSurat = [];
+  List fileName = [];
+
+  //get tetujon
+  List prajuruDesaList = List();
+  List prajuruBanjarList = [];
+  List selectedKelihanAdat = [];
+  List selectedBendesa = [];
+
+  List selectedKelihanAdatTumusan = [];
+  List selectedBendesaTumusan = [];
+
+  List pihakLain = [];
+  List pihakLainTumusan = [];
+
+  Future getBendesa() async {
+    var response = await http.get(Uri.parse(apiURLGetBendesa));
+    if(response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        prajuruDesaList = jsonData;
+      });
+    }
+  }
+
+  Future<List<KelihanAdat>> getKelihanAdat() async {
+    var response = await http.get(Uri.parse(apiURLGetKelihanAdat));
+    if(response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        prajuruBanjarList = jsonData;
+      });
+    }
+  }
 
   Future getPanitiaAcaraData() async {
     var responsePanitia2 = await http.get(Uri.parse(apiURLGetPanitiaAcara));
@@ -113,7 +155,10 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
       setState(() {
         panitiaAcaraList = jsonData;
         selectedIdPanitiaAcara = panitiaAcaraList[0]['kegiatan_panitia_id'];
+        print(selectedIdPanitiaAcara);
       });
+      getSekretarisPanitia();
+      getKetuaPanitia();
     }
   }
 
@@ -128,6 +173,8 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
         filePath = result.files.first.path;
         namaFile = result.files.first.name;
         file = File(result.files.single.path);
+        lampiranSurat.add(file);
+        fileName.add(namaFile);
       });
       print(filePath);
       print(namaFile);
@@ -146,6 +193,61 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
     }
   }
 
+  Future getSekretarisPanitia() async {
+    var body = jsonEncode({
+      "jabatan" : "Sekretaris Panitia",
+      "id" : selectedIdPanitiaAcara.toString()
+    });
+    http.post(Uri.parse(apiURLGetPanitia),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      print(responseValue);
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          availableSekretaris = true;
+          LoadingSekretaris = false;
+          sekretarisList = jsonData;
+          selectedIdSekretarisPanitia = sekretarisList[0]['panitia_desa_adat_id'];
+        });
+      }else {
+        setState(() {
+          availableSekretaris = false;
+          LoadingSekretaris = false;
+        });
+      }
+    });
+  }
+
+  Future getKetuaPanitia() async {
+    var body = jsonEncode({
+      "jabatan" : "Ketua Panitia",
+      "id" : selectedIdPanitiaAcara
+    });
+    http.post(Uri.parse(apiURLGetPanitia),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          ketuaList = jsonData;
+          selectedIdKetuaPanitia = ketuaList[0]['panitia_desa_adat_id'];
+          LoadingKetua = false;
+          availableKetua = true;
+        });
+      }else {
+        setState(() {
+          LoadingKetua = false;
+          availableKetua = false;
+        });
+      }
+    });
+  }
+
   Future getBendesaAdat() async {
     var response = await http.get(Uri.parse(apiURLGetDataBendesaAdat));
     if(response.statusCode == 200) {
@@ -154,6 +256,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
         bendesaList = jsonData;
         LoadingBendesa = false;
         availableBendesa = true;
+        selectedBendesaAdat = bendesaList[0]['prajuru_desa_adat_id'];
       });
     }else{
       setState(() {
@@ -225,6 +328,9 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
     getKodeSurat();
     getListPenduduk();
     getPanitiaAcaraData();
+    getBendesa();
+    getKelihanAdat();
+    controllerLepihanText.text = "Jumlah Lepihan: ${jumlahLampiran.toString()}";
     final DateTime sekarang = DateTime.now();
     tanggalMulai = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
     tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(sekarang.add(Duration(days: 7))).toString();
@@ -381,82 +487,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                   ),
                   Container(
                       alignment: Alignment.topLeft,
-                      child: Text("2. Tetujon *", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700
-                      )),
-                      margin: EdgeInsets.only(top: 30, left: 20)
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text("Silahkan pilih pihak penerima terlebih dahulu.", style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14
-                    )),
-                    padding: EdgeInsets.only(left: 30, right: 30),
-                    margin: EdgeInsets.only(top: 10),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 300,
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: HexColor("#025393"),
-                      borderRadius: BorderRadius.circular(30)
-                    ),
-                    child: DropdownButton(
-                      isExpanded: true,
-                      hint: Center(
-                        child: Text("Pilih Tetujon", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          color: Colors.white
-                        )),
-                      ),
-                      value: selectedTetujon,
-                      underline: Container(),
-                      icon: Icon(Icons.arrow_downward, color: Colors.white),
-                      items: jenisTetujon.map((tetujon) {
-                        return DropdownMenuItem(
-                          value: tetujon,
-                          child: Text(tetujon, style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                          )),
-                        );
-                      }).toList(),
-                      selectedItemBuilder: (BuildContext context) => jenisTetujon.map((e) => Center(
-                        child: Text(e, style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          color: Colors.white
-                        )),
-                      )).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedTetujon = value;
-                        });
-                      },
-                    ),
-                    margin: EdgeInsets.only(top: 15)
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(""),
-                  ),
-                  Container(
-                      alignment: Alignment.topLeft,
-                      child: Text("3. Tumusan", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700
-                      )),
-                      margin: EdgeInsets.only(top: 30, left: 20)
-                  ),
-                  Container(
-                      alignment: Alignment.topLeft,
-                      child: Text("4. Atribut Surat", style: TextStyle(
+                      child: Text("2. Atribut Surat", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14,
                           fontWeight: FontWeight.w700
@@ -568,11 +599,11 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                           children: <Widget>[
                             Container(
                                 alignment: Alignment.topLeft,
-                                child: Text("Tanggal Surat", style: TextStyle(
+                                child: Text("Tanggal Surat *", style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14
                                 )),
-                                margin: EdgeInsets.only(top: 20, left: 20)
+                                margin: EdgeInsets.only(top: 10, left: 20)
                             ),
                             Container(
                               child: Padding(
@@ -630,7 +661,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                       )
                   ),
                   Container(
-                      child: Text("3. Daging Surat *", style: TextStyle(
+                      child: Text("3. Daging Surat", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14,
                           fontWeight: FontWeight.w700
@@ -640,7 +671,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                   ),
                   Container(
                       alignment: Alignment.topLeft,
-                      child: Text("Pemahbah *", style: TextStyle(
+                      child: Text("Pemahbah", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14
                       )),
@@ -878,7 +909,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                 fontFamily: "Poppins",
                                 fontSize: 14
                             )),
-                            margin: EdgeInsets.only(top: 20, left: 20),
+                            margin: EdgeInsets.only(top: 10, left: 20),
                           ),
                           Container(
                             child: Padding(
@@ -907,11 +938,11 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                           children: <Widget>[
                             Container(
                                 alignment: Alignment.topLeft,
-                                child: Text("Panitia Acara", style: TextStyle(
+                                child: Text("Panitia Kegiatan", style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14
                                 )),
-                                margin: EdgeInsets.only(top: 20, left: 20)
+                                margin: EdgeInsets.only(top: 10, left: 20)
                             ),
                             Container(
                                 width: 300,
@@ -988,7 +1019,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                 margin: EdgeInsets.only(top: 20, left: 20)
                             ),
                             Container(
-                                child: LoadingPenduduk ? ListTileShimmer() : Container(
+                                child: LoadingSekretaris ? ListTileShimmer() : availableSekretaris ? Container(
                                     width: 300,
                                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                                     decoration: BoxDecoration(
@@ -1004,20 +1035,20 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                                 color: Colors.white
                                             ))
                                         ),
-                                        value: selectedSekretarisPanitia,
+                                        value: selectedIdSekretarisPanitia,
                                         underline: Container(),
                                         icon: Icon(Icons.arrow_downward, color: Colors.white),
-                                        items: pendudukList.map((penduduk) {
+                                        items: sekretarisList.map((sekretaris) {
                                           return DropdownMenuItem(
-                                              value: penduduk['krama_mipil_id'],
-                                              child: Text("${penduduk['nik']} - ${penduduk['nama']}", style: TextStyle(
+                                              value: sekretaris['panitia_desa_adat_id'],
+                                              child: Text("${sekretaris['nik']} - ${sekretaris['nama']}", style: TextStyle(
                                                   fontFamily: "Poppins",
                                                   fontSize: 14
                                               ))
                                           );
                                         }).toList(),
-                                        selectedItemBuilder: (BuildContext context) => pendudukList.map((penduduk) => Center(
-                                            child: Text("${penduduk['nik']} - ${penduduk['nama']}", style: TextStyle(
+                                        selectedItemBuilder: (BuildContext context) => sekretarisList.map((sekretaris) => Center(
+                                            child: Text("${sekretaris['nik']} - ${sekretaris['nama']}", style: TextStyle(
                                                 fontFamily: "Poppins",
                                                 fontSize: 14,
                                                 color: Colors.white
@@ -1025,12 +1056,58 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                         )).toList(),
                                         onChanged: (value) {
                                           setState(() {
-                                            selectedSekretarisPanitia = value;
+                                            selectedIdSekretarisPanitia = value;
                                           });
                                         }
                                     ),
-                                    margin: EdgeInsets.only(top: 15)
-                                )
+                                    margin: EdgeInsets.only(top: 10)
+                                ) : Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Flexible(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Container(
+                                                child: Text("Tidak ada Data Sekretaris Panitia", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white
+                                                )),
+                                              ),
+                                              Container(
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context).size.width * 0.7,
+                                                  child: Text("Silahkan hubungi administrator dan tambahkan data sekretaris panitia sebelum melanjutkan", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14,
+                                                      color: Colors.white
+                                                  )),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                          margin: EdgeInsets.only(left: 15)
+                                      )
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                      color: HexColor("B20600"),
+                                      borderRadius: BorderRadius.circular(25)
+                                  ),
+                                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+                                  margin: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 5),
+                                ),
                             )
                           ]
                       )
@@ -1044,10 +1121,10 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                     fontFamily: "Poppins",
                                     fontSize: 14
                                 )),
-                                margin: EdgeInsets.only(top: 20, left: 20)
+                                margin: EdgeInsets.only(top: 10, left: 20)
                             ),
                             Container(
-                                child: LoadingPenduduk ? ListTileShimmer() : Container(
+                                child: LoadingKetua ? ListTileShimmer() : availableKetua ? Container(
                                     width: 300,
                                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                                     decoration: BoxDecoration(
@@ -1063,20 +1140,20 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                                 color: Colors.white
                                             ))
                                         ),
-                                        value: selectedKetuaPanitia,
+                                        value: selectedIdKetuaPanitia,
                                         underline: Container(),
                                         icon: Icon(Icons.arrow_downward, color: Colors.white),
-                                        items: pendudukList.map((penduduk) {
+                                        items: ketuaList.map((ketua) {
                                           return DropdownMenuItem(
-                                              value: penduduk['krama_mipil_id'],
-                                              child: Text("${penduduk['nik']} - ${penduduk['nama']}", style: TextStyle(
+                                              value: ketua['panitia_desa_adat_id'],
+                                              child: Text("${ketua['nik']} - ${ketua['nama']}", style: TextStyle(
                                                   fontFamily: "Poppins",
                                                   fontSize: 14
                                               ))
                                           );
                                         }).toList(),
-                                        selectedItemBuilder: (BuildContext context) => pendudukList.map((penduduk) => Center(
-                                            child: Text("${penduduk['nik']} - ${penduduk['nama']}", style: TextStyle(
+                                        selectedItemBuilder: (BuildContext context) => ketuaList.map((ketua) => Center(
+                                            child: Text("${ketua['nik']} - ${ketua['nama']}", style: TextStyle(
                                                 fontFamily: "Poppins",
                                                 fontSize: 14,
                                                 color: Colors.white
@@ -1084,12 +1161,58 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                         )).toList(),
                                         onChanged: (value) {
                                           setState(() {
-                                            selectedKetuaPanitia = value;
+                                            selectedIdKetuaPanitia = value;
                                           });
                                         }
                                     ),
-                                    margin: EdgeInsets.only(top: 15)
-                                )
+                                    margin: EdgeInsets.only(top: 10)
+                                ) : Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Container(
+                                          child: Flexible(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Container(
+                                                  child: Text("Tidak ada Data Ketua Panitia", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white
+                                                  )),
+                                                ),
+                                                Container(
+                                                  child: SizedBox(
+                                                    width: MediaQuery.of(context).size.width * 0.7,
+                                                    child: Text("Silahkan hubungi administrator dan tambahkan data ketua panitia sebelum melanjutkan", style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 14,
+                                                        color: Colors.white
+                                                    )),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          margin: EdgeInsets.only(left: 15)
+                                      )
+                                    ],
+                                  ),
+                                  decoration: BoxDecoration(
+                                      color: HexColor("B20600"),
+                                      borderRadius: BorderRadius.circular(25)
+                                  ),
+                                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+                                  margin: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 5),
+                                ),
                             )
                           ]
                       )
@@ -1103,7 +1226,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                     fontFamily: "Poppins",
                                     fontSize: 14
                                 )),
-                                margin: EdgeInsets.only(top: 20, left: 20)
+                                margin: EdgeInsets.only(top: 10, left: 20)
                             ),
                             Container(
                                 child: LoadingBendesa ? ListTileShimmer() : availableBendesa == false ? Container(
@@ -1193,23 +1316,9 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                           });
                                         }
                                     ),
-                                    margin: EdgeInsets.only(top: 15)
+                                    margin: EdgeInsets.only(top: 10)
                                 )
                             )
-                          ]
-                      )
-                  ),
-                  Container(
-                      child: Column(
-                          children: <Widget>[
-                            Container(
-                                alignment: Alignment.topLeft,
-                                child: Text("Tumusan", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14
-                                )),
-                                margin: EdgeInsets.only(top: 20, left: 20)
-                            ),
                           ]
                       )
                   ),
@@ -1231,16 +1340,36 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                       margin: EdgeInsets.only(top: 10)
                   ),
                   Container(
-                      child: namaFile == null ? Text("Berkas lampiran belum terpilih", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700
-                      )) : Text("Nama berkas: ${namaFile}", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700
-                      )),
-                      margin: EdgeInsets.only(top: 10)
+                    child: Center(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        height: 150.0,
+                        child: ListView.builder(
+                          itemCount: lampiranSurat.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              elevation: 6,
+                              margin: EdgeInsets.all(10),
+                              child: ListTile(
+                                title: Text(fileName[index], style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontWeight: FontWeight.w700
+                                )),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: (){
+                                    setState(() {
+                                      lampiranSurat.remove(lampiranSurat[index]);
+                                      fileName.remove(fileName[index]);
+                                    });
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    )
                   ),
                   Container(
                     child: FlatButton(
@@ -1370,12 +1499,308 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                         ),
                         padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
                     ),
-                    margin: EdgeInsets.only(top: 20),
+                    margin: EdgeInsets.only(top: 10),
+                  ),
+                  Container(
+                    child: Text("6. Tetujon Surat", style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700
+                    )),
+                    alignment: Alignment.topLeft,
+                    margin: EdgeInsets.only(top: 30, left: 20),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Prajuru Desa Adat", style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                      child: Center(
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              height: 150.0,
+                              child: SingleChildScrollView(
+                                  child: MultiSelectDialogField(
+                                    title: Text("Pilih Prajuru Desa Adat"),
+                                    buttonText: Text("Pilih Prajuru Desa Adat", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    )),
+                                    buttonIcon: Icon(Icons.expand_more),
+                                    searchable: false,
+                                    selectedColor: HexColor("#025393"),
+                                    checkColor: Colors.white,
+                                    items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                                    listType: MultiSelectListType.LIST,
+                                    onConfirm: (values) {
+                                      selectedBendesa = values;
+                                    },
+                                  )
+                              )
+                          )
+                      )
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Prajuru Banjar Adat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                    child: Center(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          height: 150.0,
+                          child: SingleChildScrollView(
+                            child: MultiSelectDialogField(
+                              title: Text("Pilih Prajuru Banjar Adat"),
+                              buttonText: Text("Pilih Prajuru Banjar Adat", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              )),
+                              buttonIcon: Icon(Icons.expand_more),
+                              searchable: false,
+                              selectedColor: HexColor("#025393"),
+                              checkColor: Colors.white,
+                              items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
+                              listType: MultiSelectListType.LIST,
+                              onConfirm: (values) {
+                                selectedKelihanAdat = values;
+                              },
+                            )
+                          )
+                        )
+                    )
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Pihak Lain", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                          child: TextField(
+                            controller: controllerPihakLainTetujon,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    borderSide: BorderSide(color: HexColor("#025393"))
+                                ),
+                                hintText: "Nama Pihak Lain",
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: (){
+                                    if(controllerPihakLainTetujon.text != "") {
+                                      setState(() {
+                                        pihakLain.add(controllerPihakLainTetujon.text);
+                                      });
+                                    }
+                                  },
+                                )
+                            ),
+                            style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            ),
+                          )
+                      )
+                  ),
+                  Container(
+                      child: Center(
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              height: 150.0,
+                              child: ListView.builder(
+                                  itemCount: pihakLain.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      elevation: 6,
+                                      margin: EdgeInsets.all(10),
+                                      child: ListTile(
+                                        title: Text(pihakLain[index], style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.w700
+                                        )),
+                                        trailing: IconButton(
+                                          icon: Icon(Icons.delete),
+                                          onPressed: (){
+                                            setState(() {
+                                              pihakLain.remove(pihakLain[index]);
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  }
+                              )
+                          )
+                      )
+                  ),
+                  Container(
+                    child: Text("7. Tumusan Surat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    alignment: Alignment.topLeft,
+                    margin: EdgeInsets.only(top: 30, left: 20),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Prajuru Desa Adat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                      child: Center(
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              height: 150.0,
+                              child: SingleChildScrollView(
+                                  child: MultiSelectDialogField(
+                                    title: Text("Pilih Prajuru Desa Adat"),
+                                    buttonText: Text("Pilih Prajuru Desa Adat", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    )),
+                                    buttonIcon: Icon(Icons.expand_more),
+                                    searchable: false,
+                                    selectedColor: HexColor("#025393"),
+                                    checkColor: Colors.white,
+                                    items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                                    listType: MultiSelectListType.LIST,
+                                    onConfirm: (values) {
+                                      selectedBendesaTumusan = values;
+                                    },
+                                  )
+                              )
+                          )
+                      )
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Prajuru Banjar Adat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                      child: Center(
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              height: 150.0,
+                              child: SingleChildScrollView(
+                                  child: MultiSelectDialogField(
+                                    title: Text("Pilih Prajuru Banjar Adat"),
+                                    buttonText: Text("Pilih Prajuru Banjar Adat", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    )),
+                                    buttonIcon: Icon(Icons.expand_more),
+                                    searchable: false,
+                                    selectedColor: HexColor("#025393"),
+                                    checkColor: Colors.white,
+                                    items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
+                                    listType: MultiSelectListType.LIST,
+                                    onConfirm: (values) {
+                                      selectedKelihanAdatTumusan = values;
+                                    },
+                                  )
+                              )
+                          )
+                      )
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Pihak Lain", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                          child: TextField(
+                            controller: controllerPihakLainTumusan,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    borderSide: BorderSide(color: HexColor("#025393"))
+                                ),
+                                hintText: "Nama Pihak Lain",
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: (){
+                                    if(controllerPihakLainTumusan.text != "") {
+                                      setState(() {
+                                        pihakLainTumusan.add(controllerPihakLainTumusan.text);
+                                      });
+                                    }
+                                  },
+                                )
+                            ),
+                            style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            ),
+                          )
+                      )
+                  ),
+                  Container(
+                      child: Center(
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              height: 150.0,
+                              child: ListView.builder(
+                                  itemCount: pihakLainTumusan.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      elevation: 6,
+                                      margin: EdgeInsets.all(10),
+                                      child: ListTile(
+                                        title: Text(pihakLainTumusan[index], style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontWeight: FontWeight.w700
+                                        )),
+                                        trailing: IconButton(
+                                          icon: Icon(Icons.delete),
+                                          onPressed: (){
+                                            setState(() {
+                                              pihakLainTumusan.remove(pihakLainTumusan[index]);
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  }
+                              )
+                          )
+                      )
                   ),
                   Container(
                       child: FlatButton(
                           onPressed: () async {
-                            if(controllerParindikan.text == "" || controllerLepihan.text == "" || controllerPemahbah.text == "" || selectedKetuaPanitia == null || selectedSekretarisPanitia == null || selectedBendesaAdat == null || controllerNomorSurat.text == "") {
+                            if(controllerParindikan.text == "" || controllerLepihan.text == "" || controllerPemahbah.text == "" || selectedBendesaAdat == null || controllerNomorSurat.text == "") {
                               showDialog(
                                   context: context,
                                   barrierDismissible: false,
@@ -1514,8 +1939,6 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                     "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
                                     "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
                                     "bendesa_adat_id" : selectedBendesaAdat,
-                                    "krama_mipil_ketua_id" : selectedKetuaPanitia,
-                                    "krama_mipil_sekretaris_id" : selectedSekretarisPanitia,
                                     "lampiran" : namaFile,
                                     "tanggal_surat" : tanggalSuratValue,
                                   });
@@ -1617,8 +2040,6 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                 "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
                                 "tim_kegiatan" : controllerPanitiaAcara.text == "" ? null : controllerPanitiaAcara.text,
                                 "bendesa_adat_id" : selectedBendesaAdat,
-                                "krama_mipil_ketua_id" : selectedKetuaPanitia,
-                                "krama_mipil_sekretaris_id" : selectedSekretarisPanitia,
                                 "tanggal_surat" : tanggalSuratValue,
                               });
                               http.post(Uri.parse(apiURLUpSuratKeluarPanitia),

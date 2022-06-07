@@ -356,6 +356,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "multi_select_flutter",
+      "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/multi_select_flutter-4.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "page_transition",
       "rootUri": "file:///C:/flutter/.pub-cache/hosted/pub.dartlang.org/page_transition-2.0.5",
       "packageUri": "lib/",
@@ -656,7 +662,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2022-06-06T15:35:56.401102Z",
+  "generated": "2022-06-07T08:54:02.509509Z",
   "generator": "pub",
   "generatorVersion": "2.16.2"
 }

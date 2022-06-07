@@ -59,6 +59,7 @@ dependencies:
   syncfusion_flutter_calendar: ^19.4.56
   image_cropper: ^2.0.3
   flutter_search_bar: ^2.1.0
+  multi_select_flutter: ^4.1.2
 
 dev_dependencies:
   flutter_test:
