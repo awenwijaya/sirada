@@ -149,7 +149,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
     }
   }
 
-  Future<List<KelihanAdat>> getKelihanAdat() async {
+  Future getKelihanAdat() async {
     var response = await http.get(Uri.parse(apiURLGetKelihanAdat));
     if(response.statusCode == 200) {
       var jsonData = json.decode(response.body);
@@ -1808,6 +1808,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                   "desa_adat_id" : loginPage.desaId,
                                   "master_surat" : selectedKodeSurat,
                                   "nomor_surat" : controllerNomorSurat.text,
+                                  "kegiatan_panitia_id" : selectedIdPanitiaAcara,
                                   "nomor_urut_surat" : nomorUrutSurat.toString(),
                                   "lepihan" : controllerLepihan.text,
                                   "parindikan" : controllerParindikan.text,
