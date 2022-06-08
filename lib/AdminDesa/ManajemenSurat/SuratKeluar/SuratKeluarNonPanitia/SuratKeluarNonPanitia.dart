@@ -19,6 +19,7 @@ class suratKeluarNonPanitiaAdmin extends StatefulWidget {
 
 class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin> {
   var apiURLGetDataSurat = "https://siradaskripsi.my.id/api/data/admin/surat/non-panitia/${loginPage.desaId}";
+  var apiURLSearchSurat = "https://siradaskripsi.my.id/api/data/admin/surat/non-panitia/${loginPage.desaId}/search";
   var selectedIdSuratKeluar;
 
   //bool
@@ -30,12 +31,141 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
   bool availableSedangDiproses = false;
   bool availableTelahDikonfirmasi = false;
   bool availableDibatalkan = false;
+  bool isSearchMenungguRespons = false;
+  bool isSearchSedangDiproses = false;
+  bool isSearchTelahDikonfirmasi = false;
+  bool isSearchDibatalkan = false;
+
+  final controllerSearchMenungguRespons = TextEditingController();
+  final controllerSearchSedangDiproses = TextEditingController();
+  final controllerSearchTelahDikonfirmasi = TextEditingController();
+  final controllerSearchDibatalkan = TextEditingController();
 
   //list
   List MenungguRespons = [];
   List SedangDiproses = [];
   List TelahDikonfirmasi = [];
   List Dibatalkan = [];
+
+  Future refreshListSearchMenungguRespons() async {
+    setState(() {
+      LoadingMenungguRespons = true;
+      isSearchMenungguRespons = true;
+    });
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "search_query" : controllerSearchMenungguRespons.text,
+      "status" : "Menunggu Respon"
+    });
+    http.post(Uri.parse(apiURLSearchSurat),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          LoadingMenungguRespons = false;
+          availableMenungguRespons = true;
+          MenungguRespons = data;
+        });
+      }else {
+        setState(() {
+          LoadingMenungguRespons = false;
+          availableMenungguRespons = false;
+        });
+      }
+    });
+  }
+
+  Future refreshListSearchSedangDiproses() async {
+    setState(() {
+      LoadingSedangDiproses = true;
+      isSearchSedangDiproses = true;
+    });
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "search_query" : controllerSearchSedangDiproses.text,
+      "status" : "Sedang Diproses"
+    });
+    http.post(Uri.parse(apiURLSearchSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          LoadingSedangDiproses = false;
+          availableSedangDiproses = true;
+          SedangDiproses = data;
+        });
+      }else {
+        setState(() {
+          LoadingSedangDiproses = false;
+          availableSedangDiproses = false;
+        });
+      }
+    });
+  }
+
+  Future refreshListSearchTelahDikonfirmasi() async {
+    setState(() {
+      LoadingTelahDikonfirmasi = true;
+      isSearchTelahDikonfirmasi = true;
+    });
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "search_query" : controllerSearchTelahDikonfirmasi.text,
+      "status" : "Telah Dikonfirmasi"
+    });
+    http.post(Uri.parse(apiURLSearchSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          LoadingTelahDikonfirmasi = false;
+          availableTelahDikonfirmasi = true;
+          TelahDikonfirmasi = data;
+        });
+      }else {
+        setState(() {
+          LoadingTelahDikonfirmasi = false;
+          availableTelahDikonfirmasi = false;
+        });
+      }
+    });
+  }
+
+  Future refreshListSearchDibatalkan() async {
+    setState(() {
+      LoadingDibatalkan = true;
+      isSearchDibatalkan = true;
+    });
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "search_query" : controllerSearchDibatalkan.text,
+      "status" : "Dibatalkan"
+    });
+    http.post(Uri.parse(apiURLSearchSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          LoadingDibatalkan = false;
+          availableDibatalkan = true;
+          Dibatalkan = data;
+        });
+      }else {
+        setState(() {
+          LoadingDibatalkan = false;
+          availableDibatalkan = false;
+        });
+      }
+    });
+  }
 
   Future refreshListMenungguRespons() async {
     var body = jsonEncode({
@@ -76,8 +206,10 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
           SedangDiproses = data;
         });
       }else {
-        LoadingSedangDiproses = false;
-        availableSedangDiproses = false;
+        setState(() {
+          LoadingSedangDiproses = false;
+          availableSedangDiproses = false;
+        });
       }
     });
   }
@@ -98,8 +230,10 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
           TelahDikonfirmasi = data;
         });
       }else {
-        LoadingTelahDikonfirmasi = false;
-        availableTelahDikonfirmasi = false;
+        setState(() {
+          LoadingTelahDikonfirmasi = false;
+          availableTelahDikonfirmasi = false;
+        });
       }
     });
   }
@@ -120,8 +254,10 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
           Dibatalkan = data;
         });
       }else {
-        LoadingDibatalkan = false;
-        availableDibatalkan = false;
+        setState(() {
+          LoadingDibatalkan = false;
+          availableDibatalkan = false;
+        });
       }
     });
   }
@@ -302,15 +438,33 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                     children: <Widget>[
                                       Container(
                                         child: TextField(
+                                          controller: controllerSearchMenungguRespons,
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(
                                                   borderRadius: BorderRadius.circular(50.0),
                                                   borderSide: BorderSide(color: HexColor("#025393"))
                                               ),
                                               hintText: "Cari surat keluar...",
-                                              suffixIcon: IconButton(
+                                              suffixIcon: isSearchMenungguRespons ? IconButton(
+                                                icon: Icon(Icons.close),
+                                                onPressed: (){
+                                                  setState(() {
+                                                    LoadingMenungguRespons = true;
+                                                    controllerSearchMenungguRespons.text = "";
+                                                    isSearchMenungguRespons = false;
+                                                    refreshListMenungguRespons();
+                                                  });
+                                                },
+                                              ) : IconButton(
                                                 icon: Icon(Icons.search),
-                                                onPressed: (){},
+                                                onPressed: (){
+                                                  if(controllerSearchMenungguRespons.text != "") {
+                                                    setState(() {
+                                                      isSearchMenungguRespons = true;
+                                                    });
+                                                    refreshListSearchMenungguRespons();
+                                                  }
+                                                },
                                               )
                                           ),
                                           style: TextStyle(
@@ -324,7 +478,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                         child: LoadingMenungguRespons ? ListTileShimmer() : availableMenungguRespons ? SizedBox(
                                             height: MediaQuery.of(context).size.height * 0.442,
                                             child: RefreshIndicator(
-                                              onRefresh: refreshListMenungguRespons,
+                                              onRefresh: isSearchMenungguRespons ? refreshListSearchMenungguRespons : refreshListMenungguRespons,
                                               child: ListView.builder(
                                                 itemCount: MenungguRespons.length,
                                                 itemBuilder: (context, index) {
@@ -436,15 +590,33 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                     children: <Widget>[
                                       Container(
                                         child: TextField(
+                                          controller: controllerSearchSedangDiproses,
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(
                                                   borderRadius: BorderRadius.circular(50.0),
                                                   borderSide: BorderSide(color: HexColor("#025393"))
                                               ),
                                               hintText: "Cari surat keluar...",
-                                              suffixIcon: IconButton(
+                                              suffixIcon: isSearchSedangDiproses ? IconButton(
+                                                icon: Icon(Icons.close),
+                                                onPressed: (){
+                                                  setState(() {
+                                                    LoadingSedangDiproses = true;
+                                                    controllerSearchSedangDiproses.text = "";
+                                                    isSearchSedangDiproses = false;
+                                                    refreshListSedangDiproses();
+                                                  });
+                                                },
+                                              ) : IconButton(
                                                 icon: Icon(Icons.search),
-                                                onPressed: (){},
+                                                onPressed: (){
+                                                  if(controllerSearchSedangDiproses.text != "") {
+                                                    setState(() {
+                                                      isSearchSedangDiproses = true;
+                                                    });
+                                                    refreshListSearchSedangDiproses();
+                                                  }
+                                                },
                                               )
                                           ),
                                           style: TextStyle(
@@ -458,7 +630,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                         child: LoadingSedangDiproses ? ListTileShimmer() : availableSedangDiproses ? SizedBox(
                                             height: MediaQuery.of(context).size.height * 0.442,
                                             child: RefreshIndicator(
-                                              onRefresh: refreshListSedangDiproses,
+                                              onRefresh: isSearchSedangDiproses ? refreshListSearchSedangDiproses : refreshListSedangDiproses,
                                               child: ListView.builder(
                                                 itemCount: SedangDiproses.length,
                                                 itemBuilder: (context, index) {
@@ -561,15 +733,33 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                     children: <Widget>[
                                       Container(
                                         child: TextField(
+                                          controller: controllerSearchTelahDikonfirmasi,
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(
                                                   borderRadius: BorderRadius.circular(50.0),
                                                   borderSide: BorderSide(color: HexColor("#025393"))
                                               ),
                                               hintText: "Cari surat keluar...",
-                                              suffixIcon: IconButton(
+                                              suffixIcon: isSearchTelahDikonfirmasi ? IconButton(
+                                                icon: Icon(Icons.close),
+                                                onPressed: (){
+                                                  setState(() {
+                                                    LoadingTelahDikonfirmasi = true;
+                                                    controllerSearchTelahDikonfirmasi.text = "";
+                                                    isSearchTelahDikonfirmasi = false;
+                                                    refreshListTelahDikonfirmasi();
+                                                  });
+                                                },
+                                              ) : IconButton(
                                                 icon: Icon(Icons.search),
-                                                onPressed: (){},
+                                                onPressed: (){
+                                                  if(controllerSearchTelahDikonfirmasi.text != "") {
+                                                    setState(() {
+                                                      isSearchTelahDikonfirmasi = true;
+                                                    });
+                                                    refreshListSearchTelahDikonfirmasi();
+                                                  }
+                                                },
                                               )
                                           ),
                                           style: TextStyle(
@@ -583,7 +773,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                         child: LoadingTelahDikonfirmasi ? ListTileShimmer() : availableTelahDikonfirmasi ? SizedBox(
                                             height: MediaQuery.of(context).size.height * 0.442,
                                             child: RefreshIndicator(
-                                              onRefresh: refreshListTelahDikonfirmasi,
+                                              onRefresh: isSearchTelahDikonfirmasi ? refreshListSearchTelahDikonfirmasi : refreshListTelahDikonfirmasi,
                                               child: ListView.builder(
                                                 itemCount: TelahDikonfirmasi.length,
                                                 itemBuilder: (context, index) {
@@ -686,15 +876,33 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                     children: <Widget>[
                                       Container(
                                         child: TextField(
+                                          controller: controllerSearchDibatalkan,
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(
                                                   borderRadius: BorderRadius.circular(50.0),
                                                   borderSide: BorderSide(color: HexColor("#025393"))
                                               ),
                                               hintText: "Cari surat keluar...",
-                                              suffixIcon: IconButton(
+                                              suffixIcon: isSearchDibatalkan ? IconButton(
+                                                icon: Icon(Icons.close),
+                                                onPressed: (){
+                                                  setState(() {
+                                                    LoadingDibatalkan = true;
+                                                    controllerSearchDibatalkan.text = "";
+                                                    isSearchDibatalkan = false;
+                                                    refreshListDibatalkan();
+                                                  });
+                                                },
+                                              ) : IconButton(
                                                 icon: Icon(Icons.search),
-                                                onPressed: (){},
+                                                onPressed: (){
+                                                  if(controllerSearchDibatalkan.text != "") {
+                                                    setState(() {
+                                                      isSearchDibatalkan = true;
+                                                    });
+                                                    refreshListSearchDibatalkan();
+                                                  }
+                                                },
                                               )
                                           ),
                                           style: TextStyle(
@@ -708,7 +916,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                         child: LoadingDibatalkan ? ListTileShimmer() : availableDibatalkan ? SizedBox(
                                             height: MediaQuery.of(context).size.height * 0.442,
                                             child: RefreshIndicator(
-                                              onRefresh: refreshListDibatalkan,
+                                              onRefresh: isSearchDibatalkan ? refreshListSearchDibatalkan : refreshListDibatalkan,
                                               child: ListView.builder(
                                                 itemCount: Dibatalkan.length,
                                                 itemBuilder: (context, index) {

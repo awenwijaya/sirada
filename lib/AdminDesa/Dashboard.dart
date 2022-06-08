@@ -9,7 +9,6 @@ import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
 import 'package:surat/AdminDesa/ManajemenPanitia/ManajemenPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/PrajuruBanjarAdat.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/PrajuruDesaAdat.dart';
-import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluar.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/SuratKeluarNonPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratMasuk/SuratMasuk.dart';
 import 'package:surat/AdminDesa/NomorSurat/NomorSurat.dart';
