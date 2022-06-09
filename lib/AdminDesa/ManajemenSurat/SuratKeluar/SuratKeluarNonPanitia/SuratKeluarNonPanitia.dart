@@ -483,7 +483,12 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                                 itemCount: MenungguRespons.length,
                                                 itemBuilder: (context, index) {
                                                   return GestureDetector(
-                                                    onTap: (){},
+                                                    onTap: (){
+                                                      setState(() {
+                                                        detailSuratKeluarNonPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
+                                                      });
+                                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                                    },
                                                     child: Container(
                                                       child: Row(
                                                         children: <Widget>[
@@ -635,7 +640,12 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                                 itemCount: SedangDiproses.length,
                                                 itemBuilder: (context, index) {
                                                   return GestureDetector(
-                                                    onTap: (){},
+                                                    onTap: (){
+                                                      setState(() {
+                                                        detailSuratKeluarNonPanitia.suratKeluarId = SedangDiproses[index]['surat_keluar_id'];
+                                                      });
+                                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                                    },
                                                     child: Container(
                                                       child: Row(
                                                         children: <Widget>[
@@ -778,7 +788,12 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                                 itemCount: TelahDikonfirmasi.length,
                                                 itemBuilder: (context, index) {
                                                   return GestureDetector(
-                                                    onTap: (){},
+                                                    onTap: (){
+                                                      setState(() {
+                                                        detailSuratKeluarNonPanitia.suratKeluarId = TelahDikonfirmasi[index]['surat_keluar_id'];
+                                                      });
+                                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                                    },
                                                     child: Container(
                                                       child: Row(
                                                         children: <Widget>[
@@ -921,7 +936,12 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                                 itemCount: Dibatalkan.length,
                                                 itemBuilder: (context, index) {
                                                   return GestureDetector(
-                                                    onTap: (){},
+                                                    onTap: (){
+                                                      setState(() {
+                                                        detailSuratKeluarNonPanitia.suratKeluarId = Dibatalkan[index]['surat_keluar_id'];
+                                                      });
+                                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                                    },
                                                     child: Container(
                                                       child: Row(
                                                         children: <Widget>[
