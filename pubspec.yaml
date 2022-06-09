@@ -60,6 +60,7 @@ dependencies:
   image_cropper: ^2.0.3
   flutter_search_bar: ^2.1.0
   multi_select_flutter: ^4.1.2
+  timeline_tile: ^2.0.0
 
 dev_dependencies:
   flutter_test:

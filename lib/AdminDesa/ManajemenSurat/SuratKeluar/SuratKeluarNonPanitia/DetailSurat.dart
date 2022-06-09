@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
@@ -45,13 +45,16 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
 
   List<String> tetujon = [];
   List<String> tumusan = [];
+  List lampiran = [];
+  List historiSurat = [];
+
   var nomorTetujon = 1;
   var nomorTumusan = 1;
 
   bool LoadData = true;
   var apiURLShowDetailSuratKeluar = "https://siradaskripsi.my.id/api/data/surat/keluar/view/${detailSuratKeluarNonPanitia.suratKeluarId}";
   var apiURLShowPrajuru = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarNonPanitia.suratKeluarId}";
-
+  var apiURLGetLampiran = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/lampiran/${detailSuratKeluarNonPanitia.suratKeluarId}";
   //get tetujon
   var apiURLGetTetujonPrajuruDesa = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/desa/${detailSuratKeluarNonPanitia.suratKeluarId}";
   var apiURLGetTetujonPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/banjar/${detailSuratKeluarNonPanitia.suratKeluarId}";
@@ -59,6 +62,36 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   var apiURLGetTumusanPrajuruDesa = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/desa/${detailSuratKeluarNonPanitia.suratKeluarId}";
   var apiURLGetTumusanPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/banjar/${detailSuratKeluarNonPanitia.suratKeluarId}";
   var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${detailSuratKeluarNonPanitia.suratKeluarId}";
+
+  var apiURLGetHistori = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/histori/${detailSuratKeluarNonPanitia.suratKeluarId}";
+
+  getLampiran() async {
+    http.get(Uri.parse(apiURLGetLampiran),
+      headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          lampiran = jsonData;
+        });
+      }
+    });
+  }
+
+  getHistori() async {
+    http.get(Uri.parse(apiURLGetHistori),
+      headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          historiSurat = jsonData;
+        });
+      }
+    });
+  }
 
   getTetujon() async {
     http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
@@ -255,6 +288,8 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
     getTumusan();
     getTumusanPrajuruBanjar();
     getTumusanPihakLain();
+    getHistori();
+    getLampiran();
   }
 
   @override
@@ -573,23 +608,70 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                         )
                     ),
                     Container(
-                      child: Container(
-                        child: FlatButton(
-                          onPressed: (){},
-                          child: Text("Lihat Lampiran", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: HexColor("#025393")
-                          )),
-                          color: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                              side: BorderSide(color: HexColor("#025393"), width: 2)
+                      child: lampiran.length == 0 ? Container() : Column(
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment.topLeft,
+                              margin: EdgeInsets.only(top: 15, left: 25),
+                              child: Text("Lampiran", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700
+                              ))
                           ),
-                          padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
-                        ),
-                        margin: EdgeInsets.only(top: 10, bottom: 10),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              for(var i = 0; i < lampiran.length; i++) Container(
+                                child: GestureDetector(
+                                  onTap: (){
+                                    setState(() {
+                                      viewLampiranSuratKeluarAdmin.namaFile = lampiran[i]['file'];
+                                    });
+                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => viewLampiranSuratKeluarAdmin()));
+                                  },
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                          child: Image.asset('images/paper.png', height: 40, width: 40,)
+                                      ),
+                                      Container(
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.60,
+                                          child: Text(lampiran[i]['file'], style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700
+                                          ), maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: false
+                                          ),
+                                        ),
+                                        margin: EdgeInsets.only(left: 20),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                height: 70,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(0,3)
+                                    )
+                                  ]
+                                ),
+                              )
+                            ],
+                          )
+                        ],
                       ),
                     ),
                     Container(
@@ -601,6 +683,46 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                         alignment: Alignment.topLeft,
                         margin: EdgeInsets.only(top: 15, left: 25)
                     ),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          for(var i = 0; i < historiSurat.length; i++) TimelineTile(
+                            indicatorStyle: IndicatorStyle(
+                                color: HexColor("#025393"),
+                                height: 30,
+                                width: 30
+                            ),
+                            isFirst: i == 0 ? true : false,
+                            endChild: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    child: Text(historiSurat[i]['created_at'], style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700
+                                    )),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['nama']}", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    )),
+                                  )
+                                ],
+                              ),
+                              margin: EdgeInsets.only(left: 15),
+                            ),
+                          )
+                        ],
+                      ),
+                      margin: EdgeInsets.only(top: 10, bottom: 10, left: 15),
+                    )
                   ],
                 ),
               )
