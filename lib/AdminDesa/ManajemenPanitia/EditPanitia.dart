@@ -445,6 +445,37 @@ class _editPanitiaDesaAdatAdminState extends State<editPanitiaDesaAdatAdmin> {
                                 toastDuration: Duration(seconds: 3)
                             );
                             Navigator.of(context).pop(true);
+                          }else if(response.statusCode == 500) {
+                            setState(() {
+                              Loading = false;
+                            });
+                            ftoast.showToast(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Colors.redAccent
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.close),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.65,
+                                          child: Text("Tidak bisa menyimpan panitia karena jabatan yang terpilih sudah terisi. Silahkan pilih jabatan lain dan coba lagi", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white
+                                          )),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                toastDuration: Duration(seconds: 3)
+                            );
                           }
                         });
                       }

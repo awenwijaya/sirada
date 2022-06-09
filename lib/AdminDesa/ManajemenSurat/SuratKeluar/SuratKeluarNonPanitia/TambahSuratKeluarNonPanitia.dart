@@ -1562,7 +1562,8 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                 "bendesa_adat_id" : selectedBendesaAdat,
                                 "tanggal_surat" : tanggalSuratValue,
                                 "bendesa_adat_id" : selectedBendesaAdat.toString(),
-                                "penyarikan_id" : selectedPenyarikan.toString()
+                                "penyarikan_id" : selectedPenyarikan.toString(),
+                                "user_id" : loginPage.userId,
                               });
                               http.post(Uri.parse(apiURLUpDataSuratNonPanitia),
                                   headers: {"Content-Type" : "application/json"},
