@@ -427,7 +427,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                             )
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.678,
+                            height: MediaQuery.of(context).size.height * 0.575,
                             decoration: BoxDecoration(
                               border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
                             ),
@@ -475,84 +475,85 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                         margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
                                       ),
                                       Container(
-                                        child: LoadingMenungguRespons ? ListTileShimmer() : availableMenungguRespons ? SizedBox(
-                                            height: MediaQuery.of(context).size.height * 0.442,
-                                            child: RefreshIndicator(
-                                              onRefresh: isSearchMenungguRespons ? refreshListSearchMenungguRespons : refreshListMenungguRespons,
-                                              child: ListView.builder(
-                                                itemCount: MenungguRespons.length,
-                                                itemBuilder: (context, index) {
-                                                  return GestureDetector(
-                                                    onTap: (){
-                                                      setState(() {
-                                                        detailSuratKeluarNonPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
-                                                      });
-                                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
-                                                    },
-                                                    child: Container(
-                                                      child: Row(
-                                                        children: <Widget>[
-                                                          Container(
-                                                            child: Image.asset(
-                                                              'images/email.png',
-                                                              height: 40,
-                                                              width: 40,
-                                                            ),
+                                        child: LoadingMenungguRespons ? ListTileShimmer() : availableMenungguRespons ? Expanded(
+                                          flex: 1,
+                                          child: RefreshIndicator(
+                                            onRefresh: isSearchMenungguRespons ? refreshListSearchMenungguRespons : refreshListMenungguRespons,
+                                            child: ListView.builder(
+                                              itemCount: MenungguRespons.length,
+                                              shrinkWrap: true,
+                                              itemBuilder: (context, index) {
+                                                return GestureDetector(
+                                                  onTap: (){
+                                                    setState(() {
+                                                      detailSuratKeluarNonPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
+                                                    });
+                                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                                  },
+                                                  child: Container(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Container(
+                                                          child: Image.asset(
+                                                            'images/email.png',
+                                                            height: 40,
+                                                            width: 40,
                                                           ),
-                                                          Container(
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: <Widget>[
-                                                                Container(
-                                                                  child: SizedBox(
-                                                                    width: MediaQuery.of(context).size.width * 0.55,
-                                                                    child: Text(
-                                                                      MenungguRespons[index]['parindikan'].toString(),
-                                                                      style: TextStyle(
-                                                                        fontFamily: "Poppins",
-                                                                        fontSize: 16,
-                                                                        fontWeight: FontWeight.w700,
-                                                                        color: HexColor("#025393"),
-                                                                      ),
-                                                                      maxLines: 1,
-                                                                      overflow: TextOverflow.ellipsis,
-                                                                      softWrap: false,
+                                                        ),
+                                                        Container(
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: <Widget>[
+                                                              Container(
+                                                                child: SizedBox(
+                                                                  width: MediaQuery.of(context).size.width * 0.55,
+                                                                  child: Text(
+                                                                    MenungguRespons[index]['parindikan'].toString(),
+                                                                    style: TextStyle(
+                                                                      fontFamily: "Poppins",
+                                                                      fontSize: 16,
+                                                                      fontWeight: FontWeight.w700,
+                                                                      color: HexColor("#025393"),
                                                                     ),
+                                                                    maxLines: 1,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    softWrap: false,
                                                                   ),
                                                                 ),
-                                                                Container(
-                                                                  child: Text(MenungguRespons[index]['nomor_surat'].toString(), style: TextStyle(
-                                                                      fontFamily: "Poppins",
-                                                                      fontSize: 14
-                                                                  )),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            margin: EdgeInsets.only(left: 15),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                                                      padding: EdgeInsets.symmetric(horizontal: 20),
-                                                      height: 70,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                          color: Colors.white,
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                                color: Colors.grey.withOpacity(0.2),
-                                                                spreadRadius: 5,
-                                                                blurRadius: 7,
-                                                                offset: Offset(0,3)
-                                                            )
-                                                          ]
-                                                      ),
+                                                              ),
+                                                              Container(
+                                                                child: Text(MenungguRespons[index]['nomor_surat'].toString(), style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 14
+                                                                )),
+                                                              )
+                                                            ],
+                                                          ),
+                                                          margin: EdgeInsets.only(left: 15),
+                                                        )
+                                                      ],
                                                     ),
-                                                  );
-                                                },
-                                              ),
-                                            )
+                                                    margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                                                    padding: EdgeInsets.symmetric(horizontal: 20),
+                                                    height: 70,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                        color: Colors.white,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                              color: Colors.grey.withOpacity(0.2),
+                                                              spreadRadius: 5,
+                                                              blurRadius: 7,
+                                                              offset: Offset(0,3)
+                                                          )
+                                                        ]
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          )
                                         ) : Container(
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
@@ -632,84 +633,85 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                         margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
                                       ),
                                       Container(
-                                        child: LoadingSedangDiproses ? ListTileShimmer() : availableSedangDiproses ? SizedBox(
-                                            height: MediaQuery.of(context).size.height * 0.442,
-                                            child: RefreshIndicator(
-                                              onRefresh: isSearchSedangDiproses ? refreshListSearchSedangDiproses : refreshListSedangDiproses,
-                                              child: ListView.builder(
-                                                itemCount: SedangDiproses.length,
-                                                itemBuilder: (context, index) {
-                                                  return GestureDetector(
-                                                    onTap: (){
-                                                      setState(() {
-                                                        detailSuratKeluarNonPanitia.suratKeluarId = SedangDiproses[index]['surat_keluar_id'];
-                                                      });
-                                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
-                                                    },
-                                                    child: Container(
-                                                      child: Row(
-                                                        children: <Widget>[
-                                                          Container(
-                                                            child: Image.asset(
-                                                              'images/email.png',
-                                                              height: 40,
-                                                              width: 40,
-                                                            ),
+                                        child: LoadingSedangDiproses ? ListTileShimmer() : availableSedangDiproses ? Expanded(
+                                          flex: 1,
+                                          child: RefreshIndicator(
+                                            onRefresh: isSearchSedangDiproses ? refreshListSearchSedangDiproses : refreshListSedangDiproses,
+                                            child: ListView.builder(
+                                              itemCount: SedangDiproses.length,
+                                              shrinkWrap: true,
+                                              itemBuilder: (context, index) {
+                                                return GestureDetector(
+                                                  onTap: (){
+                                                    setState(() {
+                                                      detailSuratKeluarNonPanitia.suratKeluarId = SedangDiproses[index]['surat_keluar_id'];
+                                                    });
+                                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                                  },
+                                                  child: Container(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Container(
+                                                          child: Image.asset(
+                                                            'images/email.png',
+                                                            height: 40,
+                                                            width: 40,
                                                           ),
-                                                          Container(
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: <Widget>[
-                                                                Container(
-                                                                  child: SizedBox(
-                                                                    width: MediaQuery.of(context).size.width * 0.55,
-                                                                    child: Text(
-                                                                      SedangDiproses[index]['parindikan'].toString(),
-                                                                      style: TextStyle(
-                                                                        fontFamily: "Poppins",
-                                                                        fontSize: 16,
-                                                                        fontWeight: FontWeight.w700,
-                                                                        color: HexColor("#025393"),
-                                                                      ),
-                                                                      maxLines: 1,
-                                                                      overflow: TextOverflow.ellipsis,
-                                                                      softWrap: false,
+                                                        ),
+                                                        Container(
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: <Widget>[
+                                                              Container(
+                                                                child: SizedBox(
+                                                                  width: MediaQuery.of(context).size.width * 0.55,
+                                                                  child: Text(
+                                                                    SedangDiproses[index]['parindikan'].toString(),
+                                                                    style: TextStyle(
+                                                                      fontFamily: "Poppins",
+                                                                      fontSize: 16,
+                                                                      fontWeight: FontWeight.w700,
+                                                                      color: HexColor("#025393"),
                                                                     ),
+                                                                    maxLines: 1,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    softWrap: false,
                                                                   ),
                                                                 ),
-                                                                Container(
-                                                                  child: Text(SedangDiproses[index]['nomor_surat'].toString(), style: TextStyle(
-                                                                      fontFamily: "Poppins",
-                                                                      fontSize: 14
-                                                                  )),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            margin: EdgeInsets.only(left: 15),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                                                      padding: EdgeInsets.symmetric(horizontal: 20),
-                                                      height: 70,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                          color: Colors.white,
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                                color: Colors.grey.withOpacity(0.2),
-                                                                spreadRadius: 5,
-                                                                blurRadius: 7,
-                                                                offset: Offset(0,3)
-                                                            )
-                                                          ]
-                                                      ),
+                                                              ),
+                                                              Container(
+                                                                child: Text(SedangDiproses[index]['nomor_surat'].toString(), style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 14
+                                                                )),
+                                                              )
+                                                            ],
+                                                          ),
+                                                          margin: EdgeInsets.only(left: 15),
+                                                        )
+                                                      ],
                                                     ),
-                                                  );
-                                                },
-                                              ),
-                                            )
+                                                    margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                                                    padding: EdgeInsets.symmetric(horizontal: 20),
+                                                    height: 70,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                        color: Colors.white,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                              color: Colors.grey.withOpacity(0.2),
+                                                              spreadRadius: 5,
+                                                              blurRadius: 7,
+                                                              offset: Offset(0,3)
+                                                          )
+                                                        ]
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
                                         ) : Container(
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
@@ -780,84 +782,85 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                         margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
                                       ),
                                       Container(
-                                        child: LoadingTelahDikonfirmasi ? ListTileShimmer() : availableTelahDikonfirmasi ? SizedBox(
-                                            height: MediaQuery.of(context).size.height * 0.442,
-                                            child: RefreshIndicator(
-                                              onRefresh: isSearchTelahDikonfirmasi ? refreshListSearchTelahDikonfirmasi : refreshListTelahDikonfirmasi,
-                                              child: ListView.builder(
-                                                itemCount: TelahDikonfirmasi.length,
-                                                itemBuilder: (context, index) {
-                                                  return GestureDetector(
-                                                    onTap: (){
-                                                      setState(() {
-                                                        detailSuratKeluarNonPanitia.suratKeluarId = TelahDikonfirmasi[index]['surat_keluar_id'];
-                                                      });
-                                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
-                                                    },
-                                                    child: Container(
-                                                      child: Row(
-                                                        children: <Widget>[
-                                                          Container(
-                                                            child: Image.asset(
-                                                              'images/email.png',
-                                                              height: 40,
-                                                              width: 40,
-                                                            ),
+                                        child: LoadingTelahDikonfirmasi ? ListTileShimmer() : availableTelahDikonfirmasi ? Expanded(
+                                          flex: 1,
+                                          child: RefreshIndicator(
+                                            onRefresh: isSearchTelahDikonfirmasi ? refreshListSearchTelahDikonfirmasi : refreshListTelahDikonfirmasi,
+                                            child: ListView.builder(
+                                              itemCount: TelahDikonfirmasi.length,
+                                              shrinkWrap: true,
+                                              itemBuilder: (context, index) {
+                                                return GestureDetector(
+                                                  onTap: (){
+                                                    setState(() {
+                                                      detailSuratKeluarNonPanitia.suratKeluarId = TelahDikonfirmasi[index]['surat_keluar_id'];
+                                                    });
+                                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                                  },
+                                                  child: Container(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Container(
+                                                          child: Image.asset(
+                                                            'images/email.png',
+                                                            height: 40,
+                                                            width: 40,
                                                           ),
-                                                          Container(
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: <Widget>[
-                                                                Container(
-                                                                  child: SizedBox(
-                                                                    width: MediaQuery.of(context).size.width * 0.55,
-                                                                    child: Text(
-                                                                      TelahDikonfirmasi[index]['parindikan'].toString(),
-                                                                      style: TextStyle(
-                                                                        fontFamily: "Poppins",
-                                                                        fontSize: 16,
-                                                                        fontWeight: FontWeight.w700,
-                                                                        color: HexColor("#025393"),
-                                                                      ),
-                                                                      maxLines: 1,
-                                                                      overflow: TextOverflow.ellipsis,
-                                                                      softWrap: false,
+                                                        ),
+                                                        Container(
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: <Widget>[
+                                                              Container(
+                                                                child: SizedBox(
+                                                                  width: MediaQuery.of(context).size.width * 0.55,
+                                                                  child: Text(
+                                                                    TelahDikonfirmasi[index]['parindikan'].toString(),
+                                                                    style: TextStyle(
+                                                                      fontFamily: "Poppins",
+                                                                      fontSize: 16,
+                                                                      fontWeight: FontWeight.w700,
+                                                                      color: HexColor("#025393"),
                                                                     ),
+                                                                    maxLines: 1,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    softWrap: false,
                                                                   ),
                                                                 ),
-                                                                Container(
-                                                                  child: Text(TelahDikonfirmasi[index]['nomor_surat'].toString(), style: TextStyle(
-                                                                      fontFamily: "Poppins",
-                                                                      fontSize: 14
-                                                                  )),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            margin: EdgeInsets.only(left: 15),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                                                      padding: EdgeInsets.symmetric(horizontal: 20),
-                                                      height: 70,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                          color: Colors.white,
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                                color: Colors.grey.withOpacity(0.2),
-                                                                spreadRadius: 5,
-                                                                blurRadius: 7,
-                                                                offset: Offset(0,3)
-                                                            )
-                                                          ]
-                                                      ),
+                                                              ),
+                                                              Container(
+                                                                child: Text(TelahDikonfirmasi[index]['nomor_surat'].toString(), style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 14
+                                                                )),
+                                                              )
+                                                            ],
+                                                          ),
+                                                          margin: EdgeInsets.only(left: 15),
+                                                        )
+                                                      ],
                                                     ),
-                                                  );
-                                                },
-                                              ),
-                                            )
+                                                    margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                                                    padding: EdgeInsets.symmetric(horizontal: 20),
+                                                    height: 70,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                        color: Colors.white,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                              color: Colors.grey.withOpacity(0.2),
+                                                              spreadRadius: 5,
+                                                              blurRadius: 7,
+                                                              offset: Offset(0,3)
+                                                          )
+                                                        ]
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
                                         ) : Container(
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
@@ -928,84 +931,84 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                         margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
                                       ),
                                       Container(
-                                        child: LoadingDibatalkan ? ListTileShimmer() : availableDibatalkan ? SizedBox(
-                                            height: MediaQuery.of(context).size.height * 0.442,
-                                            child: RefreshIndicator(
-                                              onRefresh: isSearchDibatalkan ? refreshListSearchDibatalkan : refreshListDibatalkan,
-                                              child: ListView.builder(
-                                                itemCount: Dibatalkan.length,
-                                                itemBuilder: (context, index) {
-                                                  return GestureDetector(
-                                                    onTap: (){
-                                                      setState(() {
-                                                        detailSuratKeluarNonPanitia.suratKeluarId = Dibatalkan[index]['surat_keluar_id'];
-                                                      });
-                                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
-                                                    },
-                                                    child: Container(
-                                                      child: Row(
-                                                        children: <Widget>[
-                                                          Container(
-                                                            child: Image.asset(
-                                                              'images/email.png',
-                                                              height: 40,
-                                                              width: 40,
-                                                            ),
+                                        child: LoadingDibatalkan ? ListTileShimmer() : availableDibatalkan ? Expanded(
+                                          flex: 1,
+                                          child: RefreshIndicator(
+                                            onRefresh: isSearchDibatalkan ? refreshListSearchDibatalkan : refreshListDibatalkan,
+                                            child: ListView.builder(
+                                              itemCount: Dibatalkan.length,
+                                              itemBuilder: (context, index) {
+                                                return GestureDetector(
+                                                  onTap: (){
+                                                    setState(() {
+                                                      detailSuratKeluarNonPanitia.suratKeluarId = Dibatalkan[index]['surat_keluar_id'];
+                                                    });
+                                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                                  },
+                                                  child: Container(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Container(
+                                                          child: Image.asset(
+                                                            'images/email.png',
+                                                            height: 40,
+                                                            width: 40,
                                                           ),
-                                                          Container(
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: <Widget>[
-                                                                Container(
-                                                                  child: SizedBox(
-                                                                    width: MediaQuery.of(context).size.width * 0.55,
-                                                                    child: Text(
-                                                                      Dibatalkan[index]['parindikan'].toString(),
-                                                                      style: TextStyle(
-                                                                        fontFamily: "Poppins",
-                                                                        fontSize: 16,
-                                                                        fontWeight: FontWeight.w700,
-                                                                        color: HexColor("#025393"),
-                                                                      ),
-                                                                      maxLines: 1,
-                                                                      overflow: TextOverflow.ellipsis,
-                                                                      softWrap: false,
+                                                        ),
+                                                        Container(
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: <Widget>[
+                                                              Container(
+                                                                child: SizedBox(
+                                                                  width: MediaQuery.of(context).size.width * 0.55,
+                                                                  child: Text(
+                                                                    Dibatalkan[index]['parindikan'].toString(),
+                                                                    style: TextStyle(
+                                                                      fontFamily: "Poppins",
+                                                                      fontSize: 16,
+                                                                      fontWeight: FontWeight.w700,
+                                                                      color: HexColor("#025393"),
                                                                     ),
+                                                                    maxLines: 1,
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    softWrap: false,
                                                                   ),
                                                                 ),
-                                                                Container(
-                                                                  child: Text(Dibatalkan[index]['nomor_surat'].toString(), style: TextStyle(
-                                                                      fontFamily: "Poppins",
-                                                                      fontSize: 14
-                                                                  )),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            margin: EdgeInsets.only(left: 15),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                                                      padding: EdgeInsets.symmetric(horizontal: 20),
-                                                      height: 70,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                          color: Colors.white,
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                                color: Colors.grey.withOpacity(0.2),
-                                                                spreadRadius: 5,
-                                                                blurRadius: 7,
-                                                                offset: Offset(0,3)
-                                                            )
-                                                          ]
-                                                      ),
+                                                              ),
+                                                              Container(
+                                                                child: Text(Dibatalkan[index]['nomor_surat'].toString(), style: TextStyle(
+                                                                    fontFamily: "Poppins",
+                                                                    fontSize: 14
+                                                                )),
+                                                              )
+                                                            ],
+                                                          ),
+                                                          margin: EdgeInsets.only(left: 15),
+                                                        )
+                                                      ],
                                                     ),
-                                                  );
-                                                },
-                                              ),
-                                            )
+                                                    margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                                                    padding: EdgeInsets.symmetric(horizontal: 20),
+                                                    height: 70,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                        color: Colors.white,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                              color: Colors.grey.withOpacity(0.2),
+                                                              spreadRadius: 5,
+                                                              blurRadius: 7,
+                                                              offset: Offset(0,3)
+                                                          )
+                                                        ]
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
                                         ) : Container(
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,

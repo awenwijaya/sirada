@@ -281,7 +281,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                               )
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.56,
+                            height: MediaQuery.of(context).size.height * 0.575,
                             decoration: BoxDecoration(
                               border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
                             ),
@@ -329,12 +329,13 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                           margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20)
                                       ),
                                       Container(
-                                        child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? SizedBox(
-                                          height: MediaQuery.of(context).size.height * 0.442,
+                                        child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? Expanded(
+                                          flex: 1,
                                           child: RefreshIndicator(
                                               onRefresh: isSearch ? refreshListSearchPrajuruDesaBanjarAktif : refreshListPrajuruBanjarAdatAktif,
                                               child: ListView.builder(
                                                   itemCount: prajuruBanjarAdatIDAktif.length,
+                                                  shrinkWrap: true,
                                                   itemBuilder: (context, index) {
                                                     return GestureDetector(
                                                         onTap: (){
@@ -550,12 +551,13 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                             margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20)
                                         ),
                                         Container(
-                                          child: LoadingTidakAktif ? ListTileShimmer() : availableDataTidakAktif ? SizedBox(
-                                            height: MediaQuery.of(context).size.height * 0.442,
+                                          child: LoadingTidakAktif ? ListTileShimmer() : availableDataTidakAktif ? Expanded(
+                                            flex: 1,
                                             child: RefreshIndicator(
                                                 onRefresh: isSearchTidakAktif ? refreshListSearchPrajuruBanjarAdatTidakAktif : refreshListPrajuruBanjarAdatTidakAktif,
                                                 child: ListView.builder(
                                                     itemCount: prajuruBanjarAdatIDTidakAktif.length,
+                                                    shrinkWrap: true,
                                                     itemBuilder: (context, index) {
                                                       return GestureDetector(
                                                           onTap: (){
@@ -636,7 +638,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                       );
                                                     }
                                                 )
-                                            )
+                                            ),
                                           ) : Container(
                                               child: Center(
                                                   child: Column(

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:surat/KramaPanitia/DetailDesa/DetailDesa.dart';
+import 'package:surat/KramaPanitia/Profile/UserProfile.dart';
+import 'package:surat/KramaPanitia/SuratKeluarPanitia/DetailSurat.dart';
 import 'package:surat/KramaPanitia/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
@@ -250,6 +252,15 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                   )
                 ],
               ),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.person_outline_rounded),
+                  color: Colors.white,
+                  onPressed: (){Navigator.push(context, CupertinoPageRoute(builder: (context) => kramaPanitiaProfile())).then((value) {
+                    getUserInfo();
+                  });},
+                )
+              ],
               backgroundColor: HexColor("#025393"),
               expandedHeight: 180.0,
               flexibleSpace: FlexibleSpaceBar(
@@ -538,7 +549,12 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                                       itemCount: MenungguRespons.length,
                                                       itemBuilder: (context, index) {
                                                         return GestureDetector(
-                                                          onTap: (){},
+                                                          onTap: (){
+                                                            setState(() {
+                                                              detailSuratKeluarPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
+                                                            });
+                                                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia()));
+                                                          },
                                                           child: Container(
                                                             child: Row(
                                                               children: <Widget>[

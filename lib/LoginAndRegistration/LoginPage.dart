@@ -8,6 +8,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:surat/AdminDesa/Dashboard.dart';
 import 'package:surat/KramaPanitia/BottomNavigationBar.dart';
+import 'package:surat/KramaPanitia/Dashboard.dart';
 import 'package:surat/LoginAndRegistration/LupaPassword.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
 import 'package:surat/Penduduk/BottomNavigationBar.dart';
@@ -813,7 +814,7 @@ Route createRouteAdminDesaDashboard() {
 
 Route createRouteKramaPanitiaDashboard() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const bottomNavigationBarPanitia(),
+    pageBuilder: (context, animation, secondaryAnimation) => const dashboardKramaPanitia(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);
       const end = Offset.zero;

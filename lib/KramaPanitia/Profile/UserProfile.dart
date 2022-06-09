@@ -76,6 +76,11 @@ class _kramaPanitiaProfileState extends State<kramaPanitiaProfile> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Colors.white,
+            onPressed: (){Navigator.of(context).pop(true);},
+          ),
           title: Text("Profil Saya", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,

@@ -270,7 +270,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                             )
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.56,
+                            height: MediaQuery.of(context).size.height * 0.575,
                             decoration: BoxDecoration(
                                 border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
                             ),
@@ -319,143 +319,144 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                           margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20)
                                         ),
                                         Container(
-                                            child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? SizedBox(
-                                              height: MediaQuery.of(context).size.height * 0.442,
+                                            child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? Expanded(
+                                              flex: 1,
                                               child: RefreshIndicator(
-                                                onRefresh: isSearch ? refreshListSearchPrajuruDesaAdatAktif : refreshListPrajuruDesaAdatAktif,
-                                                child: ListView.builder(
-                                                    itemCount: prajuruDesaAdatIDAktif.length,
-                                                    itemBuilder: (context, index) {
-                                                      return GestureDetector(
-                                                          onTap: (){
-                                                            setState(() {
-                                                              detailPrajuruDesaAdatAdmin.prajuruDesaAdatId = prajuruDesaAdatIDAktif[index];
-                                                            });
-                                                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailPrajuruDesaAdatAdmin()));
-                                                          },
-                                                          child: Container(
-                                                            child: Stack(
-                                                                children: <Widget>[
-                                                                  Container(
-                                                                      child: Row(
-                                                                          children: <Widget>[
-                                                                            Container(
-                                                                                child: Image.asset(
-                                                                                    'images/person.png',
-                                                                                    height: 40,
-                                                                                    width: 40
-                                                                                )
-                                                                            ),
-                                                                            Container(
-                                                                                child: Column(
-                                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                    children: <Widget>[
-                                                                                      Container(
-                                                                                          child: SizedBox(
-                                                                                              width: MediaQuery.of(context).size.width * 0.55,
-                                                                                              child: Text(
-                                                                                                  "${namaPrajuruAktif[index]}",
-                                                                                                  style: TextStyle(
-                                                                                                      fontFamily: "Poppins",
-                                                                                                      fontSize: 16,
-                                                                                                      fontWeight: FontWeight.w700,
-                                                                                                      color: HexColor("#025393")
-                                                                                                  ),
-                                                                                                  maxLines: 1,
-                                                                                                  overflow: TextOverflow.ellipsis,
-                                                                                                  softWrap: false
-                                                                                              )
-                                                                                          )
-                                                                                      ),
-                                                                                      Container(
-                                                                                          child: Text("${jabatanAktif[index]}", style: TextStyle(
-                                                                                              fontFamily: "Poppins",
-                                                                                              fontSize: 14
-                                                                                          ))
-                                                                                      )
-                                                                                    ]
-                                                                                ),
-                                                                                margin: EdgeInsets.only(left: 15)
-                                                                            )
-                                                                          ]
-                                                                      )
-                                                                  ),
-                                                                  Container(
-                                                                      alignment: Alignment.centerRight,
-                                                                      child: PopupMenuButton<int>(
-                                                                          onSelected: (item) {
-                                                                            setState(() {
-                                                                              selectedIdPrajuruDesaAdat = prajuruDesaAdatIDAktif[index];
-                                                                              selectedIdPenduduk = pendudukIdAktif[index];
-                                                                            });
-                                                                            onSelected(context, item);
-                                                                          },
-                                                                          itemBuilder: (context) => [
-                                                                            PopupMenuItem<int>(
-                                                                                value: 0,
-                                                                                child: Row(
-                                                                                    children: <Widget>[
-                                                                                      Container(
-                                                                                          child: Icon(
-                                                                                              Icons.edit,
-                                                                                              color: HexColor("#025393")
-                                                                                          )
-                                                                                      ),
-                                                                                      Container(
-                                                                                          child: Text("Edit", style: TextStyle(
-                                                                                              fontFamily: "Poppins",
-                                                                                              fontSize: 14
-                                                                                          )),
-                                                                                          margin: EdgeInsets.only(left: 10)
-                                                                                      )
-                                                                                    ]
-                                                                                )
-                                                                            ),
-                                                                            PopupMenuItem<int>(
-                                                                                value: 2,
-                                                                                child: Row(
-                                                                                    children: <Widget>[
-                                                                                      Container(
-                                                                                          child: Icon(
-                                                                                              Icons.close,
-                                                                                              color: HexColor("#025393")
-                                                                                          )
-                                                                                      ),
-                                                                                      Container(
-                                                                                          child: Text("Atur Menjadi Tidak Aktif", style: TextStyle(
-                                                                                              fontFamily: "Poppins",
-                                                                                              fontSize: 14
-                                                                                          )),
-                                                                                          margin: EdgeInsets.only(left: 10)
-                                                                                      )
-                                                                                    ]
-                                                                                )
-                                                                            )
-                                                                          ]
-                                                                      )
-                                                                  )
-                                                                ]
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                                                            padding: EdgeInsets.symmetric(horizontal: 20),
-                                                            height: 70,
-                                                            decoration: BoxDecoration(
-                                                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                                color: Colors.white,
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                      color: Colors.grey.withOpacity(0.2),
-                                                                      spreadRadius: 5,
-                                                                      blurRadius: 7,
-                                                                      offset: Offset(0,3)
-                                                                  )
-                                                                ]
-                                                            ),
-                                                          )
-                                                      );
-                                                    }
-                                                )
+                                                  onRefresh: isSearch ? refreshListSearchPrajuruDesaAdatAktif : refreshListPrajuruDesaAdatAktif,
+                                                  child: ListView.builder(
+                                                      itemCount: prajuruDesaAdatIDAktif.length,
+                                                      shrinkWrap: true,
+                                                      itemBuilder: (context, index) {
+                                                        return GestureDetector(
+                                                            onTap: (){
+                                                              setState(() {
+                                                                detailPrajuruDesaAdatAdmin.prajuruDesaAdatId = prajuruDesaAdatIDAktif[index];
+                                                              });
+                                                              Navigator.push(context, CupertinoPageRoute(builder: (context) => detailPrajuruDesaAdatAdmin()));
+                                                            },
+                                                            child: Container(
+                                                              child: Stack(
+                                                                  children: <Widget>[
+                                                                    Container(
+                                                                        child: Row(
+                                                                            children: <Widget>[
+                                                                              Container(
+                                                                                  child: Image.asset(
+                                                                                      'images/person.png',
+                                                                                      height: 40,
+                                                                                      width: 40
+                                                                                  )
+                                                                              ),
+                                                                              Container(
+                                                                                  child: Column(
+                                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: <Widget>[
+                                                                                        Container(
+                                                                                            child: SizedBox(
+                                                                                                width: MediaQuery.of(context).size.width * 0.55,
+                                                                                                child: Text(
+                                                                                                    "${namaPrajuruAktif[index]}",
+                                                                                                    style: TextStyle(
+                                                                                                        fontFamily: "Poppins",
+                                                                                                        fontSize: 16,
+                                                                                                        fontWeight: FontWeight.w700,
+                                                                                                        color: HexColor("#025393")
+                                                                                                    ),
+                                                                                                    maxLines: 1,
+                                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                                    softWrap: false
+                                                                                                )
+                                                                                            )
+                                                                                        ),
+                                                                                        Container(
+                                                                                            child: Text("${jabatanAktif[index]}", style: TextStyle(
+                                                                                                fontFamily: "Poppins",
+                                                                                                fontSize: 14
+                                                                                            ))
+                                                                                        )
+                                                                                      ]
+                                                                                  ),
+                                                                                  margin: EdgeInsets.only(left: 15)
+                                                                              )
+                                                                            ]
+                                                                        )
+                                                                    ),
+                                                                    Container(
+                                                                        alignment: Alignment.centerRight,
+                                                                        child: PopupMenuButton<int>(
+                                                                            onSelected: (item) {
+                                                                              setState(() {
+                                                                                selectedIdPrajuruDesaAdat = prajuruDesaAdatIDAktif[index];
+                                                                                selectedIdPenduduk = pendudukIdAktif[index];
+                                                                              });
+                                                                              onSelected(context, item);
+                                                                            },
+                                                                            itemBuilder: (context) => [
+                                                                              PopupMenuItem<int>(
+                                                                                  value: 0,
+                                                                                  child: Row(
+                                                                                      children: <Widget>[
+                                                                                        Container(
+                                                                                            child: Icon(
+                                                                                                Icons.edit,
+                                                                                                color: HexColor("#025393")
+                                                                                            )
+                                                                                        ),
+                                                                                        Container(
+                                                                                            child: Text("Edit", style: TextStyle(
+                                                                                                fontFamily: "Poppins",
+                                                                                                fontSize: 14
+                                                                                            )),
+                                                                                            margin: EdgeInsets.only(left: 10)
+                                                                                        )
+                                                                                      ]
+                                                                                  )
+                                                                              ),
+                                                                              PopupMenuItem<int>(
+                                                                                  value: 2,
+                                                                                  child: Row(
+                                                                                      children: <Widget>[
+                                                                                        Container(
+                                                                                            child: Icon(
+                                                                                                Icons.close,
+                                                                                                color: HexColor("#025393")
+                                                                                            )
+                                                                                        ),
+                                                                                        Container(
+                                                                                            child: Text("Atur Menjadi Tidak Aktif", style: TextStyle(
+                                                                                                fontFamily: "Poppins",
+                                                                                                fontSize: 14
+                                                                                            )),
+                                                                                            margin: EdgeInsets.only(left: 10)
+                                                                                        )
+                                                                                      ]
+                                                                                  )
+                                                                              )
+                                                                            ]
+                                                                        )
+                                                                    )
+                                                                  ]
+                                                              ),
+                                                              margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                                                              padding: EdgeInsets.symmetric(horizontal: 20),
+                                                              height: 70,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                  color: Colors.white,
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                        color: Colors.grey.withOpacity(0.2),
+                                                                        spreadRadius: 5,
+                                                                        blurRadius: 7,
+                                                                        offset: Offset(0,3)
+                                                                    )
+                                                                  ]
+                                                              ),
+                                                            )
+                                                        );
+                                                      }
+                                                  )
                                               )
                                             ) : Container(
                                                 child: Column(
@@ -537,12 +538,13 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                         margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
                                       ),
                                       Container(
-                                        child: LoadingTidakAktif ? ListTileShimmer() : availableDataTidakAktif ? SizedBox(
-                                          height: MediaQuery.of(context).size.height * 0.442,
+                                        child: LoadingTidakAktif ? ListTileShimmer() : availableDataTidakAktif ? Expanded(
+                                          flex: 1,
                                           child: RefreshIndicator(
                                               onRefresh: isSearchTidakAktif ? refreshListSearchPrajuruDesaAdatTidakAktif : refreshListPrajuruDesaAdatTidakAktif,
                                               child: ListView.builder(
                                                   itemCount: prajuruDesaAdatIDTidakAktif.length,
+                                                  shrinkWrap: true,
                                                   itemBuilder: (context, index) {
                                                     return GestureDetector(
                                                         onTap: (){

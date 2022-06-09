@@ -14,8 +14,6 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:simple_time_range_picker/simple_time_range_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
-import 'package:path/path.dart';
-import 'package:async/async.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class tambahSuratKeluarNonPanitiaAdmin extends StatefulWidget {
@@ -77,6 +75,8 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
   final controllerBusanaKegiatan = TextEditingController();
   final controllerPihakLainTetujon = TextEditingController();
   final controllerPihakLainTumusan = TextEditingController();
+  final controllerWaktuKegiatan = TextEditingController();
+  final controllerTanggalKegiatanText = TextEditingController();
 
   TimeOfDay startTime;
   TimeOfDay endTime;
@@ -133,6 +133,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
       tanggalMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
       tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
       tanggalBerakhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      controllerTanggalKegiatanText.text = tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir";
     });
   }
 
@@ -704,11 +705,27 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                 margin: EdgeInsets.only(top: 20, left: 20)
                             ),
                             Container(
-                                child: Text(tanggalMulaiValue == null ? "Tanggal kegiatan belum terpilih" : tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700
-                                )), margin: EdgeInsets.only(top: 20, left: 20)),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                child: TextField(
+                                  controller: controllerTanggalKegiatanText,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(50.0),
+                                          borderSide: BorderSide(color: HexColor("#025393"))
+                                      ),
+                                      hintText: "Tanggal kegiatan belum terpilih",
+                                      prefixIcon: Icon(CupertinoIcons.calendar)
+                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ),
+                                ),
+                              ),
+                              margin: EdgeInsets.only(top: 10),
+                            ),
                             Container(
                                 child: Card(
                                     margin: EdgeInsets.fromLTRB(50, 15, 50, 10),
@@ -735,12 +752,26 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                 margin: EdgeInsets.only(top: 20, left: 20)
                             ),
                             Container(
-                                child: Text(startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700
-                                )),
-                                margin: EdgeInsets.only(top: 15)
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                child: TextField(
+                                  controller: controllerWaktuKegiatan,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(50.0),
+                                          borderSide: BorderSide(color: HexColor("#025393"))
+                                      ),
+                                      hintText: "Waktu kegiatan belum terpilih",
+                                      prefixIcon: Icon(CupertinoIcons.time_solid)
+                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ),
+                                ),
+                              ),
+                              margin: EdgeInsets.only(top: 10),
                             ),
                             Container(
                                 child: FlatButton(
@@ -754,6 +785,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                             setState(() {
                                               startTime = value.startTime;
                                               endTime = value.endTime;
+                                              controllerWaktuKegiatan.text = startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}";
                                             });
                                           }
                                       );
@@ -1528,6 +1560,33 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                           child: SizedBox(
                                             width: MediaQuery.of(context).size.width * 0.65,
                                             child: Text("Silahkan unggah berkas lampiran", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white
+                                            )),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                              );
+                            }else if(selectedKelihanAdat.isEmpty && selectedBendesa.isEmpty && pihakLain.isEmpty) {
+                              ftoast.showToast(
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: Colors.redAccent
+                                    ),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.close),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 15),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.65,
+                                            child: Text("Silahkan masukkan penerima surat", style: TextStyle(
                                                 fontFamily: "Poppins",
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w700,

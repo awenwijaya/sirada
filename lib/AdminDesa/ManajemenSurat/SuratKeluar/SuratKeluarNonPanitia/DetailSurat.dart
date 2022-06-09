@@ -48,9 +48,6 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   List lampiran = [];
   List historiSurat = [];
 
-  var nomorTetujon = 1;
-  var nomorTumusan = 1;
-
   bool LoadData = true;
   var apiURLShowDetailSuratKeluar = "https://siradaskripsi.my.id/api/data/surat/keluar/view/${detailSuratKeluarNonPanitia.suratKeluarId}";
   var apiURLShowPrajuru = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarNonPanitia.suratKeluarId}";
@@ -348,7 +345,6 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                 width: 50,
                                 height: 50,
                                 decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
                                     image: DecorationImage(
                                         image: NetworkImage('https://storage.siradaskripsi.my.id/img/logo-desa/${logoDesa}'),
                                         fit: BoxFit.fill
@@ -518,7 +514,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                     ),
                     Container(
                         alignment: Alignment.topLeft,
-                        child: Text("\t\t\t${pemahbah}", style: TextStyle(
+                        child: Text(pemahbah == null ? "" : "\t\t\t${pemahbah}", style: TextStyle(
                             fontFamily: "Times New Roman",
                             fontSize: 16
                         ), textAlign: TextAlign.justify),

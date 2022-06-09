@@ -167,7 +167,7 @@ class _splashScreenState extends State<splashScreen> {
   }
 
   void navigatorKramaPanitiaHomePage() {
-    Navigator.pushAndRemoveUntil(context, PageTransition(child: bottomNavigationBarPanitia(), type: PageTransitionType.fade), (route) => false);
+    Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardKramaPanitia(), type: PageTransitionType.fade), (route) => false);
   }
 
   @override
