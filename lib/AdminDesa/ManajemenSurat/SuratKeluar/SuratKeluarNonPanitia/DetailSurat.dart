@@ -91,6 +91,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   }
 
   getTetujon() async {
+    this.tetujon = [];
     http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
       headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
@@ -105,26 +106,6 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
         }
       }
     });
-  }
-
-  getTumusan() async {
-    http.get(Uri.parse(apiURLGetTumusanPrajuruDesa),
-        headers: {"Content-Type" : "application/json"}
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          tumusanPrajuruDesaList = jsonData;
-        });
-        for(var i = 0; i < tumusanPrajuruDesaList.length; i++) {
-          tumusan.add("Desa ${tumusanPrajuruDesaList[i]['desadat_nama']} - ${tumusanPrajuruDesaList[i]['nama']}");
-        }
-      }
-    });
-  }
-
-  getTetujonPrajuruBanjar() async {
     http.get(Uri.parse(apiURLGetTetujonPrajuruBanjar),
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
@@ -140,27 +121,6 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
         }
       }
     });
-  }
-
-  getTumusanPrajuruBanjar() async {
-    http.get(Uri.parse(apiURLGetTumusanPrajuruBanjar),
-        headers: {"Content-Type" : "application/json"}
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      print(responseValue.toString());
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          tumusanPrajuruBanjarList = jsonData;
-        });
-        for(var i = 0; i < tumusanPrajuruBanjarList.length; i++) {
-          tumusan.add("Banjar ${tumusanPrajuruBanjarList[i]['nama_banjar_adat']} - ${tumusanPrajuruBanjarList[i]['nama']}");
-        }
-      }
-    });
-  }
-
-  getTetujonPihakLain() async {
     http.get(Uri.parse(apiURLGetTetujonPihakLain),
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
@@ -177,7 +137,37 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
     });
   }
 
-  getTumusanPihakLain() async {
+  getTumusan() async {
+    this.tumusan = [];
+    http.get(Uri.parse(apiURLGetTumusanPrajuruDesa),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tumusanPrajuruDesaList = jsonData;
+        });
+        for(var i = 0; i < tumusanPrajuruDesaList.length; i++) {
+          tumusan.add("Desa ${tumusanPrajuruDesaList[i]['desadat_nama']} - ${tumusanPrajuruDesaList[i]['nama']}");
+        }
+      }
+    });
+    http.get(Uri.parse(apiURLGetTumusanPrajuruBanjar),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      print(responseValue.toString());
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tumusanPrajuruBanjarList = jsonData;
+        });
+        for(var i = 0; i < tumusanPrajuruBanjarList.length; i++) {
+          tumusan.add("Banjar ${tumusanPrajuruBanjarList[i]['nama_banjar_adat']} - ${tumusanPrajuruBanjarList[i]['nama']}");
+        }
+      }
+    });
     http.get(Uri.parse(apiURLGetTumusanPihakLain),
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
@@ -280,11 +270,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
     getBendesaInfo();
     getPenyarikanInfo();
     getTetujon();
-    getTetujonPrajuruBanjar();
-    getTetujonPihakLain();
     getTumusan();
-    getTumusanPrajuruBanjar();
-    getTumusanPihakLain();
     getHistori();
     getLampiran();
   }
@@ -318,6 +304,10 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                     getSuratKeluarInfo();
                     getBendesaInfo();
                     getPenyarikanInfo();
+                    getTetujon();
+                    getTumusan();
+                    getHistori();
+                    getLampiran();
                   });
                 });
               },

@@ -14,6 +14,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class editSuratKeluarNonPanitia extends StatefulWidget {
   static var idSuratKeluar;
@@ -32,6 +33,25 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
   var apiURLShowPrajuru = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/prajuru/${editSuratKeluarNonPanitia.idSuratKeluar}";
   var apiURLSimpanEditSuratKeluar = "https://siradaskripsi.my.id/api/admin/surat/keluar/non-panitia/edit/up";
   var apiURLShowKomponenNomorSurat = "https://siradaskripsi.my.id/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
+  var apiURLGetLampiran = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/lampiran/${editSuratKeluarNonPanitia.idSuratKeluar}";
+  var apiURLGetKelihanAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/kelihan_adat";
+  var apiURLGetBendesa = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/bendesa";
+  var apiURLGetTetujonPrajuruDesa = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/desa/${editSuratKeluarNonPanitia.idSuratKeluar}";
+  var apiURLGetTetujonPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/banjar/${editSuratKeluarNonPanitia.idSuratKeluar}";
+  var apiURLGetTetujonPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/pihak-lain/${editSuratKeluarNonPanitia.idSuratKeluar}";
+  var apiURLGetTumusanPrajuruDesa = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/desa/${editSuratKeluarNonPanitia.idSuratKeluar}";
+  var apiURLGetTumusanPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/banjar/${editSuratKeluarNonPanitia.idSuratKeluar}";
+  var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${editSuratKeluarNonPanitia.idSuratKeluar}";
+
+  //url tetujon, tumusan, lampiran
+  var apiURLUpTetujonPihakLain = "https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/pihak-lain/up";
+  var apiURLUpTumusanPihakLain = "https://siradaskripsi.my.id/api/admin/surat/keluar/tumusan/pihak-lain/up";
+  var apiURLUpTetujonPrajuruBanjar = "https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/banjar/up";
+  var apiURLUpTumusanPrajuruBanjar = "https://siradaskripsi.my.id/api/admin/surat/keluar/tumusan/banjar/up";
+  var apiURLUpTetujonPrajuruDesa = "https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/desa/up";
+  var apiURLUpTumusanPrajuruDesa = "https://siradaskripsi.my.id/api/admin/surat/keluar/tumusan/desa/up";
+  var apiURLUpLampiran = "https://siradaskripsi.my.id/api/upload/lampiran";
+  var apiURLSaveEditLampiran = "https://siradaskripsi.my.id/api/admin/surat/keluar/lampiran/edit/up";
 
   //kodesurat
   var nomorUrutSurat;
@@ -45,7 +65,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
   bool Loading = false;
   bool LoadingPenyarikan = true;
   bool LoadingBendesa = true;
-  bool NomorSuratLoading = true;
+  bool NomorSuratLoading = false;
 
   //selected
   var selectedKodeSurat;
@@ -60,6 +80,22 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
   List bendesaList = List();
   List penyarikanList = List();
 
+  List lampiran = [];
+  List fileName = [];
+  List lampiranUploadName = [];
+
+  //get tetujon
+  List prajuruDesaList = List();
+  List prajuruBanjarList = [];
+  List selectedKelihanAdat = [];
+  List selectedBendesa = [];
+
+  List selectedKelihanAdatTumusan = [];
+  List selectedBendesaTumusan = [];
+
+  List pihakLain = [];
+  List pihakLainTumusan = [];
+
   //komponen surat keluar
   final controllerNomorSurat = TextEditingController();
   final controllerLepihan = TextEditingController();
@@ -70,7 +106,12 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
   final controllerPamuput = TextEditingController();
   final controllerTempatKegiatan = TextEditingController();
   final controllerBusanaKegiatan = TextEditingController();
+  final controllerWaktuKegiatan = TextEditingController();
+  final controllerTanggalKegiatanText = TextEditingController();
+  final controllerPihakLainTetujon = TextEditingController();
+  final controllerPihakLainTumusan = TextEditingController();
   final DateRangePickerController controllerTanggalKegiatan = DateRangePickerController();
+
   TimeOfDay startTime;
   TimeOfDay endTime;
   String tanggalMulai;
@@ -79,6 +120,112 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
   String tanggalBerakhirValue;
   DateTime tanggalMulaiKegiatan;
   DateTime tanggalAkhirKegiatan;
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  FToast ftoast;
+
+  getTetujon() async {
+    http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          selectedBendesa = jsonData;
+        });
+      }
+    });
+  }
+
+  getTumusan() async {
+    http.get(Uri.parse(apiURLGetTumusanPrajuruDesa),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          selectedBendesaTumusan = jsonData;
+        });
+      }
+    });
+  }
+
+   getTetujonPrajuruBanjar() async {
+    http.get(Uri.parse(apiURLGetTetujonPrajuruBanjar),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      print(responseValue.toString());
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          selectedKelihanAdat = jsonData;
+        });
+      }
+    });
+  }
+
+  getTumusanPrajuruBanjar() async {
+    http.get(Uri.parse(apiURLGetTumusanPrajuruBanjar),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      print(responseValue.toString());
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          selectedKelihanAdatTumusan = jsonData;
+        });
+      }
+    });
+  }
+
+  getTetujonPihakLain() async {
+    http.get(Uri.parse(apiURLGetTetujonPihakLain),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        this.pihakLain = [];
+        for(var i = 0; i < jsonData.length; i++) {
+          this.pihakLain.add(jsonData[i]['pihak_lain']);
+        }
+      }
+    });
+  }
+
+  getTumusanPihakLain() async {
+    http.get(Uri.parse(apiURLGetTumusanPihakLain),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        this.pihakLainTumusan = [];
+        for(var i = 0; i < jsonData.length; i++) {
+          this.pihakLainTumusan.add(jsonData[i]['pihak_lain']);
+        }
+      }
+    });
+  }
+
+  getLampiran() async {
+    http.get(Uri.parse(apiURLGetLampiran),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        this.fileName = [];
+        for(var i = 0; i < jsonData.length; i++) {
+          this.fileName.add(jsonData[i]['file']);
+        }
+      }
+    });
+  }
 
   getBendesaInfo() async {
     var body = jsonEncode({
@@ -104,6 +251,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
       tanggalMulaiValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
       tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
       tanggalBerakhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      controllerTanggalKegiatanText.text = tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir";
     });
   }
 
@@ -149,10 +297,13 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
           tanggalMulaiValue = DateFormat("yyyy-MM-dd").format(tanggalMulaiKegiatan).toString();
           tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(tanggalAkhirKegiatan).toString();
           tanggalBerakhirValue = DateFormat("yyyy-MM-dd").format(tanggalAkhirKegiatan).toString();
+          controllerTanggalKegiatanText.text = tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir";
         }
         startTime = parsedJson['waktu_mulai'] == null ? null : TimeOfDay(hour: int.parse(parsedJson['waktu_mulai'].split(":")[0]), minute: int.parse(parsedJson['waktu_mulai'].split(":")[1]));
         endTime = parsedJson['waktu_selesai'] == null ? null : TimeOfDay(hour: int.parse(parsedJson['waktu_selesai'].split(":")[0]), minute: int.parse(parsedJson['waktu_selesai'].split(":")[1]));
-        namaFile = parsedJson['lampiran'] == null ? null : parsedJson['lampiran'];
+        if(startTime != null && endTime != null) {
+          controllerWaktuKegiatan.text = "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}";
+        }
         LoadingData = false;
       });
     }
@@ -208,6 +359,9 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
         filePath = result.files.first.path;
         namaFile = result.files.first.name;
         file = File(result.files.single.path);
+        lampiran.add(file);
+        fileName.add(namaFile);
+        lampiranUploadName.add(namaFile);
       });
       print(filePath);
       print(namaFile);
@@ -236,18 +390,52 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
     }
   }
 
+  getKelihanAdat() async {
+    http.get(Uri.parse(apiURLGetKelihanAdat),
+      headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200){
+        var jsonData = json.decode(response.body);
+        setState(() {
+          prajuruBanjarList = jsonData;
+        });
+      }
+    });
+  }
+
+  Future getBendesa() async {
+    var response = await http.get(Uri.parse(apiURLGetBendesa));
+    if(response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        prajuruDesaList = jsonData;
+      });
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getDataSuratKeluar();
     getKodeSurat();
-    getKomponenNomorSurat();
     getBendesaAdat();
     getPenyarikan();
     getBendesaInfo();
     getPenyarikanInfo();
+    getLampiran();
+    getKelihanAdat();
+    getBendesa();
+    getTetujon();
+    getTumusan();
+    getTetujonPrajuruBanjar();
+    getTumusanPrajuruBanjar();
+    getTetujonPihakLain();
+    getTumusanPihakLain();
     final DateTime sekarang = DateTime.now();
+    ftoast = FToast();
+    ftoast.init(this.context);
     tanggalMulai = DateFormat("dd-MMM-yyyy").format(tanggalMulaiKegiatan == null ? sekarang : tanggalMulaiKegiatan).toString();
     tanggalBerakhir = DateFormat("dd-MMM-yyyy").format(tanggalAkhirKegiatan == null ? sekarang.add(Duration(days: 7)) : tanggalAkhirKegiatan).toString();
     controllerTanggalKegiatan.selectedRange = PickerDateRange(sekarang, sekarang.add(Duration(days: 7)));
@@ -273,447 +461,30 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
           ))
         ),
         body: LoadingData ? ProfilePageShimmer() : SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                  alignment: Alignment.center,
-                  child: Image.asset(
-                      'images/email.png',
-                      height: 100,
-                      width: 100
+          child: Form(
+            key: formKey,
+            child: Column(
+                children: <Widget>[
+                  Container(
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                          'images/email.png',
+                          height: 100,
+                          width: 100
+                      ),
+                      margin: EdgeInsets.only(top: 30)
                   ),
-                  margin: EdgeInsets.only(top: 30)
-              ),
-              Container(
-                  alignment: Alignment.topLeft,
-                  child: Text("1. Kode Surat *", style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700
-                  )),
-                  margin: EdgeInsets.only(top: 30, left: 20)
-              ),
-              Container(
-                child: KodeSuratLoading ? ListTileShimmer() : Container(
-                    width: 300,
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    decoration: BoxDecoration(
-                        color: HexColor("#025393"),
-                        borderRadius: BorderRadius.circular(30)
-                    ),
-                    child: DropdownButton(
-                      isExpanded: true,
-                      hint: Center(
-                          child: Text("Pilih Kode Surat", style: TextStyle(
-                              fontFamily: "Poppins",
-                              color: Colors.white,
-                              fontSize: 14
-                          ))
-                      ),
-                      value: selectedKodeSurat,
-                      underline: Container(),
-                      icon: Icon(Icons.arrow_downward, color: Colors.white),
-                      items: kodeSuratList.map((kodeSurat) {
-                        return DropdownMenuItem(
-                            value: kodeSurat['kode_nomor_surat'],
-                            child: Text("${kodeSurat['kode_nomor_surat']} - ${kodeSurat['keterangan']}", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            ))
-                        );
-                      }).toList(),
-                      selectedItemBuilder: (BuildContext context) => kodeSuratList.map((kodeSurat) => Center(
-                          child: Text("${kodeSurat['kode_nomor_surat']}", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              color: Colors.white
-                          ))
-                      )).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedKodeSurat = value;
-                        });
-                        getKomponenNomorSurat();
-                      },
-                    ),
-                    margin: EdgeInsets.only(top: 15)
-                )
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                child: Text("2. Atribut Surat", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700
-                )),
-                margin: EdgeInsets.only(top: 30, left: 20)
-              ),
-              Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                        alignment: Alignment.topLeft,
-                        child: Text("Nomor Surat *", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                        )),
-                        margin: EdgeInsets.only(top: 20, left: 20)
-                    ),
-                    Container(
-                        child: NomorSuratLoading ? ListTileShimmer() : Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                            child: TextField(
-                              controller: controllerNomorSurat,
-                              enabled: false,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(50.0),
-                                    borderSide: BorderSide(color: HexColor("#025393"))
-                                ),
-                              ),
-                              style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14
-                              ),
-                            )
-                        ),
-                    ),
-                    Container(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                                alignment: Alignment.topLeft,
-                                child: Text("Lepihan (Lampiran) *", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14
-                                )),
-                                margin: EdgeInsets.only(top: 20, left: 20)
-                            ),
-                            Container(
-                                child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                                    child: TextField(
-                                      controller: controllerLepihan,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(50.0),
-                                            borderSide: BorderSide(color: HexColor("#025393"))
-                                        ),
-                                        hintText: "Lepihan",
-                                      ),
-                                      keyboardType: TextInputType.number,
-                                      style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14
-                                      ),
-                                    )
-                                ),
-                            )
-                          ],
-                        )
-                    ),
-                    Container(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                                alignment: Alignment.topLeft,
-                                child: Text("Parindikan *", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14
-                                )),
-                                margin: EdgeInsets.only(top: 20, left: 20)
-                            ),
-                            Container(
-                                child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                                    child: TextField(
-                                      controller: controllerParindikan,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(50.0),
-                                            borderSide: BorderSide(color: HexColor("#025393"))
-                                        ),
-                                        hintText: "Parindikan",
-                                      ),
-                                      style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14
-                                      ),
-                                    )
-                                ),
-                            )
-                          ],
-                        )
-                    ),
-                  ],
-                )
-              ),
-              Container(
-                child: Text("3. Daging Surat", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700
-                )),
-                alignment: Alignment.topLeft,
-                margin: EdgeInsets.only(top: 30, left: 20)
-              ),
-              Container(
-                  alignment: Alignment.topLeft,
-                  child: Text("Pemahbah", style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14
-                  )),
-                  margin: EdgeInsets.only(top: 20, left: 20)
-              ),
-              Container(
-                  child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                      child: TextField(
-                        controller: controllerPemahbah,
-                        maxLines: 5,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide(color: HexColor("#025393"))
-                            ),
-                            hintText: "Pemahbah (Pendahuluan)"
-                        ),
-                        style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                        ),
-                      )
-                  ),
-              ),
-              Container(
-                  alignment: Alignment.topLeft,
-                  child: Text("Daging Surat", style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14
-                  )),
-                  margin: EdgeInsets.only(top: 20, left: 20)
-              ),
-              Container(
-                  child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                      child: TextField(
-                        controller: controllerDagingSurat,
-                        maxLines: 20,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide(color: HexColor("#025393"))
-                            ),
-                            hintText: "Daging (Isi)"
-                        ),
-                        style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                        ),
-                      )
-                  ),
-              ),
-              Container(
-                  alignment: Alignment.topLeft,
-                  child: Text("Pamuput Surat", style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14
-                  )),
-                  margin: EdgeInsets.only(top: 20, left: 20)
-              ),
-              Container(
-                  child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                      child: TextField(
-                        controller: controllerPamuput,
-                        maxLines: 5,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide(color: HexColor("#025393"))
-                            ),
-                            hintText: "Pamuput (Penutup)"
-                        ),
-                        style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                        ),
-                      )
-                  ),
-              ),
-              Container(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.topLeft,
-                        child: Text("Tempat Kegiatan", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                        )),
-                        margin: EdgeInsets.only(top: 20, left: 20),
-                      ),
-                      Container(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                          child: TextField(
-                            controller: controllerTempatKegiatan,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(50.0),
-                                    borderSide: BorderSide(color: HexColor("#025393"))
-                                ),
-                                hintText: "Tempat Kegiatan"
-                            ),
-                            style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-              ),
-              Container(
-                  child: Column(
-                      children: <Widget>[
-                        Container(
-                            alignment: Alignment.topLeft,
-                            child: Text("Tanggal Kegiatan", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            )),
-                            margin: EdgeInsets.only(top: 20, left: 20)
-                        ),
-                        Container(
-                            child: Text(tanggalMulaiValue == null ? "Tanggal kegiatan belum terpilih" : tanggalBerakhirValue == null ? "$tanggalMulai - $tanggalMulai" : "$tanggalMulai - $tanggalBerakhir", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700
-                            )),
-                            margin: EdgeInsets.only(top: 20, left: 20)
-                        ),
-                        Container(
-                            child: Card(
-                                margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
-                                child: SfDateRangePicker(
-                                  controller: controllerTanggalKegiatan,
-                                  selectionMode: DateRangePickerSelectionMode.range,
-                                  onSelectionChanged: selectionChanged,
-                                  allowViewNavigation: true,
-                                )
-                            )
-                        )
-                      ]
-                  )
-              ),
-              Container(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.topLeft,
-                        child: Text("Waktu Kegiatan", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                        )),
-                        margin: EdgeInsets.only(top: 20, left: 20),
-                      ),
-                      Container(
-                        child: Text(startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700
-                        )),
-                        margin: EdgeInsets.only(top: 15),
-                      ),
-                      Container(
-                        child: FlatButton(
-                          onPressed: (){
-                            TimeRangePicker.show(
-                                context: context,
-                                unSelectedEmpty: true,
-                                headerDefaultStartLabel: "Waktu Mulai",
-                                headerDefaultEndLabel: "Waktu Selesai",
-                                onSubmitted: (TimeRangeValue value) {
-                                  setState(() {
-                                    startTime = value.startTime;
-                                    endTime = value.endTime;
-                                  });
-                                }
-                            );
-                          },
-                          child: Text("Pilih Waktu Kegiatan", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white
-                          )),
-                          color: HexColor("#025393"),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25)
-                          ),
-                          padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
-                        ),
-                        margin: EdgeInsets.only(top: 10),
-                      )
-                    ],
-                  )
-              ),
-              Container(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.topLeft,
-                        child: Text("Busana Kegiatan", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                        )),
-                        margin: EdgeInsets.only(top: 20, left: 20),
-                      ),
-                      Container(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                          child: TextField(
-                            controller: controllerBusanaKegiatan,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(50.0),
-                                    borderSide: BorderSide(color: HexColor("#025393"))
-                                ),
-                                hintText: "Busana Kegiatan"
-                            ),
-                            style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-              ),
-              Container(
-                child: Text("4. Lingga Tangan Miwah Pesengan", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700
-                )),
-                alignment: Alignment.topLeft,
-                margin: EdgeInsets.only(top: 30, left: 20)
-              ),
-              Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
+                  Container(
                       alignment: Alignment.topLeft,
-                      child: Text("Penyarikan *", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 14
+                      child: Text("1. Kode Surat *", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700
                       )),
-                      margin: EdgeInsets.only(top: 20, left: 20)
-                    ),
-                    Container(
-                      child: LoadingPenyarikan ? ListTileShimmer() : Container(
+                      margin: EdgeInsets.only(top: 30, left: 20)
+                  ),
+                  Container(
+                      child: KodeSuratLoading ? ListTileShimmer() : Container(
                           width: 300,
                           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                           decoration: BoxDecoration(
@@ -723,26 +494,26 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                           child: DropdownButton(
                             isExpanded: true,
                             hint: Center(
-                                child: Text("Pilih Data Penyarikan", style: TextStyle(
+                                child: Text("Pilih Kode Surat", style: TextStyle(
                                     fontFamily: "Poppins",
                                     color: Colors.white,
                                     fontSize: 14
                                 ))
                             ),
-                            value: selectedPenyarikan,
+                            value: selectedKodeSurat,
                             underline: Container(),
                             icon: Icon(Icons.arrow_downward, color: Colors.white),
-                            items: penyarikanList.map((penyarikan) {
+                            items: kodeSuratList.map((kodeSurat) {
                               return DropdownMenuItem(
-                                  value: penyarikan['prajuru_desa_adat_id'],
-                                  child: Text("${penyarikan['nik']} - ${penyarikan['nama']}", style: TextStyle(
+                                  value: kodeSurat['kode_nomor_surat'],
+                                  child: Text("${kodeSurat['kode_nomor_surat']} - ${kodeSurat['keterangan']}", style: TextStyle(
                                       fontFamily: "Poppins",
                                       fontSize: 14
                                   ))
                               );
                             }).toList(),
-                            selectedItemBuilder: (BuildContext context) => penyarikanList.map((penyarikan) => Center(
-                                child: Text("${penyarikan['nik']} - ${penyarikan['nama']}", style: TextStyle(
+                            selectedItemBuilder: (BuildContext context) => kodeSuratList.map((kodeSurat) => Center(
+                                child: Text("${kodeSurat['kode_nomor_surat']}", style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14,
                                     color: Colors.white
@@ -750,502 +521,1341 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                             )).toList(),
                             onChanged: (value) {
                               setState(() {
-                                selectedPenyarikan = value;
+                                selectedKodeSurat = value;
                               });
+                              getKomponenNomorSurat();
                             },
                           ),
                           margin: EdgeInsets.only(top: 15)
                       )
-                    )
-                  ]
-                )
-              ),
-              Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
+                  ),
+                  Container(
                       alignment: Alignment.topLeft,
-                      child: Text("Bendesa *", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 14
+                      child: Text("2. Atribut Surat", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700
                       )),
-                      margin: EdgeInsets.only(top: 20, left: 20)
-                    ),
-                    Container(
-                      child: LoadingBendesa ? ListTileShimmer() : Container(
-                          width: 300,
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                          decoration: BoxDecoration(
-                              color: HexColor("#025393"),
-                              borderRadius: BorderRadius.circular(30)
+                      margin: EdgeInsets.only(top: 30, left: 20)
+                  ),
+                  Container(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment.topLeft,
+                              child: Text("Nomor Surat *", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              )),
+                              margin: EdgeInsets.only(top: 20, left: 20)
                           ),
-                          child: DropdownButton(
-                              isExpanded: true,
-                              hint: Center(
-                                  child: Text("Pilih Bendesa Adat", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14,
-                                      color: Colors.white
-                                  ))
-                              ),
-                              value: selectedBendesaAdat,
-                              underline: Container(),
-                              icon: Icon(Icons.arrow_downward, color: Colors.white),
-                              items: bendesaList.map((bendesa) {
-                                return DropdownMenuItem(
-                                    value: bendesa['prajuru_desa_adat_id'],
-                                    child: Text("${bendesa['nik']} - ${bendesa['nama']}", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                    ))
-                                );
-                              }).toList(),
-                              selectedItemBuilder: (BuildContext context) => bendesaList.map((bendesa) => Center(
-                                  child: Text("${bendesa['nik']} - ${bendesa['nama']}", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14,
-                                      color: Colors.white
-                                  ))
-                              )).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedBendesaAdat = value;
-                                });
-                              }
-                          ),
-                          margin: EdgeInsets.only(top: 15)
-                      )
-                    )
-                  ]
-                )
-              ),
-              Container(
-                child: Text("5. Lepihan Surat", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700
-                )),
-                alignment: Alignment.topLeft,
-                margin: EdgeInsets.only(top: 30, left: 20)
-              ),
-              Container(
-                child: FlatButton(
-                    onPressed: (){
-                      if(controllerLepihan.text == "") {
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                  ),
-                                  content: Container(
-                                      child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Container(
-                                                child: Image.asset(
-                                                  'images/alert.png',
-                                                  height: 50,
-                                                  width: 50,
-                                                )
-                                            ),
-                                            Container(
-                                                child: Text("Data Lepihan Belum Terisi", style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: HexColor("#025393")
-                                                ), textAlign: TextAlign.center),
-                                                margin: EdgeInsets.only(top: 10)
-                                            ),
-                                            Container(
-                                                child: Text("Data lepihan belum terisi. Silahkan isi data lepihan terlebih dahulu dan coba lagi", style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14
-                                                ), textAlign: TextAlign.center),
-                                                margin: EdgeInsets.only(top: 10)
-                                            )
-                                          ]
-                                      )
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text("OK", style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontWeight: FontWeight.w700,
-                                          color: HexColor("#025393")
-                                      )),
-                                      onPressed: (){Navigator.of(context).pop();},
-                                    )
-                                  ]
-                              );
-                            }
-                        );
-                      }else if(controllerLepihan.text == "0" || controllerLepihan.text == "-") {
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                  ),
-                                  content: Container(
-                                      child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Container(
-                                                child: Image.asset(
-                                                  'images/alert.png',
-                                                  height: 50,
-                                                  width: 50,
-                                                )
-                                            ),
-                                            Container(
-                                                child: Text("Tidak Dapat Memilih Berkas Lepihan", style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: HexColor("#025393")
-                                                ), textAlign: TextAlign.center),
-                                                margin: EdgeInsets.only(top: 10)
-                                            ),
-                                            Container(
-                                                child: Text("Tidak dapat memilih berkas lepihan karena Anda menginputkan tidak ada berkas lepihan", style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14
-                                                ), textAlign: TextAlign.center),
-                                                margin: EdgeInsets.only(top: 10)
-                                            )
-                                          ]
-                                      )
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text("OK", style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontWeight: FontWeight.w700,
-                                          color: HexColor("#025393")
-                                      )),
-                                      onPressed: (){Navigator.of(context).pop();},
-                                    )
-                                  ]
-                              );
-                            }
-                        );
-                      }else{
-                        pilihBerkas();
-                      }
-                    },
-                    child: Text("Unggah Berkas", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white
-                    )),
-                    color: HexColor("#025393"),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                        side: BorderSide(color: HexColor("#025393"), width: 2)
-                    ),
-                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
-                ),
-                margin: EdgeInsets.only(top: 20),
-              ),
-              Container(
-                child: FlatButton(
-                  onPressed: () async {
-                    if(controllerParindikan.text == "" || controllerLepihan.text == "" || controllerPemahbah.text == "" || controllerNomorSurat.text == "") {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(40.0))
-                            ),
-                            content: Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Container(
-                                        child: Image.asset(
-                                          'images/warning.png',
-                                          height: 50,
-                                          width: 50,
-                                        )
+                          Container(
+                            child: NomorSuratLoading ? ListTileShimmer() : Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                child: TextFormField(
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if(value.isEmpty) {
+                                      return "Data tidak boleh kosong";
+                                    }else {
+                                      return null;
+                                    }
+                                  },
+                                  controller: controllerNomorSurat,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393"))
                                     ),
-                                    Container(
-                                        child: Text("Masih ada data yang kosong", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: HexColor("#025393")
-                                        ), textAlign: TextAlign.center),
-                                        margin: EdgeInsets.only(top: 10)
-                                    ),
-                                    Container(
-                                      child: Text("Masih ada data yang kosong. Silahkan lengkapi form yang telah disediakan dan coba lagi", style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14
-                                      ), textAlign: TextAlign.center),
-                                      margin: EdgeInsets.only(top: 10),
-                                    )
-                                  ],
+                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ),
                                 )
                             ),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text("OK", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w700,
-                                  color: HexColor("#025393")
-                                )),
-                                onPressed: (){Navigator.of(context).pop();},
-                              )
-                            ]
-                          );
-                        }
-                      );
-                    }else if(controllerLepihan.text != "0") {
-                      if(namaFile == null) {
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                ),
-                                content: Container(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Container(
-                                            child: Image.asset(
-                                              'images/warning.png',
-                                              height: 50,
-                                              width: 50,
-                                            )
-                                        ),
-                                        Container(
-                                            child: Text("Berkas lepihan belum terpilih", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("#025393")
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10)
-                                        ),
-                                        Container(
-                                          child: Text("Berkas lepihan (lampiran) belum terpilih. Silahkan unggah berkas lepihan dan coba lagi nanti", style: TextStyle(
+                          ),
+                          Container(
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                      alignment: Alignment.topLeft,
+                                      child: Text("Lepihan (Lampiran) *", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      )),
+                                      margin: EdgeInsets.only(top: 20, left: 20)
+                                  ),
+                                  Container(
+                                    child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                        child: TextFormField(
+                                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                                          validator: (value) {
+                                            if(value.isEmpty) {
+                                              return "Data tidak boleh kosong";
+                                            }else {
+                                              return null;
+                                            }
+                                          },
+                                          controller: controllerLepihan,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(50.0),
+                                                borderSide: BorderSide(color: HexColor("#025393"))
+                                            ),
+                                            hintText: "Lepihan",
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                          style: TextStyle(
                                               fontFamily: "Poppins",
                                               fontSize: 14
-                                          ), textAlign: TextAlign.center),
-                                          margin: EdgeInsets.only(top: 10),
+                                          ),
                                         )
-                                      ],
-                                    )
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text("OK", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontWeight: FontWeight.w700,
-                                        color: HexColor("#025393")
-                                    )),
-                                    onPressed: (){Navigator.of(context).pop();},
+                                    ),
                                   )
                                 ],
-                              );
-                            }
-                        );
-                      }else{
-                        setState(() {
-                          Loading = true;
-                        });
-                        var stream = http.ByteStream(DelegatingStream.typed(file.openRead()));
-                        var length = await file.length();
-                        var url = Uri.parse('http://192.168.122.149/siraja-api-skripsi-new/upload-file-lampiran.php');
-                        var request = http.MultipartRequest("POST", url);
-                        var multipartFile = http.MultipartFile("dokumen", stream, length, filename: basename(file.path));
-                        request.files.add(multipartFile);
-                        var response = await request.send();
-                        print(response.statusCode.toString());
-                        if(response.statusCode == 200) {
-                          var body = jsonEncode({
-                            "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar,
-                            "desa_adat_id" : loginPage.desaId,
-                            "master_surat" : selectedKodeSurat,
-                            "nomor_surat" : controllerNomorSurat.text,
-                            "lepihan" : controllerLepihan.text,
-                            "parindikan" : controllerParindikan.text,
-                            "pihak_penerima" : controllerTetujon.text,
-                            "pemahbah_surat" : controllerPemahbah.text,
-                            "daging_surat" : controllerDagingSurat.text == "" ? null : controllerDagingSurat.text,
-                            "tanggal_mulai" : tanggalMulaiValue == null ? null : tanggalMulaiValue,
-                            "tanggal_selesai" : tanggalMulaiValue == null ? null : tanggalBerakhir == null ? tanggalMulaiValue : tanggalBerakhirValue,
-                            "waktu_mulai" : startTime == null ? null : "${startTime.hour}:${startTime.minute}",
-                            "waktu_selesai" : startTime == null ? null : endTime == null ? "${startTime.hour}:${startTime.minute}" : "${endTime.hour}:${endTime.minute}",
-                            "pamuput_surat" : controllerPamuput.text == "" ? null : controllerPamuput.text,
-                            "busana" : controllerBusanaKegiatan.text == "" ? null : controllerBusanaKegiatan.text,
-                            "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
-                            "bendesa_adat_id" : selectedBendesaAdat,
-                            "penyarikan_id" : selectedPenyarikan,
-                            "lampiran" : namaFile,
-                          });
-                          http.post(Uri.parse(apiURLSimpanEditSuratKeluar),
-                              headers: {"Content-Type" : "application/json"},
-                              body: body
-                          ).then((http.Response response) {
-                            var responseValue = response.statusCode;
-                            print(response.statusCode);
-                            if(responseValue == 500) {
-                              setState(() {
-                                Loading = false;
-                              });
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                        ),
-                                        content: Container(
-                                            child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  Container(
-                                                      child: Image.asset(
-                                                          'images/alert.png',
-                                                          height: 50,
-                                                          width: 50
-                                                      )
-                                                  ),
-                                                  Container(
-                                                      child: Text("Data kode desa tidak terdaftar", style: TextStyle(
-                                                          fontFamily: "Poppins",
-                                                          fontSize: 16,
-                                                          fontWeight: FontWeight.w700,
-                                                          color: HexColor("#025393")
-                                                      ), textAlign: TextAlign.center),
-                                                      margin: EdgeInsets.only(top: 10)
-                                                  ),
-                                                  Container(
-                                                      child: Text("Data kode desa tidak terdaftar. Silahkan hubungi Administrator untuk informasi lebih lanjut", style: TextStyle(
-                                                          fontFamily: "Poppins",
-                                                          fontSize: 14
-                                                      ), textAlign: TextAlign.center),
-                                                      margin: EdgeInsets.only(top: 10)
-                                                  )
-                                                ]
-                                            )
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: Text("OK", style: TextStyle(
+                              )
+                          ),
+                          Container(
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                      alignment: Alignment.topLeft,
+                                      child: Text("Parindikan *", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      )),
+                                      margin: EdgeInsets.only(top: 20, left: 20)
+                                  ),
+                                  Container(
+                                    child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                                        child: TextFormField(
+                                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                                          validator: (value) {
+                                            if(value.isEmpty) {
+                                              return "Data tidak boleh kosong";
+                                            }else {
+                                              return null;
+                                            }
+                                          },
+                                          controller: controllerParindikan,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(50.0),
+                                                borderSide: BorderSide(color: HexColor("#025393"))
+                                            ),
+                                            hintText: "Parindikan",
+                                          ),
+                                          style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ),
+                                        )
+                                    ),
+                                  )
+                                ],
+                              )
+                          ),
+                        ],
+                      )
+                  ),
+                  Container(
+                      child: Text("3. Daging Surat", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700
+                      )),
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.only(top: 30, left: 20)
+                  ),
+                  Container(
+                      alignment: Alignment.topLeft,
+                      child: Text("Pemahbah", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14
+                      )),
+                      margin: EdgeInsets.only(top: 20, left: 20)
+                  ),
+                  Container(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                        child: TextField(
+                          controller: controllerPemahbah,
+                          maxLines: 5,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(color: HexColor("#025393"))
+                              ),
+                              hintText: "Pemahbah (Pendahuluan)"
+                          ),
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          ),
+                        )
+                    ),
+                  ),
+                  Container(
+                      alignment: Alignment.topLeft,
+                      child: Text("Daging Surat", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14
+                      )),
+                      margin: EdgeInsets.only(top: 20, left: 20)
+                  ),
+                  Container(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                        child: TextField(
+                          controller: controllerDagingSurat,
+                          maxLines: 20,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(color: HexColor("#025393"))
+                              ),
+                              hintText: "Daging (Isi)"
+                          ),
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          ),
+                        )
+                    ),
+                  ),
+                  Container(
+                      alignment: Alignment.topLeft,
+                      child: Text("Pamuput Surat", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14
+                      )),
+                      margin: EdgeInsets.only(top: 20, left: 20)
+                  ),
+                  Container(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                        child: TextField(
+                          controller: controllerPamuput,
+                          maxLines: 5,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(color: HexColor("#025393"))
+                              ),
+                              hintText: "Pamuput (Penutup)"
+                          ),
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          ),
+                        )
+                    ),
+                  ),
+                  Container(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Tempat Kegiatan", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                            margin: EdgeInsets.only(top: 20, left: 20),
+                          ),
+                          Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                              child: TextField(
+                                controller: controllerTempatKegiatan,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393"))
+                                    ),
+                                    hintText: "Tempat Kegiatan"
+                                ),
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                  ),
+                  Container(
+                      child: Column(
+                          children: <Widget>[
+                            Container(
+                                alignment: Alignment.topLeft,
+                                child: Text("Tanggal Kegiatan", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                )),
+                                margin: EdgeInsets.only(top: 20, left: 20)
+                            ),
+                            Container(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                child: TextField(
+                                  controller: controllerTanggalKegiatanText,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(50.0),
+                                          borderSide: BorderSide(color: HexColor("#025393"))
+                                      ),
+                                      hintText: "Tanggal kegiatan belum terpilih",
+                                      prefixIcon: Icon(CupertinoIcons.calendar)
+                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ),
+                                ),
+                              ),
+                              margin: EdgeInsets.only(top: 10),
+                            ),
+                            Container(
+                                child: Card(
+                                    margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
+                                    child: SfDateRangePicker(
+                                      controller: controllerTanggalKegiatan,
+                                      selectionMode: DateRangePickerSelectionMode.range,
+                                      onSelectionChanged: selectionChanged,
+                                      allowViewNavigation: true,
+                                    )
+                                )
+                            )
+                          ]
+                      )
+                  ),
+                  Container(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Waktu Kegiatan", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                            margin: EdgeInsets.only(top: 20, left: 20),
+                          ),
+                          Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                              child: TextField(
+                                controller: controllerWaktuKegiatan,
+                                enabled: false,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393"))
+                                    ),
+                                    hintText: "Waktu kegiatan belum terpilih",
+                                    prefixIcon: Icon(CupertinoIcons.time_solid)
+                                ),
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ),
+                              ),
+                            ),
+                            margin: EdgeInsets.only(top: 10),
+                          ),
+                          Container(
+                            child: FlatButton(
+                              onPressed: (){
+                                TimeRangePicker.show(
+                                    context: context,
+                                    unSelectedEmpty: true,
+                                    headerDefaultStartLabel: "Waktu Mulai",
+                                    headerDefaultEndLabel: "Waktu Selesai",
+                                    onSubmitted: (TimeRangeValue value) {
+                                      setState(() {
+                                        startTime = value.startTime;
+                                        endTime = value.endTime;
+                                        controllerWaktuKegiatan.text = startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}";
+                                      });
+                                    }
+                                );
+                              },
+                              child: Text("Pilih Waktu Kegiatan", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white
+                              )),
+                              color: HexColor("#025393"),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25)
+                              ),
+                              padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                            ),
+                            margin: EdgeInsets.only(top: 10),
+                          )
+                        ],
+                      )
+                  ),
+                  Container(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Busana Kegiatan", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                            margin: EdgeInsets.only(top: 20, left: 20),
+                          ),
+                          Container(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                              child: TextField(
+                                controller: controllerBusanaKegiatan,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393"))
+                                    ),
+                                    hintText: "Busana Kegiatan"
+                                ),
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                  ),
+                  Container(
+                      child: Text("4. Lingga Tangan Miwah Pesengan", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700
+                      )),
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.only(top: 30, left: 20)
+                  ),
+                  Container(
+                      child: Column(
+                          children: <Widget>[
+                            Container(
+                                alignment: Alignment.topLeft,
+                                child: Text("Penyarikan *", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                )),
+                                margin: EdgeInsets.only(top: 20, left: 20)
+                            ),
+                            Container(
+                                child: LoadingPenyarikan ? ListTileShimmer() : Container(
+                                    width: 300,
+                                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    decoration: BoxDecoration(
+                                        color: HexColor("#025393"),
+                                        borderRadius: BorderRadius.circular(30)
+                                    ),
+                                    child: DropdownButton(
+                                      isExpanded: true,
+                                      hint: Center(
+                                          child: Text("Pilih Data Penyarikan", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              color: Colors.white,
+                                              fontSize: 14
+                                          ))
+                                      ),
+                                      value: selectedPenyarikan,
+                                      underline: Container(),
+                                      icon: Icon(Icons.arrow_downward, color: Colors.white),
+                                      items: penyarikanList.map((penyarikan) {
+                                        return DropdownMenuItem(
+                                            value: penyarikan['prajuru_desa_adat_id'],
+                                            child: Text("${penyarikan['nik']} - ${penyarikan['nama']}", style: TextStyle(
                                                 fontFamily: "Poppins",
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("#025393")
-                                            )),
-                                            onPressed: (){Navigator.of(context).pop();},
+                                                fontSize: 14
+                                            ))
+                                        );
+                                      }).toList(),
+                                      selectedItemBuilder: (BuildContext context) => penyarikanList.map((penyarikan) => Center(
+                                          child: Text("${penyarikan['nik']} - ${penyarikan['nama']}", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                              color: Colors.white
+                                          ))
+                                      )).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedPenyarikan = value;
+                                        });
+                                      },
+                                    ),
+                                    margin: EdgeInsets.only(top: 15)
+                                )
+                            )
+                          ]
+                      )
+                  ),
+                  Container(
+                      child: Column(
+                          children: <Widget>[
+                            Container(
+                                alignment: Alignment.topLeft,
+                                child: Text("Bendesa *", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                )),
+                                margin: EdgeInsets.only(top: 20, left: 20)
+                            ),
+                            Container(
+                                child: LoadingBendesa ? ListTileShimmer() : Container(
+                                    width: 300,
+                                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    decoration: BoxDecoration(
+                                        color: HexColor("#025393"),
+                                        borderRadius: BorderRadius.circular(30)
+                                    ),
+                                    child: DropdownButton(
+                                        isExpanded: true,
+                                        hint: Center(
+                                            child: Text("Pilih Bendesa Adat", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                color: Colors.white
+                                            ))
+                                        ),
+                                        value: selectedBendesaAdat,
+                                        underline: Container(),
+                                        icon: Icon(Icons.arrow_downward, color: Colors.white),
+                                        items: bendesaList.map((bendesa) {
+                                          return DropdownMenuItem(
+                                              value: bendesa['prajuru_desa_adat_id'],
+                                              child: Text("${bendesa['nik']} - ${bendesa['nama']}", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14
+                                              ))
+                                          );
+                                        }).toList(),
+                                        selectedItemBuilder: (BuildContext context) => bendesaList.map((bendesa) => Center(
+                                            child: Text("${bendesa['nik']} - ${bendesa['nama']}", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                color: Colors.white
+                                            ))
+                                        )).toList(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedBendesaAdat = value;
+                                          });
+                                        }
+                                    ),
+                                    margin: EdgeInsets.only(top: 15)
+                                )
+                            )
+                          ]
+                      )
+                  ),
+                  Container(
+                      child: Text("5. Lepihan Surat", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700
+                      )),
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.only(top: 30, left: 20)
+                  ),
+                  Container(
+                    child: Center(
+                      child: fileName.isEmpty ? Container() : SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        height: 150.0,
+                        child: ListView.builder(
+                          itemCount: fileName.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              elevation: 6,
+                              margin: EdgeInsets.all(10),
+                              child: ListTile(
+                                title: Text(fileName[index].toString(), style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontWeight: FontWeight.w700
+                                )),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: (){
+                                    if(lampiran.isNotEmpty) {
+                                      for(var i = 0; i < fileName.length; i++) {
+                                        var index = 0;
+                                        if(lampiranUploadName[index] == fileName[i]) {
+                                          setState(() {
+                                            lampiranUploadName.remove(lampiranUploadName[index]);
+                                            lampiran.remove(lampiran[index]);
+                                          });
+                                        }else{
+                                          setState(() {
+                                            index = index + 1;
+                                          });
+                                        }
+                                      }
+                                    }
+                                    setState(() {
+                                      fileName.remove(fileName[index]);
+                                    });
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: FlatButton(
+                        onPressed: (){
+                          if(controllerLepihan.text == "") {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                      ),
+                                      content: Container(
+                                          child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Container(
+                                                    child: Image.asset(
+                                                      'images/alert.png',
+                                                      height: 50,
+                                                      width: 50,
+                                                    )
+                                                ),
+                                                Container(
+                                                    child: Text("Data Lepihan Belum Terisi", style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w700,
+                                                        color: HexColor("#025393")
+                                                    ), textAlign: TextAlign.center),
+                                                    margin: EdgeInsets.only(top: 10)
+                                                ),
+                                                Container(
+                                                    child: Text("Data lepihan belum terisi. Silahkan isi data lepihan terlebih dahulu dan coba lagi", style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 14
+                                                    ), textAlign: TextAlign.center),
+                                                    margin: EdgeInsets.only(top: 10)
+                                                )
+                                              ]
                                           )
-                                        ]
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text("OK", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontWeight: FontWeight.w700,
+                                              color: HexColor("#025393")
+                                          )),
+                                          onPressed: (){Navigator.of(context).pop();},
+                                        )
+                                      ]
+                                  );
+                                }
+                            );
+                          }else if(controllerLepihan.text == "0" || controllerLepihan.text == "-") {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                      ),
+                                      content: Container(
+                                          child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Container(
+                                                    child: Image.asset(
+                                                      'images/alert.png',
+                                                      height: 50,
+                                                      width: 50,
+                                                    )
+                                                ),
+                                                Container(
+                                                    child: Text("Tidak Dapat Memilih Berkas Lepihan", style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w700,
+                                                        color: HexColor("#025393")
+                                                    ), textAlign: TextAlign.center),
+                                                    margin: EdgeInsets.only(top: 10)
+                                                ),
+                                                Container(
+                                                    child: Text("Tidak dapat memilih berkas lepihan karena Anda menginputkan tidak ada berkas lepihan", style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 14
+                                                    ), textAlign: TextAlign.center),
+                                                    margin: EdgeInsets.only(top: 10)
+                                                )
+                                              ]
+                                          )
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text("OK", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontWeight: FontWeight.w700,
+                                              color: HexColor("#025393")
+                                          )),
+                                          onPressed: (){Navigator.of(context).pop();},
+                                        )
+                                      ]
+                                  );
+                                }
+                            );
+                          }else{
+                            pilihBerkas();
+                          }
+                        },
+                        child: Text("Unggah Berkas", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white
+                        )),
+                        color: HexColor("#025393"),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            side: BorderSide(color: HexColor("#025393"), width: 2)
+                        ),
+                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
+                    ),
+                    margin: EdgeInsets.only(top: 20),
+                  ),
+                  Container(
+                    child: Text("6. Tetujon Surat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    alignment: Alignment.topLeft,
+                    margin: EdgeInsets.only(top: 30, left: 20),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Prajuru Desa Adat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: MultiSelectDialogField(
+                        title: Text("Pilih Prajuru Desa Adat"),
+                        buttonText: Text("Pilih Prajuru Desa Adat", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        )),
+                        buttonIcon: Icon(Icons.expand_more),
+                        initialValue: selectedBendesa,
+                        searchable: false,
+                        selectedColor: HexColor("#025393"),
+                        checkColor: Colors.white,
+                        items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                        listType: MultiSelectListType.LIST,
+                        onConfirm: (values) {
+                          setState(() {
+                            selectedBendesa.addAll(values);
+                            values.clear();
+                          });
+                        },
+                      )
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: MultiSelectChipDisplay(
+                      items: selectedBendesa.map((e) => MultiSelectItem(e, "Desa ${e['desadat_nama']} - ${e['nama']}")).toList(),
+                      onTap: (value) {
+                        setState(() {
+                          selectedBendesa.remove(value);
+                        });
+                      },
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Prajuru Banjar Adat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: MultiSelectDialogField(
+                        title: Text("Pilih Prajuru Banjar Adat"),
+                        buttonText: Text("Pilih Prajuru Banjar Adat", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        )),
+                        buttonIcon: Icon(Icons.expand_more),
+                        searchable: false,
+                        selectedColor: HexColor("#025393"),
+                        checkColor: Colors.white,
+                        items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
+                        listType: MultiSelectListType.LIST,
+                        onConfirm: (values) {
+                          setState(() {
+                            selectedKelihanAdat.addAll(values);
+                            values.clear();
+                          });
+                        },
+                      )
+                  ),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: MultiSelectChipDisplay(
+                        items: selectedKelihanAdat.map((e) => MultiSelectItem(e, "Banjar ${e['nama_banjar_adat']} - ${e['nama']}")).toList(),
+                        onTap: (value) {
+                          setState(() {
+                            selectedKelihanAdat.remove(value);
+                          });
+                        },
+                      )
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Pihak Lain", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                      child: TextField(
+                        controller: controllerPihakLainTetujon,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                                borderSide: BorderSide(color: HexColor("#025393"))
+                            ),
+                            hintText: "Nama Pihak Lain",
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: (){
+                                if(controllerPihakLainTetujon.text != "") {
+                                  setState(() {
+                                    pihakLain.add(controllerPihakLainTetujon.text);
+                                  });
+                                }
+                              },
+                            )
+                        ),
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                      child: Center(
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              height: 150.0,
+                              child: ListView.builder(
+                                  itemCount: pihakLain.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      elevation: 6,
+                                      margin: EdgeInsets.all(10),
+                                      child: ListTile(
+                                        title: Text(pihakLain[index], style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontWeight: FontWeight.w700
+                                        )),
+                                        trailing: IconButton(
+                                          icon: Icon(Icons.delete),
+                                          onPressed: (){
+                                            setState(() {
+                                              pihakLain.remove(pihakLain[index]);
+                                            });
+                                          },
+                                        ),
+                                      ),
                                     );
                                   }
-                              );
-                            }else if(responseValue == 200) {
-                              setState(() {
-                                Loading = false;
-                              });
-                              Fluttertoast.showToast(
-                                  msg: "Data surat keluar berhasil diperbaharui",
-                                  fontSize: 14,
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER
-                              );
-                              Navigator.of(context).pop(true);
-                            }
-                          });
-                        }
-                      }
-                    }else{
-                      setState(() {
-                        Loading = true;
-                      });
-                      var body = jsonEncode({
-                        "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar,
-                        "desa_adat_id" : loginPage.desaId,
-                        "master_surat" : selectedKodeSurat,
-                        "nomor_surat" : controllerNomorSurat.text,
-                        "lepihan" : controllerLepihan.text,
-                        "parindikan" : controllerParindikan.text,
-                        "pihak_penerima" : controllerTetujon.text,
-                        "pemahbah_surat" : controllerPemahbah.text,
-                        "daging_surat" : controllerDagingSurat.text == "" ? null : controllerDagingSurat.text,
-                        "tanggal_mulai" : tanggalMulaiValue == null ? null : tanggalMulaiValue,
-                        "tanggal_selesai" : tanggalMulaiValue == null ? null : tanggalBerakhir == null ? tanggalMulaiValue : tanggalBerakhirValue,
-                        "waktu_mulai" : startTime == null ? null : "${startTime.hour}:${startTime.minute}",
-                        "waktu_selesai" : startTime == null ? null : endTime == null ? "${startTime.hour}:${startTime.minute}" : "${endTime.hour}:${endTime.minute}",
-                        "pamuput_surat" : controllerPamuput.text == "" ? null : controllerPamuput.text,
-                        "busana" : controllerBusanaKegiatan.text == "" ? null : controllerBusanaKegiatan.text,
-                        "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
-                        "bendesa_adat_id" : selectedBendesaAdat,
-                        "penyarikan_id" : selectedPenyarikan,
-                        "lampiran" : null,
-                      });
-                      http.post(Uri.parse(apiURLSimpanEditSuratKeluar),
-                          headers: {"Content-Type" : "application/json"},
-                          body: body
-                      ).then((http.Response response) {
-                        var responseValue = response.statusCode;
-                        if(responseValue == 200) {
-                          setState(() {
-                            Loading = false;
-                          });
-                          Fluttertoast.showToast(
-                              msg: "Data surat keluar berhasil diperbaharui",
-                              fontSize: 14,
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER
-                          );
-                          Navigator.of(context).pop(true);
-                        }
-                      });
-                    }
-                  },
-                  child: Text("Simpan", style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: HexColor("#025393")
-                  )),
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    side: BorderSide(color: HexColor("#025393"), width: 2)
+                              )
+                          )
+                      )
                   ),
-                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20)
-              )
-            ]
+                  Container(
+                    child: Text("7. Tumusan Surat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    alignment: Alignment.topLeft,
+                    margin: EdgeInsets.only(top: 30, left: 20),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Prajuru Desa Adat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: MultiSelectDialogField(
+                        title: Text("Pilih Prajuru Desa Adat"),
+                        buttonText: Text("Pilih Prajuru Desa Adat", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        )),
+                        buttonIcon: Icon(Icons.expand_more),
+                        initialValue: selectedBendesa,
+                        searchable: false,
+                        selectedColor: HexColor("#025393"),
+                        checkColor: Colors.white,
+                        items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                        listType: MultiSelectListType.LIST,
+                        onConfirm: (values) {
+                          setState(() {
+                            selectedBendesaTumusan.addAll(values);
+                            values.clear();
+                          });
+                        },
+                      )
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: MultiSelectChipDisplay(
+                      items: selectedBendesaTumusan.map((e) => MultiSelectItem(e, "Desa ${e['desadat_nama']} - ${e['nama']}")).toList(),
+                      onTap: (value) {
+                        setState(() {
+                          selectedBendesaTumusan.remove(value);
+                        });
+                      },
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Prajuru Banjar Adat", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: MultiSelectDialogField(
+                        title: Text("Pilih Prajuru Banjar Adat"),
+                        buttonText: Text("Pilih Prajuru Banjar Adat", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        )),
+                        buttonIcon: Icon(Icons.expand_more),
+                        searchable: false,
+                        selectedColor: HexColor("#025393"),
+                        checkColor: Colors.white,
+                        items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
+                        listType: MultiSelectListType.LIST,
+                        onConfirm: (values) {
+                          setState(() {
+                            selectedKelihanAdatTumusan.addAll(values);
+                            values.clear();
+                          });
+                        },
+                      )
+                  ),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: MultiSelectChipDisplay(
+                        items: selectedKelihanAdatTumusan.map((e) => MultiSelectItem(e, "Banjar ${e['nama_banjar_adat']} - ${e['nama']}")).toList(),
+                        onTap: (value) {
+                          setState(() {
+                            selectedKelihanAdatTumusan.remove(value);
+                          });
+                        },
+                      )
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text("Pihak Lain", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700
+                    )),
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                      child: TextField(
+                        controller: controllerPihakLainTumusan,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                                borderSide: BorderSide(color: HexColor("#025393"))
+                            ),
+                            hintText: "Nama Pihak Lain",
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: (){
+                                if(controllerPihakLainTumusan.text != "") {
+                                  setState(() {
+                                    pihakLainTumusan.add(controllerPihakLainTumusan.text);
+                                  });
+                                }
+                              },
+                            )
+                        ),
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                      child: Center(
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              height: 150.0,
+                              child: ListView.builder(
+                                  itemCount: pihakLainTumusan.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      elevation: 6,
+                                      margin: EdgeInsets.all(10),
+                                      child: ListTile(
+                                        title: Text(pihakLainTumusan[index], style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontWeight: FontWeight.w700
+                                        )),
+                                        trailing: IconButton(
+                                          icon: Icon(Icons.delete),
+                                          onPressed: (){
+                                            setState(() {
+                                              pihakLainTumusan.remove(pihakLainTumusan[index]);
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  }
+                              )
+                          )
+                      )
+                  ),
+                  Container(
+                      child: FlatButton(
+                          onPressed: () async {
+                            setState(() {
+                              Loading = true;
+                            });
+                            var body = jsonEncode({
+                              "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar,
+                              "desa_adat_id" : loginPage.desaId,
+                              "master_surat" : selectedKodeSurat,
+                              "nomor_surat" : controllerNomorSurat.text,
+                              "nomor_urut_surat" : nomorUrutSurat == null ? null : nomorUrutSurat,
+                              "user_id" : loginPage.userId,
+                              "lepihan" : controllerLepihan.text,
+                              "parindikan" : controllerParindikan.text,
+                              "pihak_penerima" : controllerTetujon.text,
+                              "pemahbah_surat" : controllerPemahbah.text,
+                              "daging_surat" : controllerDagingSurat.text == "" ? null : controllerDagingSurat.text,
+                              "tanggal_mulai" : tanggalMulaiValue == null ? null : tanggalMulaiValue,
+                              "tanggal_selesai" : tanggalMulaiValue == null ? null : tanggalBerakhir == null ? tanggalMulaiValue : tanggalBerakhirValue,
+                              "waktu_mulai" : startTime == null ? null : "${startTime.hour}:${startTime.minute}",
+                              "waktu_selesai" : startTime == null ? null : endTime == null ? "${startTime.hour}:${startTime.minute}" : "${endTime.hour}:${endTime.minute}",
+                              "pamuput_surat" : controllerPamuput.text == "" ? null : controllerPamuput.text,
+                              "busana" : controllerBusanaKegiatan.text == "" ? null : controllerBusanaKegiatan.text,
+                              "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
+                              "bendesa_adat_id" : selectedBendesaAdat,
+                              "penyarikan_id" : selectedPenyarikan,
+                              "lampiran" : null,
+                            });
+                            http.post(Uri.parse(apiURLSimpanEditSuratKeluar),
+                                headers: {"Content-Type" : "application/json"},
+                                body: body
+                            ).then((http.Response response) {
+                              var responseValue = response.statusCode;
+                              print("status upload edit surat keluar non-panitia : ${response.statusCode.toString()}");
+                              if(responseValue == 200) {
+                                uploadLampiran();
+                                uploadPrajuruBanjar();
+                                uploadPrajuruDesa();
+                                uploadPihakLain();
+                                setState(() {
+                                  Loading = false;
+                                });
+                                setState(() {
+                                  Loading = false;
+                                });
+                                ftoast.showToast(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(25),
+                                          color: Colors.green
+                                      ),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(Icons.done),
+                                          Container(
+                                            margin: EdgeInsets.only(left: 15),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.65,
+                                              child: Text("Surat keluar berhasil diperbaharui", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white
+                                              )),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                );
+                                Navigator.of(context).pop(true);
+                              }
+                            });
+                          },
+                          child: Text("Simpan", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: HexColor("#025393")
+                          )),
+                          color: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              side: BorderSide(color: HexColor("#025393"), width: 2)
+                          ),
+                          padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
+                      ),
+                      margin: EdgeInsets.only(top: 20, bottom: 20)
+                  )
+                ]
+            ),
           )
         )
       )
     );
+  }
+
+  Future uploadLampiran() async {
+    Map<String, String> headers = {
+      'Content-Type' : 'multipart/form-data'
+    };
+    Map<String, String> body = {
+      "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString()
+    };
+    var request_delete = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/lampiran/delete"))
+                              ..fields.addAll(body)
+                              ..headers.addAll(headers);
+    var response_delete = await request_delete.send();
+    print("delete lampiran status code : ${response_delete.statusCode.toString()}");
+    if(lampiran.isNotEmpty) {
+      for(var i = 0; i < lampiran.length; i++) {
+        var request = http.MultipartRequest('POST', Uri.parse(apiURLUpLampiran))
+          ..headers.addAll(headers)
+          ..files.add(await http.MultipartFile.fromPath('lampiran', lampiran[i].path));
+        var response = await request.send();
+        print("upload lampiran status code: ${response.statusCode.toString()}");
+      }
+      for(var i = 0; i < fileName.length; i++) {
+        Map<String, String> body = {
+          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+          "file_name" : fileName[i].toString()
+        };
+        var request = http.MultipartRequest("POST", Uri.parse(apiURLSimpanEditSuratKeluar))
+          ..fields.addAll(body)
+          ..headers.addAll(headers);
+        var response = await request.send();
+        print("upload lampiran status code (save edit): ${response.statusCode.toString()}");
+      }
+    }else {
+      for(var i = 0; i < fileName.length; i++) {
+        Map<String, String> body = {
+          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+          "file_name" : fileName[i].toString()
+        };
+        var request = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/lampiran/edit/up"))
+          ..fields.addAll(body)
+          ..headers.addAll(headers);
+        var response = await request.send();
+        print("upload lampiran status code (save edit): ${response.statusCode.toString()}");
+      }
+    }
+  }
+
+  Future uploadPrajuruBanjar() async {
+
+    Map<String, String> body = {
+      "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString()
+    };
+    Map<String, String> headers = {
+      'Content-Type' : 'multipart/form-data'
+    };
+    var request_delete = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/banjar/delete"))
+      ..fields.addAll(body)
+      ..headers.addAll(headers);
+    var response_delete = await request_delete.send();
+    print("delete tetujon prajuru banjar status code : ${response_delete.statusCode.toString()}");
+    var request_delete_tumusan = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tumusan/banjar/delete"))
+      ..fields.addAll(body)
+      ..headers.addAll(headers);
+    var response_delete_tumusan = await request_delete_tumusan.send();
+    print("delete tetujon prajuru banjar status code : ${response_delete_tumusan.statusCode.toString()}");
+
+    if(selectedKelihanAdat.isNotEmpty) {
+      for(var i = 0; i < selectedKelihanAdat.length; i++) {
+        Map<String, String> body = {
+          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+          "prajuru_banjar_adat_id" : selectedKelihanAdat[i]['prajuru_banjar_adat_id'].toString()
+        };
+        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruBanjar))
+          ..fields.addAll(body)
+          ..headers.addAll(headers);
+        var response = await request.send();
+        print("upload tetujon prajuru banjar status code: ${response.statusCode.toString()}");
+      }
+    }
+    if(selectedKelihanAdatTumusan.isNotEmpty) {
+      for(var i = 0; i < selectedKelihanAdatTumusan.length; i++) {
+        Map<String, String> bodyTumusan = {
+          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+          "prajuru_banjar_adat_id" : selectedKelihanAdatTumusan[i]['prajuru_banjar_adat_id'].toString()
+        };
+        var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPrajuruBanjar))
+          ..fields.addAll(bodyTumusan)
+          ..headers.addAll(headers);
+        var response = await requestTumusan.send();
+        print("upload tumusan prajuru banjar status code: ${response.statusCode.toString()}");
+      }
+    }
+  }
+
+  Future uploadPrajuruDesa() async {
+
+    Map<String, String> body = {
+      "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString()
+    };
+    Map<String, String> headers = {
+      'Content-Type' : 'multipart/form-data'
+    };
+    var request_delete = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/desa/delete"))
+      ..fields.addAll(body)
+      ..headers.addAll(headers);
+    var response_delete = await request_delete.send();
+    print("delete tetujon prajuru desa status code : ${response_delete.statusCode.toString()}");
+    var request_delete_tumusan = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tumusan/desa/delete"))
+      ..fields.addAll(body)
+      ..headers.addAll(headers);
+    var response_delete_tumusan = await request_delete_tumusan.send();
+    print("delete tumusan prajuru desa status code : ${response_delete_tumusan.statusCode.toString()}");
+
+    if(selectedBendesa.isNotEmpty) {
+      for(var i = 0; i < selectedBendesa.length; i++) {
+        Map<String, String> body = {
+          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+          "prajuru_desa_adat_id" : selectedBendesa[i]['prajuru_desa_adat_id'].toString()
+        };
+        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruDesa))
+          ..fields.addAll(body)
+          ..headers.addAll(headers);
+        var response = await request.send();
+        print("upload tetujon prajuru desa status code: ${response.statusCode.toString()}");
+      }
+    }
+    if(selectedBendesaTumusan.isNotEmpty) {
+      for(var i = 0; i < selectedBendesaTumusan.length; i++) {
+        Map<String, String> bodyTumusan = {
+          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+          "prajuru_desa_adat_id" : selectedBendesaTumusan[i]['prajuru_desa_adat_id'].toString()
+        };
+        var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPrajuruDesa))
+          ..fields.addAll(bodyTumusan)
+          ..headers.addAll(headers);
+        var response = await requestTumusan.send();
+        print("upload tumusan prajuru desa status code: ${response.statusCode.toString()}");
+      }
+    }
+  }
+
+  Future uploadPihakLain() async {
+
+    Map<String, String> body = {
+      "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString()
+    };
+    Map<String, String> headers = {
+      'Content-Type' : 'multipart/form-data'
+    };
+    var request_delete = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/pihak-lain/delete"))
+      ..fields.addAll(body)
+      ..headers.addAll(headers);
+    var response_delete = await request_delete.send();
+    print("delete tetujon pihak lain status code : ${response_delete.statusCode.toString()}");
+    var request_delete_tumusan = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tumusan/pihak-lain/delete"))
+      ..fields.addAll(body)
+      ..headers.addAll(headers);
+    var response_delete_tumusan = await request_delete_tumusan.send();
+    print("delete tumusan pihak lain status code : ${response_delete_tumusan.statusCode.toString()}");
+
+    if(pihakLain.isNotEmpty) {
+      for(var i = 0; i < pihakLain.length; i++) {
+        Map<String, String> body = {
+          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+          "pihak_lain" : pihakLain[i].toString()
+        };
+        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPihakLain))
+          ..fields.addAll(body)
+          ..headers.addAll(headers);
+        var response = await request.send();
+        print("upload tetujon pihak lain status code: ${response.statusCode.toString()}");
+      }
+    }
+    if(pihakLainTumusan.isNotEmpty) {
+      for(var i = 0; i < pihakLainTumusan.length; i++) {
+        Map<String, String> bodyTumusan = {
+          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+          "pihak_lain" : pihakLainTumusan[i].toString()
+        };
+        var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPihakLain))
+          ..fields.addAll(bodyTumusan)
+          ..headers.addAll(headers);
+        var response = await requestTumusan.send();
+        print("upload tumusan pihak lain status code: ${response.statusCode.toString()}");
+      }
+    }
   }
 }

@@ -10,24 +10,24 @@ String kelihanAdatToJson(List<KelihanAdat> data) => json.encode(List<dynamic>.fr
 
 class KelihanAdat {
   KelihanAdat({
+    this.namaBanjarAdat,
     this.prajuruBanjarAdatId,
-    this.nik,
     this.nama,
   });
 
-  int prajuruBanjarAdatId;
-  String nik;
+  String namaBanjarAdat;
+  String prajuruBanjarAdatId;
   String nama;
 
   factory KelihanAdat.fromJson(Map<String, dynamic> json) => KelihanAdat(
-    prajuruBanjarAdatId: json["prajuru_banjar_adat_id"],
-    nik: json["nik"],
+    namaBanjarAdat: json["nama_banjar_adat"],
+    prajuruBanjarAdatId: json["prajuru_banjar_adat_id"].toString(),
     nama: json["nama"],
   );
 
   Map<String, dynamic> toJson() => {
+    "nama_banjar_adat": namaBanjarAdat,
     "prajuru_banjar_adat_id": prajuruBanjarAdatId,
-    "nik": nik,
     "nama": nama,
   };
 }

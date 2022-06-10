@@ -31,7 +31,6 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
   var apiURLGetDataBendesaAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
   var apiURLGetDataPenyarikan = "https://siradaskripsi.my.id/api/data/staff/prajuru/desa_adat/penyarikan/${loginPage.desaId}";
   var apiURLUpDataSuratNonPanitia = "https://siradaskripsi.my.id/api/admin/surat/keluar/non-panitia/up";
-  var apiURLUpFileLampiran = 'http://192.168.1.193/siraja-api-skripsi-new/upload-file-lampiran.php';
   var apiURLGetKelihanAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/kelihan_adat";
   var apiURLGetBendesa = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/bendesa";
 
@@ -488,7 +487,15 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                             Container(
                               child: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                                  child: TextField(
+                                  child: TextFormField(
+                                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                                      validator: (value) {
+                                        if(value.isEmpty) {
+                                          return "Data tidak boleh kosong";
+                                        }else {
+                                          return null;
+                                        }
+                                      },
                                       controller: controllerLepihan,
                                       decoration: InputDecoration(
                                           border: OutlineInputBorder(
@@ -1544,7 +1551,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                   Container(
                       child: FlatButton(
                           onPressed: () async {
-                            if(controllerLepihan.text != "0" && namaFile == null) {
+                            if(controllerLepihan.text != "0" && fileName.isEmpty) {
                               ftoast.showToast(
                                   child: Container(
                                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
