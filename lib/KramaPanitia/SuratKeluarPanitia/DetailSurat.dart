@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:surat/KramaPanitia/SuratKeluarPanitia/EditSurat.dart';
 import 'package:surat/KramaPanitia/SuratKeluarPanitia/ViewLampiran.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter/cupertino.dart';
@@ -81,6 +82,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       var responseValue = response.statusCode;
+      print("get histori status code: ${response.statusCode.toString()}");
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
         setState(() {
@@ -202,6 +204,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) {
+      print("get ketua info status code : ${response.statusCode.toString()}");
       if(response.statusCode == 200) {
         var jsonData = response.body;
         var parsedJson = json.decode(jsonData);
@@ -220,6 +223,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) {
+      print("get sekretaris info status code : ${response.statusCode.toString()}");
       if(response.statusCode == 200) {
         var jsonData = response.body;
         var parsedJson = json.decode(jsonData);
@@ -329,7 +333,12 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           )),
           actions: <Widget>[
             IconButton(
-              onPressed: (){},
+              onPressed: (){
+                setState(() {
+                  editSuratKeluarPanitia.idSuratKeluar = detailSuratKeluarPanitia.suratKeluarId;
+                });
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratKeluarPanitia()));
+              },
               icon: Icon(Icons.edit),
               color: Colors.white,
             )

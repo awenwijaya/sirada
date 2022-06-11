@@ -823,7 +823,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                             ),
                             Container(
                                 child: Card(
-                                    margin: EdgeInsets.fromLTRB(50, 40, 50, 10),
+                                    margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
                                     child: SfDateRangePicker(
                                       controller: controllerTanggalKegiatan,
                                       selectionMode: DateRangePickerSelectionMode.range,
@@ -1072,50 +1072,32 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                       margin: EdgeInsets.only(top: 30, left: 20)
                   ),
                   Container(
-                    child: Center(
-                      child: fileName.isEmpty ? Container() : SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        height: 150.0,
-                        child: ListView.builder(
-                          itemCount: fileName.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              elevation: 6,
-                              margin: EdgeInsets.all(10),
-                              child: ListTile(
-                                title: Text(fileName[index].toString(), style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontWeight: FontWeight.w700
-                                )),
-                                trailing: IconButton(
-                                  icon: Icon(Icons.delete),
-                                  onPressed: (){
-                                    if(lampiran.isNotEmpty) {
-                                      for(var i = 0; i < fileName.length; i++) {
-                                        var index = 0;
-                                        if(lampiranUploadName[index] == fileName[i]) {
-                                          setState(() {
-                                            lampiranUploadName.remove(lampiranUploadName[index]);
-                                            lampiran.remove(lampiran[index]);
-                                          });
-                                        }else{
-                                          setState(() {
-                                            index = index + 1;
-                                          });
-                                        }
-                                      }
-                                    }
-                                    setState(() {
-                                      fileName.remove(fileName[index]);
-                                    });
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: MultiSelectChipDisplay(
+                        items: fileName.map((e) => MultiSelectItem(e, e)).toList(),
+                        onTap: (value) {
+                          setState(() {
+                            if(lampiran.isNotEmpty) {
+                              for(var i = 0; i < fileName.length; i++) {
+                                var index = 0;
+                                if(lampiranUploadName[index] == value) {
+                                  setState(() {
+                                    lampiranUploadName.remove(lampiranUploadName[index]);
+                                    lampiran.remove(lampiran[index]);
+                                  });
+                                }else{
+                                  setState(() {
+                                    index = index + 1;
+                                  });
+                                }
+                              }
+                            }
+                            setState(() {
+                              fileName.remove(value);
+                            });
+                          });
+                        },
+                      )
                   ),
                   Container(
                     child: FlatButton(
@@ -1268,15 +1250,14 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                   Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       child: MultiSelectDialogField(
-                        title: Text("Pilih Prajuru Desa Adat"),
-                        buttonText: Text("Pilih Prajuru Desa Adat", style: TextStyle(
+                        title: Text("Tambah Penerima Prajuru Desa Adat"),
+                        buttonText: Text("Tambah Penerima Prajuru Desa Adat", style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14
                         )),
                         buttonIcon: Icon(Icons.expand_more),
                         initialValue: selectedBendesa,
                         searchable: false,
-                        selectedColor: HexColor("#025393"),
                         checkColor: Colors.white,
                         items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
                         listType: MultiSelectListType.LIST,
@@ -1311,14 +1292,13 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                   Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       child: MultiSelectDialogField(
-                        title: Text("Pilih Prajuru Banjar Adat"),
-                        buttonText: Text("Pilih Prajuru Banjar Adat", style: TextStyle(
+                        title: Text("Tambah Penerima Prajuru Banjar Adat"),
+                        buttonText: Text("Tambah Penerima Prajuru Banjar Adat", style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14
                         )),
                         buttonIcon: Icon(Icons.expand_more),
                         searchable: false,
-                        selectedColor: HexColor("#025393"),
                         checkColor: Colors.white,
                         items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
                         listType: MultiSelectListType.LIST,
@@ -1360,13 +1340,14 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                                 borderRadius: BorderRadius.circular(50.0),
                                 borderSide: BorderSide(color: HexColor("#025393"))
                             ),
-                            hintText: "Nama Pihak Lain",
+                            hintText: "Nama Penerima Pihak Lain",
                             suffixIcon: IconButton(
                               icon: Icon(Icons.add),
                               onPressed: (){
                                 if(controllerPihakLainTetujon.text != "") {
                                   setState(() {
                                     pihakLain.add(controllerPihakLainTetujon.text);
+                                    controllerPihakLainTetujon.text = "";
                                   });
                                 }
                               },
@@ -1380,35 +1361,15 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                     ),
                   ),
                   Container(
-                      child: Center(
-                          child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              height: 150.0,
-                              child: ListView.builder(
-                                  itemCount: pihakLain.length,
-                                  itemBuilder: (context, index) {
-                                    return Card(
-                                      elevation: 6,
-                                      margin: EdgeInsets.all(10),
-                                      child: ListTile(
-                                        title: Text(pihakLain[index], style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.w700
-                                        )),
-                                        trailing: IconButton(
-                                          icon: Icon(Icons.delete),
-                                          onPressed: (){
-                                            setState(() {
-                                              pihakLain.remove(pihakLain[index]);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  }
-                              )
-                          )
-                      )
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: MultiSelectChipDisplay(
+                      items: pihakLain.map((e) => MultiSelectItem(e, e)).toList(),
+                      onTap: (value) {
+                        setState(() {
+                          pihakLain.remove(value);
+                        });
+                      },
+                    ),
                   ),
                   Container(
                     child: Text("7. Tumusan Surat", style: TextStyle(
@@ -1431,8 +1392,8 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                   Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       child: MultiSelectDialogField(
-                        title: Text("Pilih Prajuru Desa Adat"),
-                        buttonText: Text("Pilih Prajuru Desa Adat", style: TextStyle(
+                        title: Text("Tambah Tumusan Prajuru Desa Adat"),
+                        buttonText: Text("Tambah Tumusan Prajuru Desa Adat", style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14
                         )),
@@ -1474,8 +1435,8 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                   Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       child: MultiSelectDialogField(
-                        title: Text("Pilih Prajuru Banjar Adat"),
-                        buttonText: Text("Pilih Prajuru Banjar Adat", style: TextStyle(
+                        title: Text("Tambah Tumusan Prajuru Banjar Adat"),
+                        buttonText: Text("Tambah Tumusan Prajuru Banjar Adat", style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14
                         )),
@@ -1523,13 +1484,14 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                                 borderRadius: BorderRadius.circular(50.0),
                                 borderSide: BorderSide(color: HexColor("#025393"))
                             ),
-                            hintText: "Nama Pihak Lain",
+                            hintText: "Nama Tumusan Pihak Lain",
                             suffixIcon: IconButton(
                               icon: Icon(Icons.add),
                               onPressed: (){
                                 if(controllerPihakLainTumusan.text != "") {
                                   setState(() {
                                     pihakLainTumusan.add(controllerPihakLainTumusan.text);
+                                    controllerPihakLainTumusan.text == "";
                                   });
                                 }
                               },
@@ -1543,39 +1505,21 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                     ),
                   ),
                   Container(
-                      child: Center(
-                          child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              height: 150.0,
-                              child: ListView.builder(
-                                  itemCount: pihakLainTumusan.length,
-                                  itemBuilder: (context, index) {
-                                    return Card(
-                                      elevation: 6,
-                                      margin: EdgeInsets.all(10),
-                                      child: ListTile(
-                                        title: Text(pihakLainTumusan[index], style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontWeight: FontWeight.w700
-                                        )),
-                                        trailing: IconButton(
-                                          icon: Icon(Icons.delete),
-                                          onPressed: (){
-                                            setState(() {
-                                              pihakLainTumusan.remove(pihakLainTumusan[index]);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  }
-                              )
-                          )
-                      )
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        child: MultiSelectChipDisplay(
+                          items: pihakLainTumusan.map((e) => MultiSelectItem(e, e)).toList(),
+                          onTap: (value) {
+                            setState(() {
+                              pihakLainTumusan.remove(value);
+                            });
+                          },
+                        ),
+                      ),
                   ),
                   Container(
                       child: FlatButton(
-                          onPressed: () async {
+                          onPressed: () {
                             if(controllerLepihan.text != "0" && fileName.isEmpty) {
                               ftoast.showToast(
                                   child: Container(
@@ -1661,6 +1605,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                               setState(() {
                                 Loading = true;
                               });
+                              saveEdit();
                               var body = jsonEncode({
                                 "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar,
                                 "desa_adat_id" : loginPage.desaId,
@@ -1682,7 +1627,6 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                                 "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
                                 "bendesa_adat_id" : selectedBendesaAdat,
                                 "penyarikan_id" : selectedPenyarikan,
-                                "lampiran" : null,
                               });
                               http.post(Uri.parse(apiURLSimpanEditSuratKeluar),
                                   headers: {"Content-Type" : "application/json"},
@@ -1691,10 +1635,6 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                                 var responseValue = response.statusCode;
                                 print("status upload edit surat keluar non-panitia : ${response.statusCode.toString()}");
                                 if(responseValue == 200) {
-                                  uploadLampiran();
-                                  uploadPrajuruBanjar();
-                                  uploadPrajuruDesa();
-                                  uploadPihakLain();
                                   setState(() {
                                     Loading = false;
                                   });
@@ -1753,6 +1693,13 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
         )
       )
     );
+  }
+
+  saveEdit() async {
+    uploadLampiran();
+    uploadPrajuruDesa();
+    uploadPrajuruBanjar();
+    uploadPihakLain();
   }
 
   Future uploadLampiran() async {
