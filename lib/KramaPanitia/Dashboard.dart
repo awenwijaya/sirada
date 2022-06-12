@@ -553,7 +553,12 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                                             setState(() {
                                                               detailSuratKeluarPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
                                                             });
-                                                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia()));
+                                                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
+                                                              refreshListDibatalkan();
+                                                              refreshListMenungguRespons();
+                                                              refreshListSedangDiproses();
+                                                              refreshListTelahDikonfirmasi();
+                                                            });
                                                           },
                                                           child: Container(
                                                             child: Row(

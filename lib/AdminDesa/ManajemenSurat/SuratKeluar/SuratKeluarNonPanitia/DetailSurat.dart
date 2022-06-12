@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/EditSuratKeluarNonPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/ViewLampiran.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class detailSuratKeluarNonPanitia extends StatefulWidget {
   static var suratKeluarId;
@@ -35,6 +37,8 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   var namaPenyarikan;
   var namaBendesa;
   var kecamatanId;
+  var status;
+  FToast ftoast;
 
   List tetujonPrajuruDesaList = [];
   List tetujonPrajuruBanjarList = [];
@@ -59,8 +63,11 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   var apiURLGetTumusanPrajuruDesa = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/desa/${detailSuratKeluarNonPanitia.suratKeluarId}";
   var apiURLGetTumusanPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/banjar/${detailSuratKeluarNonPanitia.suratKeluarId}";
   var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${detailSuratKeluarNonPanitia.suratKeluarId}";
-
   var apiURLGetHistori = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/histori/${detailSuratKeluarNonPanitia.suratKeluarId}";
+
+  //validasi
+  var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
+
 
   getLampiran() async {
     http.get(Uri.parse(apiURLGetLampiran),
@@ -208,6 +215,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
           kontakWa2 = parsedJson['desadat_wa_kontak_2'];
           logoDesa = parsedJson['desadat_logo'];
           aksaraDesa = parsedJson['desadat_aksara_bali'];
+          status = parsedJson['status'];
         });
         http.get(Uri.parse("https://siradaskripsi.my.id/api/data/kecamatan/${kecamatanId}"),
           headers: {"Content-Type" : "application/json"}
@@ -273,6 +281,8 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
     getTumusan();
     getHistori();
     getLampiran();
+    ftoast = FToast();
+    ftoast.init(this.context);
   }
 
   @override
@@ -294,6 +304,117 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                 color: HexColor("#025393")
             )),
           actions: <Widget>[
+            status == "Menunggu Respon" ? IconButton(
+                onPressed: (){
+                  showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(40.0))
+                          ),
+                          content: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Container(
+                                  child: Image.asset(
+                                    'images/question.png',
+                                    height: 50,
+                                    width: 50,
+                                  ),
+                                ),
+                                Container(
+                                  child: Text("Proses Verifikasi Surat", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("#025393")
+                                  ), textAlign: TextAlign.center),
+                                  margin: EdgeInsets.only(top: 10),
+                                ),
+                                Container(
+                                  child: Text("Apakah Anda yakin ingin melanjutkan proses verifikasi surat ini? Tindakan ini tidak dapat diubah kembali", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ), textAlign: TextAlign.center),
+                                  margin: EdgeInsets.only(top: 10),
+                                )
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text("Lanjutkan", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor("#025393")
+                              )),
+                              onPressed: (){
+                                var body = jsonEncode({
+                                  "surat_keluar_id" : detailSuratKeluarNonPanitia.suratKeluarId,
+                                  "user_id" : loginPage.userId
+                                });
+                                http.post(Uri.parse(apiURLSetSedangDiproses),
+                                  headers: {"Content-Type" : "application/json"},
+                                  body: body
+                                ).then((http.Response response) {
+                                  var responseValue = response.statusCode;
+                                  if(responseValue == 200) {
+                                    ftoast.showToast(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(25),
+                                              color: Colors.green
+                                          ),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Icon(Icons.done),
+                                              Container(
+                                                margin: EdgeInsets.only(left: 15),
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context).size.width * 0.65,
+                                                  child: Text("Status surat telah diubah menjadi Sedang Diproses", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: Colors.white
+                                                  )),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                    );
+                                    getHistori();
+                                    getSuratKeluarInfo();
+                                    Navigator.of(context).pop(true);
+                                  }
+                                });
+                              },
+                            ),
+                            TextButton(
+                              child: Text("Batal", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor("#025393")
+                              )),
+                              onPressed: (){
+                                Navigator.of(context).pop();
+                              },
+                            )
+                          ],
+                        );
+                      }
+                  );
+                },
+                icon: Icon(Icons.add_task_rounded),
+                color: HexColor("#025393")
+            ) : Container(),
             IconButton(
               onPressed: (){
                 setState(() {
@@ -313,7 +434,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
               },
               icon: Icon(Icons.edit),
               color: HexColor("#025393")
-            )
+            ),
           ]
         ),
         body: Stack(
