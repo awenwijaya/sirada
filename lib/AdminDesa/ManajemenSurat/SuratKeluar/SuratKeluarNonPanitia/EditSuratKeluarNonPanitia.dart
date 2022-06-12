@@ -1519,7 +1519,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                   ),
                   Container(
                       child: FlatButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if(controllerLepihan.text != "0" && fileName.isEmpty) {
                               ftoast.showToast(
                                   child: Container(
@@ -1605,7 +1605,6 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                               setState(() {
                                 Loading = true;
                               });
-                              saveEdit();
                               var body = jsonEncode({
                                 "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar,
                                 "desa_adat_id" : loginPage.desaId,
@@ -1635,39 +1634,38 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                                 var responseValue = response.statusCode;
                                 print("status upload edit surat keluar non-panitia : ${response.statusCode.toString()}");
                                 if(responseValue == 200) {
-                                  setState(() {
-                                    Loading = false;
+                                  saveEdit().whenComplete(() {
+                                    setState(() {
+                                      Loading = false;
+                                    });
+                                    ftoast.showToast(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(25),
+                                              color: Colors.green
+                                          ),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Icon(Icons.done),
+                                              Container(
+                                                margin: EdgeInsets.only(left: 15),
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context).size.width * 0.65,
+                                                  child: Text("Surat keluar berhasil diperbaharui", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: Colors.white
+                                                  )),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                    );
+                                    Navigator.of(context).pop(true);
                                   });
-                                  setState(() {
-                                    Loading = false;
-                                  });
-                                  ftoast.showToast(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(25),
-                                            color: Colors.green
-                                        ),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Icon(Icons.done),
-                                            Container(
-                                              margin: EdgeInsets.only(left: 15),
-                                              child: SizedBox(
-                                                width: MediaQuery.of(context).size.width * 0.65,
-                                                child: Text("Surat keluar berhasil diperbaharui", style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: Colors.white
-                                                )),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                  );
-                                  Navigator.of(context).pop(true);
                                 }
                               });
                             }
@@ -1727,7 +1725,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
           "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
           "file_name" : fileName[i].toString()
         };
-        var request = http.MultipartRequest("POST", Uri.parse(apiURLSimpanEditSuratKeluar))
+        var request = http.MultipartRequest("POST", Uri.parse(apiURLSaveEditLampiran))
           ..fields.addAll(body)
           ..headers.addAll(headers);
         var response = await request.send();

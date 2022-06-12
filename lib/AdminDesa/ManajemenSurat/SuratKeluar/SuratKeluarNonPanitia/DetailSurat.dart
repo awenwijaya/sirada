@@ -38,6 +38,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   var namaBendesa;
   var kecamatanId;
   var status;
+  var validasiStatus;
   FToast ftoast;
 
   List tetujonPrajuruDesaList = [];
@@ -67,7 +68,25 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
 
   //validasi
   var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
+  var apiURLShowValidasiStatus = "https://siradaskripsi.my.id/admin/surat/keluar/prajuru/validasi/show/${loginPage.prajuruId}";
 
+  getValidasiStatus() async {
+    var body = jsonEncode({
+      "surat_keluar_id" : detailSuratKeluarNonPanitia.suratKeluarId
+    });
+    http.post(Uri.parse(apiURLShowValidasiStatus),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          validasiStatus = jsonData['status'];
+        });
+      }
+    });
+  }
 
   getLampiran() async {
     http.get(Uri.parse(apiURLGetLampiran),
@@ -230,6 +249,9 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
             });
           }
         });
+        if(status == "Sedang Diproses") {
+          getValidasiStatus();
+        }
       }
     });
   }
@@ -779,6 +801,50 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                             ],
                           )
                         ],
+                      ),
+                    ),
+                    Container(
+                      child: status == null ? Container() : Container(
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              child: FlatButton(
+                                onPressed: (){},
+                                child: Text("Validasi Surat", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: HexColor("446A46")
+                                )),
+                                color: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                    side: BorderSide(color: HexColor("446A46"), width: 2)
+                                ),
+                                padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                              ),
+                              margin: EdgeInsets.only(top: 20, bottom: 10),
+                            ),
+                            Container(
+                              child: FlatButton(
+                                onPressed: (){},
+                                child: Text("Tolak Surat", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: HexColor("990000")
+                                )),
+                                color: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                    side: BorderSide(color: HexColor("990000"), width: 2)
+                                ),
+                                padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
+                              ),
+                              margin: EdgeInsets.only(bottom: 10),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     Container(
