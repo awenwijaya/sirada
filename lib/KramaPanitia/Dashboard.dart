@@ -693,7 +693,17 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                                         itemCount: SedangDiproses.length,
                                                         itemBuilder: (context, index) {
                                                           return GestureDetector(
-                                                            onTap: (){},
+                                                            onTap: (){
+                                                              setState(() {
+                                                                detailSuratKeluarPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
+                                                              });
+                                                              Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
+                                                                refreshListDibatalkan();
+                                                                refreshListMenungguRespons();
+                                                                refreshListSedangDiproses();
+                                                                refreshListTelahDikonfirmasi();
+                                                              });
+                                                            },
                                                             child: Container(
                                                               child: Row(
                                                                 children: <Widget>[
@@ -818,7 +828,17 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                                         itemCount: TelahDikonfirmasi.length,
                                                         itemBuilder: (context, index) {
                                                           return GestureDetector(
-                                                            onTap: (){},
+                                                            onTap: (){
+                                                              setState(() {
+                                                                detailSuratKeluarPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
+                                                              });
+                                                              Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
+                                                                refreshListDibatalkan();
+                                                                refreshListMenungguRespons();
+                                                                refreshListSedangDiproses();
+                                                                refreshListTelahDikonfirmasi();
+                                                              });
+                                                            },
                                                             child: Container(
                                                               child: Row(
                                                                 children: <Widget>[
@@ -943,7 +963,17 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                                         itemCount: Dibatalkan.length,
                                                         itemBuilder: (context, index) {
                                                           return GestureDetector(
-                                                            onTap: (){},
+                                                            onTap: (){
+                                                              setState(() {
+                                                                detailSuratKeluarPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
+                                                              });
+                                                              Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
+                                                                refreshListDibatalkan();
+                                                                refreshListMenungguRespons();
+                                                                refreshListSedangDiproses();
+                                                                refreshListTelahDikonfirmasi();
+                                                              });
+                                                            },
                                                             child: Container(
                                                               child: Row(
                                                                 children: <Widget>[

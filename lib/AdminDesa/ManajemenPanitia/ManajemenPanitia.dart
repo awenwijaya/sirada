@@ -646,7 +646,7 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                                     borderRadius: BorderRadius.circular(50.0),
                                                     borderSide: BorderSide(color: HexColor("#025393"))
                                                 ),
-                                                hintText: "Cari nama, jabatan, atau asal banjar Prajuru Banjar Adat...",
+                                                hintText: "Cari nama, jabatan atau tim kegiatan Panitia Kegiatan...",
                                                 suffixIcon: isSearchTidakAktif ? IconButton(
                                                   icon: Icon(Icons.close),
                                                   onPressed: (){

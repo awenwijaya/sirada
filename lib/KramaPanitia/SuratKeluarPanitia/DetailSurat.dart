@@ -40,6 +40,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   var kecamatanId;
   var timKegiatan;
   var status;
+  var validasiStatus;
   FToast ftoast;
 
   List tetujonPrajuruDesaList = [];
@@ -70,6 +71,25 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
 
   //validasi
   var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
+  var apiURLShowValidasiStatus = "https://siradaskripsi.my.id/admin/surat/keluar/panitia/validasi/show/${loginPage.kramaId}";
+
+  getValidasiStatus() async {
+    var body = jsonEncode({
+      "surat_keluar_id" : detailSuratKeluarPanitia.suratKeluarId
+    });
+    http.post(Uri.parse(apiURLShowValidasiStatus),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          validasiStatus = jsonData['status'];
+        });
+      }
+    });
+  }
 
   getLampiran() async {
     http.get(Uri.parse(apiURLGetLampiran),
@@ -267,6 +287,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           logoDesa = parsedJson['desadat_logo'];
           aksaraDesa = parsedJson['desadat_aksara_bali'];
           timKegiatan = parsedJson['tim_kegiatan'];
+          status = parsedJson['status'];
         });
         http.get(Uri.parse("https://siradaskripsi.my.id/api/data/kecamatan/${kecamatanId}"),
             headers: {"Content-Type" : "application/json"}
@@ -319,6 +340,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
     getTumusanPihakLain();
     getHistori();
     getLampiran();
+    getValidasiStatus();
     ftoast = FToast();
     ftoast.init(this.context);
   }
@@ -342,7 +364,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
             color: Colors.white
           )),
           actions: <Widget>[
-            IconButton(
+            status == "Menunggu Respon" ? IconButton(
                 onPressed: (){
                   showDialog(
                     context: context,
@@ -452,7 +474,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                 },
                 icon: Icon(Icons.add_task_rounded),
                 color: Colors.white
-            ),
+            ) : Container(),
             IconButton(
               onPressed: (){
                 setState(() {
@@ -837,6 +859,64 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                 ),
                               )
                             ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: status == "Menunggu Respon" ? Container() : Column(
+                        children: <Widget>[
+                          Container(
+                            child: Text("Aksi", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700
+                            )),
+                            alignment: Alignment.topLeft,
+                            margin: EdgeInsets.only(top: 20, left: 25),
+                          ),
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  child: FlatButton(
+                                    onPressed: (){},
+                                    child: Text("Validasi Surat", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("446A46")
+                                    )),
+                                    color: Colors.transparent,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                      side: BorderSide(color: HexColor("446A46"), width: 2)
+                                    ),
+                                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
+                                  ),
+                                ),
+                                Container(
+                                  child: FlatButton(
+                                    onPressed: (){},
+                                    child: Text("Tolak Surat", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor("990000")
+                                    )),
+                                    color: Colors.transparent,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        side: BorderSide(color: HexColor("990000"), width: 2)
+                                    ),
+                                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
+                                  ),
+                                  margin: EdgeInsets.only(left: 10),
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.only(top: 10)
                           )
                         ],
                       ),

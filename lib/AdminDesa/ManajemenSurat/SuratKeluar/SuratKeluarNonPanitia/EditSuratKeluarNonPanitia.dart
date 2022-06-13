@@ -466,22 +466,13 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
             child: Column(
                 children: <Widget>[
                   Container(
-                      alignment: Alignment.center,
-                      child: Image.asset(
-                          'images/email.png',
-                          height: 100,
-                          width: 100
-                      ),
-                      margin: EdgeInsets.only(top: 30)
-                  ),
-                  Container(
                       alignment: Alignment.topLeft,
                       child: Text("1. Kode Surat *", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14,
                           fontWeight: FontWeight.w700
                       )),
-                      margin: EdgeInsets.only(top: 30, left: 20)
+                      margin: EdgeInsets.only(top: 20, left: 20)
                   ),
                   Container(
                       child: KodeSuratLoading ? ListTileShimmer() : Container(
