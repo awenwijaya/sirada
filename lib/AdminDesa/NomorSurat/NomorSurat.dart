@@ -123,220 +123,218 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
               Navigator.of(context).pop();
             },
           ),
-          title: isSearchBar ? Container(
-            child: TextField(
-              controller: controllerSearch,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                    borderSide: BorderSide(color: HexColor("#025393"))
-                ),
-                hintText: "Cari kode surat atau keterangan...",
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: (){
-                      if(controllerSearch.text != "") {
-                        setState(() {
-                          isSearch = true;
-                        });
-                        refreshListSearch();
-                      }
-                    },
-                  )
-              ),
-              style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14
-              ),
-            ),
-            height: 40
-          ) : Text("Nomor Surat", style: TextStyle(
+          title: Text("Nomor Surat", style: TextStyle(
               fontFamily: "Poppins",
               fontWeight: FontWeight.w700,
               color: HexColor("#025393")
           )),
-          actions: <Widget>[
-            isSearchBar ? IconButton(
-              icon: Icon(Icons.close),
-              color: HexColor("#025393"),
-              onPressed: (){
-                setState(() {
-                  isSearch = false;
-                  isSearchBar = false;
-                  controllerSearch.text = "";
-                });
-                refreshListNomorSurat();
-              },
-            ) : IconButton(
-              icon: Icon(Icons.search),
-              color: HexColor("#025393"),
-              onPressed: (){
-                setState(() {
-                  isSearchBar = true;
-                });
-              },
+        ),
+        body: Column(
+          children: <Widget>[
+            Container(
+              child: TextField(
+                controller: controllerSearch,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide(color: HexColor("#025393"))
+                    ),
+                    hintText: "Cari kode surat atau keterangan...",
+                    suffixIcon: isSearch ? IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: (){
+                        setState(() {
+                          controllerSearch.text = "";
+                          isSearch = false;
+                          Loading = true;
+                          refreshListNomorSurat();
+                        });
+                      },
+                    ) : IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: (){
+                        if(controllerSearch.text != "") {
+                          setState(() {
+                            isSearch = true;
+                          });
+                          refreshListSearch();
+                        }
+                      },
+                    )
+                ),
+                style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14
+                ),
+              ),
+              margin: EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
+            ),
+            Container(
+              child: Loading ? ListTileShimmer() : availableData ? Expanded(
+                flex: 1,
+                child: RefreshIndicator(
+                    onRefresh: isSearch ? refreshListSearch : refreshListNomorSurat,
+                    child: ListView.builder(
+                        itemCount: idNomorSurat.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                              onTap: (){},
+                              child: Container(
+                                child: Stack(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Row(
+                                          children: <Widget>[
+                                            Container(
+                                                child: Image.asset(
+                                                    'images/paper.png',
+                                                    height: 40,
+                                                    width: 40
+                                                )
+                                            ),
+                                            Container(
+                                                child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Container(
+                                                        child: Text("${nomorSurat[index]}", style: TextStyle(
+                                                            fontFamily: "Poppins",
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: HexColor("#025393")
+                                                        )),
+                                                      ),
+                                                      Container(
+                                                          child: SizedBox(
+                                                              width: MediaQuery.of(context).size.width * 0.55,
+                                                              child: Text("${keteranganSurat[index]}", style: TextStyle(
+                                                                fontFamily: "Poppins",
+                                                                fontSize: 14,
+                                                              ))
+                                                          )
+                                                      )
+                                                    ]
+                                                ),
+                                                margin: EdgeInsets.only(left: 15)
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                          alignment: Alignment.centerRight,
+                                          child: PopupMenuButton<int>(
+                                              onSelected: (item) {
+                                                setState(() {
+                                                  selectedIdNomorSurat = idNomorSurat[index];
+                                                  controllerKodeSuratEdit.text = nomorSurat[index];
+                                                  controllerKeteranganEdit.text = keteranganSurat[index];
+                                                });
+                                                onSelected(context, item);
+                                              },
+                                              itemBuilder: (context) => [
+                                                PopupMenuItem<int>(
+                                                    value: 0,
+                                                    child: Row(
+                                                        children: <Widget>[
+                                                          Container(
+                                                              child: Icon(
+                                                                  Icons.edit,
+                                                                  color: HexColor("#025393")
+                                                              )
+                                                          ),
+                                                          Container(
+                                                              child: Text("Edit", style: TextStyle(
+                                                                  fontFamily: "Poppins",
+                                                                  fontSize: 14
+                                                              )),
+                                                              margin: EdgeInsets.only(left: 10)
+                                                          )
+                                                        ]
+                                                    )
+                                                ),
+                                                PopupMenuItem<int>(
+                                                    value: 1,
+                                                    child: Row(
+                                                        children: <Widget>[
+                                                          Container(
+                                                              child: Icon(
+                                                                  Icons.delete,
+                                                                  color: HexColor("#025393")
+                                                              )
+                                                          ),
+                                                          Container(
+                                                              child: Text("Hapus", style: TextStyle(
+                                                                  fontFamily: "Poppins",
+                                                                  fontSize: 14
+                                                              )),
+                                                              margin: EdgeInsets.only(left: 10)
+                                                          )
+                                                        ]
+                                                    )
+                                                )
+                                              ]
+                                          )
+                                      )
+                                    ]
+                                ),
+                                margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: Offset(0,3)
+                                      )
+                                    ]
+                                ),
+                              )
+                          );
+                        }
+                    )
+                ),
+              ) : Container(
+                child: Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              child: Icon(
+                                CupertinoIcons.number,
+                                size: 50,
+                                color: Colors.black26,
+                              )
+                          ),
+                          Container(
+                            child: Text("Tidak ada Data Nomor Surat", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black26
+                            ), textAlign: TextAlign.center),
+                            margin: EdgeInsets.only(top: 10),
+                            padding: EdgeInsets.symmetric(horizontal: 30),
+                          ),
+                          Container(
+                            child: Text("Tidak ada data nomor surat. Anda bisa menambahkannya dengan cara menekan tombol + dan isi data nomor surat pada form yang telah disediakan", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14,
+                                color: Colors.black26
+                            ), textAlign: TextAlign.center),
+                            padding: EdgeInsets.symmetric(horizontal: 30),
+                            margin: EdgeInsets.only(top: 10),
+                          )
+                        ]
+                    )
+                ),
+                alignment: Alignment(0.0, 0.0),
+              ),
             )
           ],
-        ),
-        body: Loading ? ListTileShimmer() : availableData ? RefreshIndicator(
-            onRefresh: isSearch ? refreshListSearch : refreshListNomorSurat,
-            child: ListView.builder(
-                itemCount: idNomorSurat.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                      onTap: (){},
-                      child: Container(
-                        child: Stack(
-                            children: <Widget>[
-                              Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                        child: Image.asset(
-                                            'images/paper.png',
-                                            height: 40,
-                                            width: 40
-                                        )
-                                    ),
-                                    Container(
-                                        child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Container(
-                                                child: Text("${nomorSurat[index]}", style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: HexColor("#025393")
-                                                )),
-                                              ),
-                                              Container(
-                                                  child: SizedBox(
-                                                      width: MediaQuery.of(context).size.width * 0.55,
-                                                      child: Text("${keteranganSurat[index]}", style: TextStyle(
-                                                        fontFamily: "Poppins",
-                                                        fontSize: 14,
-                                                      ))
-                                                  )
-                                              )
-                                            ]
-                                        ),
-                                        margin: EdgeInsets.only(left: 15)
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                  alignment: Alignment.centerRight,
-                                  child: PopupMenuButton<int>(
-                                      onSelected: (item) {
-                                        setState(() {
-                                          selectedIdNomorSurat = idNomorSurat[index];
-                                          controllerKodeSuratEdit.text = nomorSurat[index];
-                                          controllerKeteranganEdit.text = keteranganSurat[index];
-                                        });
-                                        onSelected(context, item);
-                                      },
-                                      itemBuilder: (context) => [
-                                        PopupMenuItem<int>(
-                                            value: 0,
-                                            child: Row(
-                                                children: <Widget>[
-                                                  Container(
-                                                      child: Icon(
-                                                          Icons.edit,
-                                                          color: HexColor("#025393")
-                                                      )
-                                                  ),
-                                                  Container(
-                                                      child: Text("Edit", style: TextStyle(
-                                                          fontFamily: "Poppins",
-                                                          fontSize: 14
-                                                      )),
-                                                      margin: EdgeInsets.only(left: 10)
-                                                  )
-                                                ]
-                                            )
-                                        ),
-                                        PopupMenuItem<int>(
-                                            value: 1,
-                                            child: Row(
-                                                children: <Widget>[
-                                                  Container(
-                                                      child: Icon(
-                                                          Icons.delete,
-                                                          color: HexColor("#025393")
-                                                      )
-                                                  ),
-                                                  Container(
-                                                      child: Text("Hapus", style: TextStyle(
-                                                          fontFamily: "Poppins",
-                                                          fontSize: 14
-                                                      )),
-                                                      margin: EdgeInsets.only(left: 10)
-                                                  )
-                                                ]
-                                            )
-                                        )
-                                      ]
-                                  )
-                              )
-                            ]
-                        ),
-                        margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(0,3)
-                              )
-                            ]
-                        ),
-                      )
-                  );
-                }
-            )
-        ) : Container(
-          child: Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        child: Icon(
-                          CupertinoIcons.number,
-                          size: 50,
-                          color: Colors.black26,
-                        )
-                    ),
-                    Container(
-                      child: Text("Tidak ada Data Nomor Surat", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black26
-                      ), textAlign: TextAlign.center),
-                      margin: EdgeInsets.only(top: 10),
-                      padding: EdgeInsets.symmetric(horizontal: 30),
-                    ),
-                    Container(
-                      child: Text("Tidak ada data nomor surat. Anda bisa menambahkannya dengan cara menekan tombol + dan isi data nomor surat pada form yang telah disediakan", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          color: Colors.black26
-                      ), textAlign: TextAlign.center),
-                      padding: EdgeInsets.symmetric(horizontal: 30),
-                      margin: EdgeInsets.only(top: 10),
-                    )
-                  ]
-              )
-          ),
-          alignment: Alignment(0.0, 0.0),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
