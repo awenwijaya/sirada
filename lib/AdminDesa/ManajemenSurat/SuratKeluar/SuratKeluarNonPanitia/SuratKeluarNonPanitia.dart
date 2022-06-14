@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/DetailSurat.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/DetailSuratPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/EditSuratKeluarNonPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/TambahSuratKeluarNonPanitia.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
@@ -20,6 +21,8 @@ class suratKeluarNonPanitiaAdmin extends StatefulWidget {
 class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin> {
   var apiURLGetDataSurat = "https://siradaskripsi.my.id/api/data/admin/surat/non-panitia/${loginPage.desaId}";
   var apiURLSearchSurat = "https://siradaskripsi.my.id/api/data/admin/surat/non-panitia/${loginPage.desaId}/search";
+  var apiURLGetAllSurat = "https://siradaskripsi.my.id/api/data/admin/surat/all/${loginPage.desaId}";
+  var apiURLSearchAllSurat = "https://siradaskripsi.my.id/api/data/admin/surat/all/${loginPage.desaId}/search";
   var selectedIdSuratKeluar;
 
   //bool
@@ -194,7 +197,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
     var body = jsonEncode({
       "status" : "Sedang Diproses"
     });
-    http.post(Uri.parse(apiURLGetDataSurat),
+    http.post(Uri.parse(loginPage.role == "Bendesa" ? apiURLGetDataSurat : apiURLGetAllSurat),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) async {
@@ -218,7 +221,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
     var body = jsonEncode({
       "status" : "Telah Dikonfirmasi"
     });
-    http.post(Uri.parse(apiURLGetDataSurat),
+    http.post(Uri.parse(loginPage.role == "Bendesa" ? apiURLGetDataSurat : apiURLGetAllSurat),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) async {
@@ -242,7 +245,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
     var body = jsonEncode({
       "status" : "Dibatalkan"
     });
-    http.post(Uri.parse(apiURLGetDataSurat),
+    http.post(Uri.parse(loginPage.role == "Bendesa" ? apiURLGetDataSurat : apiURLGetAllSurat),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) async {
@@ -643,10 +646,17 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                               itemBuilder: (context, index) {
                                                 return GestureDetector(
                                                   onTap: (){
-                                                    setState(() {
-                                                      detailSuratKeluarNonPanitia.suratKeluarId = SedangDiproses[index]['surat_keluar_id'];
-                                                    });
-                                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                                    if(SedangDiproses[index]['tim_kegiatan'] == null) {
+                                                      setState(() {
+                                                        detailSuratKeluarPanitiaAdmin.suratKeluarId = SedangDiproses[index]['surat_keluar_id'];
+                                                      });
+                                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                                    }else {
+                                                      setState(() {
+                                                        detailSuratKeluarPanitiaAdmin.suratKeluarId = SedangDiproses[index]['surat_keluar_id'];
+                                                      });
+                                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaAdmin()));
+                                                    }
                                                   },
                                                   child: Container(
                                                     child: Row(
