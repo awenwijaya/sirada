@@ -58,6 +58,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
   var kodeDesa;
   var bulan;
   var tahun;
+  var statusSurat;
 
   //loading indicator
   bool LoadingData = true;
@@ -123,20 +124,6 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   FToast ftoast;
-
-  getTetujon() async {
-    http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
-        headers: {"Content-Type" : "application/json"}
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          selectedBendesa = jsonData;
-        });
-      }
-    });
-  }
 
   getTumusan() async {
     http.get(Uri.parse(apiURLGetTumusanPrajuruDesa),
@@ -291,6 +278,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
         selectedKodeSurat = parsedJson['kode_nomor_surat'];
         tanggalAkhirKegiatan = parsedJson['tanggal_selesai'] == null ? null : DateTime.parse(parsedJson['tanggal_selesai']);
         tanggalMulaiKegiatan = parsedJson['tanggal_mulai'] == null ? null : DateTime.parse(parsedJson['tanggal_mulai']);
+        statusSurat = parsedJson['status'];
         if(tanggalAkhirKegiatan != null || tanggalMulaiKegiatan != null) {
           controllerTanggalKegiatan.selectedRange = PickerDateRange(tanggalMulaiKegiatan, tanggalAkhirKegiatan);
           tanggalMulai = DateFormat("dd-MMM-yyyy").format(tanggalMulaiKegiatan).toString();
@@ -411,6 +399,17 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
       setState(() {
         prajuruDesaList = jsonData;
       });
+      http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
+          headers: {"Content-Type" : "application/json"}
+      ).then((http.Response response) {
+        var responseValue = response.statusCode;
+        if(responseValue == 200) {
+          var jsonData = json.decode(response.body);
+          setState(() {
+            selectedBendesa = jsonData;
+          });
+        }
+      });
     }
   }
 
@@ -427,7 +426,6 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
     getLampiran();
     getKelihanAdat();
     getBendesa();
-    getTetujon();
     getTumusan();
     getTetujonPrajuruBanjar();
     getTumusanPrajuruBanjar();
@@ -1617,6 +1615,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                                 "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
                                 "bendesa_adat_id" : selectedBendesaAdat,
                                 "penyarikan_id" : selectedPenyarikan,
+                                "status_surat" : statusSurat
                               });
                               http.post(Uri.parse(apiURLSimpanEditSuratKeluar),
                                   headers: {"Content-Type" : "application/json"},

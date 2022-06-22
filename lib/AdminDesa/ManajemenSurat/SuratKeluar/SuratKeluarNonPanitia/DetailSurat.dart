@@ -556,15 +556,20 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                       child: tetujon.length == 0 ? Text("-", style: TextStyle(
                         fontFamily: "Times New Roman",
                         fontSize: 16
-                      )) : Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          for(var i = 0; i < tetujon.length; i++) Text("${i+1}. ${tetujon[i].toString()}", textAlign: TextAlign.right, style: TextStyle(
-                            fontFamily: "Times New Roman",
-                            fontSize: 16
-                          ))
-                        ],
+                      )) : Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            for(var i = 0; i < tetujon.length; i++) Container(
+                              child: Text("${i+1}. ${tetujon[i].toString()}", textAlign: TextAlign.right, style: TextStyle(
+                                  fontFamily: "Times New Roman",
+                                  fontSize: 16
+                              )),
+                              margin: EdgeInsets.only(bottom: 5),
+                            )
+                          ],
+                        ),
                       ),
                       margin: EdgeInsets.only(right: 15, top: 5),
                     ),
@@ -608,15 +613,21 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                 child: tumusan.length == 0 ? Text("-", style: TextStyle(
                                   fontFamily: "Times New Roman",
                                   fontSize: 16
-                                )) : Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    for(var i = 0; i < tumusan.length; i++) Text("${i+1}. ${tumusan[i].toString()}", style: TextStyle(
-                                     fontFamily: "Times New Roman",
-                                     fontSize: 16
-                                    ))
-                                  ],
+                                )) : Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      for(var i = 0; i < tumusan.length; i++) Container(
+                                        child: Text("${i+1}. ${tumusan[i].toString()}", style: TextStyle(
+                                            fontFamily: "Times New Roman",
+                                            fontSize: 16
+                                        )),
+                                        margin: EdgeInsets.only(bottom: 5),
+                                      )
+                                    ],
+                                  ),
+                                  margin: EdgeInsets.only(top: 5),
                                 ),
                                 margin: EdgeInsets.only(left: 5),
                               )

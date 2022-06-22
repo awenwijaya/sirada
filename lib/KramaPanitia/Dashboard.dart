@@ -695,7 +695,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                                           return GestureDetector(
                                                             onTap: (){
                                                               setState(() {
-                                                                detailSuratKeluarPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
+                                                                detailSuratKeluarPanitia.suratKeluarId = SedangDiproses[index]['surat_keluar_id'];
                                                               });
                                                               Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
                                                                 refreshListDibatalkan();

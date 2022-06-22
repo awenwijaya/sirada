@@ -89,6 +89,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
   var kodeDesa;
   var bulan;
   var tahun;
+  var statusSurat;
 
   Future getKodeSurat() async {
     var response = await http.get(Uri.parse(apiURLShowKodeSurat));
@@ -170,7 +171,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
         controllerTempatKegiatan.text = parsedJson['tempat_kegiatan'] == null ? "" : parsedJson['tempat_kegiatan'];
         controllerBusanaKegiatan.text = parsedJson['busana'] == null ? "" : parsedJson['busana'];
         selectedKodeSurat = parsedJson['kode_nomor_surat'];
-        print(selectedKodeSurat.toString());
+        statusSurat = parsedJson['status'];
         tanggalAkhirKegiatan = parsedJson['tanggal_selesai'] == null ? null : DateTime.parse(parsedJson['tanggal_selesai']);
         tanggalMulaiKegiatan = parsedJson['tanggal_mulai'] == null ? null : DateTime.parse(parsedJson['tanggal_mulai']);
         if(tanggalAkhirKegiatan != null || tanggalMulaiKegiatan != null) {
