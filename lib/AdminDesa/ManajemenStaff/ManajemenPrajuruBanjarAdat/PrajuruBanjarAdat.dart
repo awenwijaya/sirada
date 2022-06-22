@@ -39,9 +39,25 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
   var apiURLShowListPrajuruBanjarAdatTidakAktif =  "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
   var apiURLDeletePrajuruBanjarAdat = "https://siradaskripsi.my.id/api/admin/prajuru/banjar_adat/delete";
   var apiURLSetPrajuruBanjarTidakAktif = "https://siradaskripsi.my.id/api/admin/prajuru/banjar_adat/set_tidak_aktif";
+  var apiURLGetNamaBanjarFilter = "https://siradaskripsi.my.id/api/data/admin/prajuru_banjar_adat/filter/show_nama_banjar";
+  var apiURLGetJabatanFilter = "https://siradaskripsi.my.id/api/data/admin/prajuru_banjar_adat/filter/show_jabatan";
+  var apiURLShowFilterResult = "https://siradaskripsi.my.id/api/data/admin/prajuru_banjar_adat/filter/show_result";
   FToast ftoast;
   final controllerSearchAktif = TextEditingController();
   final controllerSearchTidakAktif = TextEditingController();
+
+  List jabatanFilterAktif = List();
+  List banjarFilterAktif = List();
+  List jabatanFilterTidakAktif = List();
+  List banjarFilterTidakAktif = List();
+  var selectedJabatanFilterAktif;
+  var selectedBanjarFilterAktif;
+  var selectedJabatanFilterTidakAktif;
+  var selectedBanjarFilterTidakAktif;
+  bool LoadingFilterAktif = true;
+  bool isFilterAktif = false;
+  bool LoadingFilterTidakAktif = true;
+  bool isFilterTidakAktif = false;
 
   //search
   bool isSearch = false;
@@ -51,6 +67,69 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
   bool isSearchTidakAktif = false;
   var apiURLSearchTidakAktif = "https://siradaskripsi.my.id/api/admin/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}/search";
 
+  Future getFilterKomponenAktif() async{
+    var body = jsonEncode({
+      "status" : "aktif",
+      "desa_adat_id" : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLGetNamaBanjarFilter),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          banjarFilterAktif = jsonData;
+        });
+      }
+    });
+    http.post(Uri.parse(apiURLGetJabatanFilter),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          jabatanFilterAktif = jsonData;
+        });
+      }
+    });
+    LoadingFilterAktif = false;
+  }
+
+  Future getFilterKomponenTidakAktif() {
+    var body = jsonEncode({
+      "status" : "tidak aktif",
+      "desa_adat_id" : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLGetNamaBanjarFilter),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          banjarFilterTidakAktif = jsonData;
+        });
+      }
+    });
+    http.post(Uri.parse(apiURLGetJabatanFilter),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          jabatanFilterTidakAktif = jsonData;
+        });
+      }
+    });
+    LoadingFilterTidakAktif = false;
+  }
 
   Future refreshListPrajuruBanjarAdatAktif() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruBanjarAdatAktif);
@@ -190,12 +269,56 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
     });
   }
 
+  Future showFilterResultAktif() async {
+    setState(() {
+      LoadingAktif = true;
+    });
+    var body = jsonEncode({
+      "filter_jabatan" : selectedJabatanFilterAktif == null ? null : selectedJabatanFilterAktif,
+      "filter_banjar" : selectedBanjarFilterAktif == null ? null : selectedBanjarFilterAktif,
+      "desa_adat_id" : loginPage.desaId,
+      "status" : "aktif"
+    });
+    http.post(Uri.parse(apiURLShowFilterResult),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      var statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var data = json.decode(response.body);
+        this.prajuruBanjarAdatIDAktif = [];
+        this.namaPrajuruAktif = [];
+        this.jabatanAktif = [];
+        this.namaBanjarAktif = [];
+        this.pendudukIdAktif = [];
+        setState(() {
+          LoadingAktif = false;
+          availableDataAktif = true;
+          for(var i = 0; i < data.length; i++) {
+            this.prajuruBanjarAdatIDAktif.add(data[i]['prajuru_banjar_adat_id']);
+            this.namaPrajuruAktif.add(data[i]['nama']);
+            this.jabatanAktif.add(data[i]['jabatan']);
+            this.namaBanjarAktif.add(data[i]['nama_banjar_adat']);
+            this.pendudukIdAktif.add(data[i]['penduduk_id']);
+          }
+        });
+      }else {
+        setState(() {
+          LoadingAktif = false;
+          availableDataAktif = false;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     refreshListPrajuruBanjarAdatAktif();
     refreshListPrajuruBanjarAdatTidakAktif();
+    getFilterKomponenAktif();
+    getFilterKomponenTidakAktif();
     ftoast = FToast();
     ftoast.init(context);
   }
@@ -258,25 +381,24 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                           borderRadius: BorderRadius.circular(50.0),
                                           borderSide: BorderSide(color: HexColor("#025393"))
                                       ),
-                                      hintText: "Cari nama, jabatan atau asal banjar Prajuru Banjar Adat...",
-                                      suffixIcon: isSearch ? IconButton(
-                                        icon: Icon(Icons.close),
-                                        onPressed: (){
-                                          setState(() {
-                                            LoadingAktif = true;
-                                            controllerSearchAktif.text = "";
-                                            isSearch = false;
-                                            refreshListPrajuruBanjarAdatAktif();
-                                          });
-                                        },
-                                      ) : IconButton(
+                                      hintText: "Cari Prajuru Banjar Adat...",
+                                      suffixIcon: IconButton(
                                         icon: Icon(Icons.search),
                                         onPressed: (){
                                           if(controllerSearchAktif.text != "") {
                                             setState(() {
                                               isSearch = true;
+                                              selectedJabatanFilterAktif = null;
+                                              selectedBanjarFilterAktif = null;
                                             });
                                             refreshListSearchPrajuruDesaBanjarAktif();
+                                          }else {
+                                            setState(() {
+                                              LoadingAktif = true;
+                                              controllerSearchAktif.text = "";
+                                              isSearch = false;
+                                              refreshListPrajuruBanjarAdatAktif();
+                                            });
                                           }
                                         },
                                       )
@@ -289,10 +411,192 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                 margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20)
                             ),
                             Container(
+                              child: LoadingFilterAktif ? ListTileShimmer() : Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Flexible(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(30),
+                                              border: Border.all(width: 1, color: HexColor("025393"))
+                                          ),
+                                          child: DropdownButton(
+                                            isExpanded: true,
+                                            hint: Center(
+                                                child: Text("Semua Jabatan", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14
+                                                ))
+                                            ),
+                                            value: selectedJabatanFilterAktif,
+                                            underline: Container(),
+                                            items: jabatanFilterAktif.map((jabatan) {
+                                              return DropdownMenuItem(
+                                                  value: jabatan['jabatan'],
+                                                  child: Text("${jabatan['jabatan']}", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14
+                                                  ))
+                                              );
+                                            }).toList(),
+                                            selectedItemBuilder: (BuildContext context) => jabatanFilterAktif.map((jabatan) => Center(
+                                                child: Text("${jabatan['jabatan']}", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14
+                                                ))
+                                            )).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                selectedJabatanFilterAktif = value;
+                                              });
+                                            },
+                                          ),
+                                          margin: EdgeInsets.symmetric(horizontal: 5),
+                                        )
+                                    ),
+                                    Flexible(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(30),
+                                              border: Border.all(width: 1, color: HexColor("025393"))
+                                          ),
+                                          child: DropdownButton(
+                                            onChanged: (value) {
+                                              setState(() {
+                                                selectedBanjarFilterAktif = value;
+                                              });
+                                            },
+                                            value: selectedBanjarFilterAktif,
+                                            underline: Container(),
+                                            hint: Center(
+                                              child: Text("Semua Banjar", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14
+                                              )),
+                                            ),
+                                            isExpanded: true,
+                                            items: banjarFilterAktif.map((banjar) {
+                                              return DropdownMenuItem(
+                                                  value: banjar['banjar_adat_id'],
+                                                  child: Text("${banjar['nama_banjar_adat']}", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14
+                                                  ))
+                                              );
+                                            }).toList(),
+                                            selectedItemBuilder: (BuildContext context) => banjarFilterAktif.map((banjar) => Center(
+                                              child: Text(banjar['nama_banjar_adat'], style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontFamily: "Poppins"
+                                              )),
+                                            )).toList(),
+                                          ),
+                                          margin: EdgeInsets.symmetric(horizontal: 5),
+                                        )
+                                    )
+                                  ],
+                                ),
+                                margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                              ),
+                            ),
+                            Container(
+                              child: Column(
+                                children: [
+                                  if(isSearch == true) Container(
+                                    child: FlatButton(
+                                      onPressed: (){
+                                        setState(() {
+                                          LoadingAktif = true;
+                                          controllerSearchAktif.text = "";
+                                          isSearch = false;
+                                          refreshListPrajuruBanjarAdatAktif();
+                                        });
+                                      },
+                                      child: Text("Reset Pencarian", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white
+                                      )),
+                                      color: HexColor("#025393"),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(25),
+                                          side: BorderSide(color: HexColor("#025393"), width: 2)
+                                      ),
+                                    ),
+                                    margin: EdgeInsets.symmetric(horizontal: 5),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              child: Column(
+                                children: <Widget>[
+                                  if(selectedJabatanFilterAktif != null || selectedBanjarFilterAktif != null) Container(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          child: FlatButton(
+                                            onPressed: (){
+                                              setState(() {
+                                                selectedJabatanFilterAktif = null;
+                                                selectedBanjarFilterAktif = null;
+                                                controllerSearchAktif.text = "";
+                                                LoadingAktif = true;
+                                              });
+                                              refreshListPrajuruBanjarAdatAktif();
+                                            },
+                                            child: Text("Reset Filter", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white
+                                            )),
+                                            color: HexColor("#025393"),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(25),
+                                                side: BorderSide(color: HexColor("#025393"), width: 2)
+                                            ),
+                                          ),
+                                          margin: EdgeInsets.symmetric(horizontal: 5),
+                                        ),
+                                        Container(
+                                          child: FlatButton(
+                                            onPressed: (){
+                                              setState(() {
+                                                controllerSearchAktif.text = "";
+                                              });
+                                              showFilterResultAktif();
+                                            },
+                                            child: Text("Cari Data", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white
+                                            )),
+                                            color: HexColor("#025393"),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(25),
+                                                side: BorderSide(color: HexColor("#025393"), width: 2)
+                                            ),
+                                          ),
+                                          margin: EdgeInsets.symmetric(horizontal: 5),
+                                        )
+                                      ],
+                                    )
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
                                 child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? Expanded(
                                     flex: 1,
                                     child: RefreshIndicator(
-                                        onRefresh: isSearch ? refreshListSearchPrajuruDesaBanjarAktif : refreshListPrajuruBanjarAdatAktif,
+                                        onRefresh: isSearch ? refreshListSearchPrajuruDesaBanjarAktif : isFilterAktif ? showFilterResultAktif : refreshListPrajuruBanjarAdatAktif,
                                         child: ListView.builder(
                                             itemCount: prajuruBanjarAdatIDAktif.length,
                                             shrinkWrap: true,
