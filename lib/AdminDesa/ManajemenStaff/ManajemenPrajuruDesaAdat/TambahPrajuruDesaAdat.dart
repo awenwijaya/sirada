@@ -1006,7 +1006,17 @@ class _pilihDataPegawaiState extends State<pilihDataPegawai> {
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop();},
           ),
-          title: isSearchBar ? Container(
+          title: Text("Pilih Data Prajuru", style: TextStyle(
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w700,
+              color: HexColor("#025393")
+          )),
+        ),
+        body: Loading ? Center(
+          child: Lottie.asset('assets/loading-circle.json')
+        ) : Column(
+          children: <Widget>[
+            Container(
               child: TextField(
                 controller: controllerSearch,
                 decoration: InputDecoration(
@@ -1014,7 +1024,7 @@ class _pilihDataPegawaiState extends State<pilihDataPegawai> {
                         borderRadius: BorderRadius.circular(50.0),
                         borderSide: BorderSide(color: HexColor("#025393"))
                     ),
-                    hintText: "Cari prajuru...",
+                    hintText: "Cari...",
                     suffixIcon: IconButton(
                       icon: Icon(Icons.search),
                       onPressed: (){
@@ -1032,140 +1042,145 @@ class _pilihDataPegawaiState extends State<pilihDataPegawai> {
                     fontSize: 14
                 ),
               ),
-              height: 40
-          ) : Text("Pilih Data Prajuru", style: TextStyle(
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w700,
-              color: HexColor("#025393")
-          )),
-          actions: <Widget>[
-            isSearchBar ? IconButton(
-              icon: Icon(Icons.close),
-              color: HexColor("#025393"),
-              onPressed: (){
-                setState(() {
-                  isSearch = false;
-                  isSearchBar = false;
-                  controllerSearch.text = "";
-                });
-                getListPenduduk();
-              },
-            ) : IconButton(
-              icon: Icon(Icons.search),
-              color: HexColor("#025393"),
-              onPressed: (){
-                setState(() {
-                  isSearchBar = true;
-                });
-              },
-            )
-          ],
-        ),
-        body: Loading ? Center(
-          child: Lottie.asset('assets/loading-circle.json')
-        ) : availableData ? RefreshIndicator(
-          onRefresh: isSearch ? refreshListSearch : getListPenduduk,
-          child: ListView.builder(
-            itemCount: kramaMipilID.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: (){
-                  setState(() {
-                    pilihDataPegawai.selectedNIK = nikPegawai[index];
-                    pilihDataPegawai.selectedId = kramaMipilID[index];
-                    pilihDataPegawai.selectedPegawaiId = pegawaiID[index];
-                  });
-                  Navigator.of(context, rootNavigator: true).pop(namaPegawai[index]);
-                },
-                child: Container(
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        child: Image.asset(
-                          'images/person.png',
-                          height: 40,
-                          width: 40,
-                        )
-                      ),
-                      Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: Text("${namaPegawai[index]}",
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: false,
-                                    style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: HexColor("#025393"),
-                                ))
-                              )
-                            ),
-                            Container(
-                              child: Text("${nikPegawai[index]}", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                color: Colors.black26
-                              ))
-                            )
-                          ],
-                        ),
-                        margin: EdgeInsets.only(left: 15),
-                      )
-                    ]
-                  ),
-                  margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  height: 70,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0,3)
-                      )
-                    ]
-                  ),
-                )
-              );
-            },
-          )
-        ) : Container(
-      child: Center(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-                child: Icon(
-                  CupertinoIcons.person_alt,
-                  size: 50,
-                  color: Colors.black26,
-                )
+              margin: EdgeInsets.only(top: 20, bottom: 10, left: 20, right: 20),
             ),
             Container(
-              child: Text("Tidak ada Data", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black26
-              ), textAlign: TextAlign.center),
-              margin: EdgeInsets.only(top: 10),
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                children: [
+                  if(isSearch == true) Container(
+                    child: FlatButton(
+                      onPressed: (){
+                        setState(() {
+                          Loading = true;
+                          controllerSearch.text = "";
+                          isSearch = false;
+                          getListPenduduk();
+                        });
+                      },
+                      child: Text("Hapus Pencarian", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white
+                      )),
+                      color: HexColor("025393"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        side: BorderSide(color: HexColor("025393"), width: 2)
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              child: availableData ? RefreshIndicator(
+                  onRefresh: isSearch ? refreshListSearch : getListPenduduk,
+                  child: ListView.builder(
+                    itemCount: kramaMipilID.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              pilihDataPegawai.selectedNIK = nikPegawai[index];
+                              pilihDataPegawai.selectedId = kramaMipilID[index];
+                              pilihDataPegawai.selectedPegawaiId = pegawaiID[index];
+                            });
+                            Navigator.of(context, rootNavigator: true).pop(namaPegawai[index]);
+                          },
+                          child: Container(
+                            child: Row(
+                                children: <Widget>[
+                                  Container(
+                                      child: Image.asset(
+                                        'images/person.png',
+                                        height: 40,
+                                        width: 40,
+                                      )
+                                  ),
+                                  Container(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                            child: SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.6,
+                                                child: Text("${namaPegawai[index]}",
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    softWrap: false,
+                                                    style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: HexColor("#025393"),
+                                                    ))
+                                            )
+                                        ),
+                                        Container(
+                                            child: Text("${nikPegawai[index]}", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                color: Colors.black26
+                                            ))
+                                        )
+                                      ],
+                                    ),
+                                    margin: EdgeInsets.only(left: 15),
+                                  )
+                                ]
+                            ),
+                            margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            height: 70,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(0,3)
+                                  )
+                                ]
+                            ),
+                          )
+                      );
+                    },
+                  )
+              ) : Container(
+                child: Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              child: Icon(
+                                CupertinoIcons.person_alt,
+                                size: 50,
+                                color: Colors.black26,
+                              )
+                          ),
+                          Container(
+                            child: Text("Tidak ada Data", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black26
+                            ), textAlign: TextAlign.center),
+                            margin: EdgeInsets.only(top: 10),
+                            padding: EdgeInsets.symmetric(horizontal: 30),
+                          )
+                        ]
+                    )
+                ),
+                alignment: Alignment(0.0, 0.0),
+              ),
             )
-          ]
-      )
-    ),
-    alignment: Alignment(0.0, 0.0),
-    ),
+          ],
+        )
       )
     );
   }

@@ -33,6 +33,16 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
   final controllerSearch = TextEditingController();
   var apiURLSearch = "https://siradaskripsi.my.id/api/data/admin/surat/masuk/${loginPage.desaId}/search";
 
+  //filter
+  List kodeSuratFilter = List();
+  List tanggalSuratFilter = List();
+  List prajuruListFilter = List();
+  List pengirimListFilter = List();
+  var selectedKodeSuratFilter;
+  var selectedTanggalSuratFilter;
+  var selectedPrajuruListFilter;
+  var selectedPengirimListFilter;
+
   Future refreshListSuratMasuk() async {
     var response = await http.get(Uri.parse(apiURLShowListSuratMasuk));
     if(response.statusCode == 200) {
@@ -131,7 +141,7 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                         borderRadius: BorderRadius.circular(50.0),
                         borderSide: BorderSide(color: HexColor("#025393"))
                     ),
-                    hintText: "Cari perihal surat atau pengirim...",
+                    hintText: "Cari surat masuk...",
                     suffixIcon: isSearch ? IconButton(
                       icon: Icon(Icons.close),
                       onPressed: (){
@@ -160,6 +170,158 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                 ),
               ),
               margin: EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
+            ),
+            Container(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      width: 150,
+                      child: DropdownButton(
+                        isExpanded: true,
+                        hint: Center(
+                          child: Text("Semua Kode", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                          )),
+                        ),
+                        value: selectedKodeSuratFilter,
+                        underline: Container(),
+                        items: kodeSuratFilter.map((e) {
+                          return DropdownMenuItem(
+                            value: e,
+                            child: Text(e, style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                            )),
+                          );
+                        }).toList(),
+                        selectedItemBuilder: (BuildContext context) => kodeSuratFilter.map((e) => Center(
+                          child: Text(e, style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14
+                          )),
+                        )).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedKodeSuratFilter = value;
+                          });
+                        },
+                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                    ),
+                    Container(
+                      width: 150,
+                      child: DropdownButton(
+                        isExpanded: true,
+                        hint: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: Text("Semua Tanggal Masuk", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            ), maxLines: 1, softWrap: false, overflow: TextOverflow.ellipsis),
+                          ),
+                        ),
+                        value: selectedKodeSuratFilter,
+                        underline: Container(),
+                        items: kodeSuratFilter.map((e) {
+                          return DropdownMenuItem(
+                            value: e,
+                            child: Text(e, style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                          );
+                        }).toList(),
+                        selectedItemBuilder: (BuildContext context) => kodeSuratFilter.map((e) => Center(
+                          child: Text(e, style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                        )).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedKodeSuratFilter = value;
+                          });
+                        },
+                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                    ),
+                    Container(
+                      width: 150,
+                      child: DropdownButton(
+                        isExpanded: true,
+                        hint: Center(
+                          child: Text("Semua Prajuru", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                        ),
+                        value: selectedKodeSuratFilter,
+                        underline: Container(),
+                        items: kodeSuratFilter.map((e) {
+                          return DropdownMenuItem(
+                            value: e,
+                            child: Text(e, style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                          );
+                        }).toList(),
+                        selectedItemBuilder: (BuildContext context) => kodeSuratFilter.map((e) => Center(
+                          child: Text(e, style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                        )).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedKodeSuratFilter = value;
+                          });
+                        },
+                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                    ),
+                    Container(
+                      width: 150,
+                      child: DropdownButton(
+                        isExpanded: true,
+                        hint: Center(
+                          child: Text("Semua Pengirim", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                        ),
+                        value: selectedKodeSuratFilter,
+                        underline: Container(),
+                        items: kodeSuratFilter.map((e) {
+                          return DropdownMenuItem(
+                            value: e,
+                            child: Text(e, style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                          );
+                        }).toList(),
+                        selectedItemBuilder: (BuildContext context) => kodeSuratFilter.map((e) => Center(
+                          child: Text(e, style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                        )).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedKodeSuratFilter = value;
+                          });
+                        },
+                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 5),
+                    )
+                  ],
+                ),
+              ),
             ),
             Container(
               child: LoadingSuratMasuk ? ListTileShimmer() : availableSuratMasuk ? Expanded(

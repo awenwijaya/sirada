@@ -53,6 +53,21 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
   final controllerSearchAktif = TextEditingController();
   final controllerSearchTidakAktif = TextEditingController();
 
+  //filter
+  var apiURLGetNamaTimKegiatanFilter = "https://siradaskripsi.my.id/api/panitia/filter/show_tim_kegiatan";
+  var apiURLGetJabatanFilter = "https://siradaskripsi.my.id/api/panitia/filter/show_jabatan";
+  List jabatanFilterListAktif = List();
+  List jabatanFilterListTidakAktif = List();
+  List timKegiatanFilterAktif = List();
+  List timKegiatanFilterTidakAktif = List();
+  bool isFilterAktif = false;
+  bool isFilterTidakAktif = false;
+  var selectedJabatanFilterAktif;
+  var selectedTimKegiatanFilterAktif;
+  var selectedJabatanFilterTidakAktif;
+  var selectedTimKegiatanFilterTidakAktif;
+  var apiURLShowResult = "https://siradaskripsi.my.id/api/panitia/filter/show_result";
+
   //search
   bool isSearch = false;
   var apiURLSearchAktif = "https://siradaskripsi.my.id/api/panitia/${loginPage.desaId}/aktif/search";
@@ -60,6 +75,147 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
   //search tidak aktif
   bool isSearchTidakAktif = false;
   var apiURLSearchTidakAktif = "https://siradaskripsi.my.id/api/panitia/${loginPage.desaId}/tidak_aktif/search";
+
+  Future showFilterResultAktif() async {
+    setState(() {
+      LoadingAktif = true;
+      isFilterAktif = true;
+    });
+    var body = jsonEncode({
+      "filter_jabatan" : selectedJabatanFilterAktif == null ? null : selectedJabatanFilterAktif,
+      "filter_tim" : selectedTimKegiatanFilterAktif == null ? null : selectedTimKegiatanFilterAktif,
+      "desa_adat_id" : loginPage.desaId,
+      "status" : "aktif"
+    });
+    http.post(Uri.parse(apiURLShowResult),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) async {
+      var statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var data = json.decode(response.body);
+        this.namaPanitiaAktif = [];
+        this.idPanitiaAktif = [];
+        this.jabatanPanitiaAktif = [];
+        this.timKegiatanPanitiaAktif = [];
+        this.periodeMulaiPanitiaAktif = [];
+        this.periodeAkhirPanitiaAktif = [];
+        setState(() {
+          LoadingAktif = false;
+          availableDataAktif = true;
+        });
+        for(var i = 0; i < data.length; i++) {
+          this.namaPanitiaAktif.add(data[i]['nama']);
+          this.idPanitiaAktif.add(data[i]['panitia_desa_adat_id']);
+          this.jabatanPanitiaAktif.add(data[i]['jabatan']);
+          this.timKegiatanPanitiaAktif.add(data[i]['panitia']);
+          this.periodeMulaiPanitiaAktif.add(data[i]['tanggal_mulai_menjabat']);
+          this.periodeAkhirPanitiaAktif.add(data[i]['tanggal_akhir_menjabat']);
+        }
+      }
+    });
+  }
+
+  Future showFilterResultTidakAktif() async {
+    setState(() {
+      LoadingTidakAktif = true;
+      isFilterTidakAktif = true;
+    });
+    var body = jsonEncode({
+      "filter_jabatan" : selectedJabatanFilterTidakAktif == null ? null : selectedJabatanFilterTidakAktif,
+      "filter_tim" : selectedTimKegiatanFilterTidakAktif == null ? null : selectedTimKegiatanFilterTidakAktif,
+      "desa_adat_id" : loginPage.desaId,
+      "status" : "tidak aktif"
+    });
+    http.post(Uri.parse(apiURLShowResult),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      var statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var data = json.decode(response.body);
+        this.namaPanitiaTidakAktif = [];
+        this.idPanitiaTidakAktif = [];
+        this.jabatanPanitiaTidakAktif = [];
+        this.timKegiatanPanitiaTidakAktif = [];
+        this.periodeMulaiPanitiaTidakAktif = [];
+        this.periodeAkhirPanitiaTidakAktif = [];
+        setState(() {
+          LoadingTidakAktif = false;
+          availableDataTidakAktif = true;
+        });
+        for(var i = 0; i < data.length; i++) {
+          this.namaPanitiaTidakAktif.add(data[i]['nama']);
+          this.idPanitiaTidakAktif.add(data[i]['panitia_desa_adat_id']);
+          this.jabatanPanitiaTidakAktif.add(data[i]['jabatan']);
+          this.timKegiatanPanitiaTidakAktif.add(data[i]['panitia']);
+          this.periodeMulaiPanitiaTidakAktif.add(data[i]['tanggal_mulai_menjabat']);
+          this.periodeAkhirPanitiaTidakAktif.add(data[i]['tanggal_akhir_menjabat']);
+        }
+    }});
+  }
+
+  Future getFilterKomponenAktif() async {
+    var body = jsonEncode({
+      "status" : "aktif",
+      "desa_adat_id" : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLGetNamaTimKegiatanFilter),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          timKegiatanFilterAktif = jsonData;
+        });
+      }
+    });
+    http.post(Uri.parse(apiURLGetJabatanFilter),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          jabatanFilterListAktif = jsonData;
+        });
+      }
+    });
+  }
+
+  Future getFilterKomponenTidakAktif() async {
+    var body = jsonEncode({
+      "status" : "tidak aktif",
+      "desa_adat_id" : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLGetNamaTimKegiatanFilter),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          timKegiatanFilterTidakAktif = jsonData;
+        });
+      }
+    });
+    http.post(Uri.parse(apiURLGetJabatanFilter),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          jabatanFilterListTidakAktif = jsonData;
+        });
+      }
+    });
+  }
 
   Future refreshListPanitiaAktif() async {
     Uri uri = Uri.parse(apiURLGetDataTimKegiatanAktif);
@@ -210,6 +366,8 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
             );
             refreshListPanitiaTidakAktif();
             refreshListPanitiaAktif();
+            getFilterKomponenTidakAktif();
+            getFilterKomponenAktif();
             Navigator.of(context).pop(true);
           }
         });
@@ -296,6 +454,8 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
     super.initState();
     refreshListPanitiaAktif();
     refreshListPanitiaTidakAktif();
+    getFilterKomponenAktif();
+    getFilterKomponenTidakAktif();
     ftoast = FToast();
     ftoast.init(this.context);
   }
@@ -358,18 +518,8 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                     borderRadius: BorderRadius.circular(50.0),
                                     borderSide: BorderSide(color: HexColor("#025393"))
                                 ),
-                                hintText: "Cari nama, jabatan atau tim kegiatan Panitia Kegiatan...",
-                                suffixIcon: isSearch ? IconButton(
-                                  icon: Icon(Icons.close),
-                                  onPressed: (){
-                                    setState(() {
-                                      LoadingAktif = true;
-                                      controllerSearchAktif.text = "";
-                                      isSearch = false;
-                                      refreshListPanitiaAktif();
-                                    });
-                                  },
-                                ) : IconButton(
+                                hintText: "Cari Panitia Kegiatan...",
+                                suffixIcon: IconButton(
                                   icon: Icon(Icons.search),
                                   onPressed: (){
                                     if(controllerSearchAktif.text != "") {
@@ -387,6 +537,170 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                             ),
                           ),
                           margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20)
+                      ),
+                      Container(
+                        child: Container(
+                          child: Row(
+                            children: <Widget>[
+                              Flexible(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(width: 1, color: Colors.black38)
+                                  ),
+                                  child: DropdownButton(
+                                    isExpanded: true,
+                                    hint: Center(
+                                      child: Text("Semua Tim", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      )),
+                                    ),
+                                    value: selectedTimKegiatanFilterAktif,
+                                    underline: Container(),
+                                    items: timKegiatanFilterAktif.map((e) {
+                                      return DropdownMenuItem(
+                                        value: e['kegiatan_panitia_id'],
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Text(e['panitia'], style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                        )
+                                      );
+                                    }).toList(),
+                                    selectedItemBuilder: (BuildContext context) => timKegiatanFilterAktif.map((e) => Center(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Text(e['panitia'], style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
+                                        ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                      )
+                                    )).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedTimKegiatanFilterAktif = value;
+                                      });
+                                      showFilterResultAktif();
+                                    },
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                ),
+                              ),
+                              Flexible(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(width: 1, color: Colors.black38)
+                                  ),
+                                  child: DropdownButton(
+                                    isExpanded: true,
+                                    hint: Center(
+                                      child: Text("Semua Jabatan", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      )),
+                                    ),
+                                    value: selectedJabatanFilterAktif,
+                                    underline: Container(),
+                                    items: jabatanFilterListAktif.map((e) {
+                                      return DropdownMenuItem(
+                                        value: e['jabatan'],
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Text(e['jabatan'], style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                        )
+                                      );
+                                    }).toList(),
+                                    selectedItemBuilder: (BuildContext context) => jabatanFilterListAktif.map((e) => Center(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Text(e['jabatan'], style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
+                                        ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                      )
+                                    )).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedJabatanFilterAktif = value;
+                                      });
+                                      showFilterResultAktif();
+                                    },
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                ),
+                              ),
+                            ],
+                          ),
+                          margin: EdgeInsets.only(left: 20, right: 20, bottom: 10)
+                        )
+                      ),
+                      Container(
+                        child: Column(
+                          children: [
+                            if(isSearch == true) Container(
+                              child: FlatButton(
+                                onPressed: (){
+                                  setState(() {
+                                    LoadingAktif = true;
+                                    controllerSearchAktif.text = "";
+                                    isSearch = false;
+                                    refreshListPanitiaAktif();
+                                  });
+                                },
+                                child: Text("Hapus Pencarian", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white
+                                )),
+                                color: HexColor("025393"),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                  side: BorderSide(color: HexColor("025393"), width: 2)
+                                ),
+                              ),
+                              margin: EdgeInsets.symmetric(horizontal: 5),
+                            )
+                          ],
+                        )
+                      ),
+                      Container(
+                        child: Column(
+                          children: <Widget>[
+                            if(isFilterAktif == true) Container(
+                              child: FlatButton(
+                                onPressed: (){
+                                  setState(() {
+                                    selectedJabatanFilterAktif = null;
+                                    selectedTimKegiatanFilterAktif = null;
+                                    isFilterAktif = false;
+                                    LoadingAktif = true;
+                                  });
+                                  refreshListPanitiaAktif();
+                                },
+                                child: Text("Hapus Filter", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white
+                                )),
+                                color: HexColor("025393"),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                  side: BorderSide(color: HexColor("025393"), width: 2)
+                                ),
+                              ),
+                              margin: EdgeInsets.symmetric(horizontal: 5),
+                            )
+                          ],
+                        ),
                       ),
                       Container(
                         child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? Expanded(
@@ -606,18 +920,8 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                         borderRadius: BorderRadius.circular(50.0),
                                         borderSide: BorderSide(color: HexColor("#025393"))
                                     ),
-                                    hintText: "Cari nama, jabatan atau tim kegiatan Panitia Kegiatan...",
-                                    suffixIcon: isSearchTidakAktif ? IconButton(
-                                      icon: Icon(Icons.close),
-                                      onPressed: (){
-                                        setState(() {
-                                          LoadingTidakAktif = true;
-                                          controllerSearchTidakAktif.text = "";
-                                          isSearchTidakAktif = false;
-                                          refreshListPanitiaTidakAktif();
-                                        });
-                                      },
-                                    ) : IconButton(
+                                    hintText: "Cari Panitia Kegiatan...",
+                                    suffixIcon: IconButton(
                                       icon: Icon(Icons.search),
                                       onPressed: (){
                                         if(controllerSearchTidakAktif.text != "") {
@@ -635,6 +939,167 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                 ),
                               ),
                               margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20)
+                          ),
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Flexible(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(width: 1, color: Colors.black38)
+                                    ),
+                                    child: DropdownButton(
+                                      isExpanded: true,
+                                      hint: Center(
+                                        child: Text("Semua Tim", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                        )),
+                                      ),
+                                      value: selectedTimKegiatanFilterTidakAktif,
+                                      underline: Container(),
+                                      items: timKegiatanFilterTidakAktif.map((e) {
+                                        return DropdownMenuItem(
+                                          value: e['kegiatan_panitia_id'],
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width,
+                                            child: Text(e['panitia'], style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                            ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                          ),
+                                        );
+                                      }).toList(),
+                                      selectedItemBuilder: (BuildContext context) => timKegiatanFilterAktif.map((e) => Center(
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Text(e['panitia'], style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
+                                          ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                        ),
+                                      )).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedTimKegiatanFilterTidakAktif = value;
+                                        });
+                                        showFilterResultTidakAktif();
+                                      },
+                                    ),
+                                    margin: EdgeInsets.symmetric(horizontal: 5),
+                                  ),
+                                ),
+                                Flexible(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(width: 1, color: Colors.black38)
+                                    ),
+                                    child: DropdownButton(
+                                      isExpanded: true,
+                                      hint: Center(
+                                        child: Text("Semua Jabatan", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                        )),
+                                      ),
+                                      value: selectedJabatanFilterTidakAktif,
+                                      underline: Container(),
+                                      items: jabatanFilterListTidakAktif.map((e) {
+                                        return DropdownMenuItem(
+                                          value: e['jabatan'],
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width,
+                                            child: Text(e['jabatan'], style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                            ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                          ),
+                                        );
+                                      }).toList(),
+                                      selectedItemBuilder: (BuildContext context) => jabatanFilterListTidakAktif.map((e) => Center(
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width,
+                                            child: Text(e['jabatan'], style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14
+                                            ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                          )
+                                      )).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedJabatanFilterTidakAktif = value;
+                                        });
+                                        showFilterResultTidakAktif();
+                                      },
+                                    ),
+                                  )
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                          ),
+                          Container(
+                              child: Column(
+                                children: [
+                                  if(isSearchTidakAktif == true) Container(
+                                    child: FlatButton(
+                                      onPressed: (){
+                                        setState(() {
+                                          LoadingTidakAktif = true;
+                                          controllerSearchTidakAktif.text = "";
+                                          isSearchTidakAktif = false;
+                                          refreshListPanitiaTidakAktif();
+                                        });
+                                      },
+                                      child: Text("Hapus Pencarian", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white
+                                      )),
+                                      color: HexColor("025393"),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(25),
+                                          side: BorderSide(color: HexColor("025393"), width: 2)
+                                      ),
+                                    ),
+                                    margin: EdgeInsets.symmetric(horizontal: 5),
+                                  )
+                                ],
+                              )
+                          ),
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                if(isFilterTidakAktif == true) Container(
+                                  child: FlatButton(
+                                    onPressed: (){
+                                      setState(() {
+                                        selectedJabatanFilterTidakAktif = null;
+                                        selectedTimKegiatanFilterTidakAktif = null;
+                                        isFilterTidakAktif = false;
+                                        LoadingTidakAktif = true;
+                                      });
+                                      refreshListPanitiaTidakAktif();
+                                    },
+                                    child: Text("Hapus Filter", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white
+                                    )),
+                                    color: HexColor("025393"),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        side: BorderSide(color: HexColor("025393"), width: 2)
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                )
+                              ],
+                            ),
                           ),
                           Container(
                             child: LoadingTidakAktif ? ListTileShimmer() : availableDataTidakAktif ? Expanded(
@@ -899,6 +1364,8 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                       if(responseValue == 200) {
                         refreshListPanitiaAktif();
                         refreshListPanitiaTidakAktif();
+                        getFilterKomponenTidakAktif();
+                        getFilterKomponenAktif();
                         ftoast.showToast(
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),

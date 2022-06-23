@@ -1063,7 +1063,17 @@ class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat>
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop();},
           ),
-          title: isSearchBar ? Container(
+          title: Text("Pilih Data Prajuru", style: TextStyle(
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w700,
+              color: HexColor("#025393")
+          )),
+        ),
+        body: Loading ? Center(
+            child: Lottie.asset('assets/loading-circle.json')
+        ) : Column(
+          children: <Widget>[
+            Container(
               child: TextField(
                 controller: controllerSearch,
                 decoration: InputDecoration(
@@ -1071,7 +1081,7 @@ class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat>
                         borderRadius: BorderRadius.circular(50.0),
                         borderSide: BorderSide(color: HexColor("#025393"))
                     ),
-                    hintText: "Cari prajuru...",
+                    hintText: "Cari...",
                     suffixIcon: IconButton(
                       icon: Icon(Icons.search),
                       onPressed: (){
@@ -1089,139 +1099,145 @@ class _pilihDataPrajuruBanjarAdatState extends State<pilihDataPrajuruBanjarAdat>
                     fontSize: 14
                 ),
               ),
-              height: 40
-          ) : Text("Pilih Data Prajuru", style: TextStyle(
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w700,
-              color: HexColor("#025393")
-          )),
-          actions: <Widget>[
-            isSearchBar ? IconButton(
-              icon: Icon(Icons.close),
-              color: HexColor("#025393"),
-              onPressed: (){
-                setState(() {
-                  isSearch = false;
-                  isSearchBar = false;
-                  controllerSearch.text = "";
-                });
-                getListPenduduk();
-              },
-            ) : IconButton(
-              icon: Icon(Icons.search),
-              color: HexColor("#025393"),
-              onPressed: (){
-                setState(() {
-                  isSearchBar = true;
-                });
-              },
-            )
-          ],
-        ),
-        body: Loading ? Center(
-            child: Lottie.asset('assets/loading-circle.json')
-        ) : availableData ? RefreshIndicator(
-            onRefresh: isSearch ? refreshListSearch : getListPenduduk,
-            child: ListView.builder(
-              itemCount: kramaMipilID.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        pilihDataPrajuruBanjarAdat.selectedNIK = nikPegawai[index];
-                        pilihDataPrajuruBanjarAdat.selectedId = kramaMipilID[index];
-                        pilihDataPrajuruBanjarAdat.selectedPegawaiId = pegawaiID[index];
-                      });
-                      Navigator.of(context, rootNavigator: true).pop(namaPegawai[index]);
-                    },
-                    child: Container(
-                      child: Row(
-                          children: <Widget>[
-                            Container(
-                                child: Image.asset(
-                                  'images/person.png',
-                                  height: 40,
-                                  width: 40,
-                                )
-                            ),
-                            Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+              margin: EdgeInsets.only(top: 20, bottom: 10, left: 20, right: 20)
+            ),
+            Container(
+              child: Column(
+                children: [
+                  if(isSearch == true) Container(
+                    child: FlatButton(
+                      onPressed: (){
+                        setState(() {
+                          isSearch = false;
+                          isSearchBar = false;
+                          controllerSearch.text = "";
+                          Loading = true;
+                        });
+                        getListPenduduk();
+                      },
+                      child: Text("Hapus Pencarian", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white
+                      )),
+                      color: HexColor("025393"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        side: BorderSide(color: HexColor("025393"), width: 2)
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                  )
+                ],
+              )
+            ),
+            Expanded(
+              child: availableData ? RefreshIndicator(
+                  onRefresh: isSearch ? refreshListSearch : getListPenduduk,
+                  child: ListView.builder(
+                    itemCount: kramaMipilID.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              pilihDataPrajuruBanjarAdat.selectedNIK = nikPegawai[index];
+                              pilihDataPrajuruBanjarAdat.selectedId = kramaMipilID[index];
+                              pilihDataPrajuruBanjarAdat.selectedPegawaiId = pegawaiID[index];
+                            });
+                            Navigator.of(context, rootNavigator: true).pop(namaPegawai[index]);
+                          },
+                          child: Container(
+                            child: Row(
                                 children: <Widget>[
                                   Container(
-                                      child: SizedBox(
-                                          width: MediaQuery.of(context).size.width * 0.6,
-                                          child: Text("${namaPegawai[index]}",
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              softWrap: false,
-                                              style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("#025393"),
-                                              ))
+                                      child: Image.asset(
+                                        'images/person.png',
+                                        height: 40,
+                                        width: 40,
                                       )
                                   ),
                                   Container(
-                                      child: Text("${nikPegawai[index]}", style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14,
-                                          color: Colors.black26
-                                      ))
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                            child: SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.6,
+                                                child: Text("${namaPegawai[index]}",
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    softWrap: false,
+                                                    style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: HexColor("#025393"),
+                                                    ))
+                                            )
+                                        ),
+                                        Container(
+                                            child: Text("${nikPegawai[index]}", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                color: Colors.black26
+                                            ))
+                                        )
+                                      ],
+                                    ),
+                                    margin: EdgeInsets.only(left: 15),
                                   )
-                                ],
-                              ),
-                              margin: EdgeInsets.only(left: 15),
-                            )
-                          ]
-                      ),
-                      margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      height: 70,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: Offset(0,3)
-                            )
-                          ]
-                      ),
+                                ]
+                            ),
+                            margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            height: 70,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(0,3)
+                                  )
+                                ]
+                            ),
+                          )
+                      );
+                    },
+                  )
+              ) : Container(
+                child: Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              child: Icon(
+                                CupertinoIcons.person_alt,
+                                size: 50,
+                                color: Colors.black26,
+                              )
+                          ),
+                          Container(
+                            child: Text("Tidak ada Data", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black26
+                            ), textAlign: TextAlign.center),
+                            margin: EdgeInsets.only(top: 10),
+                            padding: EdgeInsets.symmetric(horizontal: 30),
+                          )
+                        ]
                     )
-                );
-              },
-            )
-        ) : Container(
-          child: Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        child: Icon(
-                          CupertinoIcons.person_alt,
-                          size: 50,
-                          color: Colors.black26,
-                        )
-                    ),
-                    Container(
-                      child: Text("Tidak ada Data", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black26
-                      ), textAlign: TextAlign.center),
-                      margin: EdgeInsets.only(top: 10),
-                      padding: EdgeInsets.symmetric(horizontal: 30),
-                    )
-                  ]
+                ),
+                alignment: Alignment(0.0, 0.0),
               )
-          ),
-          alignment: Alignment(0.0, 0.0),
+            )
+          ],
         )
       )
     );
@@ -1318,7 +1334,17 @@ class _pilihDataBanjarState extends State<pilihDataBanjar> {
             color: HexColor("#025393"),
             onPressed: (){Navigator.of(context).pop();},
           ),
-          title: isSearchBar ? Container(
+          title: Text("Pilih Data Banjar", style: TextStyle(
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w700,
+              color: HexColor("#025393")
+          )),
+        ),
+        body: Loading ? Center(
+          child: Lottie.asset('assets/loading-circle.json')
+        ) : Column(
+          children: <Widget>[
+            Container(
               child: TextField(
                 controller: controllerSearch,
                 decoration: InputDecoration(
@@ -1326,7 +1352,7 @@ class _pilihDataBanjarState extends State<pilihDataBanjar> {
                         borderRadius: BorderRadius.circular(50.0),
                         borderSide: BorderSide(color: HexColor("#025393"))
                     ),
-                    hintText: "Cari banjar...",
+                    hintText: "Cari...",
                     suffixIcon: IconButton(
                       icon: Icon(Icons.search),
                       onPressed: (){
@@ -1344,116 +1370,121 @@ class _pilihDataBanjarState extends State<pilihDataBanjar> {
                     fontSize: 14
                 ),
               ),
-              height: 40
-          ) : Text("Pilih Data Banjar", style: TextStyle(
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w700,
-              color: HexColor("#025393")
-          )),
-          actions: <Widget>[
-            isSearchBar ? IconButton(
-              icon: Icon(Icons.close),
-              color: HexColor("#025393"),
-              onPressed: (){
-                setState(() {
-                  isSearch = false;
-                  isSearchBar = false;
-                  controllerSearch.text = "";
-                });
-                getListBanjar();
-              },
-            ) : IconButton(
-              icon: Icon(Icons.search),
-              color: HexColor("#025393"),
-              onPressed: (){
-                setState(() {
-                  isSearchBar = true;
-                });
-              },
-            )
-          ],
-        ),
-        body: Loading ? Center(
-          child: Lottie.asset('assets/loading-circle.json')
-        ) : availableData ? RefreshIndicator(
-          onRefresh: isSearch ? refreshListSearch : getListBanjar,
-          child: ListView.builder(
-            itemCount: idBanjar.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: (){
-                  setState(() {
-                    pilihDataBanjar.selectedIdBanjar = idBanjar[index];
-                  });
-                  Navigator.of(context, rootNavigator: true).pop(namaBanjar[index]);
-                },
-                child: Container(
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        child: Image.asset(
-                          'images/location.png',
-                          height: 40,
-                          width: 40,
-                        )
-                      ),
-                      Container(
-                        child: Text("${namaBanjar[index]}", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: HexColor("#025393")
-                        )),
-                        margin: EdgeInsets.only(left: 15)
-                      )
-                    ]
-                  ),
-                  margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  height: 70,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0,3)
-                        )
-                      ]
-                  ),
-                )
-              );
-            }
-          )
-        ) : Container(
-          child: Center(
+              margin: EdgeInsets.only(top: 20, bottom: 10, left: 20, right: 20),
+            ),
+            Container(
               child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        child: Icon(
-                          CupertinoIcons.location_solid,
-                          size: 50,
-                          color: Colors.black26,
-                        )
+                children: [
+                  if(isSearch == true) Container(
+                    child: FlatButton(
+                      onPressed: (){
+                        setState(() {
+                          Loading = true;
+                          controllerSearch.text = "";
+                          isSearch = false;
+                          getListBanjar();
+                        });
+                      },
+                      child: Text("Hapus Pencarian", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white
+                      )),
+                      color: HexColor("025393"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        side: BorderSide(color: HexColor("025393"), width: 2)
+                      ),
                     ),
-                    Container(
-                      child: Text("Tidak ada Data", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black26
-                      ), textAlign: TextAlign.center),
-                      margin: EdgeInsets.only(top: 10),
-                      padding: EdgeInsets.symmetric(horizontal: 30),
-                    )
-                  ]
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                  )
+                ],
               )
-          ),
-          alignment: Alignment(0.0, 0.0),
-        ),
+            ),
+            Expanded(
+              child: availableData ? RefreshIndicator(
+                  onRefresh: isSearch ? refreshListSearch : getListBanjar,
+                  child: ListView.builder(
+                      itemCount: idBanjar.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                pilihDataBanjar.selectedIdBanjar = idBanjar[index];
+                              });
+                              Navigator.of(context, rootNavigator: true).pop(namaBanjar[index]);
+                            },
+                            child: Container(
+                              child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                        child: Image.asset(
+                                          'images/location.png',
+                                          height: 40,
+                                          width: 40,
+                                        )
+                                    ),
+                                    Container(
+                                        child: Text("${namaBanjar[index]}", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                            color: HexColor("#025393")
+                                        )),
+                                        margin: EdgeInsets.only(left: 15)
+                                    )
+                                  ]
+                              ),
+                              margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              height: 70,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: Offset(0,3)
+                                    )
+                                  ]
+                              ),
+                            )
+                        );
+                      }
+                  )
+              ) : Container(
+                child: Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              child: Icon(
+                                CupertinoIcons.location_solid,
+                                size: 50,
+                                color: Colors.black26,
+                              )
+                          ),
+                          Container(
+                            child: Text("Tidak ada Data", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black26
+                            ), textAlign: TextAlign.center),
+                            margin: EdgeInsets.only(top: 10),
+                            padding: EdgeInsets.symmetric(horizontal: 30),
+                          )
+                        ]
+                    )
+                ),
+                alignment: Alignment(0.0, 0.0),
+              ),
+            )
+          ]
+        )
       )
     );
   }

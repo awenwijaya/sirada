@@ -50,6 +50,128 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
   bool isSearchTidakAktif = false;
   var apiURLSearchTidakAktif = "https://siradaskripsi.my.id/api/admin/staff/prajuru_desa_adat/tidak_aktif/${loginPage.desaId}/search";
 
+  //filter
+  var apiURLShowKomponenFilter = "https://siradaskripsi.my.id/api/data/admin/prajuru_desa_adat/filter/show_jabatan";
+  var apiURLShowFilterResult = "https://siradaskripsi.my.id/api/data/admin/prajuru_desa_adat/filter/show_result";
+  List jabatanFilterAktif = List();
+  List jabatanFilterTidakAktif = List();
+  var selectedJabatanFilterAktif;
+  var selectedJabatanFilterTidakAktif;
+  bool isFilterAktif = false;
+  bool isFilterTidakAktif = false;
+  bool LoadingFilterAktif = true;
+  bool LoadingFilterTidakAktif = true;
+
+  Future getFilterKomponenAktif() async {
+    var body = jsonEncode({
+      "status" : "aktif",
+      "desa_adat_id" : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLShowKomponenFilter),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          jabatanFilterAktif = jsonData;
+          LoadingFilterAktif = false;
+        });
+      }
+    });
+  }
+
+  Future showFilterResultAktif() async {
+    setState(() {
+      LoadingAktif = true;
+      isFilterAktif = true;
+    });
+    var body = jsonEncode({
+      "filter_jabatan" : selectedJabatanFilterAktif,
+      "desa_adat_id" : loginPage.desaId,
+      "status" : "aktif"
+    });
+    http.post(Uri.parse(apiURLShowFilterResult),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) async {
+      var statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var data = json.decode(response.body);
+        this.prajuruDesaAdatIDAktif = [];
+        this.jabatanAktif = [];
+        this.namaPrajuruAktif = [];
+        this.pendudukIdAktif = [];
+        setState(() {
+          LoadingAktif = false;
+          availableDataAktif = true;
+          for(var i = 0; i < data.length; i++) {
+            this.prajuruDesaAdatIDAktif.add(data[i]['prajuru_desa_adat_id']);
+            this.jabatanAktif.add(data[i]['jabatan']);
+            this.namaPrajuruAktif.add(data[i]['nama']);
+            this.pendudukIdAktif.add(data[i]['penduduk_id']);
+          }
+        });
+      }
+    });
+  }
+
+  Future showFilterResultTidakAktif() async {
+    setState(() {
+      LoadingTidakAktif = true;
+      isFilterTidakAktif = true;
+    });
+    var body = jsonEncode({
+      "filter_jabatan" : selectedJabatanFilterTidakAktif,
+      "desa_adat_id" : loginPage.desaId,
+      "status" : "tidak aktif"
+    });
+    http.post(Uri.parse(apiURLShowFilterResult),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      var statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var data = json.decode(response.body);
+        this.prajuruDesaAdatIDTidakAktif = [];
+        this.jabatanTidakAktif = [];
+        this.namaPrajuruTidakAktif = [];
+        this.pendudukIdTidakAktif = [];
+        setState(() {
+          LoadingTidakAktif = false;
+          availableDataTidakAktif = true;
+          for(var i = 0; i < data.length; i++) {
+            this.prajuruDesaAdatIDTidakAktif.add(data[i]['prajuru_desa_adat_id']);
+            this.jabatanTidakAktif.add(data[i]['jabatan']);
+            this.namaPrajuruTidakAktif.add(data[i]['nama']);
+            this.pendudukIdTidakAktif.add(data[i]['penduduk_id']);
+          }
+        });
+      }
+    });
+  }
+
+  Future getFilterKomponenTidakAktif() async {
+    var body = jsonEncode({
+      "status" : "tidak aktif",
+      "desa_adat_id" : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLShowKomponenFilter),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          jabatanFilterTidakAktif = jsonData;
+          LoadingFilterTidakAktif = false;
+        });
+      }
+    });
+  }
+
   Future refreshListPrajuruDesaAdatAktif() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruDesaAdatAktif);
     final response = await http.get(uri);
@@ -188,6 +310,8 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
     ftoast.init(context);
     refreshListPrajuruDesaAdatAktif();
     refreshListPrajuruDesaAdatTidakAktif();
+    getFilterKomponenTidakAktif();
+    getFilterKomponenAktif();
   }
 
   @override
@@ -237,224 +361,330 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
           ),
             body: TabBarView(
               children: <Widget>[
-                Expanded(
-                    child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                                child: TextField(
-                                  controller: controllerSearchAktif,
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(50.0),
-                                          borderSide: BorderSide(color: HexColor("#025393"))
-                                      ),
-                                      hintText: "Cari nama atau jabatan Prajuru Desa Adat...",
-                                      suffixIcon: isSearch ? IconButton(
-                                        icon: Icon(Icons.close),
-                                        onPressed: (){
-                                          setState(() {
-                                            LoadingAktif = true;
-                                            controllerSearchAktif.text = "";
-                                            isSearch = false;
-                                            refreshListPrajuruDesaAdatAktif();
-                                          });
-                                        },
-                                      ) : IconButton(
-                                        icon: Icon(Icons.search),
-                                        onPressed: (){
-                                          if(controllerSearchAktif.text != "") {
-                                            setState(() {
-                                              isSearch = true;
-                                            });
-                                            refreshListSearchPrajuruDesaAdatAktif();
-                                          }
-                                        },
-                                      )
+                Container(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                            child: TextField(
+                              controller: controllerSearchAktif,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      borderSide: BorderSide(color: HexColor("#025393"))
                                   ),
-                                  style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14
+                                  hintText: "Cari Prajuru Desa Adat...",
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.search),
+                                    onPressed: (){
+                                      if(controllerSearchAktif.text != "") {
+                                        setState(() {
+                                          isSearch = true;
+                                        });
+                                        refreshListSearchPrajuruDesaAdatAktif();
+                                      }else {
+                                        setState(() {
+                                          LoadingAktif = true;
+                                          controllerSearchAktif.text = "";
+                                          isSearch = false;
+                                          refreshListPrajuruDesaAdatAktif();
+                                        });
+                                      }
+                                    },
+                                  )
+                              ),
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              ),
+                            ),
+                            margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20)
+                        ),
+                        Container(
+                            child: LoadingFilterAktif ? ListTileShimmer() : Container(
+                              child: Flexible(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(width: 1, color: Colors.black38)
+                                  ),
+                                  child: DropdownButton(
+                                    isExpanded: true,
+                                    hint: Center(
+                                        child: Text("Semua Jabatan", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
+                                        ))
+                                    ),
+                                    value: selectedJabatanFilterAktif,
+                                    underline: Container(),
+                                    items: jabatanFilterAktif.map((jabatan) {
+                                      return DropdownMenuItem(
+                                        value: jabatan['jabatan_prajuru_desa_id'],
+                                        child: Text(jabatan['jabatan'], style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
+                                        )),
+                                      );
+                                    }).toList(),
+                                    selectedItemBuilder: (BuildContext context) => jabatanFilterAktif.map((jabatan) => Center(
+                                      child: Text("${jabatan['jabatan']}", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      )),
+                                    )).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedJabatanFilterAktif = value;
+                                      });
+                                      showFilterResultAktif();
+                                    },
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                ),
+                              ),
+                              margin: EdgeInsets.only(left: 20, right: 20, bottom: 10)
+                            )
+                        ),
+                        Container(
+                          child: Column(
+                            children: [
+                              if(isSearch == true) Container(
+                                child: FlatButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      LoadingAktif = true;
+                                      controllerSearchAktif.text = "";
+                                      isSearch = false;
+                                      refreshListPrajuruDesaAdatAktif();
+                                    });
+                                  },
+                                  child: Text("Reset Pencarian", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white
+                                  )),
+                                  color: HexColor("025393"),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                    side: BorderSide(color: HexColor("#025393"), width: 2)
                                   ),
                                 ),
-                                margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20)
-                            ),
-                            Container(
-                                child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? Expanded(
-                                    flex: 1,
-                                    child: RefreshIndicator(
-                                        onRefresh: isSearch ? refreshListSearchPrajuruDesaAdatAktif : refreshListPrajuruDesaAdatAktif,
-                                        child: ListView.builder(
-                                            itemCount: prajuruDesaAdatIDAktif.length,
-                                            shrinkWrap: true,
-                                            itemBuilder: (context, index) {
-                                              return GestureDetector(
-                                                  onTap: (){
-                                                    setState(() {
-                                                      detailPrajuruDesaAdatAdmin.prajuruDesaAdatId = prajuruDesaAdatIDAktif[index];
-                                                    });
-                                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => detailPrajuruDesaAdatAdmin()));
-                                                  },
-                                                  child: Container(
-                                                    child: Stack(
-                                                        children: <Widget>[
-                                                          Container(
-                                                              child: Row(
-                                                                  children: <Widget>[
-                                                                    Container(
-                                                                        child: Image.asset(
-                                                                            'images/person.png',
-                                                                            height: 40,
-                                                                            width: 40
-                                                                        )
-                                                                    ),
-                                                                    Container(
-                                                                        child: Column(
-                                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                            children: <Widget>[
-                                                                              Container(
-                                                                                  child: SizedBox(
-                                                                                      width: MediaQuery.of(context).size.width * 0.55,
-                                                                                      child: Text(
-                                                                                          "${namaPrajuruAktif[index]}",
-                                                                                          style: TextStyle(
-                                                                                              fontFamily: "Poppins",
-                                                                                              fontSize: 16,
-                                                                                              fontWeight: FontWeight.w700,
-                                                                                              color: HexColor("#025393")
-                                                                                          ),
-                                                                                          maxLines: 1,
-                                                                                          overflow: TextOverflow.ellipsis,
-                                                                                          softWrap: false
-                                                                                      )
-                                                                                  )
-                                                                              ),
-                                                                              Container(
-                                                                                  child: Text("${jabatanAktif[index]}", style: TextStyle(
-                                                                                      fontFamily: "Poppins",
-                                                                                      fontSize: 14
-                                                                                  ))
-                                                                              )
-                                                                            ]
-                                                                        ),
-                                                                        margin: EdgeInsets.only(left: 15)
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Column(
+                            children: <Widget>[
+                              if(isFilterAktif == true) Container(
+                                child: FlatButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      selectedJabatanFilterAktif = null;
+                                      controllerSearchAktif.text = "";
+                                    });
+                                    if(isFilterAktif == true) {
+                                      setState(() {
+                                        LoadingAktif = true;
+                                        isFilterAktif = false;
+                                      });
+                                      refreshListPrajuruDesaAdatAktif();
+                                    }
+                                  },
+                                  child: Text("Hapus Filter", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white
+                                  )),
+                                  color: HexColor("025393"),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                      side: BorderSide(color: HexColor("025393"), width: 2)
+                                  ),
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                            child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? Expanded(
+                                flex: 1,
+                                child: RefreshIndicator(
+                                    onRefresh: isSearch ? refreshListSearchPrajuruDesaAdatAktif : isFilterAktif ? showFilterResultAktif : refreshListPrajuruDesaAdatAktif,
+                                    child: ListView.builder(
+                                        itemCount: prajuruDesaAdatIDAktif.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          return GestureDetector(
+                                              onTap: (){
+                                                setState(() {
+                                                  detailPrajuruDesaAdatAdmin.prajuruDesaAdatId = prajuruDesaAdatIDAktif[index];
+                                                });
+                                                Navigator.push(context, CupertinoPageRoute(builder: (context) => detailPrajuruDesaAdatAdmin()));
+                                              },
+                                              child: Container(
+                                                child: Stack(
+                                                    children: <Widget>[
+                                                      Container(
+                                                          child: Row(
+                                                              children: <Widget>[
+                                                                Container(
+                                                                    child: Image.asset(
+                                                                        'images/person.png',
+                                                                        height: 40,
+                                                                        width: 40
                                                                     )
-                                                                  ]
-                                                              )
-                                                          ),
-                                                          Container(
-                                                              alignment: Alignment.centerRight,
-                                                              child: PopupMenuButton<int>(
-                                                                  onSelected: (item) {
-                                                                    setState(() {
-                                                                      selectedIdPrajuruDesaAdat = prajuruDesaAdatIDAktif[index];
-                                                                      selectedIdPenduduk = pendudukIdAktif[index];
-                                                                    });
-                                                                    onSelected(context, item);
-                                                                  },
-                                                                  itemBuilder: (context) => [
-                                                                    PopupMenuItem<int>(
-                                                                        value: 0,
-                                                                        child: Row(
-                                                                            children: <Widget>[
-                                                                              Container(
-                                                                                  child: Icon(
-                                                                                      Icons.edit,
-                                                                                      color: HexColor("#025393")
+                                                                ),
+                                                                Container(
+                                                                    child: Column(
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: <Widget>[
+                                                                          Container(
+                                                                              child: SizedBox(
+                                                                                  width: MediaQuery.of(context).size.width * 0.55,
+                                                                                  child: Text(
+                                                                                      "${namaPrajuruAktif[index]}",
+                                                                                      style: TextStyle(
+                                                                                          fontFamily: "Poppins",
+                                                                                          fontSize: 16,
+                                                                                          fontWeight: FontWeight.w700,
+                                                                                          color: HexColor("#025393")
+                                                                                      ),
+                                                                                      maxLines: 1,
+                                                                                      overflow: TextOverflow.ellipsis,
+                                                                                      softWrap: false
                                                                                   )
-                                                                              ),
-                                                                              Container(
-                                                                                  child: Text("Edit", style: TextStyle(
-                                                                                      fontFamily: "Poppins",
-                                                                                      fontSize: 14
-                                                                                  )),
-                                                                                  margin: EdgeInsets.only(left: 10)
                                                                               )
-                                                                            ]
-                                                                        )
+                                                                          ),
+                                                                          Container(
+                                                                              child: Text("${jabatanAktif[index]}", style: TextStyle(
+                                                                                  fontFamily: "Poppins",
+                                                                                  fontSize: 14
+                                                                              ))
+                                                                          )
+                                                                        ]
                                                                     ),
-                                                                    PopupMenuItem<int>(
-                                                                        value: 2,
-                                                                        child: Row(
-                                                                            children: <Widget>[
-                                                                              Container(
-                                                                                  child: Icon(
-                                                                                      Icons.close,
-                                                                                      color: HexColor("#025393")
-                                                                                  )
-                                                                              ),
-                                                                              Container(
-                                                                                  child: Text("Atur Menjadi Tidak Aktif", style: TextStyle(
-                                                                                      fontFamily: "Poppins",
-                                                                                      fontSize: 14
-                                                                                  )),
-                                                                                  margin: EdgeInsets.only(left: 10)
+                                                                    margin: EdgeInsets.only(left: 15)
+                                                                )
+                                                              ]
+                                                          )
+                                                      ),
+                                                      Container(
+                                                          alignment: Alignment.centerRight,
+                                                          child: PopupMenuButton<int>(
+                                                              onSelected: (item) {
+                                                                setState(() {
+                                                                  selectedIdPrajuruDesaAdat = prajuruDesaAdatIDAktif[index];
+                                                                  selectedIdPenduduk = pendudukIdAktif[index];
+                                                                });
+                                                                onSelected(context, item);
+                                                              },
+                                                              itemBuilder: (context) => [
+                                                                PopupMenuItem<int>(
+                                                                    value: 0,
+                                                                    child: Row(
+                                                                        children: <Widget>[
+                                                                          Container(
+                                                                              child: Icon(
+                                                                                  Icons.edit,
+                                                                                  color: HexColor("#025393")
                                                                               )
-                                                                            ]
-                                                                        )
+                                                                          ),
+                                                                          Container(
+                                                                              child: Text("Edit", style: TextStyle(
+                                                                                  fontFamily: "Poppins",
+                                                                                  fontSize: 14
+                                                                              )),
+                                                                              margin: EdgeInsets.only(left: 10)
+                                                                          )
+                                                                        ]
                                                                     )
-                                                                  ]
-                                                              )
+                                                                ),
+                                                                PopupMenuItem<int>(
+                                                                    value: 2,
+                                                                    child: Row(
+                                                                        children: <Widget>[
+                                                                          Container(
+                                                                              child: Icon(
+                                                                                  Icons.close,
+                                                                                  color: HexColor("#025393")
+                                                                              )
+                                                                          ),
+                                                                          Container(
+                                                                              child: Text("Atur Menjadi Tidak Aktif", style: TextStyle(
+                                                                                  fontFamily: "Poppins",
+                                                                                  fontSize: 14
+                                                                              )),
+                                                                              margin: EdgeInsets.only(left: 10)
+                                                                          )
+                                                                        ]
+                                                                    )
+                                                                )
+                                                              ]
                                                           )
-                                                        ]
-                                                    ),
-                                                    margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                                                    padding: EdgeInsets.symmetric(horizontal: 20),
-                                                    height: 70,
-                                                    decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                        color: Colors.white,
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                              color: Colors.grey.withOpacity(0.2),
-                                                              spreadRadius: 5,
-                                                              blurRadius: 7,
-                                                              offset: Offset(0,3)
-                                                          )
-                                                        ]
-                                                    ),
-                                                  )
-                                              );
-                                            }
-                                        )
-                                    )
-                                ) : Container(
-                                    child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                              child: Icon(
-                                                CupertinoIcons.person_alt,
-                                                size: 50,
-                                                color: Colors.black26,
+                                                      )
+                                                    ]
+                                                ),
+                                                margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                                height: 70,
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                    color: Colors.white,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: Colors.grey.withOpacity(0.2),
+                                                          spreadRadius: 5,
+                                                          blurRadius: 7,
+                                                          offset: Offset(0,3)
+                                                      )
+                                                    ]
+                                                ),
                                               )
-                                          ),
-                                          Container(
-                                            child: Text("Tidak ada Data Prajuru Desa Adat", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black26
-                                            ), textAlign: TextAlign.center),
-                                            margin: EdgeInsets.only(top: 10),
-                                            padding: EdgeInsets.symmetric(horizontal: 30),
-                                          ),
-                                          Container(
-                                            child: Text("Tidak ada data prajuru desa adat. Anda bisa menambahkannya dengan cara menekan tombol Tambah Data Prajuru dan isi data pada form yang telah disediakan", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 14,
-                                                color: Colors.black26
-                                            ), textAlign: TextAlign.center),
-                                            padding: EdgeInsets.symmetric(horizontal: 30),
-                                            margin: EdgeInsets.only(top: 10),
-                                          )
-                                        ]
+                                          );
+                                        }
                                     )
                                 )
+                            ) : Container(
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Container(
+                                          child: Icon(
+                                            CupertinoIcons.person_alt,
+                                            size: 50,
+                                            color: Colors.black26,
+                                          )
+                                      ),
+                                      Container(
+                                        child: Text("Tidak ada Data Prajuru Desa Adat", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black26
+                                        ), textAlign: TextAlign.center),
+                                        margin: EdgeInsets.only(top: 10),
+                                        padding: EdgeInsets.symmetric(horizontal: 30),
+                                      ),
+                                      Container(
+                                        child: Text("Tidak ada data prajuru desa adat. Anda bisa menambahkannya dengan cara menekan tombol Tambah Data Prajuru dan isi data pada form yang telah disediakan", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            color: Colors.black26
+                                        ), textAlign: TextAlign.center),
+                                        padding: EdgeInsets.symmetric(horizontal: 30),
+                                        margin: EdgeInsets.only(top: 10),
+                                      )
+                                    ]
+                                )
                             )
-                          ],
                         )
+                      ],
                     )
                 ),
                 Expanded(
@@ -468,18 +698,8 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                       borderRadius: BorderRadius.circular(50.0),
                                       borderSide: BorderSide(color: HexColor("#025393"))
                                   ),
-                                  hintText: "Cari nama atau jabatan Prajuru Desa Adat...",
-                                  suffixIcon: isSearchTidakAktif ? IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: (){
-                                      setState(() {
-                                        LoadingTidakAktif = true;
-                                        controllerSearchTidakAktif.text = "";
-                                        isSearchTidakAktif = false;
-                                        refreshListPrajuruDesaAdatTidakAktif();
-                                      });
-                                    },
-                                  ) : IconButton(
+                                  hintText: "Cari Prajuru Desa Adat...",
+                                  suffixIcon: IconButton(
                                       icon: Icon(Icons.search),
                                       onPressed: (){
                                         if(controllerSearchTidakAktif.text != "") {
@@ -487,6 +707,13 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                             isSearchTidakAktif = true;
                                           });
                                           refreshListSearchPrajuruDesaAdatTidakAktif();
+                                        }else {
+                                          setState(() {
+                                            LoadingTidakAktif = true;
+                                            controllerSearchTidakAktif.text = "";
+                                            isSearchTidakAktif = false;
+                                            refreshListPrajuruDesaAdatTidakAktif();
+                                          });
                                         }
                                       }
                                   )
@@ -497,6 +724,113 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                               ),
                             ),
                             margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
+                          ),
+                          Container(
+                              child: LoadingFilterTidakAktif ? ListTileShimmer() : Container(
+                                  child: Flexible(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(30),
+                                          border: Border.all(width: 1, color: Colors.black38)
+                                      ),
+                                      child: DropdownButton(
+                                        isExpanded: true,
+                                        hint: Center(
+                                            child: Text("Semua Jabatan", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14
+                                            ))
+                                        ),
+                                        value: selectedJabatanFilterTidakAktif,
+                                        underline: Container(),
+                                        items: jabatanFilterTidakAktif.map((jabatan) {
+                                          return DropdownMenuItem(
+                                            value: jabatan['jabatan_prajuru_desa_id'],
+                                            child: Text(jabatan['jabatan'], style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14
+                                            )),
+                                          );
+                                        }).toList(),
+                                        selectedItemBuilder: (BuildContext context) => jabatanFilterTidakAktif.map((jabatan) => Center(
+                                          child: Text("${jabatan['jabatan']}", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          )),
+                                        )).toList(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedJabatanFilterTidakAktif = value;
+                                          });
+                                          showFilterResultTidakAktif();
+                                        },
+                                      ),
+                                      margin: EdgeInsets.symmetric(horizontal: 5),
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.only(left: 20, right: 20, bottom: 10)
+                              )
+                          ),
+                          Container(
+                            child: Column(
+                              children: [
+                                if(isSearchTidakAktif == true) Container(
+                                  child: FlatButton(
+                                    onPressed: (){
+                                      setState(() {
+                                        LoadingTidakAktif = true;
+                                        controllerSearchTidakAktif.text = "";
+                                        isSearchTidakAktif = false;
+                                        refreshListPrajuruDesaAdatTidakAktif();
+                                      });
+                                    },
+                                    child: Text("Hapus Pencarian", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white
+                                    )),
+                                    color: HexColor("025393"),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        side: BorderSide(color: HexColor("#025393"), width: 2)
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                if(selectedJabatanFilterTidakAktif != null) Container(
+                                  child: FlatButton(
+                                    onPressed: (){
+                                      setState(() {
+                                        selectedJabatanFilterTidakAktif = null;
+                                        controllerSearchTidakAktif.text = "";
+                                        LoadingTidakAktif = true;
+                                        isFilterTidakAktif = false;
+                                      });
+                                      refreshListPrajuruDesaAdatTidakAktif();
+                                    },
+                                    child: Text("Hapus Filter", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white
+                                    )),
+                                    color: HexColor("025393"),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        side: BorderSide(color: HexColor("025393"), width: 2)
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                ),
+                              ],
+                            ),
                           ),
                           Container(
                               child: LoadingTidakAktif ? ListTileShimmer() : availableDataTidakAktif ? Expanded(
@@ -614,6 +948,9 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
             onPressed: (){
               Navigator.push(context, CupertinoPageRoute(builder: (context) => tambahPrajuruDesaAdatAdmin())).then((value) {
                 refreshListPrajuruDesaAdatAktif();
+                getFilterKomponenAktif();
+                getFilterKomponenTidakAktif();
+                refreshListPrajuruDesaAdatTidakAktif();
               });
             },
             child: Icon(Icons.add),
