@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratMasuk/DetailSuratMasuk.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratMasuk/EditSuratMasuk.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratMasuk/TambahSuratMasuk.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_shimmer/flutter_shimmer.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class suratMasukAdmin extends StatefulWidget {
   const suratMasukAdmin({Key key}) : super(key: key);
@@ -34,14 +36,69 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
   var apiURLSearch = "https://siradaskripsi.my.id/api/data/admin/surat/masuk/${loginPage.desaId}/search";
 
   //filter
+  var apiURLShowFilterKodeSurat = "https://siradaskripsi.my.id/api/admin/surat/masuk/filter/kode_surat";
+  var apiURLShowFilterPrajuru = "https://siradaskripsi.my.id/api/admin/surat/masuk/filter/prajuru";
+  var apiURLShowFilterPengirimSurat = "https://siradaskripsi.my.id/api/admin/surat/masuk/filter/pengirim";
   List kodeSuratFilter = List();
-  List tanggalSuratFilter = List();
   List prajuruListFilter = List();
   List pengirimListFilter = List();
   var selectedKodeSuratFilter;
-  var selectedTanggalSuratFilter;
   var selectedPrajuruListFilter;
   var selectedPengirimListFilter;
+  String selectedRangeAwal;
+  String selectedRangeAwalValue;
+  String selectedRangeAkhir;
+  String selectedRangeAkhirValue;
+  DateTime rangeAwal;
+  DateTime rangeAkhir;
+  bool LoadingFilter = true;
+  final controllerFilterTanggalMasuk = TextEditingController();
+  final DateRangePickerController controllerFilterTanggal = DateRangePickerController();
+
+  Future getFilterKomponen() async{
+    var body = jsonEncode({
+      'desa_adat_id' : loginPage.desaId
+    });
+    http.post(Uri.parse(apiURLShowFilterKodeSurat),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          kodeSuratFilter = jsonData;
+        });
+      }
+    });
+    http.post(Uri.parse(apiURLShowFilterPrajuru),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          prajuruListFilter = jsonData;
+        });
+      }
+    });
+    http.post(Uri.parse(apiURLShowFilterPengirimSurat),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          pengirimListFilter = jsonData;
+        });
+      }
+    });
+    setState(() {
+      LoadingFilter = false;
+    });
+  }
 
   Future refreshListSuratMasuk() async {
     var response = await http.get(Uri.parse(apiURLShowListSuratMasuk));
@@ -108,6 +165,7 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
     // TODO: implement initState
     super.initState();
     refreshListSuratMasuk();
+    getFilterKomponen();
     ftoast = FToast();
     ftoast.init(this.context);
   }
@@ -172,12 +230,16 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
               margin: EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
             ),
             Container(
-              child: SingleChildScrollView(
+              child: LoadingFilter ? ListTileShimmer() : SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: <Widget>[
                     Container(
                       width: 150,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(width: 1, color: Colors.black38)
+                      ),
                       child: DropdownButton(
                         isExpanded: true,
                         hint: Center(
@@ -190,15 +252,18 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                         underline: Container(),
                         items: kodeSuratFilter.map((e) {
                           return DropdownMenuItem(
-                            value: e,
-                            child: Text(e, style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14
-                            )),
+                            value: e['master_surat_id'],
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: Text("${e['kode_nomor_surat']} - ${e['keterangan']}", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              ), maxLines: 2, overflow: TextOverflow.ellipsis, softWrap: false),
+                            )
                           );
                         }).toList(),
                         selectedItemBuilder: (BuildContext context) => kodeSuratFilter.map((e) => Center(
-                          child: Text(e, style: TextStyle(
+                          child: Text(e['kode_nomor_surat'], style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14
                           )),
@@ -213,44 +278,10 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                     ),
                     Container(
                       width: 150,
-                      child: DropdownButton(
-                        isExpanded: true,
-                        hint: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: Center(
-                            child: Text("Semua Tanggal Masuk", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            ), maxLines: 1, softWrap: false, overflow: TextOverflow.ellipsis),
-                          ),
-                        ),
-                        value: selectedKodeSuratFilter,
-                        underline: Container(),
-                        items: kodeSuratFilter.map((e) {
-                          return DropdownMenuItem(
-                            value: e,
-                            child: Text(e, style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            )),
-                          );
-                        }).toList(),
-                        selectedItemBuilder: (BuildContext context) => kodeSuratFilter.map((e) => Center(
-                          child: Text(e, style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14
-                          )),
-                        )).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedKodeSuratFilter = value;
-                          });
-                        },
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(width: 1, color: Colors.black38)
                       ),
-                      margin: EdgeInsets.symmetric(horizontal: 5),
-                    ),
-                    Container(
-                      width: 150,
                       child: DropdownButton(
                         isExpanded: true,
                         hint: Center(
@@ -259,26 +290,32 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                               fontSize: 14
                           )),
                         ),
-                        value: selectedKodeSuratFilter,
+                        value: selectedPrajuruListFilter,
                         underline: Container(),
-                        items: kodeSuratFilter.map((e) {
+                        items: prajuruListFilter.map((e) {
                           return DropdownMenuItem(
-                            value: e,
-                            child: Text(e, style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            )),
+                            value: e['prajuru_desa_adat_id'],
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: Text(e['nama'], style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                            )
                           );
                         }).toList(),
-                        selectedItemBuilder: (BuildContext context) => kodeSuratFilter.map((e) => Center(
-                          child: Text(e, style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14
-                          )),
+                        selectedItemBuilder: (BuildContext context) => prajuruListFilter.map((e) => Center(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Text(e['nama'], style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                          )
                         )).toList(),
                         onChanged: (value) {
                           setState(() {
-                            selectedKodeSuratFilter = value;
+                            selectedPrajuruListFilter = value;
                           });
                         },
                       ),
@@ -286,6 +323,10 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                     ),
                     Container(
                       width: 150,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(width: 1, color: Colors.black38)
+                      ),
                       child: DropdownButton(
                         isExpanded: true,
                         hint: Center(
@@ -294,22 +335,28 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                               fontSize: 14
                           )),
                         ),
-                        value: selectedKodeSuratFilter,
+                        value: selectedPengirimListFilter,
                         underline: Container(),
-                        items: kodeSuratFilter.map((e) {
+                        items: pengirimListFilter.map((e) {
                           return DropdownMenuItem(
-                            value: e,
-                            child: Text(e, style: TextStyle(
+                            value: e['asal_surat'],
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: Text(e['asal_surat'], style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                            ),
+                          );
+                        }).toList(),
+                        selectedItemBuilder: (BuildContext context) => pengirimListFilter.map((e) => Center(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Text(e['asal_surat'], style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14
                             )),
-                          );
-                        }).toList(),
-                        selectedItemBuilder: (BuildContext context) => kodeSuratFilter.map((e) => Center(
-                          child: Text(e, style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14
-                          )),
+                          ),
                         )).toList(),
                         onChanged: (value) {
                           setState(() {
@@ -322,6 +369,74 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                   ],
                 ),
               ),
+              margin: EdgeInsets.only(left: 20, right: 20),
+            ),
+            Container(
+              child: GestureDetector(
+                onTap: (){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Pilih Tanggal", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: HexColor("025393")
+                        )),
+                        content: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Container(
+                                height: 250,
+                                width: 250,
+                                child: SfDateRangePicker(
+                                  controller: controllerFilterTanggal,
+                                  selectionMode: DateRangePickerSelectionMode.range,
+                                  onSelectionChanged: selectionChanged,
+                                  allowViewNavigation: true,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text("OK", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w700,
+                              color: HexColor("025393")
+                            )),
+                            onPressed: (){
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ]
+                      );
+                    }
+                  );
+                },
+                child: TextField(
+                  enabled: false,
+                  controller: controllerFilterTanggalMasuk,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide(color: HexColor("#025393"))
+                    ),
+                    hintText: "Semua Tanggal Masuk",
+                  ),
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontSize: 14
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+                margin: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
             ),
             Container(
               child: LoadingSuratMasuk ? ListTileShimmer() : availableSuratMasuk ? Expanded(
@@ -608,5 +723,15 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
         );
         break;
     }
+  }
+
+  void selectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      selectedRangeAwal = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
+      selectedRangeAwalValue = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
+      selectedRangeAkhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedRangeAkhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      controllerFilterTanggalMasuk.text = selectedRangeAkhirValue == null ? "$selectedRangeAwal" : "$selectedRangeAwal - $selectedRangeAkhir";
+    });
   }
 }
