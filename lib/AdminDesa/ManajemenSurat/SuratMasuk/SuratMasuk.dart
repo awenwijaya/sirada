@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -39,6 +38,7 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
   var apiURLShowFilterKodeSurat = "https://siradaskripsi.my.id/api/admin/surat/masuk/filter/kode_surat";
   var apiURLShowFilterPrajuru = "https://siradaskripsi.my.id/api/admin/surat/masuk/filter/prajuru";
   var apiURLShowFilterPengirimSurat = "https://siradaskripsi.my.id/api/admin/surat/masuk/filter/pengirim";
+  var apiURLShowFilterResult = "https://siradaskripsi.my.id/api/admin/surat/masuk/filter/result";
   List kodeSuratFilter = List();
   List prajuruListFilter = List();
   List pengirimListFilter = List();
@@ -52,8 +52,46 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
   DateTime rangeAwal;
   DateTime rangeAkhir;
   bool LoadingFilter = true;
+  bool isFilter = false;
   final controllerFilterTanggalMasuk = TextEditingController();
   final DateRangePickerController controllerFilterTanggal = DateRangePickerController();
+
+  Future showFilterResult() async {
+    setState(() {
+      LoadingSuratMasuk = true;
+      isFilter = true;
+      isSearch = false;
+      controllerSearch.text = "";
+    });
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId,
+      "kode_surat_filter" : selectedKodeSuratFilter == null ? null : selectedKodeSuratFilter,
+      "pengirim_filter" : selectedPengirimListFilter == null ? null : selectedPengirimListFilter,
+      "tanggal_awal" : selectedRangeAwalValue == null ? null : selectedRangeAwalValue,
+      "tanggal_akhir" : selectedRangeAkhirValue == null ? selectedRangeAwalValue == null ? null : selectedRangeAwalValue : selectedRangeAkhirValue
+    });
+    http.post(Uri.parse(apiURLShowFilterResult),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) async {
+      var statusCode = response.statusCode;
+      if(statusCode == 200) {
+        var data = json.decode(response.body);
+        this.idSuratMasuk = [];
+        this.perihalSuratMasuk = [];
+        this.asalSuratMasuk = [];
+        setState(() {
+          LoadingSuratMasuk = false;
+          availableSuratMasuk = true;
+          for(var i = 0; i < data.length; i++) {
+            this.idSuratMasuk.add(data[i]['surat_masuk_id']);
+            this.perihalSuratMasuk.add(data[i]['perihal']);
+            this.asalSuratMasuk.add(data[i]['asal_surat']);
+          }
+        });
+      }
+    });
+  }
 
   Future getFilterKomponen() async{
     var body = jsonEncode({
@@ -200,21 +238,20 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                         borderSide: BorderSide(color: HexColor("#025393"))
                     ),
                     hintText: "Cari surat masuk...",
-                    suffixIcon: isSearch ? IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: (){
-                        setState(() {
-                          controllerSearch.text = "";
-                          isSearch = false;
-                          LoadingSuratMasuk = true;
-                          refreshListSuratMasuk();
-                        });
-                      },
-                    ) : IconButton(
+                    suffixIcon: IconButton(
                       icon: Icon(Icons.search),
                       onPressed: (){
                         if(controllerSearch.text != "") {
                           setState(() {
+                            selectedRangeAkhirValue = null;
+                            selectedRangeAkhir = null;
+                            selectedRangeAwalValue = null;
+                            selectedRangeAwal = null;
+                            selectedPengirimListFilter = null;
+                            selectedPrajuruListFilter = null;
+                            selectedKodeSuratFilter = null;
+                            LoadingSuratMasuk = true;
+                            isFilter = false;
                             isSearch = true;
                           });
                           refreshListSearch();
@@ -272,6 +309,7 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                           setState(() {
                             selectedKodeSuratFilter = value;
                           });
+                          showFilterResult();
                         },
                       ),
                       margin: EdgeInsets.symmetric(horizontal: 5),
@@ -317,6 +355,7 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                           setState(() {
                             selectedPrajuruListFilter = value;
                           });
+                          showFilterResult();
                         },
                       ),
                       margin: EdgeInsets.symmetric(horizontal: 5),
@@ -360,8 +399,9 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                         )).toList(),
                         onChanged: (value) {
                           setState(() {
-                            selectedKodeSuratFilter = value;
+                            selectedPengirimListFilter = value;
                           });
+                          showFilterResult();
                         },
                       ),
                       margin: EdgeInsets.symmetric(horizontal: 5),
@@ -439,10 +479,77 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                 margin: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
             ),
             Container(
+              child: Column(
+                children: [
+                  if(isSearch == true) Container(
+                    child: FlatButton(
+                      onPressed: (){
+                        setState(() {
+                          controllerSearch.text = "";
+                          isSearch = false;
+                          LoadingSuratMasuk = true;
+                          refreshListSuratMasuk();
+                        });
+                      },
+                      child: Text("Reset Pencarian", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white
+                      )),
+                      color: HexColor("025393"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        side: BorderSide(color: HexColor("025393"), width: 2)
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                  )
+                ],
+              )
+            ),
+            Container(
+              child: Column(
+                children: <Widget>[
+                  if(isFilter == true) Container(
+                    child: FlatButton(
+                      onPressed: (){
+                        setState(() {
+                          selectedRangeAkhirValue = null;
+                          selectedRangeAkhir = null;
+                          selectedRangeAwalValue = null;
+                          selectedRangeAwal = null;
+                          selectedPengirimListFilter = null;
+                          selectedPrajuruListFilter = null;
+                          selectedKodeSuratFilter = null;
+                          LoadingSuratMasuk = true;
+                          isFilter = false;
+                          controllerFilterTanggalMasuk.text = "";
+                        });
+                        refreshListSuratMasuk();
+                      },
+                      child: Text("Hapus Filter", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white
+                      )),
+                      color: HexColor("025393"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        side: BorderSide(color: HexColor("025393"), width: 2)
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                  )
+                ],
+              ),
+            ),
+            Container(
               child: LoadingSuratMasuk ? ListTileShimmer() : availableSuratMasuk ? Expanded(
                 flex: 1,
                 child: RefreshIndicator(
-                  onRefresh: isSearch ? refreshListSearch : refreshListSuratMasuk,
+                  onRefresh: isSearch ? refreshListSearch : isFilter ? showFilterResult : refreshListSuratMasuk,
                   child: ListView.builder(
                     itemCount: idSuratMasuk.length,
                     itemBuilder: (context, index) {
@@ -733,5 +840,6 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
       selectedRangeAkhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
       controllerFilterTanggalMasuk.text = selectedRangeAkhirValue == null ? "$selectedRangeAwal" : "$selectedRangeAwal - $selectedRangeAkhir";
     });
+    showFilterResult();
   }
 }

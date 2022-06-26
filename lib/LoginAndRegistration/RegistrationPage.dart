@@ -145,66 +145,32 @@ class _registrationPageState extends State<registrationPage> {
                         if(data == 500) {
                           setState(() {
                             Loading = false;
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                    ),
-                                    content: Container(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Container(
-                                              child: Image.asset(
-                                                'images/alert.png',
-                                                height: 50,
-                                                width: 50,
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                "Data NIK tidak ditemukan",
-                                                style: TextStyle(
+                            ftoast.showToast(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Colors.redAccent
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.close),
+                                      Container(
+                                          margin: EdgeInsets.only(left: 15),
+                                          child: SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.65,
+                                              child: Text("Data NIK tidak ditemukan", style: TextStyle(
                                                   fontFamily: "Poppins",
-                                                  fontSize: 16,
+                                                  fontSize: 14,
                                                   fontWeight: FontWeight.w700,
-                                                  color: HexColor("#025393"),
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              margin: EdgeInsets.only(top: 10),
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                "Pastikan Anda telah menginputkan data NIK yang benar dan coba lagi",
-                                                style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              margin: EdgeInsets.only(top: 10),
-                                            )
-                                          ],
-                                        )
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: Text('OK', style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontWeight: FontWeight.w700,
-                                          color: HexColor("#025393"),
-                                        )),
-                                        onPressed: (){Navigator.of(context).pop();},
+                                                  color: Colors.white
+                                              ))
+                                          )
                                       )
                                     ],
-                                  );
-                                }
+                                  ),
+                                ),
+                                toastDuration: Duration(seconds: 3)
                             );
                           });
                         }else if(data == 200) {
@@ -338,6 +304,37 @@ class _registrationPageState extends State<registrationPage> {
                                 }
                             );
                           });
+                        }else if(data == 501) {
+                          setState(() {
+                            Loading = false;
+                          });
+                          ftoast.showToast(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    color: Colors.redAccent
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.close),
+                                    Container(
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.65,
+                                            child: Text("Tidak bisa melanjutkan pendaftaran karena Anda sudah terdaftar menjadi Prajuru", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white
+                                            ))
+                                        )
+                                    )
+                                  ],
+                                ),
+                              ),
+                              toastDuration: Duration(seconds: 3)
+                          );
                         }
                       });
                     }else{
@@ -576,7 +573,13 @@ class _enterEmailState extends State<enterEmail> {
                             Container(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                                child: TextField(
+                                child: TextFormField(
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if(value.isEmpty) {
+                                      return "Data tidak boleh kosong";
+                                    }
+                                  },
                                   controller: controllerPhoneNumber,
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(
@@ -632,7 +635,7 @@ class _enterEmailState extends State<enterEmail> {
                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                   validator: (value) {
                                     if(value.isEmpty) {
-                                      return 'Password tidak boleh kosong';
+                                      return 'Data tidak boleh kosong';
                                     }else if(value.isNotEmpty && value.length < 8) {
                                       return 'Password tidak boleh kurang dari 8 digit';
                                     }else {
@@ -665,7 +668,7 @@ class _enterEmailState extends State<enterEmail> {
                                     if(value.isNotEmpty && controllerPassword.text!=value) {
                                       return "Password tidak sesuai";
                                     }else if(value.isEmpty) {
-                                      return "Konfirmasi password tidak boleh kosong";
+                                      return "Data tidak boleh kosong";
                                     }else{
                                       return null;
                                     }

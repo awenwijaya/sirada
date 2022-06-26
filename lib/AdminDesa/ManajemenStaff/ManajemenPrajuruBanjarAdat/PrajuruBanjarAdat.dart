@@ -273,6 +273,8 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
     setState(() {
       LoadingAktif = true;
       isFilterAktif = true;
+      isSearch = false;
+      controllerSearchAktif.text = "";
     });
     var body = jsonEncode({
       "filter_jabatan" : selectedJabatanFilterAktif == null ? null : selectedJabatanFilterAktif,
@@ -316,6 +318,8 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
     setState(() {
       isFilterTidakAktif = true;
       LoadingTidakAktif = true;
+      isSearchTidakAktif = false;
+      controllerSearchTidakAktif.text = "";
     });
     var body = jsonEncode({
       "filter_jabatan" : selectedJabatanFilterTidakAktif == null ? null : selectedJabatanFilterTidakAktif,
@@ -434,6 +438,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                               isSearch = true;
                                               selectedJabatanFilterAktif = null;
                                               selectedBanjarFilterAktif = null;
+                                              isFilterAktif = false;
                                             });
                                             refreshListSearchPrajuruDesaBanjarAktif();
                                           }else {
@@ -808,6 +813,9 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                               if(controllerSearchTidakAktif.text != "") {
                                                 setState(() {
                                                   isSearchTidakAktif = true;
+                                                  isFilterTidakAktif = false;
+                                                  selectedJabatanFilterTidakAktif = null;
+                                                  selectedBanjarFilterTidakAktif = null;
                                                 });
                                                 refreshListSearchPrajuruBanjarAdatTidakAktif();
                                               }else {

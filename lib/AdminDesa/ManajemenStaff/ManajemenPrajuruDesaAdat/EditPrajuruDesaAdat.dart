@@ -216,36 +216,73 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                         Container(
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                            child: TextField(
-                              controller: controllerMasaMenjabat,
-                              enabled: false,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50.0),
-                                      borderSide: BorderSide(color: HexColor("#025393"))
-                                  ),
-                                  hintText: "Masa menjabat belum terpilih",
-                                  prefixIcon: Icon(CupertinoIcons.calendar)
-                              ),
-                              style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14
-                              ),
+                            child: GestureDetector(
+                              onTap: (){
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Pilih Masa Menjabat", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor("025393")
+                                      )),
+                                      content: Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Container(
+                                              height: 250,
+                                              width: 250,
+                                              child: SfDateRangePicker(
+                                                controller: controllerMasaAktif,
+                                                selectionMode: DateRangePickerSelectionMode.range,
+                                                onSelectionChanged: selectionChanged,
+                                                allowViewNavigation: true,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text("Simpan", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontWeight: FontWeight.w700,
+                                              color: HexColor("025393")
+                                          )),
+                                          onPressed: (){
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  }
+                                );
+                              },
+                              child: TextField(
+                                controller: controllerMasaMenjabat,
+                                enabled: false,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393"))
+                                    ),
+                                    hintText: "Masa menjabat belum terpilih",
+                                    prefixIcon: Icon(CupertinoIcons.calendar)
+                                ),
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ),
+                              )
                             ),
                           ),
                           margin: EdgeInsets.only(top: 10),
                         ),
-                        Container(
-                            child: Card(
-                                margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                                child: SfDateRangePicker(
-                                  controller: controllerMasaAktif,
-                                  selectionMode: DateRangePickerSelectionMode.range,
-                                  onSelectionChanged: selectionChanged,
-                                  allowViewNavigation: true,
-                                )
-                            )
-                        )
                       ]
                   )
               ),
@@ -298,7 +335,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                   ),
                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50)
                 ),
-                margin: EdgeInsets.only(top: 20)
+                margin: EdgeInsets.only(top: 10)
               ),
               Container(
                 child: FlatButton(

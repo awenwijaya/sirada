@@ -80,6 +80,8 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
     setState(() {
       LoadingAktif = true;
       isFilterAktif = true;
+      isSearch = false;
+      controllerSearchAktif.text = "";
     });
     var body = jsonEncode({
       "filter_jabatan" : selectedJabatanFilterAktif == null ? null : selectedJabatanFilterAktif,
@@ -120,6 +122,8 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
     setState(() {
       LoadingTidakAktif = true;
       isFilterTidakAktif = true;
+      isSearchTidakAktif = false;
+      controllerSearchTidakAktif.text = "";
     });
     var body = jsonEncode({
       "filter_jabatan" : selectedJabatanFilterTidakAktif == null ? null : selectedJabatanFilterTidakAktif,
@@ -525,6 +529,9 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                     if(controllerSearchAktif.text != "") {
                                       setState(() {
                                         isSearch = true;
+                                        selectedJabatanFilterAktif = null;
+                                        selectedTimKegiatanFilterAktif = null;
+                                        isFilterAktif = false;
                                       });
                                       refreshListSearchPanitiaAktif();
                                     }
@@ -927,6 +934,9 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                         if(controllerSearchTidakAktif.text != "") {
                                           setState(() {
                                             isSearchTidakAktif = true;
+                                            selectedJabatanFilterTidakAktif = null;
+                                            selectedTimKegiatanFilterTidakAktif = null;
+                                            isFilterAktif = false;
                                           });
                                           refreshListSearchPanitiaTidakAktif();
                                         }

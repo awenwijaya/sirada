@@ -140,17 +140,7 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                         borderSide: BorderSide(color: HexColor("#025393"))
                     ),
                     hintText: "Cari kode surat atau keterangan...",
-                    suffixIcon: isSearch ? IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: (){
-                        setState(() {
-                          controllerSearch.text = "";
-                          isSearch = false;
-                          Loading = true;
-                          refreshListNomorSurat();
-                        });
-                      },
-                    ) : IconButton(
+                    suffixIcon: IconButton(
                       icon: Icon(Icons.search),
                       onPressed: (){
                         if(controllerSearch.text != "") {
@@ -168,6 +158,36 @@ class _nomorSuratAdminState extends State<nomorSuratAdmin> {
                 ),
               ),
               margin: EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
+            ),
+            Container(
+              child: Column(
+                children: [
+                  if(isSearch == true) Container(
+                    child: FlatButton(
+                      onPressed: (){
+                        setState(() {
+                          controllerSearch.text = "";
+                          isSearch = false;
+                          Loading = true;
+                          refreshListNomorSurat();
+                        });
+                      },
+                      child: Text("Hapus Pencarian", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white
+                      )),
+                      color: HexColor("025393"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        side: BorderSide(color: HexColor("025393"), width: 2)
+                      ),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                  )
+                ],
+              )
             ),
             Container(
               child: Loading ? ListTileShimmer() : availableData ? Expanded(

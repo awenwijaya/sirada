@@ -86,6 +86,8 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
     setState(() {
       LoadingAktif = true;
       isFilterAktif = true;
+      isSearch = false;
+      controllerSearchAktif.text = "";
     });
     var body = jsonEncode({
       "filter_jabatan" : selectedJabatanFilterAktif,
@@ -121,6 +123,8 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
     setState(() {
       LoadingTidakAktif = true;
       isFilterTidakAktif = true;
+      isSearchTidakAktif = false;
+      controllerSearchTidakAktif.text = "";
     });
     var body = jsonEncode({
       "filter_jabatan" : selectedJabatanFilterTidakAktif,
@@ -379,6 +383,8 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                       if(controllerSearchAktif.text != "") {
                                         setState(() {
                                           isSearch = true;
+                                          selectedJabatanFilterAktif = null;
+                                          isFilterAktif = false;
                                         });
                                         refreshListSearchPrajuruDesaAdatAktif();
                                       }else {
@@ -386,6 +392,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                           LoadingAktif = true;
                                           controllerSearchAktif.text = "";
                                           isSearch = false;
+                                          controllerSearchAktif.text = "";
                                           refreshListPrajuruDesaAdatAktif();
                                         });
                                       }
@@ -705,6 +712,8 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                                         if(controllerSearchTidakAktif.text != "") {
                                           setState(() {
                                             isSearchTidakAktif = true;
+                                            selectedJabatanFilterTidakAktif = null;
+                                            isFilterTidakAktif = false;
                                           });
                                           refreshListSearchPrajuruDesaAdatTidakAktif();
                                         }else {
