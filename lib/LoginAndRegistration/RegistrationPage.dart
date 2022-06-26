@@ -486,7 +486,6 @@ class _enterEmailState extends State<enterEmail> {
   FToast ftoast;
   bool Loading = false;
   var apiURLRegistrasiAkun = "https://siradaskripsi.my.id/api/autentikasi/registrasi/post";
-  var apiURLKonfirmasiEmail = "https://siradaskripsi.my.id/api/autentikasi/registrasi/konfirmasi_email";
 
   @override
   void initState() {
@@ -578,6 +577,8 @@ class _enterEmailState extends State<enterEmail> {
                                   validator: (value) {
                                     if(value.isEmpty) {
                                       return "Data tidak boleh kosong";
+                                    }else {
+                                      return null;
                                     }
                                   },
                                   controller: controllerPhoneNumber,
@@ -714,27 +715,14 @@ class _enterEmailState extends State<enterEmail> {
                                       if(data == 200) {
                                         setState(() {
                                           emailConfirmation.userEmail = controllerEmail.text;
-                                        });
-                                        var body = jsonEncode({
-                                          "email" : controllerEmail.text
-                                        });
-                                        http.post(Uri.parse(apiURLKonfirmasiEmail),
-                                            headers: {"Content-Type" : "application/json"},
-                                            body: body
-                                        ).then((http.Response response) {
-                                          var data = response.statusCode;
-                                          if(data == 200) {
-                                            setState(() {
-                                              Loading = false;
-                                              showDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  builder: (BuildContext context) {
-                                                    return emailConfirmation();
-                                                  }
-                                              );
-                                            });
-                                          }
+                                          Loading = false;
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (BuildContext context) {
+                                                return emailConfirmation();
+                                              }
+                                          );
                                         });
                                       } else if(data == 501){
                                         setState(() {
