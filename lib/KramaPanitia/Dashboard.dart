@@ -307,9 +307,9 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                 children: <Widget>[
                   Container(
                     child: Text("Desa Anda", style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
                     )),
                     margin: EdgeInsets.only(top: 20, left: 15),
                     alignment: Alignment.topLeft,
@@ -318,16 +318,16 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                     child: namaDesa == null ? ProfileShimmer() : Row(
                       children: <Widget>[
                         Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: dashboardKramaPanitia.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://storage.siradaskripsi.my.id/img/logo-desa/${dashboardKramaPanitia.logoDesa}'),
-                              fit: BoxFit.fill
-                            )
-                          ),
-                          margin: EdgeInsets.only(left: 20)
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: dashboardKramaPanitia.logoDesa == null ? AssetImage('images/noimage.png') : NetworkImage('http://storage.siradaskripsi.my.id/img/logo-desa/${dashboardKramaPanitia.logoDesa}'),
+                                    fit: BoxFit.fill
+                                )
+                            ),
+                            margin: EdgeInsets.only(left: 20)
                         ),
                         Container(
                           child: Column(
@@ -335,26 +335,26 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Container(
-                                child: Text(namaDesa, style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700
-                                )),
-                                margin: EdgeInsets.only(left: 20)
+                                  child: Text(namaDesa, style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700
+                                  )),
+                                  margin: EdgeInsets.only(left: 20)
                               ),
                               Container(
-                                child: TextButton(
-                                  child: Text("Lihat Detail Desa", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: HexColor("#025393")
-                                  )),
-                                  onPressed: (){
-                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => detailDesaKramaPanitia()));
-                                  },
-                                ),
-                                margin: EdgeInsets.only(left: 15)
+                                  child: TextButton(
+                                    child: Text("Lihat Detail Desa", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: HexColor("#025393")
+                                    )),
+                                    onPressed: (){
+                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailDesaKramaPanitia()));
+                                    },
+                                  ),
+                                  margin: EdgeInsets.only(left: 15)
                               )
                             ],
                           ),
@@ -364,26 +364,26 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                     margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                     padding: EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0,3)
-                        )
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(10))
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0,3)
+                          )
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10))
                     ),
                   ),
                   Container(
-                    alignment: Alignment.topLeft,
-                    child: Text("Status Surat", style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold
-                    )),
-                    margin: EdgeInsets.only(top: 20, left: 15)
+                      alignment: Alignment.topLeft,
+                      child: Text("Status Surat", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold
+                      )),
+                      margin: EdgeInsets.only(top: 20, left: 15)
                   ),
                   Container(
                     child: FlatButton(
@@ -396,15 +396,15 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                         });
                       },
                       child: Text("Tambah Surat Keluar", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: HexColor("#025393")
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: HexColor("#025393")
                       )),
                       color: Colors.transparent,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                        side: BorderSide(color: HexColor("#025393"), width: 2)
+                          borderRadius: BorderRadius.circular(25),
+                          side: BorderSide(color: HexColor("#025393"), width: 2)
                       ),
                       padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
                     ),
@@ -430,13 +430,13 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                         Tab(
                                           child: Column(
                                             children: <Widget>[
-                                              Icon(CupertinoIcons.hourglass_bottomhalf_fill),
+                                              Icon(CupertinoIcons.hourglass_bottomhalf_fill, color: HexColor("4B8673")),
                                               SizedBox(
                                                 width: MediaQuery.of(context).size.width * 0.55,
                                                 child: Text(
                                                   "Menunggu", style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontWeight: FontWeight.w700
+                                                    fontFamily: "Poppins",
+                                                    fontWeight: FontWeight.w700
                                                 ),
                                                   maxLines: 1,
                                                   overflow: TextOverflow.fade,
@@ -450,7 +450,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                         Tab(
                                           child: Column(
                                             children: <Widget>[
-                                              Icon(CupertinoIcons.time_solid),
+                                              Icon(CupertinoIcons.time_solid, color: HexColor("354259")),
                                               SizedBox(
                                                 width: MediaQuery.of(context).size.width * 0.55,
                                                 child: Text(
@@ -470,7 +470,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                         Tab(
                                           child: Column(
                                             children: <Widget>[
-                                              Icon(Icons.done),
+                                              Icon(Icons.done, color: HexColor("228B22")),
                                               SizedBox(
                                                 width: MediaQuery.of(context).size.width * 0.55,
                                                 child: Text(
@@ -490,7 +490,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                         Tab(
                                           child: Column(
                                             children: <Widget>[
-                                              Icon(Icons.close),
+                                              Icon(Icons.close, color: HexColor("990000")),
                                               SizedBox(
                                                 width: MediaQuery.of(context).size.width * 0.55,
                                                 child: Text(
@@ -513,7 +513,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                   Container(
                                     height: MediaQuery.of(context).size.height * 0.56,
                                     decoration: BoxDecoration(
-                                      border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
+                                        border: Border(top: BorderSide(color: Colors.black26, width: 0.5))
                                     ),
                                     child: TabBarView(
                                       children: <Widget>[
@@ -523,107 +523,107 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                                               Container(
                                                 child: TextField(
                                                   decoration: InputDecoration(
-                                                    border: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.circular(50.0),
-                                                      borderSide: BorderSide(color: HexColor("#025393"))
-                                                    ),
-                                                    hintText: "Cari surat keluar...",
-                                                    suffixIcon: IconButton(
-                                                      icon: Icon(Icons.search),
-                                                      onPressed: (){},
-                                                    )
+                                                      border: OutlineInputBorder(
+                                                          borderRadius: BorderRadius.circular(50.0),
+                                                          borderSide: BorderSide(color: HexColor("#025393"))
+                                                      ),
+                                                      hintText: "Cari surat keluar...",
+                                                      suffixIcon: IconButton(
+                                                        icon: Icon(Icons.search),
+                                                        onPressed: (){},
+                                                      )
                                                   ),
                                                   style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14
                                                   ),
                                                 ),
                                                 margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
                                               ),
                                               Container(
                                                 child: LoadingMenungguRespons ? ListTileShimmer() : availableMenungguRespons ? SizedBox(
-                                                  height: MediaQuery.of(context).size.height * 0.442,
-                                                  child: RefreshIndicator(
-                                                    onRefresh: refreshListMenungguRespons,
-                                                    child: ListView.builder(
-                                                      itemCount: MenungguRespons.length,
-                                                      itemBuilder: (context, index) {
-                                                        return GestureDetector(
-                                                          onTap: (){
-                                                            setState(() {
-                                                              detailSuratKeluarPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
-                                                            });
-                                                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
-                                                              refreshListDibatalkan();
-                                                              refreshListMenungguRespons();
-                                                              refreshListSedangDiproses();
-                                                              refreshListTelahDikonfirmasi();
-                                                            });
-                                                          },
-                                                          child: Container(
-                                                            child: Row(
-                                                              children: <Widget>[
-                                                                Container(
-                                                                  child: Image.asset(
-                                                                    'images/email.png',
-                                                                    height: 40,
-                                                                    width: 40,
+                                                    height: MediaQuery.of(context).size.height * 0.442,
+                                                    child: RefreshIndicator(
+                                                      onRefresh: refreshListMenungguRespons,
+                                                      child: ListView.builder(
+                                                        itemCount: MenungguRespons.length,
+                                                        itemBuilder: (context, index) {
+                                                          return GestureDetector(
+                                                            onTap: (){
+                                                              setState(() {
+                                                                detailSuratKeluarPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
+                                                              });
+                                                              Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
+                                                                refreshListDibatalkan();
+                                                                refreshListMenungguRespons();
+                                                                refreshListSedangDiproses();
+                                                                refreshListTelahDikonfirmasi();
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                              child: Row(
+                                                                children: <Widget>[
+                                                                  Container(
+                                                                    child: Image.asset(
+                                                                      'images/email.png',
+                                                                      height: 40,
+                                                                      width: 40,
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                Container(
-                                                                  child: Column(
-                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: <Widget>[
-                                                                      Container(
-                                                                        child: SizedBox(
-                                                                          width: MediaQuery.of(context).size.width * 0.55,
-                                                                          child: Text(
-                                                                            MenungguRespons[index]['parindikan'].toString(),
-                                                                            style: TextStyle(
-                                                                              fontFamily: "Poppins",
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.w700,
-                                                                              color: HexColor("#025393"),
+                                                                  Container(
+                                                                    child: Column(
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: <Widget>[
+                                                                        Container(
+                                                                          child: SizedBox(
+                                                                            width: MediaQuery.of(context).size.width * 0.55,
+                                                                            child: Text(
+                                                                              MenungguRespons[index]['parindikan'].toString(),
+                                                                              style: TextStyle(
+                                                                                fontFamily: "Poppins",
+                                                                                fontSize: 16,
+                                                                                fontWeight: FontWeight.w700,
+                                                                                color: HexColor("#025393"),
+                                                                              ),
+                                                                              maxLines: 1,
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              softWrap: false,
                                                                             ),
-                                                                            maxLines: 1,
-                                                                            overflow: TextOverflow.ellipsis,
-                                                                            softWrap: false,
                                                                           ),
                                                                         ),
-                                                                      ),
-                                                                      Container(
-                                                                        child: Text(MenungguRespons[index]['nomor_surat'].toString(), style: TextStyle(
-                                                                          fontFamily: "Poppins",
-                                                                          fontSize: 14
-                                                                        )),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                  margin: EdgeInsets.only(left: 15),
-                                                                )
-                                                              ],
+                                                                        Container(
+                                                                          child: Text(MenungguRespons[index]['nomor_surat'].toString(), style: TextStyle(
+                                                                              fontFamily: "Poppins",
+                                                                              fontSize: 14
+                                                                          )),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                    margin: EdgeInsets.only(left: 15),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                                                              padding: EdgeInsets.symmetric(horizontal: 20),
+                                                              height: 70,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                  color: Colors.white,
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                        color: Colors.grey.withOpacity(0.2),
+                                                                        spreadRadius: 5,
+                                                                        blurRadius: 7,
+                                                                        offset: Offset(0,3)
+                                                                    )
+                                                                  ]
+                                                              ),
                                                             ),
-                                                            margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                                                            padding: EdgeInsets.symmetric(horizontal: 20),
-                                                            height: 70,
-                                                            decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                              color: Colors.white,
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                  color: Colors.grey.withOpacity(0.2),
-                                                                  spreadRadius: 5,
-                                                                  blurRadius: 7,
-                                                                  offset: Offset(0,3)
-                                                                )
-                                                              ]
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  )
+                                                          );
+                                                        },
+                                                      ),
+                                                    )
                                                 ) : Container(
                                                     child: Column(
                                                       mainAxisAlignment: MainAxisAlignment.center,

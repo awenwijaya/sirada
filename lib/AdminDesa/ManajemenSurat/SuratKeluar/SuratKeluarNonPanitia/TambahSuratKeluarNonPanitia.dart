@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:surat/AdminDesa/Dashboard.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:surat/main.dart';
@@ -712,7 +713,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          title: Text("Pilih Masa Menjabat", style: TextStyle(
+                                          title: Text("Pilih Tanggal Kegiatan", style: TextStyle(
                                             fontFamily: "Poppins",
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700,
@@ -737,6 +738,18 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                               ],
                                             ),
                                           ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text("Simpan", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontWeight: FontWeight.w700,
+                                                color: HexColor("025393")
+                                              )),
+                                              onPressed: (){
+                                                Navigator.of(context).pop();
+                                              },
+                                            )
+                                          ],
                                         );
                                       }
                                     );
@@ -1349,7 +1362,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                   ),
                   Container(
                       child: CheckboxListTile(
-                        title: Text("Kirimkan surat ini ke Krama Desa", style: TextStyle(
+                        title: Text("Kirimkan surat ini ke Krama Desa ${dashboardAdminDesa.namaDesaAdat}", style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14,
                             color: Colors.black
@@ -1558,6 +1571,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                 "bendesa_adat_id" : selectedBendesaAdat.toString(),
                                 "penyarikan_id" : selectedPenyarikan.toString(),
                                 "user_id" : loginPage.userId,
+                                "pihak_krama" : isSendToKrama ? "Desa Adat ${dashboardAdminDesa.namaDesaAdat}" : null
                               });
                               http.post(Uri.parse(apiURLUpDataSuratNonPanitia),
                                   headers: {"Content-Type" : "application/json"},

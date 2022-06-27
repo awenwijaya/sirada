@@ -22,6 +22,7 @@ import 'package:surat/main.dart';
 
 class dashboardAdminDesa extends StatefulWidget {
   static var logoDesa;
+  static var namaDesaAdat;
   const dashboardAdminDesa({Key key}) : super(key: key);
 
   @override
@@ -34,6 +35,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var namaDesa;
   var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
   var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
+  var apiURLRemoveFCMToken = "https://siradaskripsi.my.id/api/autentikasi/login/token/remove";
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -61,6 +63,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
         var parsedJson = json.decode(jsonData);
         setState(() {
           namaDesa = parsedJson['desadat_nama'];
+          dashboardAdminDesa.namaDesaAdat = parsedJson['desadat_nama'];
           dashboardAdminDesa.logoDesa = parsedJson['desadat_logo'].toString();
         });
       }
@@ -181,14 +184,25 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                       actions: <Widget>[
                         TextButton(
                           onPressed: () async {
-                            final SharedPreferences sharedpref = await SharedPreferences.getInstance();
-                            sharedpref.remove('userId');
-                            sharedpref.remove('pendudukId');
-                            sharedpref.remove('desaId');
-                            sharedpref.remove('email');
-                            sharedpref.remove('role');
-                            sharedpref.remove('status');
-                            Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => welcomeScreen()), (route) => false);
+                            var body = jsonEncode({
+                              "token" : loginPage.token
+                            });
+                            http.post(Uri.parse(apiURLRemoveFCMToken),
+                              headers: {"Content-Type" : "application/json"},
+                              body: body
+                            ).then((http.Response response) async {
+                              var data = response.statusCode;
+                              if(data == 200) {
+                                final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+                                sharedpref.remove('userId');
+                                sharedpref.remove('pendudukId');
+                                sharedpref.remove('desaId');
+                                sharedpref.remove('email');
+                                sharedpref.remove('role');
+                                sharedpref.remove('status');
+                                Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => welcomeScreen()), (route) => false);
+                              }
+                            });
                           },
                           child: Text("Ya", style: TextStyle(
                             fontFamily: "Poppins",
