@@ -69,6 +69,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   //validasi
   var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
   var apiURLShowValidasiStatus = "https://siradaskripsi.my.id/admin/surat/keluar/prajuru/validasi/show/${loginPage.prajuruId}";
+  var apiURLSendNotifikasiSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses/notifikasi/${detailSuratKeluarNonPanitia.suratKeluarId}";
 
   getValidasiStatus() async {
     var body = jsonEncode({
@@ -384,9 +385,10 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                 http.post(Uri.parse(apiURLSetSedangDiproses),
                                   headers: {"Content-Type" : "application/json"},
                                   body: body
-                                ).then((http.Response response) {
+                                ).then((http.Response response) async {
                                   var responseValue = response.statusCode;
                                   if(responseValue == 200) {
+                                    final response = await http.get(Uri.parse(apiURLSendNotifikasiSedangDiproses));
                                     ftoast.showToast(
                                         child: Container(
                                           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),

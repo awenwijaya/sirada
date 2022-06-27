@@ -332,108 +332,106 @@ class _loginPageState extends State<loginPage> {
                                         if(response.statusCode == 200) {
                                           var jsonDataPrajuru = response.body;
                                           var parsedJsonPrajuru = json.decode(jsonDataPrajuru);
-                                          if(parsedJsonPrajuru['status_prajuru_desa_adat'] == "aktif") {
-                                            setState(() {
-                                              loginPage.pendudukId = tempPendudukId;
-                                              loginPage.userEmail = tempEmail;
-                                              loginPage.desaId = tempDesaId;
-                                              loginPage.userId = tempUserId;
-                                              loginPage.role = tempRole;
-                                              loginPage.prajuruId = parsedJsonPrajuru['prajuru_desa_adat_id'];
-                                            });
-                                            final SharedPreferences sharedpref = await SharedPreferences.getInstance();
-                                            final SharedPreferences sharedprefadmin = await SharedPreferences.getInstance();
-                                            sharedpref.setInt('userId', loginPage.userId);
-                                            sharedpref.setString('pendudukId', loginPage.pendudukId);
-                                            sharedpref.setString('desaId', loginPage.desaId);
-                                            sharedpref.setString('email', loginPage.userEmail);
-                                            sharedpref.setString('role', loginPage.role);
-                                            sharedpref.setString('status', 'login');
-                                            sharedprefadmin.setString('prajuru_adat_id', loginPage.prajuruId);
-                                            var bodyToken = jsonEncode({
-                                              "user_id" : tempUserId,
-                                              "token" : loginPage.token
-                                            });
-                                            http.post(Uri.parse(apiURLUploadFCMToken),
-                                                headers: {"Content-Type" : "application/json"},
-                                                body: bodyToken
-                                            ).then((http.Response response) async {
-                                              var data = response.statusCode;
-                                              if(data == 200) {
-                                                setState(() {
-                                                  Loading = false;
-                                                });
-                                                Navigator.of(context).pushAndRemoveUntil(createRouteAdminDesaDashboard(), (route) => false);
-                                              }
-                                            });
-                                          }else{
-                                            setState(() {
-                                              Loading = false;
-                                            });
-                                            showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                builder: (BuildContext context) {
-                                                  return AlertDialog(
-                                                    shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                                    ),
-                                                    content: Container(
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: <Widget>[
-                                                            Container(
-                                                              child: Image.asset(
-                                                                'images/alert.png',
-                                                                height: 50,
-                                                                width: 50,
-                                                              ),
-                                                              alignment: Alignment.center,
+                                          setState(() {
+                                            loginPage.pendudukId = tempPendudukId;
+                                            loginPage.userEmail = tempEmail;
+                                            loginPage.desaId = tempDesaId;
+                                            loginPage.userId = tempUserId;
+                                            loginPage.role = tempRole;
+                                            loginPage.prajuruId = parsedJsonPrajuru['prajuru_desa_adat_id'];
+                                          });
+                                          final SharedPreferences sharedpref = await SharedPreferences.getInstance();
+                                          final SharedPreferences sharedprefadmin = await SharedPreferences.getInstance();
+                                          sharedpref.setInt('userId', loginPage.userId);
+                                          sharedpref.setString('pendudukId', loginPage.pendudukId);
+                                          sharedpref.setString('desaId', loginPage.desaId);
+                                          sharedpref.setString('email', loginPage.userEmail);
+                                          sharedpref.setString('role', loginPage.role);
+                                          sharedpref.setString('status', 'login');
+                                          sharedprefadmin.setString('prajuru_adat_id', loginPage.prajuruId);
+                                          var bodyToken = jsonEncode({
+                                            "user_id" : tempUserId,
+                                            "token" : loginPage.token
+                                          });
+                                          http.post(Uri.parse(apiURLUploadFCMToken),
+                                              headers: {"Content-Type" : "application/json"},
+                                              body: bodyToken
+                                          ).then((http.Response response) async {
+                                            var data = response.statusCode;
+                                            if(data == 200) {
+                                              setState(() {
+                                                Loading = false;
+                                              });
+                                              Navigator.of(context).pushAndRemoveUntil(createRouteAdminDesaDashboard(), (route) => false);
+                                            }
+                                          });
+                                        }else if(response.statusCode == 500) {
+                                          setState(() {
+                                            Loading = false;
+                                          });
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.all(Radius.circular(40.0))
+                                                  ),
+                                                  content: Container(
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          Container(
+                                                            child: Image.asset(
+                                                              'images/alert.png',
+                                                              height: 50,
+                                                              width: 50,
                                                             ),
-                                                            Container(
-                                                              child: Text(
-                                                                "Akun Nonaktif",
-                                                                style: TextStyle(
-                                                                    fontFamily: "Poppins",
-                                                                    fontSize: 16,
-                                                                    fontWeight: FontWeight.w700,
-                                                                    color: HexColor("#025393")
-                                                                ),
-                                                                textAlign: TextAlign.center,
+                                                            alignment: Alignment.center,
+                                                          ),
+                                                          Container(
+                                                            child: Text(
+                                                              "Akun Nonaktif",
+                                                              style: TextStyle(
+                                                                  fontFamily: "Poppins",
+                                                                  fontSize: 16,
+                                                                  fontWeight: FontWeight.w700,
+                                                                  color: HexColor("#025393")
                                                               ),
-                                                              margin: EdgeInsets.only(top: 10),
-                                                              alignment: Alignment.center,
+                                                              textAlign: TextAlign.center,
                                                             ),
-                                                            Container(
-                                                              child: Text(
-                                                                "Anda tidak bisa login karena akun Anda sudah di nonaktifkan.",
-                                                                style: TextStyle(
-                                                                    fontFamily: "Poppins",
-                                                                    fontSize: 14
-                                                                ),
-                                                                textAlign: TextAlign.center,
+                                                            margin: EdgeInsets.only(top: 10),
+                                                            alignment: Alignment.center,
+                                                          ),
+                                                          Container(
+                                                            child: Text(
+                                                              "Anda tidak bisa login karena akun Anda sudah di nonaktifkan.",
+                                                              style: TextStyle(
+                                                                  fontFamily: "Poppins",
+                                                                  fontSize: 14
                                                               ),
-                                                              margin: EdgeInsets.only(top: 10),
-                                                            )
-                                                          ],
-                                                        )
-                                                    ),
-                                                    actions: <Widget>[
-                                                      TextButton(
-                                                        child: Text("OK", style: TextStyle(
-                                                            fontFamily: "Poppins",
-                                                            fontWeight: FontWeight.w700,
-                                                            color: HexColor("#025393")
-                                                        )),
-                                                        onPressed: (){Navigator.of(context).pop();},
+                                                              textAlign: TextAlign.center,
+                                                            ),
+                                                            margin: EdgeInsets.only(top: 10),
+                                                          )
+                                                        ],
                                                       )
-                                                    ],
-                                                  );
-                                                }
-                                            );
-                                          }
+                                                  ),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: Text("OK", style: TextStyle(
+                                                          fontFamily: "Poppins",
+                                                          fontWeight: FontWeight.w700,
+                                                          color: HexColor("#025393")
+                                                      )),
+                                                      onPressed: (){Navigator.of(context).pop();},
+                                                    )
+                                                  ],
+                                                );
+                                              }
+                                          );
                                         }
                                       }else if(parsedJson['role'] == "Krama") {
                                         var response = await http.get(Uri.parse("https://siradaskripsi.my.id/api/krama/mipil/${tempPendudukId}"));

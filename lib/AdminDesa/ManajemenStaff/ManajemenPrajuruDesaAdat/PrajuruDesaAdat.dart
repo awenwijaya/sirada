@@ -408,49 +408,55 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                         ),
                         Container(
                             child: LoadingFilterAktif ? ListTileShimmer() : Container(
-                              child: Flexible(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      border: Border.all(width: 1, color: Colors.black38)
-                                  ),
-                                  child: DropdownButton(
-                                    isExpanded: true,
-                                    hint: Center(
-                                        child: Text("Semua Jabatan", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 14
-                                        ))
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Flexible(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(30),
+                                          border: Border.all(width: 1, color: Colors.black38)
+                                      ),
+                                      child: DropdownButton(
+                                        isExpanded: true,
+                                        hint: Center(
+                                            child: Text("Semua Jabatan", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14
+                                            ))
+                                        ),
+                                        value: selectedJabatanFilterAktif,
+                                        underline: Container(),
+                                        items: jabatanFilterAktif.map((jabatan) {
+                                          return DropdownMenuItem(
+                                            value: jabatan['jabatan_prajuru_desa_id'],
+                                            child: Text(jabatan['jabatan'], style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14
+                                            )),
+                                          );
+                                        }).toList(),
+                                        selectedItemBuilder: (BuildContext context) => jabatanFilterAktif.map((jabatan) => Center(
+                                          child: Text("${jabatan['jabatan']}", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          )),
+                                        )).toList(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedJabatanFilterAktif = value;
+                                          });
+                                          showFilterResultAktif();
+                                        },
+                                      ),
+                                      margin: EdgeInsets.symmetric(horizontal: 5),
                                     ),
-                                    value: selectedJabatanFilterAktif,
-                                    underline: Container(),
-                                    items: jabatanFilterAktif.map((jabatan) {
-                                      return DropdownMenuItem(
-                                        value: jabatan['jabatan_prajuru_desa_id'],
-                                        child: Text(jabatan['jabatan'], style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 14
-                                        )),
-                                      );
-                                    }).toList(),
-                                    selectedItemBuilder: (BuildContext context) => jabatanFilterAktif.map((jabatan) => Center(
-                                      child: Text("${jabatan['jabatan']}", style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14
-                                      )),
-                                    )).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedJabatanFilterAktif = value;
-                                      });
-                                      showFilterResultAktif();
-                                    },
                                   ),
-                                  margin: EdgeInsets.symmetric(horizontal: 5),
-                                ),
-                              ),
-                              margin: EdgeInsets.only(left: 20, right: 20, bottom: 10)
-                            )
+                                ],
+                              )
+                            ),
+                            margin: EdgeInsets.only(left: 20, right: 20, bottom: 10)
                         ),
                         Container(
                           child: Column(
@@ -694,7 +700,7 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                       ],
                     )
                 ),
-                Expanded(
+                Container(
                     child: Column(
                         children: <Widget>[
                           Container(
@@ -736,49 +742,55 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                           ),
                           Container(
                               child: LoadingFilterTidakAktif ? ListTileShimmer() : Container(
-                                  child: Flexible(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(30),
-                                          border: Border.all(width: 1, color: Colors.black38)
-                                      ),
-                                      child: DropdownButton(
-                                        isExpanded: true,
-                                        hint: Center(
-                                            child: Text("Semua Jabatan", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 14
-                                            ))
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Flexible(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(30),
+                                              border: Border.all(width: 1, color: Colors.black38)
+                                          ),
+                                          child: DropdownButton(
+                                            isExpanded: true,
+                                            hint: Center(
+                                                child: Text("Semua Jabatan", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14
+                                                ))
+                                            ),
+                                            value: selectedJabatanFilterTidakAktif,
+                                            underline: Container(),
+                                            items: jabatanFilterTidakAktif.map((jabatan) {
+                                              return DropdownMenuItem(
+                                                value: jabatan['jabatan_prajuru_desa_id'],
+                                                child: Text(jabatan['jabatan'], style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14
+                                                )),
+                                              );
+                                            }).toList(),
+                                            selectedItemBuilder: (BuildContext context) => jabatanFilterTidakAktif.map((jabatan) => Center(
+                                              child: Text("${jabatan['jabatan']}", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14
+                                              )),
+                                            )).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                selectedJabatanFilterTidakAktif = value;
+                                              });
+                                              showFilterResultTidakAktif();
+                                            },
+                                          ),
+                                          margin: EdgeInsets.symmetric(horizontal: 5),
                                         ),
-                                        value: selectedJabatanFilterTidakAktif,
-                                        underline: Container(),
-                                        items: jabatanFilterTidakAktif.map((jabatan) {
-                                          return DropdownMenuItem(
-                                            value: jabatan['jabatan_prajuru_desa_id'],
-                                            child: Text(jabatan['jabatan'], style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 14
-                                            )),
-                                          );
-                                        }).toList(),
-                                        selectedItemBuilder: (BuildContext context) => jabatanFilterTidakAktif.map((jabatan) => Center(
-                                          child: Text("${jabatan['jabatan']}", style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14
-                                          )),
-                                        )).toList(),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            selectedJabatanFilterTidakAktif = value;
-                                          });
-                                          showFilterResultTidakAktif();
-                                        },
                                       ),
-                                      margin: EdgeInsets.symmetric(horizontal: 5),
-                                    ),
-                                  ),
-                                  margin: EdgeInsets.only(left: 20, right: 20, bottom: 10)
-                              )
+                                    ],
+                                  )
+                              ),
+                              margin: EdgeInsets.only(left: 20, right: 20, bottom: 10)
                           ),
                           Container(
                             child: Column(
