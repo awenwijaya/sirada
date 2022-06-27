@@ -10,14 +10,12 @@ import 'package:http/http.dart' as http;
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:surat/main.dart';
-import 'package:surat/shared/KelihanAdat.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:simple_time_range_picker/simple_time_range_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
-import 'package:path/path.dart';
-import 'package:async/async.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:surat/KramaPanitia/Dashboard.dart';
 
 class tambahSuratKeluarPanitia extends StatefulWidget {
   const tambahSuratKeluarPanitia({Key key}) : super(key: key);
@@ -1589,7 +1587,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                     ),
                     Container(
                         child: CheckboxListTile(
-                          title: Text("Kirimkan surat ini ke Krama Desa", style: TextStyle(
+                          title: Text("Kirimkan surat ini ke Krama Desa ${dashboardKramaPanitia.namaDesaAdat}", style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 14,
                               color: Colors.black
@@ -1772,7 +1770,8 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                   "bendesa_adat_id" : selectedBendesaAdat,
                                   "tanggal_surat" : tanggalSuratValue,
                                   "ketua_id" : selectedIdKetuaPanitia.toString(),
-                                  "sekretaris_id" : selectedIdSekretarisPanitia.toString()
+                                  "sekretaris_id" : selectedIdSekretarisPanitia.toString(),
+                                  "pihak_krama" : isSendToKrama ? "Desa Adat ${dashboardKramaPanitia.namaDesaAdat}" : null
                                 });
                                 http.post(Uri.parse(apiURLUpSuratKeluarPanitia),
                                     headers: {"Content-Type" : "application/json"},

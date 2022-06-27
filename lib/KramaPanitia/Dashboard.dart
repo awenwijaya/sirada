@@ -15,6 +15,7 @@ import 'package:surat/main.dart';
 
 class dashboardKramaPanitia extends StatefulWidget {
   static var logoDesa;
+  static var namaDesaAdat;
   const dashboardKramaPanitia({Key key}) : super(key: key);
 
   @override
@@ -160,6 +161,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
         var parsedJson = json.decode(jsonData);
         setState(() {
           namaDesa = parsedJson['desadat_nama'];
+          dashboardKramaPanitia.namaDesaAdat = parsedJson['desadat_nama'];
           dashboardKramaPanitia.logoDesa = parsedJson['desadat_logo'].toString();
         });
       }
