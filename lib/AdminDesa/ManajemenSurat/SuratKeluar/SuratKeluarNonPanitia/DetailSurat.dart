@@ -237,6 +237,9 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
           logoDesa = parsedJson['desadat_logo'];
           aksaraDesa = parsedJson['desadat_aksara_bali'];
           status = parsedJson['status'];
+          if(parsedJson['pihak_krama'] != null) {
+            tetujon.add("Krama ${parsedJson['pihak_krama']}");
+          }
         });
         http.get(Uri.parse("https://siradaskripsi.my.id/api/data/kecamatan/${kecamatanId}"),
           headers: {"Content-Type" : "application/json"}
@@ -446,7 +449,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                   setState(() {
                     editSuratKeluarNonPanitia.idSuratKeluar = detailSuratKeluarNonPanitia.suratKeluarId;
                   });
-                  Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratKeluarNonPanitia())).then((value) {
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratKeluarNonPanitia())).then((value) async {
                     getSuratKeluarInfo();
                     getBendesaInfo();
                     getPenyarikanInfo();

@@ -12,9 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
-import 'package:path/path.dart';
-import 'package:async/async.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:surat/KramaPanitia/Dashboard.dart';
 
 class editSuratKeluarPanitia extends StatefulWidget {
   static var idSuratKeluar;
@@ -186,6 +185,9 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
         endTime = parsedJson['waktu_selesai'] == null ? null : TimeOfDay(hour: int.parse(parsedJson['waktu_selesai'].split(":")[0]), minute: int.parse(parsedJson['waktu_selesai'].split(":")[1]));
         if(startTime != null && endTime != null) {
           controllerWaktuKegiatan.text = "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}";
+        }
+        if(parsedJson['pihak_krama'] != null) {
+          isSendToKrama = true;
         }
         LoadingData = false;
       });
@@ -1631,6 +1633,22 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                   ),
                 ),
                 Container(
+                    child: CheckboxListTile(
+                      title: Text("Kirimkan surat ini ke Krama Desa ${dashboardKramaPanitia.namaDesaAdat}", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        color: Colors.black
+                      )),
+                      value: isSendToKrama,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (bool value) {
+                        setState(() {
+                          isSendToKrama = value;
+                        });
+                      },
+                    )
+                ),
+                Container(
                   child: Text("7. Tumusan Surat", style: TextStyle(
                       fontFamily: "Poppins",
                       fontSize: 14,
@@ -1873,6 +1891,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                           "user_id" : loginPage.userId,
                           "surat_keluar_id" : editSuratKeluarPanitia.idSuratKeluar,
                           "nomor_urut_surat" : nomorUrutSurat == null ? null : nomorUrutSurat,
+                          "pihak_krama" : isSendToKrama ? "Desa Adat ${dashboardKramaPanitia.namaDesaAdat}" : null
                         });
                         http.post(Uri.parse(apiURLSimpanEdit),
                           headers: {"Content-Type" : "application/json"},

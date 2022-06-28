@@ -288,6 +288,9 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           aksaraDesa = parsedJson['desadat_aksara_bali'];
           timKegiatan = parsedJson['tim_kegiatan'];
           status = parsedJson['status'];
+          if(parsedJson['pihak_krama'] != null) {
+            tetujon.add("Krama ${parsedJson['pihak_krama']}");
+          }
         });
         print(status.toString());
         http.get(Uri.parse("https://siradaskripsi.my.id/api/data/kecamatan/${kecamatanId}"),

@@ -5,6 +5,7 @@ import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:simple_time_range_picker/simple_time_range_picker.dart';
+import 'package:surat/AdminDesa/Dashboard.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/cupertino.dart';
@@ -67,6 +68,8 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
   bool LoadingPenyarikan = true;
   bool LoadingBendesa = true;
   bool NomorSuratLoading = false;
+
+  bool isSendToKrama = false;
 
   //selected
   var selectedKodeSurat;
@@ -291,6 +294,9 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
         endTime = parsedJson['waktu_selesai'] == null ? null : TimeOfDay(hour: int.parse(parsedJson['waktu_selesai'].split(":")[0]), minute: int.parse(parsedJson['waktu_selesai'].split(":")[1]));
         if(startTime != null && endTime != null) {
           controllerWaktuKegiatan.text = "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}";
+        }
+        if(parsedJson['pihak_krama'] != null) {
+          isSendToKrama = true;
         }
         LoadingData = false;
       });
@@ -1384,6 +1390,22 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                     ),
                   ),
                   Container(
+                    child: CheckboxListTile(
+                      title: Text("Kirimkan surat ini ke Krama Desa ${dashboardAdminDesa.namaDesaAdat}", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        color: Colors.black
+                      )),
+                      value: isSendToKrama,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (bool value) {
+                        setState(() {
+                          isSendToKrama = value;
+                        });
+                      },
+                    ),
+                  ),
+                  Container(
                     child: Text("7. Tumusan Surat", style: TextStyle(
                         fontFamily: "Poppins",
                         fontSize: 14,
@@ -1638,7 +1660,8 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                                 "tempat_kegiatan" : controllerTempatKegiatan.text == "" ? null : controllerTempatKegiatan.text,
                                 "bendesa_adat_id" : selectedBendesaAdat,
                                 "penyarikan_id" : selectedPenyarikan,
-                                "status_surat" : statusSurat
+                                "status_surat" : statusSurat,
+                                "pihak_krama" : isSendToKrama ? "Desa Adat ${dashboardAdminDesa.namaDesaAdat}" : null
                               });
                               http.post(Uri.parse(apiURLSimpanEditSuratKeluar),
                                   headers: {"Content-Type" : "application/json"},
