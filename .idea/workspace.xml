@@ -15,10 +15,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ae2c7e7b-ad51-4daf-a323-df3f297432d6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/EditPrajuruBanjarAdat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/EditPrajuruBanjarAdat.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/PrajuruBanjarAdat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/PrajuruBanjarAdat.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/TambahPrajuruBanjarAdat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/TambahPrajuruBanjarAdat.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/DetailSurat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/DetailSurat.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/EditPrajuruDesaAdat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/EditPrajuruDesaAdat.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/TambahPrajuruDesaAdat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/TambahPrajuruDesaAdat.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

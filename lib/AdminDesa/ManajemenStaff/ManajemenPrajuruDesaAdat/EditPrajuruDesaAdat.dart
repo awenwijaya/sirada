@@ -22,8 +22,8 @@ class editPrajuruDesaAdatAdmin extends StatefulWidget {
 }
 
 class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
-  List<String> jabatan = ["bendesa", "pangliman", "penyarikan", "patengen"];
-  String selectedJabatan;
+  List jabatan = [];
+  var selectedJabatan;
   String selectedMasaMulai;
   String selectedMasaMulaiValue;
   String selectedMasaBerakhir;
@@ -35,9 +35,11 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
   var apiURLShowDetailPrajuruDesaAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/edit/${editPrajuruDesaAdatAdmin.idPegawai}";
   var apiURLSimpanPrajuruDesaAdat = "https://siradaskripsi.my.id/api/admin/prajuru/desa_adat/edit/up";
   var apiURLUploadFileSKPrajuru = "https://siradaskripsi.my.id/api/upload/sk-prajuru";
+  var apiURLGetAllJabatanPrajuruDesaAdat = "https://siradaskripsi.my.id/api/data/staff/jabatan/show";
   var selectedIdPenduduk;
   var selectedRole;
   bool Loading = false;
+  bool LoadingJabatan = true;
   final controllerEmail = TextEditingController();
   final controllerNamaFile = TextEditingController();
   final controllerMasaMenjabat = TextEditingController();
@@ -55,7 +57,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
         var jsonData = response.body;
         var parsedJson = json.decode(jsonData);
         setState(() {
-          selectedJabatan = parsedJson['jabatan'];
+          selectedJabatan = int.parse(parsedJson['jabatan_prajuru_desa_id']);
           masaMulai = DateTime.parse(parsedJson['tanggal_mulai_menjabat']);
           selectedMasaMulaiValue = DateFormat("yyyy-MM-dd").format(masaMulai).toString();
           masaBerakhir = DateTime.parse(parsedJson['tanggal_akhir_menjabat']);
@@ -68,6 +70,21 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
           selectedIdPenduduk = parsedJson['penduduk_id'];
           namaFile = parsedJson['sk_prajuru'];
           controllerNamaFile.text = namaFile.toString();
+        });
+      }
+    });
+  }
+
+  Future getJabatan() async {
+    http.get(Uri.parse(apiURLGetAllJabatanPrajuruDesaAdat),
+      headers: {"Content-Type" : "application/json"},
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          jabatan = data;
+          LoadingJabatan = false;
         });
       }
     });
@@ -107,6 +124,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
     // TODO: implement initState
     super.initState();
     getPrajuruDesaAdatInfo();
+    getJabatan();
     final DateTime sekarang = DateTime.now();
     selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(masaMulai == null ? sekarang : masaMulai).toString();
     selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(masaBerakhir == null ? sekarang : masaBerakhir).toString();
@@ -156,48 +174,47 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                       margin: EdgeInsets.only(top: 10, left: 20)
                     ),
                     Container(
-                      width: 300,
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                      decoration: BoxDecoration(
-                        color: HexColor("#025393"),
-                        borderRadius: BorderRadius.circular(30)
-                      ),
-                      child: DropdownButton<String>(
-                        onChanged: (value) {
-                          setState(() {
-                            selectedJabatan = value;
-                          });
-                        },
-                        value: selectedJabatan,
-                        underline: Container(),
-                        hint: Center(
-                          child: Text("Pilih Jabatan", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14,
-                            color: Colors.white
-                          ))
-                        ),
-                        icon: Icon(Icons.arrow_downward, color: Colors.white),
-                        isExpanded: true,
-                        items: jabatan.map((e) => DropdownMenuItem(
-                          child: Container(
-                            alignment: Alignment.topLeft,
-                            child: Text(e, style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            )),
+                      child: LoadingJabatan ? ListTileShimmer() : Container(
+                          width: 300,
+                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                          decoration: BoxDecoration(
+                              color: HexColor("#025393"),
+                              borderRadius: BorderRadius.circular(30)
                           ),
-                          value: e,
-                        )).toList(),
-                        selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
-                            child: Text(e, style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontFamily: "Poppins"
-                            ))
-                        )).toList(),
+                          child: DropdownButton(
+                            onChanged: (value) {
+                              setState(() {
+                                selectedJabatan = value;
+                              });
+                            },
+                            value: selectedJabatan,
+                            underline: Container(),
+                            hint: Center(
+                                child: Text("Pilih Jabatan", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    color: Colors.white
+                                ))
+                            ),
+                            icon: Icon(Icons.arrow_downward, color: Colors.white),
+                            isExpanded: true,
+                            items: jabatan.map((e) => DropdownMenuItem(
+                              child: Text(e['jabatan'], style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              )),
+                              value: e['jabatan_prajuru_desa_id'],
+                            )).toList(),
+                            selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
+                                child: Text(e['jabatan'], style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontFamily: "Poppins"
+                                ))
+                            )).toList(),
+                          ),
+                          margin: EdgeInsets.only(top: 20)
                       ),
-                      margin: EdgeInsets.only(top: 20)
                     )
                   ]
                 )
@@ -372,11 +389,11 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                       setState(() {
                         Loading = true;
                       });
-                      if(selectedJabatan == "bendesa") {
+                      if(selectedJabatan == "1") {
                         setState(() {
                           selectedRole = "Bendesa";
                         });
-                      }else if(selectedJabatan == "penyarikan") {
+                      }else if(selectedJabatan == "3") {
                         setState(() {
                           selectedRole = "Penyarikan";
                         });
@@ -409,6 +426,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                               body : body
                           ).then((http.Response response) {
                             var responseValue = response.statusCode;
+                            print(response.statusCode);
                             if(responseValue == 200) {
                               setState(() {
                                 Loading = false;
@@ -460,6 +478,7 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                             body : body
                         ).then((http.Response response) {
                           var responseValue = response.statusCode;
+                          print(response.statusCode);
                           if(responseValue == 200) {
                             setState(() {
                               Loading = false;

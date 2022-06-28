@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
@@ -23,11 +24,11 @@ class tambahPrajuruDesaAdatAdmin extends StatefulWidget {
 }
 
 class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin> {
-  List<String> jabatan = ["bendesa", "pangliman", "penyarikan", "patengen"];
+  List jabatan = [];
   List<String> status = ["Aktif", "Tidak Aktif"];
   String selectedStatus;
   String statusValue;
-  String selectedJabatan;
+  var selectedJabatan;
   String selectedMasaMulai;
   String selectedMasaMulaiValue;
   String selectedMasaBerakhir;
@@ -45,7 +46,9 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
   var pegawaiID;
   var selectedRole;
   var apiURLUpDataPrajuruDesaAdat = "https://siradaskripsi.my.id/api/admin/prajuru/desa_adat/up";
+  var apiURLGetAllJabatanPrajuruDesaAdat = "https://siradaskripsi.my.id/api/data/staff/jabatan/show";
   bool Loading = false;
+  bool LoadingJabatan = true;
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
   File file;
   String namaFile;
@@ -82,6 +85,20 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
     }
   }
 
+  Future getJabatan() async {
+    http.get(Uri.parse(apiURLGetAllJabatanPrajuruDesaAdat),
+      headers: {"Content-Type" : "application/json"},
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          jabatan = data;
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -91,6 +108,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
     controllerMasaAktif.selectedRange = PickerDateRange(sekarang, sekarang.add(Duration(days: 7)));
     ftoast = FToast();
     ftoast.init(this.context);
+    getJabatan();
   }
 
   @override
@@ -185,7 +203,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                       margin: EdgeInsets.only(top: 30, left: 20)
                   ),
                   Container(
-                      child: Column(
+                      child: LoadingJabatan ? ListTileShimmer() : Column(
                           children: <Widget>[
                             Container(
                               alignment: Alignment.topLeft,
@@ -202,7 +220,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                   color: HexColor("#025393"),
                                   borderRadius: BorderRadius.circular(30)
                               ),
-                              child: DropdownButton<String>(
+                              child: DropdownButton(
                                 onChanged: (value) {
                                   setState(() {
                                     selectedJabatan = value;
@@ -220,17 +238,14 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                 icon: Icon(Icons.arrow_downward, color: Colors.white),
                                 isExpanded: true,
                                 items: jabatan.map((e) => DropdownMenuItem(
-                                  child: Container(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(e, style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                    )),
-                                  ),
-                                  value: e,
+                                  child: Text(e['jabatan'], style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  )),
+                                  value: e['jabatan_prajuru_desa_id'],
                                 )).toList(),
                                 selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
-                                    child: Text(e, style: TextStyle(
+                                    child: Text(e['jabatan'], style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.white,
                                         fontFamily: "Poppins"
@@ -610,6 +625,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                                           ..headers.addAll(headers)
                                                           ..files.add(await http.MultipartFile.fromPath('file', filePath));
                                         var response = await request.send();
+                                        print(response.statusCode);
                                         if(response.statusCode == 501) {
                                           setState(() {
                                             Loading = false;
@@ -740,11 +756,11 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
                                           statusValue = "tidak aktif";
                                           Loading = true;
                                         });
-                                        if(selectedJabatan == "bendesa") {
+                                        if(selectedJabatan == "1") {
                                           setState(() {
                                             selectedRole = "Bendesa";
                                           });
-                                        }else if(selectedJabatan == "penyarikan"){
+                                        }else if(selectedJabatan == "3"){
                                           setState(() {
                                             selectedRole = "Penyarikan";
                                           });
