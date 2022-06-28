@@ -68,6 +68,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${detailSuratKeluarPanitia.suratKeluarId}";
   var apiURLShowPanitia = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/panitia/${detailSuratKeluarPanitia.suratKeluarId}";
   var apiURLGetHistori = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/histori/${detailSuratKeluarPanitia.suratKeluarId}";
+  var apiURLSendNotifikasi = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses/notifikasi/panitia/${detailSuratKeluarPanitia.suratKeluarId}";
 
   //validasi
   var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
@@ -425,9 +426,10 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                               http.post(Uri.parse(apiURLSetSedangDiproses),
                                   headers: {"Content-Type" : "application/json"},
                                   body: body
-                              ).then((http.Response response) {
+                              ).then((http.Response response) async {
                                 var responseValue = response.statusCode;
                                 if(responseValue == 200) {
+                                  final response = await http.get(Uri.parse(apiURLSendNotifikasi));
                                   ftoast.showToast(
                                       child: Container(
                                         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),

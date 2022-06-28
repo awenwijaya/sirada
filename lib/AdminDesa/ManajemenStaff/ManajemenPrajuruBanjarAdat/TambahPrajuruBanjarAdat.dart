@@ -287,17 +287,14 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
                                 icon: Icon(Icons.arrow_downward, color: Colors.white),
                                 isExpanded: true,
                                 items: jabatan.map((e) => DropdownMenuItem(
-                                  child: Container(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(e, style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                    )),
-                                  ),
+                                  child: Text(e.replaceAll('_', ' '), style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  )),
                                   value: e,
                                 )).toList(),
                                 selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
-                                    child: Text(e, style: TextStyle(
+                                    child: Text(e.replaceAll("_", " "), style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.white,
                                         fontFamily: "Poppins"

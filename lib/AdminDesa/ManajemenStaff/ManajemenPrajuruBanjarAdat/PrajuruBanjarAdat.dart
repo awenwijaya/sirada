@@ -484,14 +484,14 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                             items: jabatanFilterAktif.map((jabatan) {
                                               return DropdownMenuItem(
                                                   value: jabatan['jabatan'],
-                                                  child: Text("${jabatan['jabatan']}", style: TextStyle(
+                                                  child: Text("${jabatan['jabatan']}".replaceAll("_", " "), style: TextStyle(
                                                       fontFamily: "Poppins",
                                                       fontSize: 14
                                                   ))
                                               );
                                             }).toList(),
                                             selectedItemBuilder: (BuildContext context) => jabatanFilterAktif.map((jabatan) => Center(
-                                                child: Text("${jabatan['jabatan']}", style: TextStyle(
+                                                child: Text("${jabatan['jabatan']}".replaceAll("_", " "), style: TextStyle(
                                                     fontFamily: "Poppins",
                                                     fontSize: 14
                                                 ))
@@ -663,7 +663,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                                                     )
                                                                                 ),
                                                                                 Container(
-                                                                                    child: Text("${jabatanAktif[index]}", style: TextStyle(
+                                                                                    child: Text("${jabatanAktif[index]}".replaceAll("_", ' '), style: TextStyle(
                                                                                         fontFamily: "Poppins",
                                                                                         fontSize: 14
                                                                                     ))
@@ -862,7 +862,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                 items: jabatanFilterTidakAktif.map((jabatan) {
                                                   return DropdownMenuItem(
                                                     value: jabatan['jabatan'],
-                                                    child: Text("${jabatan['jabatan']}", style: TextStyle(
+                                                    child: Text(jabatan['jabatan'], style: TextStyle(
                                                       fontFamily: "Poppins",
                                                       fontSize: 14
                                                     )),
