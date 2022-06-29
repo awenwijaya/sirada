@@ -852,36 +852,73 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                           Container(
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                              child: TextField(
-                                controller: controllerTanggalKegiatanText,
-                                enabled: false,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(50.0),
-                                        borderSide: BorderSide(color: HexColor("#025393"))
+                              child: GestureDetector(
+                                  onTap: (){
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text("Pilih Tanggal Kegiatan", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                            color: HexColor("025393")
+                                          )),
+                                          content: Container(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Container(
+                                                  height: 250,
+                                                  width: 250,
+                                                  child: SfDateRangePicker(
+                                                    controller: controllerTanggalKegiatan,
+                                                    selectionMode: DateRangePickerSelectionMode.range,
+                                                    onSelectionChanged: selectionChanged,
+                                                    allowViewNavigation: true,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text("Simpan", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontWeight: FontWeight.w700,
+                                                color: HexColor("025393")
+                                              )),
+                                              onPressed: (){
+                                                Navigator.of(context).pop();
+                                              },
+                                            )
+                                          ],
+                                        );
+                                      }
+                                    );
+                                  },
+                                  child: TextField(
+                                    controller: controllerTanggalKegiatanText,
+                                    enabled: false,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(50.0),
+                                            borderSide: BorderSide(color: HexColor("#025393"))
+                                        ),
+                                        hintText: "Tanggal kegiatan belum terpilih",
+                                        prefixIcon: Icon(CupertinoIcons.calendar)
                                     ),
-                                    hintText: "Tanggal kegiatan belum terpilih",
-                                    prefixIcon: Icon(CupertinoIcons.calendar)
-                                ),
-                                style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14
-                                ),
-                              ),
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    ),
+                                  ),
+                              )
                             ),
                             margin: EdgeInsets.only(top: 10),
                           ),
-                          Container(
-                              child: Card(
-                                  margin: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                                  child: SfDateRangePicker(
-                                    controller: controllerTanggalKegiatan,
-                                    selectionMode: DateRangePickerSelectionMode.range,
-                                    onSelectionChanged: selectionChanged,
-                                    allowViewNavigation: true,
-                                  )
-                              )
-                          )
                         ]
                     )
                 ),
@@ -899,56 +936,42 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                         Container(
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                            child: TextField(
-                              controller: controllerWaktuKegiatan,
-                              enabled: false,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50.0),
-                                      borderSide: BorderSide(color: HexColor("#025393"))
-                                  ),
-                                  hintText: "Waktu kegiatan belum terpilih",
-                                  prefixIcon: Icon(CupertinoIcons.time_solid)
-                              ),
-                              style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14
+                            child: GestureDetector(
+                                onTap: (){
+                                  TimeRangePicker.show(
+                                      context: context,
+                                      unSelectedEmpty: true,
+                                      headerDefaultStartLabel: "Waktu Mulai",
+                                      headerDefaultEndLabel: "Waktu Selesai",
+                                      onSubmitted: (TimeRangeValue value) {
+                                        setState(() {
+                                          startTime = value.startTime;
+                                          endTime = value.endTime;
+                                          controllerWaktuKegiatan.text = startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}";
+                                        });
+                                      }
+                                  );
+                                },
+                              child: TextField(
+                                controller: controllerWaktuKegiatan,
+                                enabled: false,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        borderSide: BorderSide(color: HexColor("#025393"))
+                                    ),
+                                    hintText: "Waktu kegiatan belum terpilih",
+                                    prefixIcon: Icon(CupertinoIcons.time_solid)
+                                ),
+                                style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ),
                               ),
                             ),
                           ),
                           margin: EdgeInsets.only(top: 10),
                         ),
-                        Container(
-                          child: FlatButton(
-                            onPressed: (){
-                              TimeRangePicker.show(
-                                  context: context,
-                                  unSelectedEmpty: true,
-                                  headerDefaultStartLabel: "Waktu Mulai",
-                                  headerDefaultEndLabel: "Waktu Selesai",
-                                  onSubmitted: (TimeRangeValue value) {
-                                    setState(() {
-                                      startTime = value.startTime;
-                                      endTime = value.endTime;
-                                      controllerWaktuKegiatan.text = startTime == null ? "--:--" : endTime == null ? "${startTime.hour}:${startTime.minute} - ${startTime.hour}:${startTime.minute}": "${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}";
-                                    });
-                                  }
-                              );
-                            },
-                            child: Text("Pilih Waktu Kegiatan", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white
-                            )),
-                            color: HexColor("#025393"),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25)
-                            ),
-                            padding: EdgeInsets.only(top: 10, bottom: 10, left: 50, right: 50),
-                          ),
-                          margin: EdgeInsets.only(top: 10),
-                        )
                       ],
                     )
                 ),
@@ -1793,7 +1816,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                 ),
                 Container(
                   child: FlatButton(
-                    onPressed: () async {
+                    onPressed: () {
                       if(controllerLepihan.text != "0" && fileName.isEmpty) {
                         ftoast.showToast(
                             child: Container(
@@ -1889,6 +1912,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                           "pamuput_surat" : controllerPamuput.text,
                           "nomor_surat" : controllerNomorSurat.text,
                           "user_id" : loginPage.userId,
+                          "status_surat" : statusSurat,
                           "surat_keluar_id" : editSuratKeluarPanitia.idSuratKeluar,
                           "nomor_urut_surat" : nomorUrutSurat == null ? null : nomorUrutSurat,
                           "pihak_krama" : isSendToKrama ? "Desa Adat ${dashboardKramaPanitia.namaDesaAdat}" : null
@@ -1900,36 +1924,33 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                           var responseValue = response.statusCode;
                           print("status upload edit surat keluar panitia: ${response.statusCode}");
                           if(responseValue == 200) {
-                            saveEdit().whenComplete(() {
-                              print("save edit is complete");
-                              ftoast.showToast(
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(25),
-                                        color: Colors.green
-                                    ),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Icon(Icons.done),
-                                        Container(
-                                          margin: EdgeInsets.only(left: 15),
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.65,
-                                            child: Text("Surat keluar berhasil diperbaharui", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.white
-                                            )),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                              );
-                              Navigator.of(context).pop(true);
-                            });
+                            ftoast.showToast(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Colors.green
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.done),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.65,
+                                          child: Text("Surat keluar berhasil diperbaharui", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white
+                                          )),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                            );
+                            Navigator.of(context).pop(true);
                           }
                         });
                       }
@@ -1957,7 +1978,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
     );
   }
 
-  saveEdit() async {
+  saveEdit() {
     uploadLampiran();
     uploadPrajuruDesa();
     uploadPrajuruBanjar();

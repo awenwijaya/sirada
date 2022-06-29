@@ -94,6 +94,7 @@ class _tambahPrajuruDesaAdatAdminState extends State<tambahPrajuruDesaAdatAdmin>
         var data = json.decode(response.body);
         setState(() {
           jabatan = data;
+          LoadingJabatan = false;
         });
       }
     });
