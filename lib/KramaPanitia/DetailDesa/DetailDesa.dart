@@ -29,6 +29,8 @@ class _detailDesaKramaPanitiaState extends State<detailDesaKramaPanitia> {
   var webDesa;
   var luasDesa;
   var namaKecamatan;
+  var long;
+  var lat;
   bool Loading = true;
 
   getDesaInfo() async {
@@ -49,6 +51,8 @@ class _detailDesaKramaPanitiaState extends State<detailDesaKramaPanitia> {
           webDesa = parsedJson['desadat_web'];
           luasDesa = parsedJson['desadat_luas'].toString();
           namaKecamatan = parsedJson['name'];
+          long = parsedJson['desadat_kantor_long'];
+          lat = parsedJson['desadat_kantor_lat'];
           detailDesaKramaPanitia.kontakWADesa1 = parsedJson['desadat_wa_kontak_1'];
           detailDesaKramaPanitia.kontakWADesa2 = parsedJson['desadat_wa_kontak_2'];
           detailDesaKramaPanitia.logoDesa = parsedJson['desadat_logo'].toString();
@@ -298,9 +302,9 @@ class _detailDesaKramaPanitiaState extends State<detailDesaKramaPanitia> {
                                           ),
                                           Container(
                                               alignment: Alignment.center,
-                                              child: alamatKantorDesa == null ? Container() : TextButton(
+                                              child: alamatKantorDesa == null ? Container() : lat == null ? Container() : TextButton(
                                                   onPressed: () async {
-                                                    String googleURL = "https://www.google.com/maps/search/?api=1&query=-8.702976508916437,115.23417075502773";
+                                                    String googleURL = "https://www.google.com/maps/search/?api=1&query=${lat},${long}";
                                                     if(await canLaunch(googleURL)) {
                                                       await launch(googleURL);
                                                     }else{

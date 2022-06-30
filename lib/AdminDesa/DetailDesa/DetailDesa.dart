@@ -31,6 +31,8 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
   var webDesa;
   var luasDesa;
   var namaKecamatan;
+  var long;
+  var lat;
 
   getDesaInfo() async {
     http.get(Uri.parse(apiURLGetDetailDesaById),
@@ -52,6 +54,8 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
           detailDesaAdmin.kontakWADesa1 = parsedJson['desadat_wa_kontak_1'];
           detailDesaAdmin.kontakWADesa2 = parsedJson['desadat_wa_kontak_2'];
           sejarahDesaAdmin.sejarahDesa = parsedJson['desadat_sejarah'];
+          long = parsedJson['desadat_kantor_long'];
+          lat = parsedJson['desadat_kantor_lat'];
           strukturKepemimpinanDesaAdmin.strukturKepemimpinan = parsedJson['desadat_file_struktur_pem'];
           detailDesaAdmin.logoDesa = parsedJson['desadat_logo'].toString();
         });
@@ -335,7 +339,7 @@ class _detailDesaAdminState extends State<detailDesaAdmin> {
                                   alignment: Alignment.center,
                                   child: alamatKantorDesa == null ? Container() : TextButton(
                                     onPressed: () async {
-                                      String googleURL = "https://www.google.com/maps/search/?api=1&query=-8.702976508916437,115.23417075502773";
+                                      String googleURL = "https://www.google.com/maps/search/?api=1&query=${lat},${long}";
                                       if(await canLaunch(googleURL)) {
                                         await launch(googleURL);
                                       }else{

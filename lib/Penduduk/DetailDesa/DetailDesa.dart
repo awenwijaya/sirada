@@ -29,6 +29,8 @@ class _detailDesaKramaState extends State<detailDesaKrama> {
   var webDesa;
   var luasDesa;
   var namaKecamatan;
+  var long;
+  var lat;
   bool Loading = true;
 
   getDesaInfo() async {
@@ -49,6 +51,8 @@ class _detailDesaKramaState extends State<detailDesaKrama> {
           webDesa = parsedJson['desadat_web'];
           luasDesa = parsedJson['desadat_luas'].toString();
           namaKecamatan = parsedJson['name'];
+          long = parsedJson['desadat_kantor_long'];
+          lat = parsedJson['desadat_kantor_lat'];
           detailDesaKrama.kontakWADesa1 = parsedJson['desadat_wa_kontak_1'];
           detailDesaKrama.kontakWADesa2 = parsedJson['desadat_wa_kontak_2'];
           detailDesaKrama.logoDesa = parsedJson['desadat_logo'].toString();
