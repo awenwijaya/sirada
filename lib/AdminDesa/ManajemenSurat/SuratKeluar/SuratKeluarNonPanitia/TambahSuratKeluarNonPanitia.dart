@@ -1257,15 +1257,6 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                     alignment: Alignment.topLeft,
                     margin: EdgeInsets.only(top: 30, left: 20),
                   ),
-                  Switch(
-                    value: isSendToKrama,
-                    onChanged: (value) {
-                      setState(() {
-                        isSendToKrama = value;
-                        isVisible = !isVisible;
-                      });
-                    },
-                  ),
                   Visibility(
                     visible: isVisible,
                     child: Container(
@@ -1377,6 +1368,23 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                           ),
                         ],
                       ),
+                    ),
+                  ),
+                  Container(
+                    child: CheckboxListTile(
+                      title: Text("Kirimkan surat ini ke Krama Desa ${dashboardAdminDesa.namaDesaAdat}", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        color: Colors.black
+                      )),
+                      value: isSendToKrama,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (bool value) {
+                        setState(() {
+                          isSendToKrama = value;
+                          isVisible = !isVisible;
+                        });
+                      },
                     ),
                   ),
                   Container(
@@ -1645,17 +1653,19 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
     Map<String, String> headers = {
       'Content-Type' : 'multipart/form-data'
     };
-    if(selectedKelihanAdat.isNotEmpty) {
-      for(var i = 0; i < selectedKelihanAdat.length; i++) {
-        Map<String, String> body = {
-          "surat_keluar_id" : suratKeluarId.toString(),
-          "prajuru_banjar_adat_id" : selectedKelihanAdat[i]['prajuru_banjar_adat_id'].toString()
-        };
-        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruBanjar))
-          ..fields.addAll(body)
-          ..headers.addAll(headers);
-        var response = await request.send();
-        print("upload tetujon prajuru banjar status code: ${response.statusCode.toString()}");
+    if(isSendToKrama == false) {
+      if(selectedKelihanAdat.isNotEmpty) {
+        for(var i = 0; i < selectedKelihanAdat.length; i++) {
+          Map<String, String> body = {
+            "surat_keluar_id" : suratKeluarId.toString(),
+            "prajuru_banjar_adat_id" : selectedKelihanAdat[i]['prajuru_banjar_adat_id'].toString()
+          };
+          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruBanjar))
+            ..fields.addAll(body)
+            ..headers.addAll(headers);
+          var response = await request.send();
+          print("upload tetujon prajuru banjar status code: ${response.statusCode.toString()}");
+        }
       }
     }
     if(selectedKelihanAdatTumusan.isNotEmpty) {
@@ -1677,17 +1687,19 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
     Map<String, String> headers = {
       'Content-Type' : 'multipart/form-data'
     };
-    if(selectedBendesa.isNotEmpty) {
-      for(var i = 0; i < selectedBendesa.length; i++) {
-        Map<String, String> body = {
-          "surat_keluar_id" : suratKeluarId.toString(),
-          "prajuru_desa_adat_id" : selectedBendesa[i]['prajuru_desa_adat_id'].toString()
-        };
-        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruDesa))
-          ..fields.addAll(body)
-          ..headers.addAll(headers);
-        var response = await request.send();
-        print("upload tetujon prajuru desa status code: ${response.statusCode.toString()}");
+    if(isSendToKrama == false) {
+      if(selectedBendesa.isNotEmpty) {
+        for(var i = 0; i < selectedBendesa.length; i++) {
+          Map<String, String> body = {
+            "surat_keluar_id" : suratKeluarId.toString(),
+            "prajuru_desa_adat_id" : selectedBendesa[i]['prajuru_desa_adat_id'].toString()
+          };
+          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruDesa))
+            ..fields.addAll(body)
+            ..headers.addAll(headers);
+          var response = await request.send();
+          print("upload tetujon prajuru desa status code: ${response.statusCode.toString()}");
+        }
       }
     }
     if(selectedBendesaTumusan.isNotEmpty) {
@@ -1709,17 +1721,19 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
     Map<String, String> headers = {
       'Content-Type' : 'multipart/form-data'
     };
-    if(pihakLain.isNotEmpty) {
-      for(var i = 0; i < pihakLain.length; i++) {
-        Map<String, String> body = {
-          "surat_keluar_id" : suratKeluarId.toString(),
-          "pihak_lain" : pihakLain[i].toString()
-        };
-        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPihakLain))
-          ..fields.addAll(body)
-          ..headers.addAll(headers);
-        var response = await request.send();
-        print("upload tetujon pihak lain status code: ${response.statusCode.toString()}");
+    if(isSendToKrama == false) {
+      if(pihakLain.isNotEmpty) {
+        for(var i = 0; i < pihakLain.length; i++) {
+          Map<String, String> body = {
+            "surat_keluar_id" : suratKeluarId.toString(),
+            "pihak_lain" : pihakLain[i].toString()
+          };
+          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPihakLain))
+            ..fields.addAll(body)
+            ..headers.addAll(headers);
+          var response = await request.send();
+          print("upload tetujon pihak lain status code: ${response.statusCode.toString()}");
+        }
       }
     }
     if(pihakLainTumusan.isNotEmpty) {

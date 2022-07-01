@@ -123,6 +123,7 @@ class _splashScreenState extends State<splashScreen> {
             loginPage.desaId = desaId;
             loginPage.pendudukId = pendudukId;
             loginPage.prajuruId = prajuruId;
+            loginPage.role = role;
           });
         }else if(role == "Krama"){
           setState(() {
@@ -131,6 +132,7 @@ class _splashScreenState extends State<splashScreen> {
             loginPage.desaId = desaId;
             loginPage.pendudukId = pendudukId;
             loginPage.kramaId = kramaId;
+            loginPage.role = role;
           });
         }else if(role == "Panitia") {
           setState(() {
@@ -139,6 +141,7 @@ class _splashScreenState extends State<splashScreen> {
             loginPage.desaId = desaId;
             loginPage.pendudukId = pendudukId;
             loginPage.kramaId = kramaIdPanitia;
+            loginPage.role = role;
           });
         }
         if(role == "Krama") {

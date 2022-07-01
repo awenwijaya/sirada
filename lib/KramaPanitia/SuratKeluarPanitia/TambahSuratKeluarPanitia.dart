@@ -1791,11 +1791,9 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                   if(responseValue == 200) {
                                     var data = json.decode(response.body);
                                     uploadLampiran(data);
-                                    if(isSendToKrama == false) {
-                                      uploadPrajuruBanjar(data);
-                                      uploadPrajuruDesa(data);
-                                      uploadPihakLain(data);
-                                    }
+                                    uploadPrajuruBanjar(data);
+                                    uploadPrajuruDesa(data);
+                                    uploadPihakLain(data);
                                     setState(() {
                                       Loading = false;
                                     });
@@ -1853,17 +1851,19 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
     Map<String, String> headers = {
       'Content-Type' : 'multipart/form-data'
     };
-    if(selectedKelihanAdat.isNotEmpty) {
-      for(var i = 0; i < selectedKelihanAdat.length; i++) {
-        Map<String, String> body = {
-          "surat_keluar_id" : suratKeluarId.toString(),
-          "prajuru_banjar_adat_id" : selectedKelihanAdat[i]['prajuru_banjar_adat_id'].toString()
-        };
-        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruBanjar))
-                          ..fields.addAll(body)
-                          ..headers.addAll(headers);
-        var response = await request.send();
-        print("upload tetujon prajuru banjar status code: ${response.statusCode.toString()}");
+    if(isSendToKrama == false) {
+      if(selectedKelihanAdat.isNotEmpty) {
+        for(var i = 0; i < selectedKelihanAdat.length; i++) {
+          Map<String, String> body = {
+            "surat_keluar_id" : suratKeluarId.toString(),
+            "prajuru_banjar_adat_id" : selectedKelihanAdat[i]['prajuru_banjar_adat_id'].toString()
+          };
+          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruBanjar))
+            ..fields.addAll(body)
+            ..headers.addAll(headers);
+          var response = await request.send();
+          print("upload tetujon prajuru banjar status code: ${response.statusCode.toString()}");
+        }
       }
     }
     if(selectedKelihanAdatTumusan.isNotEmpty) {
@@ -1885,17 +1885,19 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
     Map<String, String> headers = {
       'Content-Type' : 'multipart/form-data'
     };
-    if(selectedBendesa.isNotEmpty) {
-      for(var i = 0; i < selectedBendesa.length; i++) {
-        Map<String, String> body = {
-          "surat_keluar_id" : suratKeluarId.toString(),
-          "prajuru_desa_adat_id" : selectedBendesa[i]['prajuru_desa_adat_id'].toString()
-        };
-        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruDesa))
-          ..fields.addAll(body)
-          ..headers.addAll(headers);
-        var response = await request.send();
-        print("upload tetujon prajuru desa status code: ${response.statusCode.toString()}");
+    if(isSendToKrama == false) {
+      if(selectedBendesa.isNotEmpty) {
+        for(var i = 0; i < selectedBendesa.length; i++) {
+          Map<String, String> body = {
+            "surat_keluar_id" : suratKeluarId.toString(),
+            "prajuru_desa_adat_id" : selectedBendesa[i]['prajuru_desa_adat_id'].toString()
+          };
+          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruDesa))
+            ..fields.addAll(body)
+            ..headers.addAll(headers);
+          var response = await request.send();
+          print("upload tetujon prajuru desa status code: ${response.statusCode.toString()}");
+        }
       }
     }
     if(selectedBendesaTumusan.isNotEmpty) {
@@ -1917,17 +1919,19 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
     Map<String, String> headers = {
       'Content-Type' : 'multipart/form-data'
     };
-    if(pihakLain.isNotEmpty) {
-      for(var i = 0; i < pihakLain.length; i++) {
-        Map<String, String> body = {
-          "surat_keluar_id" : suratKeluarId.toString(),
-          "pihak_lain" : pihakLain[i].toString()
-        };
-        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPihakLain))
-          ..fields.addAll(body)
-          ..headers.addAll(headers);
-        var response = await request.send();
-        print("upload tetujon pihak lain status code: ${response.statusCode.toString()}");
+    if(isSendToKrama == false) {
+      if(pihakLain.isNotEmpty) {
+        for(var i = 0; i < pihakLain.length; i++) {
+          Map<String, String> body = {
+            "surat_keluar_id" : suratKeluarId.toString(),
+            "pihak_lain" : pihakLain[i].toString()
+          };
+          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPihakLain))
+            ..fields.addAll(body)
+            ..headers.addAll(headers);
+          var response = await request.send();
+          print("upload tetujon pihak lain status code: ${response.statusCode.toString()}");
+        }
       }
     }
     if(pihakLainTumusan.isNotEmpty) {

@@ -39,6 +39,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   var namaBendesa;
   var kecamatanId;
   var status;
+  var pihakKrama;
   var validasiStatus;
   FToast ftoast;
 
@@ -241,7 +242,9 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
           aksaraDesa = parsedJson['desadat_aksara_bali'];
           status = parsedJson['status'];
           if(parsedJson['pihak_krama'] != null) {
-            tetujon.add("Krama ${parsedJson['pihak_krama']}");
+            pihakKrama = "Krama ${parsedJson['pihak_krama']}";
+          }else {
+            pihakKrama = null;
           }
         });
         http.get(Uri.parse("https://siradaskripsi.my.id/api/data/kecamatan/${kecamatanId}"),
@@ -458,6 +461,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                     getTumusan();
                     getHistori();
                     getLampiran();
+                    getValidasiStatus();
                   });
                 });
               },
@@ -559,9 +563,9 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                     ),
                     Container(
                       alignment: Alignment.topRight,
-                      child: tetujon.length == 0 ? Text("-", style: TextStyle(
-                        fontFamily: "Times New Roman",
-                        fontSize: 16
+                      child: pihakKrama == null ? tetujon.length == 0 ? Text("-", style: TextStyle(
+                          fontFamily: "Times New Roman",
+                          fontSize: 16
                       )) : Container(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -576,7 +580,10 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                             )
                           ],
                         ),
-                      ),
+                      ) : Text(pihakKrama, style: TextStyle(
+                        fontFamily: "Times New Roman",
+                        fontSize: 16
+                      )),
                       margin: EdgeInsets.only(right: 15, top: 5),
                     ),
                     Container(
@@ -606,37 +613,6 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                   )),
                                   margin: EdgeInsets.only(top: 5)
                               ),
-                              Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Text("Tumusan :", style: TextStyle(
-                                      fontFamily: "Times New Roman",
-                                      fontSize: 16
-                                  )),
-                                  margin: EdgeInsets.only(top: 5)
-                              ),
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: tumusan.length == 0 ? Text("-", style: TextStyle(
-                                  fontFamily: "Times New Roman",
-                                  fontSize: 16
-                                )) : Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      for(var i = 0; i < tumusan.length; i++) Container(
-                                        child: Text("${i+1}. ${tumusan[i].toString()}", style: TextStyle(
-                                            fontFamily: "Times New Roman",
-                                            fontSize: 16
-                                        )),
-                                        margin: EdgeInsets.only(bottom: 5),
-                                      )
-                                    ],
-                                  ),
-                                  margin: EdgeInsets.only(top: 5),
-                                ),
-                                margin: EdgeInsets.only(left: 5),
-                              )
                             ]
                         ),
                         margin: EdgeInsets.only(left: 15, top: 10)
@@ -753,6 +729,44 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                               ),
                             ]
                         )
+                    ),
+                    Container(
+                      child: tumusan.length == 0 ? Container() : Column(
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment.topLeft,
+                              child: Text("Tumusan :", style: TextStyle(
+                                  fontFamily: "Times New Roman",
+                                  fontSize: 16
+                              )),
+                              margin: EdgeInsets.only(top: 5)
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: tumusan.length == 0 ? Text("-", style: TextStyle(
+                                fontFamily: "Times New Roman",
+                                fontSize: 16
+                            )) : Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  for(var i = 0; i < tumusan.length; i++) Container(
+                                    child: Text("${i+1}. ${tumusan[i].toString()}", style: TextStyle(
+                                        fontFamily: "Times New Roman",
+                                        fontSize: 16
+                                    )),
+                                    margin: EdgeInsets.only(bottom: 5),
+                                  )
+                                ],
+                              ),
+                              margin: EdgeInsets.only(top: 5),
+                            ),
+                            margin: EdgeInsets.only(left: 5),
+                          )
+                        ],
+                      ),
+                      margin: EdgeInsets.only(left: 15, top: 10)
                     ),
                     Container(
                       child: lampiran.length == 0 ? Container() : Column(

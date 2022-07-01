@@ -2027,13 +2027,17 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
     Map<String, String> headers = {
       'Content-Type' : 'multipart/form-data'
     };
-    for(var i = 0; i < lampiran.length; i++) {
-      var request = http.MultipartRequest('POST', Uri.parse(apiURLUpLampiran))
-        ..headers.addAll(headers)
-        ..files.add(await http.MultipartFile.fromPath('lampiran', lampiran[i].path));
-      request.send().then((response) =>  {
-        print("upload lampiran status code: ${response.statusCode.toString()}")
-      });
+    if(lampiran.isNotEmpty) {
+      for(var i = 0; i < lampiran.length; i++) {
+        var request = http.MultipartRequest('POST', Uri.parse(apiURLUpLampiran))
+          ..headers.addAll(headers)
+          ..files.add(await http.MultipartFile.fromPath('lampiran', lampiran[i].path));
+        request.send().then((response) =>  {
+          print("upload lampiran status code: ${response.statusCode.toString()}")
+        });
+      }
+    }else {
+      print("lampiran kosong");
     }
   }
 

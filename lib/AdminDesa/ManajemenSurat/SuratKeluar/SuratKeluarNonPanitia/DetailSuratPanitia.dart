@@ -40,6 +40,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
   var timKegiatan;
   var status;
   var validasiStatus;
+  var pihakKrama;
   FToast ftoast;
 
   List tetujonPrajuruDesaList = [];
@@ -287,6 +288,11 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
           aksaraDesa = parsedJson['desadat_aksara_bali'];
           timKegiatan = parsedJson['tim_kegiatan'];
           status = parsedJson['status'];
+          if(parsedJson['pihak_krama'] != null) {
+            pihakKrama = "Krama ${parsedJson['pihak_krama']}";
+          }else {
+            pihakKrama = null;
+          }
         });
         http.get(Uri.parse("https://siradaskripsi.my.id/api/data/kecamatan/${kecamatanId}"),
             headers: {"Content-Type" : "application/json"}
@@ -455,7 +461,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                     ),
                     Container(
                       alignment: Alignment.topRight,
-                      child: tetujon.length == 0 ? Text("-", style: TextStyle(
+                      child: pihakKrama == null ? tetujon.length == 0 ? Text("-", style: TextStyle(
                           fontFamily: "Times New Roman",
                           fontSize: 16
                       )) : Column(
@@ -470,7 +476,10 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                             margin: EdgeInsets.only(bottom: 5),
                           )
                         ],
-                      ),
+                      ) : Text(pihakKrama, style: TextStyle(
+                          fontFamily: "Times New Roman",
+                          fontSize: 16
+                      )),
                       margin: EdgeInsets.only(right: 15, top: 5),
                     ),
                     Container(
@@ -500,37 +509,6 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                                   )),
                                   margin: EdgeInsets.only(top: 5)
                               ),
-                              Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Text("Tumusan :", style: TextStyle(
-                                      fontFamily: "Times New Roman",
-                                      fontSize: 16
-                                  )),
-                                  margin: EdgeInsets.only(top: 5)
-                              ),
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: tumusan.length == 0 ? Text("-", style: TextStyle(
-                                    fontFamily: "Times New Roman",
-                                    fontSize: 16
-                                )) : Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      for(var i = 0; i < tumusan.length; i++) Container(
-                                        child: Text("${i+1}. ${tumusan[i].toString()}", style: TextStyle(
-                                            fontFamily: "Times New Roman",
-                                            fontSize: 16
-                                        )),
-                                        margin: EdgeInsets.only(bottom: 5),
-                                      )
-                                    ],
-                                  ),
-                                  margin: EdgeInsets.only(top: 5),
-                                ),
-                                margin: EdgeInsets.only(left: 5),
-                              )
                             ]
                         ),
                         margin: EdgeInsets.only(left: 15, top: 20)
@@ -680,6 +658,44 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                           ],
                         ),
                         margin: EdgeInsets.only(top: 20)
+                    ),
+                    Container(
+                      child: tumusan.length == 0 ? Container() : Column(
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment.topLeft,
+                              child: Text("Tumusan :", style: TextStyle(
+                                  fontFamily: "Times New Roman",
+                                  fontSize: 16
+                              )),
+                              margin: EdgeInsets.only(top: 5)
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: tumusan.length == 0 ? Text("-", style: TextStyle(
+                              fontFamily: "Times New Roman",
+                              fontSize: 16,
+                            )) : Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  for(var i = 0; i < tumusan.length; i++) Container(
+                                    child: Text("${i+1}. ${tumusan[i].toString()}", style: TextStyle(
+                                        fontFamily: "Times New Roman",
+                                        fontSize: 16
+                                    )),
+                                    margin: EdgeInsets.only(bottom: 5),
+                                  )
+                                ],
+                              ),
+                              margin: EdgeInsets.only(top: 5),
+                            ),
+                            margin: EdgeInsets.only(left: 5),
+                          )
+                        ],
+                      ),
+                      margin: EdgeInsets.only(left: 15, top: 10),
                     ),
                     Container(
                       child: lampiran.length == 0 ? Container() : Column(

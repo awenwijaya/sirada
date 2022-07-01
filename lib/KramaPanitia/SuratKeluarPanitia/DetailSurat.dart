@@ -826,7 +826,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                           )
                         ],
                       ),
-                      margin: EdgeInsets.only(left: 15),
+                      margin: EdgeInsets.only(left: 15, top: 10),
                     ),
                     Container(
                       child: lampiran.length == 0 ? Container() : Column(

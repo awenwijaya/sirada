@@ -1675,11 +1675,14 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                               http.post(Uri.parse(apiURLSimpanEditSuratKeluar),
                                   headers: {"Content-Type" : "application/json"},
                                   body: body
-                              ).then((http.Response response) {
+                              ).then((http.Response response) async {
                                 var responseValue = response.statusCode;
                                 print("status upload edit surat keluar non-panitia : ${response.statusCode.toString()}");
                                 if(responseValue == 200) {
-                                  saveEdit();
+                                  await uploadLampiran();
+                                  await uploadPrajuruDesa();
+                                  await uploadPrajuruBanjar();
+                                  await uploadPihakLain();
                                   setState(() {
                                     Loading = false;
                                   });
@@ -1737,13 +1740,6 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
     );
   }
 
-  saveEdit() {
-    uploadLampiran();
-    uploadPrajuruDesa();
-    uploadPrajuruBanjar();
-    uploadPihakLain();
-  }
-
   Future uploadLampiran() async {
     Map<String, String> headers = {
       'Content-Type' : 'multipart/form-data'
@@ -1761,19 +1757,21 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
         var request = http.MultipartRequest('POST', Uri.parse(apiURLUpLampiran))
           ..headers.addAll(headers)
           ..files.add(await http.MultipartFile.fromPath('lampiran', lampiran[i].path));
-        var response = await request.send();
-        print("upload lampiran status code: ${response.statusCode.toString()}");
-      }
-      for(var i = 0; i < fileName.length; i++) {
-        Map<String, String> body = {
-          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
-          "file_name" : fileName[i].toString()
-        };
-        var request = http.MultipartRequest("POST", Uri.parse(apiURLSaveEditLampiran))
-          ..fields.addAll(body)
-          ..headers.addAll(headers);
-        var response = await request.send();
-        print("upload lampiran status code (save edit): ${response.statusCode.toString()}");
+        await request.send().then((response) {
+          print("upload lampiran status code: ${response.statusCode.toString()}");
+        });
+        for(var i = 0; i < fileName.length; i++) {
+          Map<String, String> body = {
+            "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+            "file_name" : fileName[i].toString()
+          };
+          var request = http.MultipartRequest("POST", Uri.parse(apiURLSaveEditLampiran))
+            ..fields.addAll(body)
+            ..headers.addAll(headers);
+          await request.send().then((response) {
+            print("upload lampiran status code (save edit): ${response.statusCode.toString()}");
+          });
+        }
       }
     }else {
       for(var i = 0; i < fileName.length; i++) {
@@ -1784,14 +1782,14 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
         var request = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/lampiran/edit/up"))
           ..fields.addAll(body)
           ..headers.addAll(headers);
-        var response = await request.send();
-        print("upload lampiran status code (save edit): ${response.statusCode.toString()}");
+        await request.send().then((response) {
+          print("upload lampiran status code (save edit): ${response.statusCode.toString()}");
+        });
       }
     }
   }
 
   Future uploadPrajuruBanjar() async {
-
     Map<String, String> body = {
       "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString()
     };
@@ -1801,44 +1799,48 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
     var request_delete = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/banjar/delete"))
       ..fields.addAll(body)
       ..headers.addAll(headers);
-    var response_delete = await request_delete.send();
-    print("delete tetujon prajuru banjar status code : ${response_delete.statusCode.toString()}");
+    await request_delete.send().then((response) {
+      print("delete tetujon prajuru banjar status code : ${response.statusCode.toString()}");
+    });
     var request_delete_tumusan = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tumusan/banjar/delete"))
       ..fields.addAll(body)
       ..headers.addAll(headers);
-    var response_delete_tumusan = await request_delete_tumusan.send();
-    print("delete tetujon prajuru banjar status code : ${response_delete_tumusan.statusCode.toString()}");
-
-    if(selectedKelihanAdat.isNotEmpty) {
-      for(var i = 0; i < selectedKelihanAdat.length; i++) {
-        Map<String, String> body = {
-          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
-          "prajuru_banjar_adat_id" : selectedKelihanAdat[i]['prajuru_banjar_adat_id'].toString()
-        };
-        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruBanjar))
-          ..fields.addAll(body)
-          ..headers.addAll(headers);
-        var response = await request.send();
-        print("upload tetujon prajuru banjar status code: ${response.statusCode.toString()}");
+    await request_delete_tumusan.send().then((response) async {
+      print("delete tetujon prajuru banjar status code : ${response.statusCode.toString()}");
+      if(isSendToKrama == false) {
+        if(selectedKelihanAdat.isNotEmpty) {
+          for(var i = 0; i < selectedKelihanAdat.length; i++) {
+            Map<String, String> body = {
+              "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+              "prajuru_banjar_adat_id" : selectedKelihanAdat[i]['prajuru_banjar_adat_id'].toString()
+            };
+            var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruBanjar))
+              ..fields.addAll(body)
+              ..headers.addAll(headers);
+            await request.send().then((response) {
+              print("upload tetujon prajuru banjar status code: ${response.statusCode.toString()}");
+            });
+          }
+        }
       }
-    }
-    if(selectedKelihanAdatTumusan.isNotEmpty) {
-      for(var i = 0; i < selectedKelihanAdatTumusan.length; i++) {
-        Map<String, String> bodyTumusan = {
-          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
-          "prajuru_banjar_adat_id" : selectedKelihanAdatTumusan[i]['prajuru_banjar_adat_id'].toString()
-        };
-        var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPrajuruBanjar))
-          ..fields.addAll(bodyTumusan)
-          ..headers.addAll(headers);
-        var response = await requestTumusan.send();
-        print("upload tumusan prajuru banjar status code: ${response.statusCode.toString()}");
+      if(selectedKelihanAdatTumusan.isNotEmpty) {
+        for(var i = 0; i < selectedKelihanAdatTumusan.length; i++) {
+          Map<String, String> bodyTumusan = {
+            "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+            "prajuru_banjar_adat_id" : selectedKelihanAdatTumusan[i]['prajuru_banjar_adat_id'].toString()
+          };
+          var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPrajuruBanjar))
+            ..fields.addAll(bodyTumusan)
+            ..headers.addAll(headers);
+          await requestTumusan.send().then((response) {
+            print("upload tumusan prajuru banjar status code: ${response.statusCode.toString()}");
+          });
+        }
       }
-    }
+    });
   }
 
   Future uploadPrajuruDesa() async {
-
     Map<String, String> body = {
       "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString()
     };
@@ -1848,44 +1850,49 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
     var request_delete = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/desa/delete"))
       ..fields.addAll(body)
       ..headers.addAll(headers);
-    var response_delete = await request_delete.send();
-    print("delete tetujon prajuru desa status code : ${response_delete.statusCode.toString()}");
+    await request_delete.send().then((response) {
+      print("delete tetujon prajuru desa status code : ${response.statusCode.toString()}");
+    });
     var request_delete_tumusan = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tumusan/desa/delete"))
       ..fields.addAll(body)
       ..headers.addAll(headers);
-    var response_delete_tumusan = await request_delete_tumusan.send();
-    print("delete tumusan prajuru desa status code : ${response_delete_tumusan.statusCode.toString()}");
+    await request_delete_tumusan.send().then((response) async {
+      print("delete tumusan prajuru desa status code : ${response.statusCode.toString()}");
+      if(isSendToKrama == false) {
+        if(selectedBendesa.isNotEmpty) {
+          for(var i = 0; i < selectedBendesa.length; i++) {
+            Map<String, String> body = {
+              "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+              "prajuru_desa_adat_id" : selectedBendesa[i]['prajuru_desa_adat_id'].toString()
+            };
+            var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruDesa))
+              ..fields.addAll(body)
+              ..headers.addAll(headers);
+            await request.send().then((response) {
+              print("upload tetujon prajuru desa status code: ${response.statusCode.toString()}");
+            });
+          }
+        }
+      }
+      if(selectedBendesaTumusan.isNotEmpty) {
+        for(var i = 0; i < selectedBendesaTumusan.length; i++) {
+          Map<String, String> bodyTumusan = {
+            "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+            "prajuru_desa_adat_id" : selectedBendesaTumusan[i]['prajuru_desa_adat_id'].toString()
+          };
+          var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPrajuruDesa))
+            ..fields.addAll(bodyTumusan)
+            ..headers.addAll(headers);
+          await requestTumusan.send().then((response) {
+            print("upload tumusan prajuru desa status code: ${response.statusCode.toString()}");
+          });
 
-    if(selectedBendesa.isNotEmpty) {
-      for(var i = 0; i < selectedBendesa.length; i++) {
-        Map<String, String> body = {
-          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
-          "prajuru_desa_adat_id" : selectedBendesa[i]['prajuru_desa_adat_id'].toString()
-        };
-        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruDesa))
-          ..fields.addAll(body)
-          ..headers.addAll(headers);
-        var response = await request.send();
-        print("upload tetujon prajuru desa status code: ${response.statusCode.toString()}");
+        }
       }
-    }
-    if(selectedBendesaTumusan.isNotEmpty) {
-      for(var i = 0; i < selectedBendesaTumusan.length; i++) {
-        Map<String, String> bodyTumusan = {
-          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
-          "prajuru_desa_adat_id" : selectedBendesaTumusan[i]['prajuru_desa_adat_id'].toString()
-        };
-        var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPrajuruDesa))
-          ..fields.addAll(bodyTumusan)
-          ..headers.addAll(headers);
-        var response = await requestTumusan.send();
-        print("upload tumusan prajuru desa status code: ${response.statusCode.toString()}");
-      }
-    }
+    });
   }
 
   Future uploadPihakLain() async {
-
     Map<String, String> body = {
       "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString()
     };
@@ -1895,39 +1902,45 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
     var request_delete = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/pihak-lain/delete"))
       ..fields.addAll(body)
       ..headers.addAll(headers);
-    var response_delete = await request_delete.send();
-    print("delete tetujon pihak lain status code : ${response_delete.statusCode.toString()}");
+    await request_delete.send().then((response) {
+      print("delete tetujon pihak lain status code : ${response.statusCode.toString()}");
+    });
     var request_delete_tumusan = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tumusan/pihak-lain/delete"))
       ..fields.addAll(body)
       ..headers.addAll(headers);
-    var response_delete_tumusan = await request_delete_tumusan.send();
-    print("delete tumusan pihak lain status code : ${response_delete_tumusan.statusCode.toString()}");
+    await request_delete_tumusan.send().then((response) async {
+      print("delete tumusan pihak lain status code : ${response.statusCode.toString()}");
+      if(isSendToKrama == false) {
+        if(pihakLain.isNotEmpty) {
+          for(var i = 0; i < pihakLain.length; i++) {
+            Map<String, String> body = {
+              "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+              "pihak_lain" : pihakLain[i].toString()
+            };
+            var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPihakLain))
+              ..fields.addAll(body)
+              ..headers.addAll(headers);
+            await request.send().then((response) {
+              print("upload tetujon pihak lain status code: ${response.statusCode.toString()}");
+            });
 
-    if(pihakLain.isNotEmpty) {
-      for(var i = 0; i < pihakLain.length; i++) {
-        Map<String, String> body = {
-          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
-          "pihak_lain" : pihakLain[i].toString()
-        };
-        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPihakLain))
-          ..fields.addAll(body)
-          ..headers.addAll(headers);
-        var response = await request.send();
-        print("upload tetujon pihak lain status code: ${response.statusCode.toString()}");
+          }
+        }
       }
-    }
-    if(pihakLainTumusan.isNotEmpty) {
-      for(var i = 0; i < pihakLainTumusan.length; i++) {
-        Map<String, String> bodyTumusan = {
-          "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
-          "pihak_lain" : pihakLainTumusan[i].toString()
-        };
-        var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPihakLain))
-          ..fields.addAll(bodyTumusan)
-          ..headers.addAll(headers);
-        var response = await requestTumusan.send();
-        print("upload tumusan pihak lain status code: ${response.statusCode.toString()}");
+      if(pihakLainTumusan.isNotEmpty) {
+        for(var i = 0; i < pihakLainTumusan.length; i++) {
+          Map<String, String> bodyTumusan = {
+            "surat_keluar_id" : editSuratKeluarNonPanitia.idSuratKeluar.toString(),
+            "pihak_lain" : pihakLainTumusan[i].toString()
+          };
+          var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPihakLain))
+            ..fields.addAll(bodyTumusan)
+            ..headers.addAll(headers);
+          await requestTumusan.send().then((response) {
+            print("upload tumusan pihak lain status code: ${response.statusCode.toString()}");
+          });
+        }
       }
-    }
+    });
   }
 }
