@@ -257,9 +257,6 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
             });
           }
         });
-        if(status == "Sedang Diproses") {
-          getValidasiStatus();
-        }
       }
     });
   }
@@ -642,7 +639,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                               )
                             ]
                         ),
-                        margin: EdgeInsets.only(left: 15, top: 20)
+                        margin: EdgeInsets.only(left: 15, top: 10)
                     ),
                     Container(
                       child: Column(
@@ -934,7 +931,6 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                                     getTumusan();
                                                     getHistori();
                                                     getLampiran();
-                                                    getValidasiStatus();
                                                     Navigator.of(context).pop(true);
                                                   }
                                                 });
@@ -969,7 +965,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                               )
                             ],
                           )
-                      ) : Container(
+                      ) : validasiStatus == "Belum Divalidasi" ? Container(
                         child: Column(
                           children: <Widget>[
                             Container(
@@ -1099,7 +1095,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                             )
                           ],
                         ),
-                      ),
+                      ) : Container(),
                     ),
                     Container(
                         child: Text("Status Surat", style: TextStyle(

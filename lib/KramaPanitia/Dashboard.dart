@@ -28,7 +28,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
   var namaDesa;
   var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
   var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
-  var apiURLGetDataSurat = "https://siradaskripsi.my.id/api/data/admin/surat/panitia/${loginPage.desaId}";
+  var apiURLGetDataSurat = "https://siradaskripsi.my.id/api/data/admin/surat/panitia/${loginPage.kramaId}";
 
   //list
   List MenungguRespons = [];

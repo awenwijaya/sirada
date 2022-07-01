@@ -12,6 +12,7 @@ import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class detailSuratKeluarPanitia extends StatefulWidget {
   static var suratKeluarId;
+  static var panitiaId;
   const detailSuratKeluarPanitia({Key key}) : super(key: key);
 
   @override
@@ -41,8 +42,10 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   var timKegiatan;
   var status;
   var validasiStatus;
+  var pihakKrama;
   FToast ftoast;
-
+  List<String> tetujon = [];
+  List<String> tumusan = [];
   List tetujonPrajuruDesaList = [];
   List tetujonPrajuruBanjarList = [];
   List tetujonPihakLainList = [];
@@ -50,8 +53,6 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   List tumusanPrajuruDesaList = [];
   List tumusanPihakLainList = [];
 
-  List<String> tetujon = [];
-  List<String> tumusan = [];
   List lampiran = [];
   List historiSurat = [];
 
@@ -72,7 +73,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
 
   //validasi
   var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
-  var apiURLShowValidasiStatus = "https://siradaskripsi.my.id/admin/surat/keluar/panitia/validasi/show/${loginPage.kramaId}";
+  var apiURLShowValidasiStatus = "https://siradaskripsi.my.id/api/admin/surat/keluar/panitia/validasi/show/${loginPage.kramaId}";
 
   getValidasiStatus() async {
     var body = jsonEncode({
@@ -83,11 +84,14 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
       body: body
     ).then((http.Response response) {
       var responseValue = response.statusCode;
+      print("get validasi status code: ${responseValue.toString()}");
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
         setState(() {
           validasiStatus = jsonData['status'];
+          detailSuratKeluarPanitia.panitiaId = jsonData['panitia_desa_adat_id'];
         });
+        print(validasiStatus);
       }
     });
   }
@@ -122,6 +126,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   }
 
   getTetujon() async {
+    this.tetujon = [];
     http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
@@ -132,30 +137,10 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           tetujonPrajuruDesaList = jsonData;
         });
         for(var i = 0; i < tetujonPrajuruDesaList.length; i++) {
-          tetujon.add("Desa ${tetujonPrajuruDesaList[i]['desadat_nama']} - ${tetujonPrajuruDesaList[i]['nama']}");
+          tetujon.add("Desa ${tetujonPrajuruDesaList[i]['desadat_nama']} (${tetujonPrajuruDesaList[i]['nama']})");
         }
       }
     });
-  }
-
-  getTumusan() async {
-    http.get(Uri.parse(apiURLGetTumusanPrajuruDesa),
-        headers: {"Content-Type" : "application/json"}
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          tumusanPrajuruDesaList = jsonData;
-        });
-        for(var i = 0; i < tumusanPrajuruDesaList.length; i++) {
-          tumusan.add("Desa ${tumusanPrajuruDesaList[i]['desadat_nama']} - ${tumusanPrajuruDesaList[i]['nama']}");
-        }
-      }
-    });
-  }
-
-  getTetujonPrajuruBanjar() async {
     http.get(Uri.parse(apiURLGetTetujonPrajuruBanjar),
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
@@ -167,31 +152,10 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           tetujonPrajuruBanjarList = jsonData;
         });
         for(var i = 0; i < tetujonPrajuruBanjarList.length; i++) {
-          tetujon.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} - ${tetujonPrajuruBanjarList[i]['nama']}");
+          tetujon.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} (${tetujonPrajuruBanjarList[i]['nama']})");
         }
       }
     });
-  }
-
-  getTumusanPrajuruBanjar() async {
-    http.get(Uri.parse(apiURLGetTumusanPrajuruBanjar),
-        headers: {"Content-Type" : "application/json"}
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      print(responseValue.toString());
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          tumusanPrajuruBanjarList = jsonData;
-        });
-        for(var i = 0; i < tumusanPrajuruBanjarList.length; i++) {
-          tumusan.add("Banjar ${tumusanPrajuruBanjarList[i]['nama_banjar_adat']} - ${tumusanPrajuruBanjarList[i]['nama']}");
-        }
-      }
-    });
-  }
-
-  getTetujonPihakLain() async {
     http.get(Uri.parse(apiURLGetTetujonPihakLain),
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
@@ -208,7 +172,37 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
     });
   }
 
-  getTumusanPihakLain() async {
+  getTumusan() async {
+    this.tumusan = [];
+    http.get(Uri.parse(apiURLGetTumusanPrajuruDesa),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tumusanPrajuruDesaList = jsonData;
+        });
+        for(var i = 0; i < tumusanPrajuruDesaList.length; i++) {
+          tumusan.add("Desa ${tumusanPrajuruDesaList[i]['desadat_nama']} (${tumusanPrajuruDesaList[i]['nama']})");
+        }
+      }
+    });
+    http.get(Uri.parse(apiURLGetTumusanPrajuruBanjar),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      print(responseValue.toString());
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tumusanPrajuruBanjarList = jsonData;
+        });
+        for(var i = 0; i < tumusanPrajuruBanjarList.length; i++) {
+          tumusan.add("Banjar ${tumusanPrajuruBanjarList[i]['nama_banjar_adat']} (${tumusanPrajuruBanjarList[i]['nama']})");
+        }
+      }
+    });
     http.get(Uri.parse(apiURLGetTumusanPihakLain),
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
@@ -244,7 +238,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
     });
   }
 
-  getSekretarisPanitiaInfo() async {
+  getSekretarisPanitiaInfo() {
     var body = jsonEncode({
       "jabatan" : "Sekretaris Panitia"
     });
@@ -290,10 +284,11 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           timKegiatan = parsedJson['tim_kegiatan'];
           status = parsedJson['status'];
           if(parsedJson['pihak_krama'] != null) {
-            tetujon.add("Krama ${parsedJson['pihak_krama']}");
+            pihakKrama = "Krama ${parsedJson['pihak_krama']}";
+          }else {
+            pihakKrama = null;
           }
         });
-        print(status.toString());
         http.get(Uri.parse("https://siradaskripsi.my.id/api/data/kecamatan/${kecamatanId}"),
             headers: {"Content-Type" : "application/json"}
         ).then((http.Response response) {
@@ -329,6 +324,18 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
     });
   }
 
+  refreshInfoSurat() async {
+    getSuratKeluarInfo();
+    getBendesaInfo();
+    getKetuaPanitiaInfo();
+    getSekretarisPanitiaInfo();
+    getTetujon();
+    getTumusan();
+    getHistori();
+    getLampiran();
+    getValidasiStatus();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -338,11 +345,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
     getKetuaPanitiaInfo();
     getSekretarisPanitiaInfo();
     getTetujon();
-    getTetujonPrajuruBanjar();
-    getTetujonPihakLain();
     getTumusan();
-    getTumusanPrajuruBanjar();
-    getTumusanPihakLain();
     getHistori();
     getLampiran();
     getValidasiStatus();
@@ -486,7 +489,11 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                 setState(() {
                   editSuratKeluarPanitia.idSuratKeluar = detailSuratKeluarPanitia.suratKeluarId;
                 });
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratKeluarPanitia()));
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratKeluarPanitia())).then((value) {
+                  if(value == true) {
+                    refreshInfoSurat();
+                  }
+                });
               },
               icon: Icon(Icons.edit),
               color: Colors.white,
@@ -585,7 +592,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                     ),
                     Container(
                       alignment: Alignment.topRight,
-                      child: tetujon.length == 0 ? Text("-", style: TextStyle(
+                      child: pihakKrama == null ? tetujon.length == 0 ? Text("-", style: TextStyle(
                           fontFamily: "Times New Roman",
                           fontSize: 16
                       )) : Column(
@@ -600,7 +607,10 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                             margin: EdgeInsets.only(bottom: 5),
                           )
                         ],
-                      ),
+                      ) : Text(pihakKrama, style: TextStyle(
+                        fontFamily: "Times New Roman",
+                        fontSize: 16
+                      )),
                       margin: EdgeInsets.only(right: 15, top: 5),
                     ),
                     Container(
@@ -630,40 +640,9 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                   )),
                                   margin: EdgeInsets.only(top: 5)
                               ),
-                              Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Text("Tumusan :", style: TextStyle(
-                                      fontFamily: "Times New Roman",
-                                      fontSize: 16
-                                  )),
-                                  margin: EdgeInsets.only(top: 5)
-                              ),
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: tumusan.length == 0 ? Text("-", style: TextStyle(
-                                    fontFamily: "Times New Roman",
-                                    fontSize: 16
-                                )) : Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      for(var i = 0; i < tumusan.length; i++) Container(
-                                        child: Text("${i+1}. ${tumusan[i].toString()}", style: TextStyle(
-                                            fontFamily: "Times New Roman",
-                                            fontSize: 16
-                                        )),
-                                        margin: EdgeInsets.only(bottom: 5),
-                                      )
-                                    ],
-                                  ),
-                                  margin: EdgeInsets.only(top: 5),
-                                ),
-                                margin: EdgeInsets.only(left: 5),
-                              )
                             ]
                         ),
-                        margin: EdgeInsets.only(left: 15, top: 20)
+                        margin: EdgeInsets.only(left: 15, top: 10)
                     ),
                     Container(
                       child: Column(
@@ -812,6 +791,44 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                         margin: EdgeInsets.only(top: 20)
                     ),
                     Container(
+                      child: tumusan.length == 0 ? Container() : Column(
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment.topLeft,
+                              child: Text("Tumusan :", style: TextStyle(
+                                  fontFamily: "Times New Roman",
+                                  fontSize: 16
+                              )),
+                              margin: EdgeInsets.only(top: 5)
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: tumusan.length == 0 ? Text("-", style: TextStyle(
+                                fontFamily: "Times New Roman",
+                                fontSize: 16,
+                            )) : Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  for(var i = 0; i < tumusan.length; i++) Container(
+                                    child: Text("${i+1}. ${tumusan[i].toString()}", style: TextStyle(
+                                        fontFamily: "Times New Roman",
+                                        fontSize: 16
+                                    )),
+                                    margin: EdgeInsets.only(bottom: 5),
+                                  )
+                                ],
+                              ),
+                              margin: EdgeInsets.only(top: 5),
+                            ),
+                            margin: EdgeInsets.only(left: 5),
+                          )
+                        ],
+                      ),
+                      margin: EdgeInsets.only(left: 15),
+                    ),
+                    Container(
                       child: lampiran.length == 0 ? Container() : Column(
                         children: <Widget>[
                           Container(
@@ -879,7 +896,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                       ),
                     ),
                     Container(
-                      child: status == "Menunggu Respon" ? Container() : Column(
+                      child: status == "Menunggu Respon" ? Container() : validasiStatus == "Belum Divalidasi" ? Column(
                         children: <Widget>[
                           Container(
                             child: Text("Aksi", style: TextStyle(
@@ -1000,7 +1017,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                             margin: EdgeInsets.only(top: 10)
                           )
                         ],
-                      ),
+                      ) : Container(),
                     ),
                     Container(
                         child: Text("Status Surat", style: TextStyle(

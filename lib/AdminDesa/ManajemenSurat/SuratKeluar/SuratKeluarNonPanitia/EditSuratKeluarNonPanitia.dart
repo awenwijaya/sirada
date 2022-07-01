@@ -68,7 +68,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
   bool LoadingPenyarikan = true;
   bool LoadingBendesa = true;
   bool NomorSuratLoading = false;
-
+  bool isVisible = true;
   bool isSendToKrama = false;
 
   //selected
@@ -297,6 +297,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
         }
         if(parsedJson['pihak_krama'] != null) {
           isSendToKrama = true;
+          isVisible = false;
         }
         LoadingData = false;
       });
@@ -1256,137 +1257,144 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                     alignment: Alignment.topLeft,
                     margin: EdgeInsets.only(top: 30, left: 20),
                   ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text("Prajuru Desa Adat", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700
-                    )),
-                    margin: EdgeInsets.only(top: 15, left: 20),
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: MultiSelectDialogField(
-                        title: Text("Tambah Penerima Prajuru Desa Adat"),
-                        buttonText: Text("Tambah Penerima Prajuru Desa Adat", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                        )),
-                        buttonIcon: Icon(Icons.expand_more),
-                        initialValue: selectedBendesa,
-                        searchable: false,
-                        checkColor: Colors.white,
-                        items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
-                        listType: MultiSelectListType.LIST,
-                        onConfirm: (values) {
-                          setState(() {
-                            selectedBendesa.addAll(values);
-                            values.clear();
-                          });
-                        },
-                      )
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: MultiSelectChipDisplay(
-                      items: selectedBendesa.map((e) => MultiSelectItem(e, "Desa ${e['desadat_nama']} - ${e['nama']}")).toList(),
-                      onTap: (value) {
-                        setState(() {
-                          selectedBendesa.remove(value);
-                        });
-                      },
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text("Prajuru Banjar Adat", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700
-                    )),
-                    margin: EdgeInsets.only(top: 15, left: 20),
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: MultiSelectDialogField(
-                        title: Text("Tambah Penerima Prajuru Banjar Adat"),
-                        buttonText: Text("Tambah Penerima Prajuru Banjar Adat", style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
-                        )),
-                        buttonIcon: Icon(Icons.expand_more),
-                        searchable: false,
-                        checkColor: Colors.white,
-                        items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
-                        listType: MultiSelectListType.LIST,
-                        onConfirm: (values) {
-                          setState(() {
-                            selectedKelihanAdat.addAll(values);
-                            values.clear();
-                          });
-                        },
-                      )
-                  ),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: MultiSelectChipDisplay(
-                        items: selectedKelihanAdat.map((e) => MultiSelectItem(e, "Banjar ${e['nama_banjar_adat']} - ${e['nama']}")).toList(),
-                        onTap: (value) {
-                          setState(() {
-                            selectedKelihanAdat.remove(value);
-                          });
-                        },
-                      )
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text("Pihak Lain", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700
-                    )),
-                    margin: EdgeInsets.only(top: 15, left: 20),
-                  ),
-                  Container(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                      child: TextField(
-                        controller: controllerPihakLainTetujon,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(50.0),
-                                borderSide: BorderSide(color: HexColor("#025393"))
-                            ),
-                            hintText: "Nama Penerima Pihak Lain",
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.add),
-                              onPressed: (){
-                                if(controllerPihakLainTetujon.text != "") {
-                                  setState(() {
-                                    pihakLain.add(controllerPihakLainTetujon.text);
-                                    controllerPihakLainTetujon.text = "";
-                                  });
-                                }
+                  Visibility(
+                    visible: isVisible,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: Text("Prajuru Desa Adat", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700
+                          )),
+                          margin: EdgeInsets.only(top: 15, left: 20),
+                        ),
+                        Container(
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            child: MultiSelectDialogField(
+                              title: Text("Tambah Penerima Prajuru Desa Adat"),
+                              buttonText: Text("Tambah Penerima Prajuru Desa Adat", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              )),
+                              buttonIcon: Icon(Icons.expand_more),
+                              initialValue: selectedBendesa,
+                              searchable: false,
+                              checkColor: Colors.white,
+                              items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                              listType: MultiSelectListType.LIST,
+                              onConfirm: (values) {
+                                setState(() {
+                                  selectedBendesa.addAll(values);
+                                  values.clear();
+                                });
                               },
                             )
                         ),
-                        style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 14
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          child: MultiSelectChipDisplay(
+                            items: selectedBendesa.map((e) => MultiSelectItem(e, "Desa ${e['desadat_nama']} - ${e['nama']}")).toList(),
+                            onTap: (value) {
+                              setState(() {
+                                selectedBendesa.remove(value);
+                              });
+                            },
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: MultiSelectChipDisplay(
-                      items: pihakLain.map((e) => MultiSelectItem(e, e)).toList(),
-                      onTap: (value) {
-                        setState(() {
-                          pihakLain.remove(value);
-                        });
-                      },
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: Text("Prajuru Banjar Adat", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700
+                          )),
+                          margin: EdgeInsets.only(top: 15, left: 20),
+                        ),
+                        Container(
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            child: MultiSelectDialogField(
+                              title: Text("Tambah Penerima Prajuru Banjar Adat"),
+                              buttonText: Text("Tambah Penerima Prajuru Banjar Adat", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              )),
+                              buttonIcon: Icon(Icons.expand_more),
+                              searchable: false,
+                              checkColor: Colors.white,
+                              items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
+                              listType: MultiSelectListType.LIST,
+                              onConfirm: (values) {
+                                setState(() {
+                                  selectedKelihanAdat.addAll(values);
+                                  values.clear();
+                                });
+                              },
+                            )
+                        ),
+                        Container(
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            child: MultiSelectChipDisplay(
+                              items: selectedKelihanAdat.map((e) => MultiSelectItem(e, "Banjar ${e['nama_banjar_adat']} - ${e['nama']}")).toList(),
+                              onTap: (value) {
+                                setState(() {
+                                  selectedKelihanAdat.remove(value);
+                                });
+                              },
+                            )
+                        ),
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: Text("Pihak Lain", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700
+                          )),
+                          margin: EdgeInsets.only(top: 15, left: 20),
+                        ),
+                        Container(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                            child: TextField(
+                              controller: controllerPihakLainTetujon,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                      borderSide: BorderSide(color: HexColor("#025393"))
+                                  ),
+                                  hintText: "Nama Penerima Pihak Lain",
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.add),
+                                    onPressed: (){
+                                      if(controllerPihakLainTetujon.text != "") {
+                                        setState(() {
+                                          pihakLain.add(controllerPihakLainTetujon.text);
+                                          controllerPihakLainTetujon.text = "";
+                                        });
+                                      }
+                                    },
+                                  )
+                              ),
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          child: MultiSelectChipDisplay(
+                            items: pihakLain.map((e) => MultiSelectItem(e, e)).toList(),
+                            onTap: (value) {
+                              setState(() {
+                                pihakLain.remove(value);
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Container(
@@ -1401,6 +1409,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                       onChanged: (bool value) {
                         setState(() {
                           isSendToKrama = value;
+                          isVisible = !isVisible;
                         });
                       },
                     ),
