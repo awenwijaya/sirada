@@ -614,7 +614,7 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                     underline: Container(),
                                     items: jabatanFilterListAktif.map((e) {
                                       return DropdownMenuItem(
-                                        value: e['jabatan'],
+                                        value: e['jabatan_panitia_desa_id'],
                                         child: SizedBox(
                                           width: MediaQuery.of(context).size.width,
                                           child: Text(e['jabatan'], style: TextStyle(
@@ -1018,7 +1018,7 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                       underline: Container(),
                                       items: jabatanFilterListTidakAktif.map((e) {
                                         return DropdownMenuItem(
-                                          value: e['jabatan'],
+                                          value: e['jabatan_panitia_desa_id'],
                                           child: SizedBox(
                                             width: MediaQuery.of(context).size.width,
                                             child: Text(e['jabatan'], style: TextStyle(
@@ -1294,6 +1294,11 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
           floatingActionButton: FloatingActionButton(
             onPressed: (){
               Navigator.push(context, CupertinoPageRoute(builder: (context) => tambahPanitiaKegiatanAdmin())).then((value) {
+                setState(() {
+                  selectedJabatanFilterAktif = null;
+                  selectedTimKegiatanFilterAktif = null;
+                  isFilterAktif = false;
+                });
                 refreshListPanitiaAktif();
                 refreshListPanitiaTidakAktif();
               });
@@ -1314,6 +1319,11 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
           editPanitiaDesaAdatAdmin.panitiaId = selectedIdPanitia;
         });
         Navigator.push(context, CupertinoPageRoute(builder: (context) => editPanitiaDesaAdatAdmin())).then((value) {
+          setState(() {
+            selectedJabatanFilterAktif = null;
+            selectedTimKegiatanFilterAktif = null;
+            isFilterAktif = false;
+          });
           refreshListPanitiaAktif();
           refreshListPanitiaTidakAktif();
         });
@@ -1372,6 +1382,11 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                     ).then((http.Response response) {
                       var responseValue = response.statusCode;
                       if(responseValue == 200) {
+                        setState(() {
+                          selectedJabatanFilterAktif = null;
+                          selectedTimKegiatanFilterAktif = null;
+                          isFilterAktif = false;
+                        });
                         refreshListPanitiaAktif();
                         refreshListPanitiaTidakAktif();
                         getFilterKomponenTidakAktif();

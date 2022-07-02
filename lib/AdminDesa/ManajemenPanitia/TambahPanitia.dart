@@ -21,7 +21,7 @@ class tambahPanitiaKegiatanAdmin extends StatefulWidget {
 class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin> {
   //List
   List panitiaKegiatanList = List();
-  List<String> jabatan = ['Ketua Panitia', 'Wakil Panitia', 'Sekretaris Panitia', 'Bendahara Panitia'];
+  List jabatan = List();
   List<String> status = ['aktif', 'tidak aktif'];
 
   //Selected
@@ -46,11 +46,13 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
   //URL
   var apiURLGetPanitiaKegiatan = "https://siradaskripsi.my.id/api/panitia/kegiatan/view";
   var apiURLSimpanPanitiaKegiatan = "https://siradaskripsi.my.id/api/panitia/save";
+  var apiURLShowJabatanList = "https://siradaskripsi.my.id/api/panitia/view/jabatan";
 
   //Bool
   bool availablePanitiaKegiatan = false;
   bool LoadingPanitiaKegiatan = true;
   bool Loading = false;
+  bool LoadingJabatan = true;
 
   //Toast & Form Key
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -84,6 +86,18 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
     }
   }
 
+  Future getListJabatanPanitia() async {
+    Uri uri = Uri.parse(apiURLShowJabatanList);
+    final response = await http.get(uri);
+    if(response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      setState(() {
+        jabatan = jsonData;
+        LoadingJabatan = false;
+      });
+    }
+  }
+
   void SelectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
       selectPeriodeSelesai = args.value.endDate;
@@ -102,11 +116,11 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
     ftoast = FToast();
     ftoast.init(this.context);
     getPanitiaKegiatan();
+    getListJabatanPanitia();
     selectedPeriodeMulai = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
     selectedPeriodeBerakhir = DateFormat("dd-MMM-yyyy").format(sekarang.add(Duration(days: 7)));
     controllerPeriode.selectedRange = PickerDateRange(sekarang, sekarang.add(Duration(days: 7)));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -352,47 +366,49 @@ class _tambahPanitiaKegiatanAdminState extends State<tambahPanitiaKegiatanAdmin>
                         margin: EdgeInsets.only(top: 20, left: 20),
                       ),
                       Container(
-                        width: 300,
-                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                        decoration: BoxDecoration(
-                          color: HexColor("#025393"),
-                          borderRadius: BorderRadius.circular(30)
-                        ),
-                        child: DropdownButton<String>(
-                          onChanged: (value) {
-                            setState(() {
-                              selectedJabatan = value;
-                            });
-                          },
-                          value: selectedJabatan,
-                          underline: Container(),
-                          hint: Center(
-                            child: Text("Pilih Jabatan", style: TextStyle(
-                              fontFamily: "Poppins",
-                              color: Colors.white,
-                              fontSize: 14
-                            )),
+                        child: LoadingJabatan ? ListTileShimmer() : Container(
+                          width: 300,
+                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                          decoration: BoxDecoration(
+                              color: HexColor("#025393"),
+                              borderRadius: BorderRadius.circular(30)
                           ),
-                          icon: Icon(Icons.arrow_downward, color: Colors.white),
-                          isExpanded: true,
-                          items: jabatan.map((e) {
-                            return DropdownMenuItem(
-                              value: e,
-                              child: Text(e, style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
+                          child: DropdownButton(
+                            onChanged: (value) {
+                              setState(() {
+                                selectedJabatan = value;
+                              });
+                            },
+                            value: selectedJabatan,
+                            underline: Container(),
+                            hint: Center(
+                              child: Text("Pilih Jabatan", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: Colors.white,
+                                  fontSize: 14
                               )),
-                            );
-                          }).toList(),
-                          selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
-                            child: Text(e, style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontFamily: "Poppins"
-                            )),
-                          )).toList(),
-                        ),
-                        margin: EdgeInsets.only(top: 10),
+                            ),
+                            icon: Icon(Icons.arrow_downward, color: Colors.white),
+                            isExpanded: true,
+                            items: jabatan.map((e) {
+                              return DropdownMenuItem(
+                                value: e['jabatan_panitia_desa_id'],
+                                child: Text(e['jabatan'], style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                )),
+                              );
+                            }).toList(),
+                            selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
+                              child: Text(e['jabatan'], style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontFamily: "Poppins"
+                              )),
+                            )).toList(),
+                          ),
+                          margin: EdgeInsets.only(top: 10),
+                        )
                       )
                     ]
                   )
