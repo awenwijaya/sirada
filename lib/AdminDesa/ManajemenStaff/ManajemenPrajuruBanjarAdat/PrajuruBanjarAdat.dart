@@ -483,15 +483,15 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                             underline: Container(),
                                             items: jabatanFilterAktif.map((jabatan) {
                                               return DropdownMenuItem(
-                                                  value: jabatan['jabatan'],
-                                                  child: Text("${jabatan['jabatan']}".replaceAll("_", " "), style: TextStyle(
+                                                  value: jabatan['jabatan_prajuru_banjar_id'],
+                                                  child: Text("${jabatan['jabatan']}", style: TextStyle(
                                                       fontFamily: "Poppins",
                                                       fontSize: 14
                                                   ))
                                               );
                                             }).toList(),
                                             selectedItemBuilder: (BuildContext context) => jabatanFilterAktif.map((jabatan) => Center(
-                                                child: Text("${jabatan['jabatan']}".replaceAll("_", " "), style: TextStyle(
+                                                child: Text("${jabatan['jabatan']}", style: TextStyle(
                                                     fontFamily: "Poppins",
                                                     fontSize: 14
                                                 ))
@@ -663,7 +663,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                                                     )
                                                                                 ),
                                                                                 Container(
-                                                                                    child: Text("${jabatanAktif[index]}".replaceAll("_", ' '), style: TextStyle(
+                                                                                    child: Text("${jabatanAktif[index]}", style: TextStyle(
                                                                                         fontFamily: "Poppins",
                                                                                         fontSize: 14
                                                                                     ))
@@ -861,7 +861,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                 underline: Container(),
                                                 items: jabatanFilterTidakAktif.map((jabatan) {
                                                   return DropdownMenuItem(
-                                                    value: jabatan['jabatan'],
+                                                    value: jabatan['jabatan_prajuru_banjar_id'],
                                                     child: Text(jabatan['jabatan'], style: TextStyle(
                                                       fontFamily: "Poppins",
                                                       fontSize: 14
@@ -1126,6 +1126,9 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
               Navigator.push(context, CupertinoPageRoute(builder: (context) => tambahPrajuruBanjarAdatAdmin())).then((value) {
                 refreshListPrajuruBanjarAdatAktif();
                 refreshListPrajuruBanjarAdatTidakAktif();
+                isFilterAktif = false;
+                selectedJabatanFilterAktif = null;
+                selectedBanjarFilterAktif = null;
               });
             },
             child: Icon(Icons.add),
@@ -1206,6 +1209,10 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                     ).then((http.Response response) {
                       var responseValue = response.statusCode;
                       if(responseValue == 200) {
+                        isSearch = false;
+                        isSearchTidakAktif = false;
+                        controllerSearchAktif.text = "";
+                        controllerSearchTidakAktif.text = "";
                         isSearch = false;
                         isSearchTidakAktif = false;
                         controllerSearchAktif.text = "";

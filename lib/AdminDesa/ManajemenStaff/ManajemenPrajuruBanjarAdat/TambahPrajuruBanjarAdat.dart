@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,11 +24,11 @@ class tambahPrajuruBanjarAdatAdmin extends StatefulWidget {
 }
 
 class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAdmin> {
-  List<String> jabatan = ['kelihan_adat','pangliman_banjar','penyarikan_banjar','patengen_banjar'];
+  List jabatan = List();
   List<String> status = ["Aktif", "Tidak Aktif"];
   String selectedStatus;
   String statusValue;
-  String selectedJabatan;
+  var selectedJabatan;
   String selectedMasaMulai;
   String selectedMasaMulaiValue;
   String selectedMasaBerakhir;
@@ -43,6 +44,7 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
   final controllerNamaPrajuru = TextEditingController();
   final controllerMasaMenjabat = TextEditingController();
   bool Loading = false;
+  bool LoadingJabatan = true;
   var namaPegawai;
   var kramaMipilID;
   var pegawaiID;
@@ -50,12 +52,28 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
   var namaBanjar;
   var selectedRole;
   var apiURLUpDataPrajuruBanjarAdat = "https://siradaskripsi.my.id/api/admin/prajuru/banjar_adat/up";
+  var apiURLShowJabatanPrajuruBanjarAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru/banjar/jabatan/show";
   final DateRangePickerController controllerMasaAktif = DateRangePickerController();
   File file;
   String namaFile;
   String filePath;
   FToast ftoast;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  Future getJabatan() async {
+    http.get(Uri.parse(apiURLShowJabatanPrajuruBanjarAdat),
+      headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          jabatan = data;
+          LoadingJabatan = false;
+        });
+      }
+    });
+  }
 
   Future pilihBerkas() async {
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -92,6 +110,7 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
     super.initState();
     ftoast = FToast();
     ftoast.init(this.context);
+    getJabatan();
     selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(sekarang).toString();
     selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(sekarang.add(Duration(days: 7))).toString();
     controllerMasaAktif.selectedRange = PickerDateRange(sekarang, sekarang.add(Duration(days: 7)));
@@ -263,45 +282,47 @@ class _tambahPrajuruBanjarAdatAdminState extends State<tambahPrajuruBanjarAdatAd
                               margin: EdgeInsets.only(top: 20, left: 20),
                             ),
                             Container(
-                              width: 300,
-                              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                              decoration: BoxDecoration(
-                                  color: HexColor("#025393"),
-                                  borderRadius: BorderRadius.circular(30)
-                              ),
-                              child: DropdownButton<String>(
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedJabatan = value;
-                                  });
-                                },
-                                value: selectedJabatan,
-                                underline: Container(),
-                                hint: Center(
-                                    child: Text("Pilih Jabatan", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        color: Colors.white,
-                                        fontSize: 14
-                                    ))
+                              child: LoadingJabatan ? ListTileShimmer() : Container(
+                                width: 300,
+                                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                                decoration: BoxDecoration(
+                                    color: HexColor("#025393"),
+                                    borderRadius: BorderRadius.circular(30)
                                 ),
-                                icon: Icon(Icons.arrow_downward, color: Colors.white),
-                                isExpanded: true,
-                                items: jabatan.map((e) => DropdownMenuItem(
-                                  child: Text(e.replaceAll('_', ' '), style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14
-                                  )),
-                                  value: e,
-                                )).toList(),
-                                selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
-                                    child: Text(e.replaceAll("_", " "), style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.white,
-                                        fontFamily: "Poppins"
-                                    ))
-                                )).toList(),
-                              ),
-                              margin: EdgeInsets.only(top: 10),
+                                child: DropdownButton(
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedJabatan = value;
+                                    });
+                                  },
+                                  value: selectedJabatan,
+                                  underline: Container(),
+                                  hint: Center(
+                                      child: Text("Pilih Jabatan", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          color: Colors.white,
+                                          fontSize: 14
+                                      ))
+                                  ),
+                                  icon: Icon(Icons.arrow_downward, color: Colors.white),
+                                  isExpanded: true,
+                                  items: jabatan.map((e) => DropdownMenuItem(
+                                    child: Text(e['jabatan'], style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    )),
+                                    value: e['jabatan_prajuru_banjar_id'],
+                                  )).toList(),
+                                  selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
+                                      child: Text(e['jabatan'], style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                          fontFamily: "Poppins"
+                                      ))
+                                  )).toList(),
+                                ),
+                                margin: EdgeInsets.only(top: 10),
+                              )
                             )
                           ]
                       )

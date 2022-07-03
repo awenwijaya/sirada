@@ -23,8 +23,8 @@ class editPrajuruBanjarAdatAdmin extends StatefulWidget {
 }
 
 class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin> {
-  List<String> jabatan = ['kelihan_adat','pangliman_banjar','penyarikan_banjar','patengen_banjar'];
-  String selectedJabatan;
+  List jabatan = List();
+  var selectedJabatan;
   String selectedMasaMulai;
   String selectedMasaMulaiValue;
   String selectedMasaBerakhir;
@@ -35,8 +35,10 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
   var apiURLShowDetailPrajuruBanjarAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/edit/${editPrajuruBanjarAdatAdmin.idPegawai}";
   var apiURLSimpanPrajuruBanjarAdat = "https://siradaskripsi.my.id/api/admin/prajuru/banjar_adat/edit/up";
   var apiURLUploadFileSKPrajuru = "https://siradaskripsi.my.id/api/upload/sk-prajuru";
+  var apiURLShowJabatanPrajuruBanjarAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru/banjar/jabatan/show";
   var selectedIdPenduduk;
   bool Loading = false;
+  bool LoadingJabatan = true;
   final controllerEmail = TextEditingController();
   final controllerNamaFile = TextEditingController();
   final controllerMasaMenjabat = TextEditingController();
@@ -45,6 +47,21 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
   String namaFile;
   String filePath;
   FToast ftoast;
+
+  Future getJabatan() async {
+    http.get(Uri.parse(apiURLShowJabatanPrajuruBanjarAdat),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          jabatan = data;
+          LoadingJabatan = false;
+        });
+      }
+    });
+  }
 
   getPrajuruBanjarAdatInfo() async {
     http.get(Uri.parse(apiURLShowDetailPrajuruBanjarAdat),
@@ -55,7 +72,7 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
         var jsonData = response.body;
         var parsedJson = json.decode(jsonData);
         setState(() {
-          selectedJabatan = parsedJson['jabatan'];
+          selectedJabatan = int.parse(parsedJson['jabatan_prajuru_banjar_id']);
           masaMulai = DateTime.parse(parsedJson['tanggal_mulai_menjabat']);
           selectedMasaMulaiValue = DateFormat("yyyy-MM-dd").format(masaMulai).toString();
           masaBerakhir = DateTime.parse(parsedJson['tanggal_akhir_menjabat']);
@@ -107,6 +124,7 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
     // TODO: implement initState
     super.initState();
     getPrajuruBanjarAdatInfo();
+    getJabatan();
     final DateTime sekarang = DateTime.now();
     selectedMasaMulai = DateFormat("dd-MMM-yyyy").format(masaMulai == null ? sekarang : masaMulai).toString();
     selectedMasaBerakhir = DateFormat("dd-MMM-yyyy").format(masaBerakhir == null ? sekarang : masaBerakhir).toString();
@@ -148,53 +166,55 @@ class _editPrajuruBanjarAdatAdminState extends State<editPrajuruBanjarAdatAdmin>
                   child: Column(
                       children: <Widget>[
                         Container(
-                            alignment: Alignment.topLeft,
-                            child: Text("Jabatan *", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            )),
-                            margin: EdgeInsets.only(top: 10, left: 20)
+                          alignment: Alignment.topLeft,
+                          child: Text("Jabatan *", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14
+                          )),
+                          margin: EdgeInsets.only(top: 20, left: 20),
                         ),
                         Container(
-                            width: 300,
-                            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                            decoration: BoxDecoration(
-                                color: HexColor("#025393"),
-                                borderRadius: BorderRadius.circular(30)
-                            ),
-                            child: DropdownButton<String>(
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedJabatan = value;
-                                });
-                              },
-                              value: selectedJabatan,
-                              underline: Container(),
-                              hint: Center(
-                                  child: Text("Pilih Jabatan", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14,
-                                      color: Colors.white
-                                  ))
+                            child: LoadingJabatan ? ListTileShimmer() : Container(
+                              width: 300,
+                              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                              decoration: BoxDecoration(
+                                  color: HexColor("#025393"),
+                                  borderRadius: BorderRadius.circular(30)
                               ),
-                              icon: Icon(Icons.arrow_downward, color: Colors.white),
-                              isExpanded: true,
-                              items: jabatan.map((e) => DropdownMenuItem(
-                                child: Text(e.replaceAll('_', ' '), style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14
-                                )),
-                                value: e,
-                              )).toList(),
-                              selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
-                                  child: Text(e.replaceAll("_", " "), style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontFamily: "Poppins"
-                                  ))
-                              )).toList(),
-                            ),
-                            margin: EdgeInsets.only(top: 20)
+                              child: DropdownButton(
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedJabatan = value;
+                                  });
+                                },
+                                value: selectedJabatan,
+                                underline: Container(),
+                                hint: Center(
+                                    child: Text("Pilih Jabatan", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        color: Colors.white,
+                                        fontSize: 14
+                                    ))
+                                ),
+                                icon: Icon(Icons.arrow_downward, color: Colors.white),
+                                isExpanded: true,
+                                items: jabatan.map((e) => DropdownMenuItem(
+                                  child: Text(e['jabatan'], style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  )),
+                                  value: e['jabatan_prajuru_banjar_id'],
+                                )).toList(),
+                                selectedItemBuilder: (BuildContext context) => jabatan.map((e) => Center(
+                                    child: Text(e['jabatan'], style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                        fontFamily: "Poppins"
+                                    ))
+                                )).toList(),
+                              ),
+                              margin: EdgeInsets.only(top: 10),
+                            )
                         )
                       ]
                   )

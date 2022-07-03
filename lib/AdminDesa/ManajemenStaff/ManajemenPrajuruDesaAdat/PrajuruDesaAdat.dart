@@ -991,6 +991,9 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
           controllerSearchAktif.text = "";
           controllerSearchTidakAktif.text = "";
           editPrajuruDesaAdatAdmin.idPegawai = selectedIdPrajuruDesaAdat;
+          selectedJabatanFilterAktif = null;
+          isFilterAktif = false;
+          isFilterTidakAktif = false;
         });
         Navigator.push(context, CupertinoPageRoute(builder: (context) => editPrajuruDesaAdatAdmin())).then((value) {
           refreshListPrajuruDesaAdatAktif();
@@ -1056,6 +1059,10 @@ class _prajuruDesaAdatAdminState extends State<prajuruDesaAdatAdmin> {
                           isSearchTidakAktif = false;
                           controllerSearchAktif.text = "";
                           controllerSearchTidakAktif.text = "";
+                          editPrajuruDesaAdatAdmin.idPegawai = selectedIdPrajuruDesaAdat;
+                          selectedJabatanFilterAktif = null;
+                          isFilterAktif = false;
+                          isFilterTidakAktif = false;
                           refreshListPrajuruDesaAdatAktif();
                           refreshListPrajuruDesaAdatTidakAktif();
                           ftoast.showToast(

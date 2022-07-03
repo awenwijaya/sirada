@@ -727,6 +727,14 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
           onPressed: (){
             Navigator.push(context, CupertinoPageRoute(builder: (context) => tambahSuratMasukAdmin())).then((value) {
               refreshListSuratMasuk();
+              selectedRangeAkhirValue = null;
+              selectedRangeAkhir = null;
+              selectedRangeAwalValue = null;
+              selectedRangeAwal = null;
+              selectedPengirimListFilter = null;
+              selectedPrajuruListFilter = null;
+              selectedKodeSuratFilter = null;
+              isFilter = false;
             });
           },
           child: Icon(Icons.add),
@@ -744,6 +752,14 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
         });
         Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratMasukAdmin())).then((value) {
           refreshListSuratMasuk();
+          selectedRangeAkhirValue = null;
+          selectedRangeAkhir = null;
+          selectedRangeAwalValue = null;
+          selectedRangeAwal = null;
+          selectedPengirimListFilter = null;
+          selectedPrajuruListFilter = null;
+          selectedKodeSuratFilter = null;
+          isFilter = false;
         });
         break;
 
