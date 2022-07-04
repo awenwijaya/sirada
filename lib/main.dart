@@ -5,6 +5,7 @@ import 'package:surat/AdminDesa/Dashboard.dart';
 import 'package:surat/KramaPanitia/BottomNavigationBar.dart';
 import 'package:surat/KramaPanitia/Dashboard.dart';
 import 'package:surat/Penduduk/BottomNavigationBar.dart';
+import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/WelcomeScreen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -158,7 +159,7 @@ class _splashScreenState extends State<splashScreen> {
   }
 
   void navigatorPendudukHomePage() {
-    Navigator.pushAndRemoveUntil(context, PageTransition(child: bottomNavigationBarPenduduk(), type: PageTransitionType.fade), (route) => false);
+    Navigator.pushAndRemoveUntil(context, PageTransition(child: dashboardPenduduk(), type: PageTransitionType.fade), (route) => false);
   }
 
   void navigatorWelcomeScreen() {

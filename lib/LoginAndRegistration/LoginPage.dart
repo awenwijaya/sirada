@@ -10,6 +10,7 @@ import 'package:surat/KramaPanitia/Dashboard.dart';
 import 'package:surat/LoginAndRegistration/LupaPassword.dart';
 import 'package:surat/LoginAndRegistration/RegistrationPage.dart';
 import 'package:surat/Penduduk/BottomNavigationBar.dart';
+import 'package:surat/Penduduk/Dashboard.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:http/http.dart' as http;
 
@@ -774,7 +775,7 @@ class _loginPageState extends State<loginPage> {
 
 Route createRoutePendudukDashboard() {
   return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => const bottomNavigationBarPenduduk(),
+      pageBuilder: (context, animation, secondaryAnimation) => const dashboardPenduduk(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
