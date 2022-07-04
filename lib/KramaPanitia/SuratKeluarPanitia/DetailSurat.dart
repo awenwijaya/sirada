@@ -47,6 +47,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   FToast ftoast;
   List<String> tetujon = [];
   List<String> tumusan = [];
+  List<String> tetujonTerlampir = [];
   List tetujonPrajuruDesaList = [];
   List tetujonPrajuruBanjarList = [];
   List tetujonPihakLainList = [];
@@ -129,7 +130,8 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
 
   getTetujon() async {
     this.tetujon = [];
-    http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
+    this.tetujonTerlampir = [];
+    await http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       var responseValue = response.statusCode;
@@ -143,7 +145,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
         }
       }
     });
-    http.get(Uri.parse(apiURLGetTetujonPrajuruBanjar),
+    await http.get(Uri.parse(apiURLGetTetujonPrajuruBanjar),
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       var responseValue = response.statusCode;
@@ -158,7 +160,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
         }
       }
     });
-    http.get(Uri.parse(apiURLGetTetujonPihakLain),
+    await http.get(Uri.parse(apiURLGetTetujonPihakLain),
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       var responseValue = response.statusCode;
@@ -172,6 +174,14 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
         }
       }
     });
+    print(tetujon.length.toString());
+    if(tetujon.length > 2) {
+      for(var i = 0; i <= 1; i++) {
+        tetujonTerlampir.add(tetujon[i]);
+        tetujon.remove(tetujon[i]);
+        print(tetujonTerlampir[i].toString());
+      }
+    }
   }
 
   getTumusan() async {
@@ -607,6 +617,12 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                 fontSize: 16
                             )),
                             margin: EdgeInsets.only(bottom: 5),
+                          ),
+                          Container(
+                            child: tetujonTerlampir.isNotEmpty ? Text("(Terlampir)", style: TextStyle(
+                                fontFamily: "Times New Roman",
+                                fontSize: 16
+                            )) : Container(),
                           )
                         ],
                       ) : Text(pihakKrama, style: TextStyle(
@@ -829,6 +845,44 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                         ],
                       ),
                       margin: EdgeInsets.only(left: 15, top: 10),
+                    ),
+                    Container(
+                      child: Divider(
+                          color: Colors.black38
+                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 15),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: tetujonTerlampir.length == 0 ? Container() : Column(
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment.topLeft,
+                              child: Text("Tetujon Surat (Terlampir) :", style: TextStyle(
+                                  fontFamily: "Times New Roman",
+                                  fontSize: 16
+                              ))
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                for(var i = 0; i < tetujonTerlampir.length; i++) Container(
+                                  child: Text("${i+1}. ${tetujonTerlampir[i].toString()}", style: TextStyle(
+                                      fontFamily: "Times New Roman",
+                                      fontSize: 16
+                                  )),
+                                  margin: EdgeInsets.only(bottom: 5),
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.only(top: 5),
+                          ),
+                        ],
+                      ),
+                      margin: EdgeInsets.only(left: 15),
                     ),
                     Container(
                       child: lampiran.length == 0 ? Container() : Column(

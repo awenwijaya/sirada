@@ -52,6 +52,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
 
   List<String> tetujon = [];
   List<String> tumusan = [];
+  List<String> tetujonTerlampir = [];
   List lampiran = [];
   List historiSurat = [];
 
@@ -121,7 +122,9 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
   }
 
   getTetujon() async {
-    http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
+    this.tetujon = [];
+    this.tetujonTerlampir = [];
+    await http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       var responseValue = response.statusCode;
@@ -131,10 +134,46 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
           tetujonPrajuruDesaList = jsonData;
         });
         for(var i = 0; i < tetujonPrajuruDesaList.length; i++) {
-          tetujon.add("Desa ${tetujonPrajuruDesaList[i]['desadat_nama']} - ${tetujonPrajuruDesaList[i]['nama']}");
+          tetujon.add("Desa ${tetujonPrajuruDesaList[i]['desadat_nama']} (${tetujonPrajuruDesaList[i]['nama']})");
         }
       }
     });
+    await http.get(Uri.parse(apiURLGetTetujonPrajuruBanjar),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      print(responseValue.toString());
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tetujonPrajuruBanjarList = jsonData;
+        });
+        for(var i = 0; i < tetujonPrajuruBanjarList.length; i++) {
+          tetujon.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} (${tetujonPrajuruBanjarList[i]['nama']})");
+        }
+      }
+    });
+    await http.get(Uri.parse(apiURLGetTetujonPihakLain),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tetujonPihakLainList = jsonData;
+        });
+        for(var i = 0; i < tetujonPihakLainList.length; i++) {
+          tetujon.add("${tetujonPihakLainList[i]['pihak_lain']}");
+        }
+      }
+    });
+    if(tetujon.length > 2) {
+      for(var i = 0; i <= 1; i++) {
+        tetujonTerlampir.add(tetujon[i]);
+        tetujon.remove(tetujon[i]);
+        print(tetujonTerlampir[i].toString());
+      }
+    }
   }
 
   getTumusan() async {
@@ -154,24 +193,6 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
     });
   }
 
-  getTetujonPrajuruBanjar() async {
-    http.get(Uri.parse(apiURLGetTetujonPrajuruBanjar),
-        headers: {"Content-Type" : "application/json"}
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      print(responseValue.toString());
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          tetujonPrajuruBanjarList = jsonData;
-        });
-        for(var i = 0; i < tetujonPrajuruBanjarList.length; i++) {
-          tetujon.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} - ${tetujonPrajuruBanjarList[i]['nama']}");
-        }
-      }
-    });
-  }
-
   getTumusanPrajuruBanjar() async {
     http.get(Uri.parse(apiURLGetTumusanPrajuruBanjar),
         headers: {"Content-Type" : "application/json"}
@@ -185,23 +206,6 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
         });
         for(var i = 0; i < tumusanPrajuruBanjarList.length; i++) {
           tumusan.add("Banjar ${tumusanPrajuruBanjarList[i]['nama_banjar_adat']} - ${tumusanPrajuruBanjarList[i]['nama']}");
-        }
-      }
-    });
-  }
-
-  getTetujonPihakLain() async {
-    http.get(Uri.parse(apiURLGetTetujonPihakLain),
-        headers: {"Content-Type" : "application/json"}
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          tetujonPihakLainList = jsonData;
-        });
-        for(var i = 0; i < tetujonPihakLainList.length; i++) {
-          tetujon.add("${tetujonPihakLainList[i]['pihak_lain']}");
         }
       }
     });
@@ -338,8 +342,6 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
     getKetuaPanitiaInfo();
     getSekretarisPanitiaInfo();
     getTetujon();
-    getTetujonPrajuruBanjar();
-    getTetujonPihakLain();
     getTumusan();
     getTumusanPrajuruBanjar();
     getTumusanPihakLain();
@@ -474,6 +476,12 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                                 fontSize: 16
                             )),
                             margin: EdgeInsets.only(bottom: 5),
+                          ),
+                          Container(
+                            child: tetujonTerlampir.isNotEmpty ? Text("(Terlampir)", style: TextStyle(
+                                fontFamily: "Times New Roman",
+                                fontSize: 16
+                            )) : Container(),
                           )
                         ],
                       ) : Text(pihakKrama, style: TextStyle(
@@ -696,6 +704,44 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                         ],
                       ),
                       margin: EdgeInsets.only(left: 15, top: 10),
+                    ),
+                    Container(
+                      child: Divider(
+                          color: Colors.black38
+                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 15),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: tetujonTerlampir.length == 0 ? Container() : Column(
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment.topLeft,
+                              child: Text("Tetujon Surat (Terlampir) :", style: TextStyle(
+                                  fontFamily: "Times New Roman",
+                                  fontSize: 16
+                              ))
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                for(var i = 0; i < tetujonTerlampir.length; i++) Container(
+                                  child: Text("${i+1}. ${tetujonTerlampir[i].toString()}", style: TextStyle(
+                                      fontFamily: "Times New Roman",
+                                      fontSize: 16
+                                  )),
+                                  margin: EdgeInsets.only(bottom: 5),
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.only(top: 5),
+                          ),
+                        ],
+                      ),
+                      margin: EdgeInsets.only(left: 15),
                     ),
                     Container(
                       child: lampiran.length == 0 ? Container() : Column(
