@@ -18,14 +18,6 @@ class agendaAcaraAdmin extends StatefulWidget {
 
 class _agendaAcaraAdminState extends State<agendaAcaraAdmin> {
   List view = ['Hari', 'Minggu', 'Bulan'];
-  EventController eventControllerSuratKeluar;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    eventControllerSuratKeluar = EventController();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +54,7 @@ class _agendaAcaraAdminState extends State<agendaAcaraAdmin> {
                 )),
                 Tab(child: Column(
                   children: <Widget>[
-                    Icon(CupertinoIcons.calendar, color: HexColor("FBA1A1")),
+                    Icon(CupertinoIcons.mail, color: HexColor("FBA1A1")),
                     Text("Surat Keluar", style: TextStyle(
                         fontFamily: "Poppins",
                         fontWeight: FontWeight.w700
@@ -308,7 +300,7 @@ class _agendaSuratKeluarAdminState extends State<agendaSuratKeluarAdmin> {
             endTime: data['waktu_kegiatan_mulai'] == data['waktu_kegiatan_selesai'] ? DateTime.parse("${data['tanggal_kegiatan_berakhir']}T${data['waktu_kegiatan_selesai']}").add(Duration(hours: 1)) : DateTime.parse("${data['tanggal_kegiatan_berakhir']}T${data['waktu_kegiatan_selesai']}"),
             endDate: data['waktu_kegiatan_mulai'] == data['waktu_kegiatan_selesai'] ? DateTime.parse("${data['tanggal_kegiatan_berakhir']}T${data['waktu_kegiatan_selesai']}").add(Duration(hours: 1)) : DateTime.parse("${data['tanggal_kegiatan_berakhir']}T${data['waktu_kegiatan_selesai']}"),
             event: data['parindikan'],
-            title: "${data['parindikan']}",
+            title: data['tim_kegiatan'] == null ? "${data['parindikan']}" : "${data['parindikan']} (${data['tim_kegiatan']})",
           );
           eventControllerSuratKeluar.add(event);
         }
