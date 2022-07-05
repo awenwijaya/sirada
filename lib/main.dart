@@ -117,7 +117,7 @@ class _splashScreenState extends State<splashScreen> {
       print(status);
       print(role);
       if(status == 'login'){
-        if(role == "Admin" || role == "Bendesa") {
+        if(role == "Admin" || role == "Bendesa" || role == "Penyarikan") {
           setState(() {
             loginPage.userId = userId;
             loginPage.userEmail = userEmail;

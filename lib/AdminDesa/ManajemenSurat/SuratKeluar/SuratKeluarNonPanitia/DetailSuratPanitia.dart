@@ -41,6 +41,8 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
   var status;
   var validasiStatus;
   var pihakKrama;
+  var validasiStatusKetua;
+  var validasiStatusSekretaris;
   FToast ftoast;
 
   List tetujonPrajuruDesaList = [];
@@ -55,7 +57,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
   List<String> tetujonTerlampir = [];
   List lampiran = [];
   List historiSurat = [];
-
+  bool canValidate = false;
   bool LoadData = true;
   var apiURLShowDetailSuratKeluar = "https://siradaskripsi.my.id/api/data/surat/keluar/view/${detailSuratKeluarPanitiaAdmin.suratKeluarId}";
   var apiURLShowPrajuru = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarPanitiaAdmin.suratKeluarId}";
@@ -73,6 +75,30 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
   //validasi
   var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
   var apiURLShowValidasiStatus = "https://siradaskripsi.my.id/admin/surat/keluar/panitia/validasi/show/${loginPage.kramaId}";
+
+  getPanitiaValidasiStatus() async {
+    http.get(Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/panitia/get/validasi/${detailSuratKeluarPanitiaAdmin.suratKeluarId}"),
+      headers: {"Content-Type" : "application/json"},
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          validasiStatusKetua = jsonData['validasi_ketua'];
+          validasiStatusSekretaris = jsonData['validasi_sekretaris'];
+        });
+      }
+    });
+    if(validasiStatusKetua == null || validasiStatusKetua == "Belum Divalidasi" || validasiStatusKetua == "Ditolak" || validasiStatusSekretaris == null || validasiStatusSekretaris == "Belum Divalidasi" || validasiStatusSekretaris == "Ditolak") {
+      setState(() {
+        canValidate = false;
+      });
+    }else if(validasiStatusKetua == "Tervalidasi" && validasiStatusSekretaris == "Tervalidasi") {
+      setState(() {
+        canValidate = true;
+      });
+    }
+  }
 
   getValidasiStatus() async {
     var body = jsonEncode({
@@ -348,6 +374,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
     getHistori();
     getLampiran();
     getValidasiStatus();
+    getPanitiaValidasiStatus();
     ftoast = FToast();
     ftoast.init(this.context);
   }
@@ -806,7 +833,58 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                       ),
                     ),
                     Container(
-                      child: status == "Menunggu Respon" ? Container() : Column(
+                      child: status == "Menunggu Respon" ? Container() : canValidate == false ? Container(
+                          child: Container(
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  child: Icon(
+                                      Icons.info_rounded,
+                                      color: Colors.black
+                                  ),
+                                ),
+                                Container(
+                                  child: Flexible(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.7,
+                                              child: Text("Tidak dapat melanjutkan validasi surat", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black
+                                              )),
+                                            )
+                                        ),
+                                        Container(
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.7,
+                                            child: Text("Anda sementara tidak dapat melakukan validasi surat karena panitia kegiatan belum atau menolak validasi surat ini.", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                color: Colors.black
+                                            )),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.only(left: 15),
+                                )
+                              ],
+                            ),
+                            decoration: BoxDecoration(
+                                color: HexColor("B2C8DF"),
+                                borderRadius: BorderRadius.circular(25)
+                            ),
+                            padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+                            margin: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 5),
+                          )
+                      ) : Column(
                         children: <Widget>[
                           Container(
                             child: Text("Aksi", style: TextStyle(
