@@ -50,6 +50,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   FToast ftoast;
   bool canValidate = false;
   bool canValidateOtherPrajuru = false;
+  bool canCancelSurat = false;
 
   List tetujonPrajuruDesaList = [];
   List tetujonPrajuruBanjarList = [];
@@ -542,868 +543,923 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
               icon: Icon(Icons.edit),
               color: HexColor("#025393")
             ),
+            status == "Sedang Diproses" ? validasiStatus == "Belum Tervalidasi" ? penyarikanValidasiStatus == "Belum Tervalidasi" ? canCancelSurat ? IconButton(
+              onPressed: (){
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(40.0))
+                        ),
+                        content: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Container(
+                                child: Image.asset(
+                                  'images/question.png',
+                                  height: 50,
+                                  width: 50,
+                                ),
+                              ),
+                              Container(
+                                child: Text("Batalkan Surat", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: HexColor("025393")
+                                ), textAlign: TextAlign.center),
+                                margin: EdgeInsets.only(top: 10),
+                              ),
+                              Container(
+                                child: Text("Apakah Anda yakin ingin membatalkan pengajuan surat ini?", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14
+                                ), textAlign: TextAlign.center),
+                                margin: EdgeInsets.only(top: 10),
+                              )
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text("Ya", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontWeight: FontWeight.w700,
+                                color: HexColor("025393")
+                            )),
+                            onPressed: (){},
+                          ),
+                          TextButton(
+                            child: Text("Tidak", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontWeight: FontWeight.w700,
+                                color: HexColor("025393")
+                            )),
+                            onPressed: (){Navigator.of(context).pop();},
+                          )
+                        ],
+                      );
+                    }
+                );
+              },
+              icon: Icon(Icons.cancel),
+              color: HexColor("025393")
+            ) : Container() : Container() : Container() : Container()
           ]
         ),
-        body: Stack(
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white
-              ),
-            ),
-            Container(
-              child: LoadData ? ProfilePageShimmer() : SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: NetworkImage('https://storage.siradaskripsi.my.id/img/logo-desa/${logoDesa}'),
-                                        fit: BoxFit.fill
-                                    )
+        body: LoadData ? ProfilePageShimmer() : SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage('https://storage.siradaskripsi.my.id/img/logo-desa/${logoDesa}'),
+                                  fit: BoxFit.fill
+                              )
+                          ),
+                          margin: EdgeInsets.only(left: 20)
+                      ),
+                      Container(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.82,
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  height: 65,
+                                  child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/${aksaraDesa}'),
+                                  margin: EdgeInsets.only(top: 10, left: 10),
                                 ),
-                                margin: EdgeInsets.only(left: 20)
-                            ),
-                            Container(
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.82,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Container(
-                                        height: 65,
-                                        child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/${aksaraDesa}'),
-                                        margin: EdgeInsets.only(top: 10, left: 10),
-                                      ),
-                                      Container(
-                                          child: Text("DESA ADAT ${namaDesa}".toUpperCase(), style: TextStyle(
-                                              fontFamily: "Times New Roman",
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700
-                                          ))
-                                      ),
-                                      Container(
-                                          child: Text("KECAMATAN ${namaKecamatan} ${namaKabupaten}".toUpperCase(), style: TextStyle(
-                                              fontFamily: "Times New Roman",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700
-                                          ), textAlign: TextAlign.center),
-                                          margin: EdgeInsets.only(top: 5),
-                                          padding: EdgeInsets.symmetric(horizontal: 10)
-                                      ),
-                                      Container(
-                                          child: Text("${alamat}${kontakWa1 == null ? "" : ", $kontakWa1"}${kontakWa2 == null ? "" : ",$kontakWa2"}", style: TextStyle(
-                                              fontFamily: "Times New Roman",
-                                              fontSize: 16
-                                          ), textAlign: TextAlign.center),
-                                          margin: EdgeInsets.only(top: 5),
-                                          padding: EdgeInsets.symmetric(horizontal: 10)
-                                      )
-                                    ],
-                                  ),
+                                Container(
+                                    child: Text("DESA ADAT ${namaDesa}".toUpperCase(), style: TextStyle(
+                                        fontFamily: "Times New Roman",
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700
+                                    ))
+                                ),
+                                Container(
+                                    child: Text("KECAMATAN ${namaKecamatan} ${namaKabupaten}".toUpperCase(), style: TextStyle(
+                                        fontFamily: "Times New Roman",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700
+                                    ), textAlign: TextAlign.center),
+                                    margin: EdgeInsets.only(top: 5),
+                                    padding: EdgeInsets.symmetric(horizontal: 10)
+                                ),
+                                Container(
+                                    child: Text("${alamat}${kontakWa1 == null ? "" : ", $kontakWa1"}${kontakWa2 == null ? "" : ",$kontakWa2"}", style: TextStyle(
+                                        fontFamily: "Times New Roman",
+                                        fontSize: 16
+                                    ), textAlign: TextAlign.center),
+                                    margin: EdgeInsets.only(top: 5),
+                                    padding: EdgeInsets.symmetric(horizontal: 10)
                                 )
-                            )
-                          ]
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(width: 2.0, color: Colors.black)
+                              ],
+                            ),
                           )
-                      ),
-                      margin: EdgeInsets.only(top: 10, left: 15, right: 15),
-                    ),
-                    Container(
-                        alignment: Alignment.topRight,
-                        child: Text("${namaDesa}, ${tanggalSurat}", style: TextStyle(
+                      )
+                    ]
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(width: 2.0, color: Colors.black)
+                    )
+                ),
+                margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+              ),
+              Container(
+                  alignment: Alignment.topRight,
+                  child: Text("${namaDesa}, ${tanggalSurat}", style: TextStyle(
+                      fontFamily: "Times New Roman",
+                      fontSize: 16
+                  )),
+                  margin: EdgeInsets.only(right: 15, top: 15)
+              ),
+              Container(
+                  alignment: Alignment.topRight,
+                  child: Text("Katur Majeng Ring :", style: TextStyle(
+                      fontFamily: "Times New Roman",
+                      fontSize: 16
+                  ), textAlign: TextAlign.center),
+                  margin: EdgeInsets.only(top: 10, right: 15)
+              ),
+              Container(
+                alignment: Alignment.topRight,
+                child: pihakKrama == null ? tetujon.length == 0 ? Text("-", style: TextStyle(
+                    fontFamily: "Times New Roman",
+                    fontSize: 16
+                )) : Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      for(var i = 0; i < tetujon.length; i++) Container(
+                        child: Text("${i+1}. ${tetujon[i].toString()}", textAlign: TextAlign.right, style: TextStyle(
                             fontFamily: "Times New Roman",
                             fontSize: 16
                         )),
-                        margin: EdgeInsets.only(right: 15, top: 15)
-                    ),
-                    Container(
-                        alignment: Alignment.topRight,
-                        child: Text("Katur Majeng Ring :", style: TextStyle(
+                        margin: EdgeInsets.only(bottom: 5),
+                      ),
+                      Container(
+                        child: tetujonTerlampir.isNotEmpty ? Text("(Terlampir)", style: TextStyle(
                             fontFamily: "Times New Roman",
                             fontSize: 16
-                        ), textAlign: TextAlign.center),
-                        margin: EdgeInsets.only(top: 10, right: 15)
-                    ),
-                    Container(
-                      alignment: Alignment.topRight,
-                      child: pihakKrama == null ? tetujon.length == 0 ? Text("-", style: TextStyle(
-                          fontFamily: "Times New Roman",
-                          fontSize: 16
-                      )) : Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            for(var i = 0; i < tetujon.length; i++) Container(
-                              child: Text("${i+1}. ${tetujon[i].toString()}", textAlign: TextAlign.right, style: TextStyle(
-                                  fontFamily: "Times New Roman",
-                                  fontSize: 16
-                              )),
-                              margin: EdgeInsets.only(bottom: 5),
-                            ),
-                            Container(
-                              child: tetujonTerlampir.isNotEmpty ? Text("(Terlampir)", style: TextStyle(
+                        )) : Container(),
+                      )
+                    ],
+                  ),
+                ) : Text(pihakKrama, style: TextStyle(
+                    fontFamily: "Times New Roman",
+                    fontSize: 16
+                )),
+                margin: EdgeInsets.only(right: 15, top: 5),
+              ),
+              Container(
+                  child: Column(
+                      children: <Widget>[
+                        Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Nomor: ${nomorSurat}", style: TextStyle(
                                 fontFamily: "Times New Roman",
                                 fontSize: 16
-                              )) : Container(),
-                            )
-                          ],
+                            )),
+                            margin: EdgeInsets.only(top: 5)
                         ),
-                      ) : Text(pihakKrama, style: TextStyle(
-                        fontFamily: "Times New Roman",
-                        fontSize: 16
-                      )),
-                      margin: EdgeInsets.only(right: 15, top: 5),
-                    ),
-                    Container(
-                        child: Column(
-                            children: <Widget>[
-                              Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Text("Nomor: ${nomorSurat}", style: TextStyle(
-                                      fontFamily: "Times New Roman",
-                                      fontSize: 16
-                                  )),
-                                  margin: EdgeInsets.only(top: 5)
-                              ),
-                              Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(lepihan == "0" ? "Lepihan: -" : "Lepihan: ${lepihan} lepih", style: TextStyle(
-                                      fontFamily: "Times New Roman",
-                                      fontSize: 16
-                                  )),
-                                  margin: EdgeInsets.only(top: 5)
-                              ),
-                              Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Text("Parindikan: ${parindikan}", style: TextStyle(
-                                      fontFamily: "Times New Roman",
-                                      fontSize: 16
-                                  )),
-                                  margin: EdgeInsets.only(top: 5)
-                              ),
-                            ]
-                        ),
-                        margin: EdgeInsets.only(left: 15, top: 10)
-                    ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
+                        Container(
                             alignment: Alignment.topLeft,
-                            height: 50,
-                            child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/om-swastyastu.png'),
-                            margin: EdgeInsets.only(top: 10, left: 10),
-                          ),
-                          Container(
-                              alignment: Alignment.topLeft,
-                              child: Text("Om Swastiyastu", style: TextStyle(
-                                  fontFamily: "Times New Roman",
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700
-                              )),
-                              margin: EdgeInsets.only(top: 10, left: 15)
-                          ),
-                        ],
-                      ),
+                            child: Text(lepihan == "0" ? "Lepihan: -" : "Lepihan: ${lepihan} lepih", style: TextStyle(
+                                fontFamily: "Times New Roman",
+                                fontSize: 16
+                            )),
+                            margin: EdgeInsets.only(top: 5)
+                        ),
+                        Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Parindikan: ${parindikan}", style: TextStyle(
+                                fontFamily: "Times New Roman",
+                                fontSize: 16
+                            )),
+                            margin: EdgeInsets.only(top: 5)
+                        ),
+                      ]
+                  ),
+                  margin: EdgeInsets.only(left: 15, top: 10)
+              ),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      height: 50,
+                      child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/om-swastyastu.png'),
+                      margin: EdgeInsets.only(top: 10, left: 10),
                     ),
                     Container(
                         alignment: Alignment.topLeft,
-                        child: Text(pemahbah == null ? "" : "\t\t\t${pemahbah}", style: TextStyle(
-                            fontFamily: "Times New Roman",
-                            fontSize: 16
-                        ), textAlign: TextAlign.justify),
-                        padding: EdgeInsets.only(left: 15, right: 15)
-                    ),
-                    Container(
-                        alignment: Alignment.topLeft,
-                        child: Text(daging == null ? "" : "\t\t\t${daging}", style: TextStyle(
-                            fontFamily: "Times New Roman",
-                            fontSize: 16
-                        ), textAlign: TextAlign.justify),
-                        padding: EdgeInsets.only(left: 15, right: 15)
-                    ),
-                    Container(
-                        alignment: Alignment.topLeft,
-                        child: Text(pamuput == null ? "" : "\t\t\t${pamuput}", style: TextStyle(
-                            fontFamily: "Times New Roman",
-                            fontSize: 16
-                        ), textAlign: TextAlign.justify),
-                        padding: EdgeInsets.only(left: 15, right: 15)
-                    ),
-                    Container(
-                        alignment: Alignment.topLeft,
-                        child: Text("Om Santih, Santih, Santih Om", style: TextStyle(
+                        child: Text("Om Swastiyastu", style: TextStyle(
                             fontFamily: "Times New Roman",
                             fontSize: 16,
                             fontWeight: FontWeight.w700
                         )),
-                        margin: EdgeInsets.only(top: 5, left: 15)
+                        margin: EdgeInsets.only(top: 10, left: 15)
                     ),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      height: 50,
-                      child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/om-santih,santih,santih-om.png'),
-                      margin: EdgeInsets.only(top: 10, left: 10),
-                    ),
-                    Container(
-                        child: Stack(
-                            children: <Widget>[
-                              Container(
-                                  alignment: Alignment.topLeft,
-                                  child: namaBendesa == null ? Container() : Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Container(
-                                          child: Text("Bendesa", style: TextStyle(
-                                              fontFamily: "Times New Roman",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700
-                                          ))
-                                      ),
-                                      Container(
-                                        child: qrCodeBendesa == null ? Container() : qrCodeBendesa == "Belum tervalidasi" ? Container() : Container(
-                                            child: SvgPicture.network(
-                                              "https://storage.siradaskripsi.my.id/img/qrcode/${qrCodeBendesa}",
-                                              height: 50,
-                                              placeholderBuilder: (context) => CircularProgressIndicator(),
-                                            ),
-                                            margin: EdgeInsets.only(top: 10)
-                                        ),
-                                      ),
-                                      Container(
-                                          child: Text(namaBendesa, style: TextStyle(
-                                              fontFamily: "Times New Roman",
-                                              fontSize: 16
-                                          )),
-                                          margin: EdgeInsets.only(top: 10)
-                                      )
-                                    ],
+                  ],
+                ),
+              ),
+              Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(pemahbah == null ? "" : "\t\t\t${pemahbah}", style: TextStyle(
+                      fontFamily: "Times New Roman",
+                      fontSize: 16
+                  ), textAlign: TextAlign.justify),
+                  padding: EdgeInsets.only(left: 15, right: 15)
+              ),
+              Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(daging == null ? "" : "\t\t\t${daging}", style: TextStyle(
+                      fontFamily: "Times New Roman",
+                      fontSize: 16
+                  ), textAlign: TextAlign.justify),
+                  padding: EdgeInsets.only(left: 15, right: 15)
+              ),
+              Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(pamuput == null ? "" : "\t\t\t${pamuput}", style: TextStyle(
+                      fontFamily: "Times New Roman",
+                      fontSize: 16
+                  ), textAlign: TextAlign.justify),
+                  padding: EdgeInsets.only(left: 15, right: 15)
+              ),
+              Container(
+                  alignment: Alignment.topLeft,
+                  child: Text("Om Santih, Santih, Santih Om", style: TextStyle(
+                      fontFamily: "Times New Roman",
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700
+                  )),
+                  margin: EdgeInsets.only(top: 5, left: 15)
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                height: 50,
+                child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/om-santih,santih,santih-om.png'),
+                margin: EdgeInsets.only(top: 10, left: 10),
+              ),
+              Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                            child: namaBendesa == null ? Container() : Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  child: Text("Bendesa", style: TextStyle(
+                                      fontFamily: "Times New Roman",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700
+                                  ), textAlign: TextAlign.center),
+                                ),
+                                Container(
+                                  child: qrCodeBendesa == "Belum tervalidasi" ? Container() : Container(
+                                    child: SvgPicture.network(
+                                      "https://storage.siradaskripsi.my.id/img/qrcode/${qrCodeBendesa}",
+                                      height: 50,
+                                      placeholderBuilder: (context) => CircularProgressIndicator(),
+                                    ),
+                                    margin: EdgeInsets.only(top: 10),
                                   ),
-                                  margin: EdgeInsets.only(left: 10, top: 10)
-                              ),
-                              Container(
-                                  alignment: Alignment.topRight,
-                                  child: namaPenyarikan == null ? Container() : Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Container(
-                                          child: Text("Penyarikan", style: TextStyle(
-                                              fontFamily: "Times New Roman",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700
-                                          ))
-                                      ),
-                                      Container(
-                                        child: qrCodePenyarikan == null ? Container() : qrCodePenyarikan == "Belum tervalidasi" ? Container() : Container(
-                                          child: SvgPicture.network(
-                                            "https://storage.siradaskripsi.my.id/img/qrcode/${qrCodePenyarikan}",
-                                            height: 50,
-                                            placeholderBuilder: (context) => CircularProgressIndicator(),
-                                          ),
-                                            margin: EdgeInsets.only(top: 10)
-                                        ),
-                                      ),
-                                      Container(
-                                          child: Text(namaPenyarikan, style: TextStyle(
-                                              fontFamily: "Times New Roman",
-                                              fontSize: 16
-                                          )),
-                                          margin: EdgeInsets.only(top: 10)
-                                      )
-                                    ],
-                                  ),
-                                  margin: EdgeInsets.only(right: 10, top: 10)
-                              ),
-                            ]
-                        )
-                    ),
-                    Container(
-                      child: tumusan.length == 0 ? Container() : Column(
-                        children: <Widget>[
-                          Container(
-                              alignment: Alignment.topLeft,
-                              child: Text("Tumusan :", style: TextStyle(
-                                  fontFamily: "Times New Roman",
-                                  fontSize: 16
-                              )),
-                              margin: EdgeInsets.only(top: 5)
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: tumusan.length == 0 ? Text("-", style: TextStyle(
-                                fontFamily: "Times New Roman",
-                                fontSize: 16
-                            )) : Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  for(var i = 0; i < tumusan.length; i++) Container(
-                                    child: Text("${i+1}. ${tumusan[i].toString()}", style: TextStyle(
+                                ),
+                                Container(
+                                    child: Text(namaBendesa, style: TextStyle(
                                         fontFamily: "Times New Roman",
                                         fontSize: 16
                                     )),
-                                    margin: EdgeInsets.only(bottom: 5),
-                                  )
-                                ],
-                              ),
-                              margin: EdgeInsets.only(top: 5),
+                                    margin: EdgeInsets.only(top: 10)
+                                )
+                              ],
                             ),
-                            margin: EdgeInsets.only(left: 5),
-                          )
-                        ],
+                            margin: EdgeInsets.only(top: 10, left: 10)
+                        ),
+                        Container(
+                            alignment: Alignment.topRight,
+                            child: namaPenyarikan == null ? Container() : Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                    child: Text("Penyarikan", style: TextStyle(
+                                        fontFamily: "Times New Roman",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700
+                                    ))
+                                ),
+                                Container(
+                                  child: qrCodePenyarikan == null ? Container() : qrCodePenyarikan == "Belum tervalidasi" ? Container() : Container(
+                                      child: SvgPicture.network(
+                                        "https://storage.siradaskripsi.my.id/img/qrcode/${qrCodePenyarikan}",
+                                        height: 50,
+                                        placeholderBuilder: (context) => CircularProgressIndicator(),
+                                      ),
+                                      margin: EdgeInsets.only(top: 10)
+                                  ),
+                                ),
+                                Container(
+                                    child: Text(namaPenyarikan, style: TextStyle(
+                                        fontFamily: "Times New Roman",
+                                        fontSize: 16
+                                    )),
+                                    margin: EdgeInsets.only(top: 10)
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.only(top: 10, right: 10)
+                        ),
+                      ]
+                  )
+              ),
+              Container(
+                  child: tumusan.length == 0 ? Container() : Column(
+                    children: <Widget>[
+                      Container(
+                          alignment: Alignment.topLeft,
+                          child: Text("Tumusan :", style: TextStyle(
+                              fontFamily: "Times New Roman",
+                              fontSize: 16
+                          )),
+                          margin: EdgeInsets.only(top: 5)
                       ),
-                      margin: EdgeInsets.only(left: 15, top: 10)
-                    ),
+                      Container(
+                        alignment: Alignment.topLeft,
+                        child: tumusan.length == 0 ? Text("-", style: TextStyle(
+                            fontFamily: "Times New Roman",
+                            fontSize: 16
+                        )) : Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              for(var i = 0; i < tumusan.length; i++) Container(
+                                child: Text("${i+1}. ${tumusan[i].toString()}", style: TextStyle(
+                                    fontFamily: "Times New Roman",
+                                    fontSize: 16
+                                )),
+                                margin: EdgeInsets.only(bottom: 5),
+                              )
+                            ],
+                          ),
+                          margin: EdgeInsets.only(top: 5),
+                        ),
+                        margin: EdgeInsets.only(left: 5),
+                      )
+                    ],
+                  ),
+                  margin: EdgeInsets.only(left: 15, top: 10)
+              ),
+              Container(
+                child: tetujonTerlampir.length == 0 ? Container() : Divider(
+                    color: Colors.black38
+                ),
+                margin: EdgeInsets.symmetric(horizontal: 15),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: tetujonTerlampir.length == 0 ? Container() : Column(
+                  children: <Widget>[
                     Container(
-                      child: tetujonTerlampir.length == 0 ? Container() : Divider(
-                          color: Colors.black38
-                      ),
-                      margin: EdgeInsets.symmetric(horizontal: 15),
+                        alignment: Alignment.topLeft,
+                        child: Text("Tetujon Surat (Terlampir) :", style: TextStyle(
+                            fontFamily: "Times New Roman",
+                            fontSize: 16
+                        ))
                     ),
                     Container(
                       alignment: Alignment.topLeft,
-                      child: tetujonTerlampir.length == 0 ? Container() : Column(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          for(var i = 0; i < tetujonTerlampir.length; i++) Container(
+                            child: Text("${i+1}. ${tetujonTerlampir[i].toString()}", style: TextStyle(
+                                fontFamily: "Times New Roman",
+                                fontSize: 16
+                            )),
+                            margin: EdgeInsets.only(bottom: 5),
+                          )
+                        ],
+                      ),
+                      margin: EdgeInsets.only(top: 5),
+                    ),
+                  ],
+                ),
+                margin: EdgeInsets.only(left: 15),
+              ),
+              Container(
+                child: lampiran.length == 0 ? Container() : Column(
+                  children: <Widget>[
+                    Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(top: 15, left: 25),
+                        child: Text("Lampiran", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700
+                        ))
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        for(var i = 0; i < lampiran.length; i++) Container(
+                          child: GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                viewLampiranSuratKeluarAdmin.namaFile = lampiran[i]['file'];
+                              });
+                              Navigator.push(context, CupertinoPageRoute(builder: (context) => viewLampiranSuratKeluarAdmin()));
+                            },
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                    child: Image.asset('images/paper.png', height: 40, width: 40,)
+                                ),
+                                Container(
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.60,
+                                    child: Text(lampiran[i]['file'], style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700
+                                    ), maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: false
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.only(left: 20),
+                                )
+                              ],
+                            ),
+                          ),
+                          margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          height: 70,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(0,3)
+                                )
+                              ]
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                child: status == "Menunggu Respon" ? Container() : canValidateOtherPrajuru == false ? Container() : canValidate == false ? Container(
+                    child: Container(
+                      child: Row(
                         children: <Widget>[
                           Container(
-                            alignment: Alignment.topLeft,
-                            child: Text("Tetujon Surat (Terlampir) :", style: TextStyle(
-                              fontFamily: "Times New Roman",
-                              fontSize: 16
-                            ))
+                            child: Icon(
+                                Icons.info_rounded,
+                                color: Colors.black
+                            ),
                           ),
                           Container(
-                            alignment: Alignment.topLeft,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                for(var i = 0; i < tetujonTerlampir.length; i++) Container(
-                                  child: Text("${i+1}. ${tetujonTerlampir[i].toString()}", style: TextStyle(
-                                    fontFamily: "Times New Roman",
-                                    fontSize: 16
-                                  )),
-                                  margin: EdgeInsets.only(bottom: 5),
+                                Container(
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.7,
+                                      child: Text("Tidak dapat melanjutkan validasi surat", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black
+                                      )),
+                                    )
+                                ),
+                                Container(
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.7,
+                                    child: Text("Anda sementara tidak dapat melakukan validasi surat karena Penyarikan belum atau menolak validasi surat ini.", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        color: Colors.black
+                                    )),
+                                  ),
                                 )
                               ],
                             ),
-                            margin: EdgeInsets.only(top: 5),
-                          ),
-                        ],
-                      ),
-                      margin: EdgeInsets.only(left: 15),
-                    ),
-                    Container(
-                      child: lampiran.length == 0 ? Container() : Column(
-                        children: <Widget>[
-                          Container(
-                              alignment: Alignment.topLeft,
-                              margin: EdgeInsets.only(top: 15, left: 25),
-                              child: Text("Lampiran", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700
-                              ))
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              for(var i = 0; i < lampiran.length; i++) Container(
-                                child: GestureDetector(
-                                  onTap: (){
-                                    setState(() {
-                                      viewLampiranSuratKeluarAdmin.namaFile = lampiran[i]['file'];
-                                    });
-                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => viewLampiranSuratKeluarAdmin()));
-                                  },
-                                  child: Row(
-                                    children: <Widget>[
-                                      Container(
-                                          child: Image.asset('images/paper.png', height: 40, width: 40,)
-                                      ),
-                                      Container(
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context).size.width * 0.60,
-                                          child: Text(lampiran[i]['file'], style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700
-                                          ), maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            softWrap: false
-                                          ),
-                                        ),
-                                        margin: EdgeInsets.only(left: 20),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                margin: EdgeInsets.only(top: 15, left: 20, right: 20),
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                height: 70,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.2),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(0,3)
-                                    )
-                                  ]
-                                ),
-                              )
-                            ],
+                            margin: EdgeInsets.only(left: 15),
                           )
                         ],
                       ),
-                    ),
-                    Container(
-                      child: status == "Menunggu Respon" ? Container() : canValidateOtherPrajuru == false ? Container() : canValidate == false ? Container(
-                        child: Container(
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                child: Icon(
-                                  Icons.info_rounded,
-                                  color: Colors.black
-                                ),
-                              ),
-                              Container(
-                                child: Flexible(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context).size.width * 0.7,
-                                          child: Text("Tidak dapat melanjutkan validasi surat", style: TextStyle(
-                                              fontFamily: "Poppins",
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black
-                                          )),
-                                        )
+                      decoration: BoxDecoration(
+                          color: HexColor("B2C8DF"),
+                          borderRadius: BorderRadius.circular(25)
+                      ),
+                      padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+                      margin: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 5),
+                    )
+                ) : validasiStatus == "Ditolak" ? Container(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          child: Text("Aksi", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700
+                          )),
+                          alignment: Alignment.topLeft,
+                          margin: EdgeInsets.only(top: 20, left: 25),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: FlatButton(
+                            onPressed: (){
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(40.0))
                                       ),
-                                      Container(
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context).size.width * 0.7,
-                                          child: Text("Anda sementara tidak dapat melakukan validasi surat karena Penyarikan belum atau menolak validasi surat ini.", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 14,
-                                            color: Colors.black
-                                          )),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                margin: EdgeInsets.only(left: 15),
-                              )
-                            ],
-                          ),
-                          decoration: BoxDecoration(
-                            color: HexColor("B2C8DF"),
-                            borderRadius: BorderRadius.circular(25)
-                          ),
-                          padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-                          margin: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 5),
-                        )
-                      ) : validasiStatus == "Ditolak" ? Container(
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                child: Text("Aksi", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700
-                                )),
-                                alignment: Alignment.topLeft,
-                                margin: EdgeInsets.only(top: 20, left: 25),
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                child: FlatButton(
-                                  onPressed: (){
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                          ),
-                                          content: Container(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                Container(
-                                                  child: Image.asset(
-                                                    'images/question.png',
-                                                    height: 50,
-                                                    width: 50,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  child: Text("Batalkan Penolakan Surat", style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: HexColor("025393")
-                                                  ), textAlign: TextAlign.center),
-                                                  margin: EdgeInsets.only(top: 10),
-                                                ),
-                                                Container(
-                                                  child: Text("Apakah Anda yakin ingin membatalkan penolakan surat ini?", style: TextStyle(
-                                                    fontFamily: "Poppins",
-                                                    fontSize: 14
-                                                  ), textAlign: TextAlign.center),
-                                                  margin: EdgeInsets.only(top: 10),
-                                                )
-                                              ],
+                                      content: Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Container(
+                                              child: Image.asset(
+                                                'images/question.png',
+                                                height: 50,
+                                                width: 50,
+                                              ),
                                             ),
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text("Ya", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("025393")
-                                              )),
-                                              onPressed: (){
-                                                var body = jsonEncode({
-                                                  "user_id" : loginPage.userId,
-                                                  "surat_keluar_id" : detailSuratKeluarNonPanitia.suratKeluarId,
-                                                  "prajuru_desa_adat_id" : loginPage.prajuruId,
-                                                });
-                                                http.post(Uri.parse(apiURLBatalTolak),
-                                                  headers: {"Content-Type" : "application/json"},
-                                                  body: body
-                                                ).then((http.Response response) {
-                                                  var responseValue = response.statusCode;
-                                                  print("status tolak surat: ${responseValue.toString()}");
-                                                  if(responseValue == 200) {
-                                                    ftoast.showToast(
-                                                      child: Container(
-                                                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                                        decoration: BoxDecoration(
+                                            Container(
+                                              child: Text("Batalkan Penolakan Surat", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("025393")
+                                              ), textAlign: TextAlign.center),
+                                              margin: EdgeInsets.only(top: 10),
+                                            ),
+                                            Container(
+                                              child: Text("Apakah Anda yakin ingin membatalkan penolakan surat ini?", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14
+                                              ), textAlign: TextAlign.center),
+                                              margin: EdgeInsets.only(top: 10),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text("Ya", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontWeight: FontWeight.w700,
+                                              color: HexColor("025393")
+                                          )),
+                                          onPressed: (){
+                                            var body = jsonEncode({
+                                              "user_id" : loginPage.userId,
+                                              "surat_keluar_id" : detailSuratKeluarNonPanitia.suratKeluarId,
+                                              "prajuru_desa_adat_id" : loginPage.prajuruId,
+                                            });
+                                            http.post(Uri.parse(apiURLBatalTolak),
+                                                headers: {"Content-Type" : "application/json"},
+                                                body: body
+                                            ).then((http.Response response) {
+                                              var responseValue = response.statusCode;
+                                              print("status tolak surat: ${responseValue.toString()}");
+                                              if(responseValue == 200) {
+                                                ftoast.showToast(
+                                                    child: Container(
+                                                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                      decoration: BoxDecoration(
                                                           borderRadius: BorderRadius.circular(25),
                                                           color: Colors.green
-                                                        ),
-                                                        child: Row(
-                                                          children: <Widget>[
-                                                            Icon(Icons.done),
-                                                            Container(
-                                                              margin: EdgeInsets.only(left: 15),
-                                                              child: SizedBox(
-                                                                width: MediaQuery.of(context).size.width * 0.65,
-                                                                child: Text("Surat telah dibatalkan status penolakannya", style: TextStyle(
+                                                      ),
+                                                      child: Row(
+                                                        children: <Widget>[
+                                                          Icon(Icons.done),
+                                                          Container(
+                                                            margin: EdgeInsets.only(left: 15),
+                                                            child: SizedBox(
+                                                              width: MediaQuery.of(context).size.width * 0.65,
+                                                              child: Text("Surat telah dibatalkan status penolakannya", style: TextStyle(
                                                                   fontFamily: "Poppins",
                                                                   fontSize: 14,
                                                                   fontWeight: FontWeight.w700,
                                                                   color: Colors.white
-                                                                )),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      )
-                                                    );
-                                                    getSuratKeluarInfo();
-                                                    getBendesaInfo();
-                                                    getPenyarikanInfo();
-                                                    getTetujon();
-                                                    getTumusan();
-                                                    getHistori();
-                                                    getLampiran();
-                                                    Navigator.of(context).pop(true);
-                                                  }
-                                                });
-                                              },
+                                                              )),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                );
+                                                getSuratKeluarInfo();
+                                                getBendesaInfo();
+                                                getPenyarikanInfo();
+                                                getTetujon();
+                                                getTumusan();
+                                                getHistori();
+                                                getLampiran();
+                                                Navigator.of(context).pop(true);
+                                              }
+                                            });
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text("Tidak", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontWeight: FontWeight.w700,
+                                              color: HexColor("025393")
+                                          )),
+                                          onPressed: (){Navigator.of(context).pop();},
+                                        )
+                                      ],
+                                    );
+                                  }
+                              );
+                            },
+                            child: Text("Batalkan Penolakan Surat", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: HexColor("990000")
+                            )),
+                            color: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                                side: BorderSide(color: HexColor("990000"), width: 2)
+                            ),
+                            padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
+                          ),
+                        )
+                      ],
+                    )
+                ) : validasiStatus == "Belum Divalidasi" ? Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        child: Text("Aksi", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700
+                        )),
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(top: 20, left: 25),
+                      ),
+                      Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                child: FlatButton(
+                                  onPressed: (){
+                                    showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(Radius.circular(40.0))
                                             ),
-                                            TextButton(
-                                              child: Text("Tidak", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontWeight: FontWeight.w700,
-                                                color: HexColor("025393")
-                                              )),
-                                              onPressed: (){Navigator.of(context).pop();},
-                                            )
-                                          ],
-                                        );
-                                      }
+                                            content: Container(
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  Container(
+                                                    child: Image.asset(
+                                                      'images/question.png',
+                                                      height: 50,
+                                                      width: 50,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Text("Validasi Surat", style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w700,
+                                                        color: HexColor("#025393")
+                                                    ), textAlign: TextAlign.center),
+                                                    margin: EdgeInsets.only(top: 10),
+                                                  ),
+                                                  Container(
+                                                    child: Text("Apakah Anda yakin ingin melakukan validasi terhadap surat ini?", style: TextStyle(
+                                                        fontFamily: "Poppins",
+                                                        fontSize: 14
+                                                    ), textAlign: TextAlign.center),
+                                                    margin: EdgeInsets.only(top: 10),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text("Ya", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontWeight: FontWeight.w700,
+                                                    color: HexColor("#025393")
+                                                )),
+                                                onPressed: (){
+                                                  var body = jsonEncode({
+                                                    "user_id" : loginPage.userId,
+                                                    "surat_keluar_id" : detailSuratKeluarNonPanitia.suratKeluarId,
+                                                    "prajuru_desa_adat_id": loginPage.prajuruId
+                                                  });
+                                                  http.post(Uri.parse(apiURLValidasi),
+                                                      headers: {"Content-Type" : "application/json"},
+                                                      body: body
+                                                  ).then((http.Response response) {
+                                                    var responseValue = response.statusCode;
+                                                    print("validasi status: ${responseValue.toString()}");
+                                                    if(responseValue == 200) {
+                                                      ftoast.showToast(
+                                                          child: Container(
+                                                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                            decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(25),
+                                                                color: Colors.green
+                                                            ),
+                                                            child: Row(
+                                                              children: <Widget>[
+                                                                Icon(Icons.done),
+                                                                Container(
+                                                                  margin: EdgeInsets.only(left: 15),
+                                                                  child: SizedBox(
+                                                                    width: MediaQuery.of(context).size.width * 0.65,
+                                                                    child: Text("Validasi surat telah berhasil", style: TextStyle(
+                                                                        fontFamily: "Poppins",
+                                                                        fontSize: 14,
+                                                                        fontWeight: FontWeight.w700,
+                                                                        color: Colors.white
+                                                                    )),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          )
+                                                      );
+                                                      getSuratKeluarInfo();
+                                                      getBendesaInfo();
+                                                      getPenyarikanInfo();
+                                                      getTetujon();
+                                                      getTumusan();
+                                                      getHistori();
+                                                      getLampiran();
+                                                      getValidasiStatus();
+                                                      Navigator.of(context).pop(true);
+                                                    }
+                                                  });
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text("Tidak", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontWeight: FontWeight.w700,
+                                                    color: HexColor("#025393")
+                                                )),
+                                                onPressed: (){Navigator.of(context).pop();},
+                                              )
+                                            ],
+                                          );
+                                        }
                                     );
                                   },
-                                  child: Text("Batalkan Penolakan Surat", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: HexColor("990000")
+                                  child: Text("Validasi Surat", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("446A46")
                                   )),
                                   color: Colors.transparent,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                    side: BorderSide(color: HexColor("990000"), width: 2)
+                                      borderRadius: BorderRadius.circular(25),
+                                      side: BorderSide(color: HexColor("446A46"), width: 2)
                                   ),
                                   padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
                                 ),
+                              ),
+                              Container(
+                                child: FlatButton(
+                                  onPressed: (){
+                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => tolakValidasiSuratAdmin())).then((value) async {
+                                      getSuratKeluarInfo();
+                                      getBendesaInfo();
+                                      getPenyarikanInfo();
+                                      getTetujon();
+                                      getTumusan();
+                                      getHistori();
+                                      getLampiran();
+                                      getValidasiStatus();
+                                    });
+                                  },
+                                  child: Text("Tolak Surat", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("990000")
+                                  )),
+                                  color: Colors.transparent,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                      side: BorderSide(color: HexColor("990000"), width: 2)
+                                  ),
+                                  padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
+                                ),
+                                margin: EdgeInsets.only(left: 10),
                               )
                             ],
-                          )
-                      ) : validasiStatus == "Belum Divalidasi" ? Container(
+                          ),
+                          margin: EdgeInsets.only(top: 10)
+                      )
+                    ],
+                  ),
+                ) : Container(),
+              ),
+              Container(
+                  child: Text("Status Surat", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  )),
+                  alignment: Alignment.topLeft,
+                  margin: EdgeInsets.only(top: 15, left: 25)
+              ),
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    for(var i = 0; i < historiSurat.length; i++) TimelineTile(
+                      indicatorStyle: IndicatorStyle(
+                          color: HexColor("#025393"),
+                          height: 30,
+                          width: 30
+                      ),
+                      isFirst: i == 0 ? true : false,
+                      endChild: Container(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
-                              child: Text("Aksi", style: TextStyle(
+                              child: Text(historiSurat[i]['created_at'], style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700
                               )),
-                              alignment: Alignment.topLeft,
-                              margin: EdgeInsets.only(top: 20, left: 25),
                             ),
                             Container(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                      child: FlatButton(
-                                        onPressed: (){
-                                          showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.all(Radius.circular(40.0))
-                                                ),
-                                                content: Container(
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Container(
-                                                        child: Image.asset(
-                                                          'images/question.png',
-                                                          height: 50,
-                                                          width: 50,
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        child: Text("Validasi Surat", style: TextStyle(
-                                                          fontFamily: "Poppins",
-                                                          fontSize: 16,
-                                                          fontWeight: FontWeight.w700,
-                                                          color: HexColor("#025393")
-                                                        ), textAlign: TextAlign.center),
-                                                        margin: EdgeInsets.only(top: 10),
-                                                      ),
-                                                      Container(
-                                                        child: Text("Apakah Anda yakin ingin melakukan validasi terhadap surat ini?", style: TextStyle(
-                                                          fontFamily: "Poppins",
-                                                          fontSize: 14
-                                                        ), textAlign: TextAlign.center),
-                                                        margin: EdgeInsets.only(top: 10),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    child: Text("Ya", style: TextStyle(
-                                                      fontFamily: "Poppins",
-                                                      fontWeight: FontWeight.w700,
-                                                      color: HexColor("#025393")
-                                                    )),
-                                                    onPressed: (){
-                                                      var body = jsonEncode({
-                                                        "user_id" : loginPage.userId,
-                                                        "surat_keluar_id" : detailSuratKeluarNonPanitia.suratKeluarId,
-                                                        "prajuru_desa_adat_id": loginPage.prajuruId
-                                                      });
-                                                      http.post(Uri.parse(apiURLValidasi),
-                                                        headers: {"Content-Type" : "application/json"},
-                                                        body: body
-                                                      ).then((http.Response response) {
-                                                        var responseValue = response.statusCode;
-                                                        print("validasi status: ${responseValue.toString()}");
-                                                        if(responseValue == 200) {
-                                                          ftoast.showToast(
-                                                              child: Container(
-                                                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius: BorderRadius.circular(25),
-                                                                    color: Colors.green
-                                                                ),
-                                                                child: Row(
-                                                                  children: <Widget>[
-                                                                    Icon(Icons.done),
-                                                                    Container(
-                                                                      margin: EdgeInsets.only(left: 15),
-                                                                      child: SizedBox(
-                                                                        width: MediaQuery.of(context).size.width * 0.65,
-                                                                        child: Text("Validasi surat telah berhasil", style: TextStyle(
-                                                                            fontFamily: "Poppins",
-                                                                            fontSize: 14,
-                                                                            fontWeight: FontWeight.w700,
-                                                                            color: Colors.white
-                                                                        )),
-                                                                      ),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                              )
-                                                          );
-                                                          getSuratKeluarInfo();
-                                                          getBendesaInfo();
-                                                          getPenyarikanInfo();
-                                                          getTetujon();
-                                                          getTumusan();
-                                                          getHistori();
-                                                          getLampiran();
-                                                          getValidasiStatus();
-                                                          Navigator.of(context).pop(true);
-                                                        }
-                                                      });
-                                                    },
-                                                  ),
-                                                  TextButton(
-                                                    child: Text("Tidak", style: TextStyle(
-                                                      fontFamily: "Poppins",
-                                                      fontWeight: FontWeight.w700,
-                                                      color: HexColor("#025393")
-                                                    )),
-                                                    onPressed: (){Navigator.of(context).pop();},
-                                                  )
-                                                ],
-                                              );
-                                            }
-                                          );
-                                        },
-                                        child: Text("Validasi Surat", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700,
-                                            color: HexColor("446A46")
-                                        )),
-                                        color: Colors.transparent,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(25),
-                                            side: BorderSide(color: HexColor("446A46"), width: 2)
-                                        ),
-                                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
-                                      ),
-                                    ),
-                                    Container(
-                                      child: FlatButton(
-                                        onPressed: (){
-                                          Navigator.push(context, CupertinoPageRoute(builder: (context) => tolakValidasiSuratAdmin())).then((value) async {
-                                            getSuratKeluarInfo();
-                                            getBendesaInfo();
-                                            getPenyarikanInfo();
-                                            getTetujon();
-                                            getTumusan();
-                                            getHistori();
-                                            getLampiran();
-                                            getValidasiStatus();
-                                          });
-                                        },
-                                        child: Text("Tolak Surat", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700,
-                                            color: HexColor("990000")
-                                        )),
-                                        color: Colors.transparent,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(25),
-                                            side: BorderSide(color: HexColor("990000"), width: 2)
-                                        ),
-                                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
-                                      ),
-                                      margin: EdgeInsets.only(left: 10),
-                                    )
-                                  ],
-                                ),
-                                margin: EdgeInsets.only(top: 10)
+                              padding: EdgeInsets.only(right: 10),
+                              child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['nama']}", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              )),
                             )
                           ],
                         ),
-                      ) : Container(),
-                    ),
-                    Container(
-                        child: Text("Status Surat", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                        )),
-                        alignment: Alignment.topLeft,
-                        margin: EdgeInsets.only(top: 15, left: 25)
-                    ),
-                    Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          for(var i = 0; i < historiSurat.length; i++) TimelineTile(
-                            indicatorStyle: IndicatorStyle(
-                                color: HexColor("#025393"),
-                                height: 30,
-                                width: 30
-                            ),
-                            isFirst: i == 0 ? true : false,
-                            endChild: Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    child: Text(historiSurat[i]['created_at'], style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700
-                                    )),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(right: 10),
-                                    child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['nama']}", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                    )),
-                                  )
-                                ],
-                              ),
-                              margin: EdgeInsets.only(left: 15),
-                            ),
-                          )
-                        ],
+                        margin: EdgeInsets.only(left: 15),
                       ),
-                      margin: EdgeInsets.only(top: 10, bottom: 10, left: 15),
                     )
                   ],
                 ),
+                margin: EdgeInsets.only(top: 10, bottom: 10, left: 15),
               )
-            )
-          ],
+            ],
+          ),
         )
       )
     );
