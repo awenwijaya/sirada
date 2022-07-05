@@ -85,6 +85,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   var apiURLBatalTolak = "https://siradaskripsi.my.id/api/admin/surat/keluar/validasi/tolak/batal";
   var apiURLValidasi = "https://siradaskripsi.my.id/api/admin/surat/keluar/validasi/accept";
   var apiURLGetQrCode = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/validasi/qrcode/${detailSuratKeluarNonPanitia.suratKeluarId}";
+  var apiURLBatalkanSurat = "https://siradaskripsi.my.id/api/admin/surat/keluar/batal";
 
   getQRCode() async {
     http.get(Uri.parse(apiURLGetQrCode),
@@ -410,6 +411,122 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                 color: HexColor("#025393")
             )),
           actions: <Widget>[
+            canValidateOtherPrajuru == false ? Container() : status == "Sedang Diproses" ? validasiStatus == "Belum Divalidasi" ? penyarikanValidasiStatus == "Belum Divalidasi" ? IconButton(
+                onPressed: (){
+                  showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(40.0))
+                          ),
+                          content: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Container(
+                                  child: Image.asset(
+                                    'images/question.png',
+                                    height: 50,
+                                    width: 50,
+                                  ),
+                                ),
+                                Container(
+                                  child: Text("Batalkan Surat", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("025393")
+                                  ), textAlign: TextAlign.center),
+                                  margin: EdgeInsets.only(top: 10),
+                                ),
+                                Container(
+                                  child: Text("Apakah Anda yakin ingin membatalkan pengajuan surat ini? Tindakan ini tidak dapat dikembalikan lagi.", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14
+                                  ), textAlign: TextAlign.center),
+                                  margin: EdgeInsets.only(top: 10),
+                                )
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text("Ya", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor("025393")
+                              )),
+                              onPressed: (){
+                                var body = jsonEncode({
+                                  "surat_keluar_id" : detailSuratKeluarNonPanitia.suratKeluarId,
+                                  "user_id" : loginPage.userId
+                                });
+                                http.post(Uri.parse(apiURLBatalkanSurat),
+                                  headers: {"Content-Type" : "application/json"},
+                                  body: body
+                                ).then((http.Response response) async {
+                                  var responseValue = response.statusCode;
+                                  print("cancel surat status: ${responseValue.toString()}");
+                                  if(responseValue == 200) {
+                                    ftoast.showToast(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(25),
+                                              color: Colors.green
+                                          ),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Icon(Icons.done),
+                                              Container(
+                                                margin: EdgeInsets.only(left: 15),
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context).size.width * 0.65,
+                                                  child: Text("Surat berhasil dibatalkan", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: Colors.white
+                                                  )),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                    );
+                                    getSuratKeluarInfo();
+                                    getBendesaInfo();
+                                    getPenyarikanInfo();
+                                    getTetujon();
+                                    getTumusan();
+                                    getHistori();
+                                    getLampiran();
+                                    getValidasiStatus();
+                                    Navigator.of(context).pop(true);
+                                  }
+                                });
+                              },
+                            ),
+                            TextButton(
+                              child: Text("Tidak", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w700,
+                                  color: HexColor("025393")
+                              )),
+                              onPressed: (){Navigator.of(context).pop();},
+                            )
+                          ],
+                        );
+                      }
+                  );
+                },
+                icon: Icon(Icons.cancel),
+                color: HexColor("025393")
+            ) : Container() : Container() : Container(),
             status == "Menunggu Respon" ? IconButton(
                 onPressed: (){
                   showDialog(
@@ -522,7 +639,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                 icon: Icon(Icons.add_task_rounded),
                 color: HexColor("#025393")
             ) : Container(),
-            status == "Telah Dikonfirmasi" ? Container() : IconButton(
+            status == "Telah Dikonfirmasi" ? Container() : status == "Dibatalkan" ? Container() : IconButton(
               onPressed: (){
                 setState(() {
                   setState(() {
@@ -543,73 +660,6 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
               icon: Icon(Icons.edit),
               color: HexColor("#025393")
             ),
-            status == "Sedang Diproses" ? validasiStatus == "Belum Tervalidasi" ? penyarikanValidasiStatus == "Belum Tervalidasi" ? canCancelSurat ? IconButton(
-              onPressed: (){
-                showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(40.0))
-                        ),
-                        content: Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Container(
-                                child: Image.asset(
-                                  'images/question.png',
-                                  height: 50,
-                                  width: 50,
-                                ),
-                              ),
-                              Container(
-                                child: Text("Batalkan Surat", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: HexColor("025393")
-                                ), textAlign: TextAlign.center),
-                                margin: EdgeInsets.only(top: 10),
-                              ),
-                              Container(
-                                child: Text("Apakah Anda yakin ingin membatalkan pengajuan surat ini?", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14
-                                ), textAlign: TextAlign.center),
-                                margin: EdgeInsets.only(top: 10),
-                              )
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text("Ya", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontWeight: FontWeight.w700,
-                                color: HexColor("025393")
-                            )),
-                            onPressed: (){},
-                          ),
-                          TextButton(
-                            child: Text("Tidak", style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontWeight: FontWeight.w700,
-                                color: HexColor("025393")
-                            )),
-                            onPressed: (){Navigator.of(context).pop();},
-                          )
-                        ],
-                      );
-                    }
-                );
-              },
-              icon: Icon(Icons.cancel),
-              color: HexColor("025393")
-            ) : Container() : Container() : Container() : Container()
           ]
         ),
         body: LoadData ? ProfilePageShimmer() : SingleChildScrollView(
@@ -1035,7 +1085,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                 ),
               ),
               Container(
-                child: status == "Menunggu Respon" ? Container() : canValidateOtherPrajuru == false ? Container() : canValidate == false ? Container(
+                child: status == "Menunggu Respon" ? Container() : status == "Dibatalkan" ? Container() : canValidateOtherPrajuru == false ? Container() : canValidate == false ? Container(
                     child: Container(
                       child: Row(
                         children: <Widget>[
