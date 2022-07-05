@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/EditSuratKeluarNonPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/ViewLampiran.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class detailSuratKeluarNonPanitia extends StatefulWidget {
   static var suratKeluarId;
@@ -42,6 +43,10 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   var pihakKrama;
   var validasiStatus;
   var penyarikanValidasiStatus;
+
+  var qrCodeBendesa;
+  var qrCodePenyarikan;
+
   FToast ftoast;
   bool canValidate = false;
   bool canValidateOtherPrajuru = false;
@@ -78,6 +83,22 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   var apiURLSendNotifikasiSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses/notifikasi/${detailSuratKeluarNonPanitia.suratKeluarId}";
   var apiURLBatalTolak = "https://siradaskripsi.my.id/api/admin/surat/keluar/validasi/tolak/batal";
   var apiURLValidasi = "https://siradaskripsi.my.id/api/admin/surat/keluar/validasi/accept";
+  var apiURLGetQrCode = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/validasi/qrcode/${detailSuratKeluarNonPanitia.suratKeluarId}";
+
+  getQRCode() async {
+    http.get(Uri.parse(apiURLGetQrCode),
+      headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          qrCodeBendesa = jsonData['validasi_ketua'];
+          qrCodePenyarikan = jsonData['validasi_penyarikan'];
+        });
+      }
+    });
+  }
 
   getPenyarikanValidasiStatus() async {
     http.get(Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/prajuru/penyarikan/${detailSuratKeluarNonPanitia.suratKeluarId}"),
@@ -364,6 +385,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
     getLampiran();
     getValidasiStatus();
     getPenyarikanValidasiStatus();
+    getQRCode();
     ftoast = FToast();
     ftoast.init(this.context);
   }
@@ -499,7 +521,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                 icon: Icon(Icons.add_task_rounded),
                 color: HexColor("#025393")
             ) : Container(),
-            IconButton(
+            status == "Telah Dikonfirmasi" ? Container() : IconButton(
               onPressed: (){
                 setState(() {
                   setState(() {
@@ -752,11 +774,21 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                           ))
                                       ),
                                       Container(
+                                        child: qrCodeBendesa == null ? Container() : qrCodeBendesa == "Belum tervalidasi" ? Container() : Container(
+                                            child: SvgPicture.network(
+                                              "https://storage.siradaskripsi.my.id/img/qrcode/${qrCodeBendesa}",
+                                              height: 50,
+                                              placeholderBuilder: (context) => CircularProgressIndicator(),
+                                            ),
+                                            margin: EdgeInsets.only(top: 10)
+                                        ),
+                                      ),
+                                      Container(
                                           child: Text(namaBendesa, style: TextStyle(
                                               fontFamily: "Times New Roman",
                                               fontSize: 16
                                           )),
-                                          margin: EdgeInsets.only(top: 25)
+                                          margin: EdgeInsets.only(top: 10)
                                       )
                                     ],
                                   ),
@@ -775,11 +807,21 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                           ))
                                       ),
                                       Container(
+                                        child: qrCodePenyarikan == null ? Container() : qrCodePenyarikan == "Belum tervalidasi" ? Container() : Container(
+                                          child: SvgPicture.network(
+                                            "https://storage.siradaskripsi.my.id/img/qrcode/${qrCodePenyarikan}",
+                                            height: 50,
+                                            placeholderBuilder: (context) => CircularProgressIndicator(),
+                                          ),
+                                            margin: EdgeInsets.only(top: 10)
+                                        ),
+                                      ),
+                                      Container(
                                           child: Text(namaPenyarikan, style: TextStyle(
                                               fontFamily: "Times New Roman",
                                               fontSize: 16
                                           )),
-                                          margin: EdgeInsets.only(top: 25)
+                                          margin: EdgeInsets.only(top: 10)
                                       )
                                     ],
                                   ),

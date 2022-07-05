@@ -62,6 +62,7 @@ dependencies:
   multi_select_flutter: ^4.1.2
   timeline_tile: ^2.0.0
   calendar_view: ^0.0.5
+  flutter_svg: ^1.0.3
 
 dev_dependencies:
   flutter_test:
