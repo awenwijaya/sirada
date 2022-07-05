@@ -160,46 +160,6 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
     }
   }
 
-  Future refreshListSearchPrajuruDesaBanjarAktif() async {
-    setState(() {
-      LoadingAktif = true;
-      isSearch = true;
-    });
-    var body = jsonEncode({
-      "search_query" : controllerSearchAktif.text
-    });
-    http.post(Uri.parse(apiURLSearchAktif),
-        headers: {"Content-Type" : "application/json"},
-        body: body
-    ).then((http.Response response) async {
-      var statusCode = response.statusCode;
-      if(statusCode == 200) {
-        var data = json.decode(response.body);
-        this.prajuruBanjarAdatIDAktif = [];
-        this.namaPrajuruAktif = [];
-        this.jabatanAktif = [];
-        this.namaBanjarAktif = [];
-        this.pendudukIdAktif = [];
-        setState(() {
-          LoadingAktif = false;
-          availableDataAktif = true;
-          for(var i = 0; i < data.length; i++) {
-            this.prajuruBanjarAdatIDAktif.add(data[i]['prajuru_banjar_adat_id']);
-            this.namaPrajuruAktif.add(data[i]['nama']);
-            this.jabatanAktif.add(data[i]['jabatan']);
-            this.namaBanjarAktif.add(data[i]['nama_banjar_adat']);
-            this.pendudukIdAktif.add(data[i]['penduduk_id']);
-          }
-        });
-      }else {
-        setState(() {
-          LoadingAktif = false;
-          availableDataAktif = false;
-        });
-      }
-    });
-  }
-
   Future refreshListPrajuruBanjarAdatTidakAktif() async {
     Uri uri = Uri.parse(apiURLShowListPrajuruBanjarAdatTidakAktif);
     final response = await http.get(uri);
@@ -229,57 +189,16 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
     }
   }
 
-  Future refreshListSearchPrajuruBanjarAdatTidakAktif() async {
-    setState(() {
-      LoadingTidakAktif = true;
-      isSearchTidakAktif = true;
-    });
-    var body = jsonEncode({
-      "search_query" : controllerSearchTidakAktif.text
-    });
-    http.post(Uri.parse(apiURLSearchTidakAktif),
-        headers: {"Content-Type" : "application/json"},
-        body: body
-    ).then((http.Response response) async {
-      var statusCode = response.statusCode;
-      if(statusCode == 200) {
-        var data = json.decode(response.body);
-        this.prajuruBanjarAdatIDTidakAktif = [];
-        this.namaPrajuruTidakAktif = [];
-        this.jabatanTidakAktif = [];
-        this.namaBanjarTidakAktif = [];
-        this.pendudukIdTidakAktif = [];
-        setState(() {
-          LoadingTidakAktif = false;
-          availableDataTidakAktif = true;
-          for(var i = 0; i < data.length; i++) {
-            this.prajuruBanjarAdatIDTidakAktif.add(data[i]['prajuru_banjar_adat_id']);
-            this.namaPrajuruTidakAktif.add(data[i]['nama']);
-            this.jabatanTidakAktif.add(data[i]['jabatan']);
-            this.namaBanjarTidakAktif.add(data[i]['nama_banjar_adat']);
-            this.pendudukIdTidakAktif.add(data[i]['penduduk_id']);
-          }
-        });
-      }else {
-        setState(() {
-          LoadingTidakAktif = false;
-          availableDataTidakAktif = false;
-        });
-      }
-    });
-  }
-
   Future showFilterResultAktif() async {
     setState(() {
       LoadingAktif = true;
       isFilterAktif = true;
-      isSearch = false;
-      controllerSearchAktif.text = "";
     });
     var body = jsonEncode({
       "filter_jabatan" : selectedJabatanFilterAktif == null ? null : selectedJabatanFilterAktif,
       "filter_banjar" : selectedBanjarFilterAktif == null ? null : selectedBanjarFilterAktif,
       "desa_adat_id" : loginPage.desaId,
+      "search_query" : controllerSearchAktif.text,
       "status" : "aktif"
     });
     http.post(Uri.parse(apiURLShowFilterResult),
@@ -318,14 +237,13 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
     setState(() {
       isFilterTidakAktif = true;
       LoadingTidakAktif = true;
-      isSearchTidakAktif = false;
-      controllerSearchTidakAktif.text = "";
     });
     var body = jsonEncode({
       "filter_jabatan" : selectedJabatanFilterTidakAktif == null ? null : selectedJabatanFilterTidakAktif,
       "filter_banjar" : selectedBanjarFilterTidakAktif == null ? null : selectedBanjarFilterTidakAktif,
       "desa_adat_id" : loginPage.desaId,
-      "status" : "tidak aktif"
+      "status" : "tidak aktif",
+      "search_query" : controllerSearchTidakAktif.text
     });
     http.post(Uri.parse(apiURLShowFilterResult),
         headers: {"Content-Type" : "application/json"},
@@ -435,19 +353,9 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                         onPressed: (){
                                           if(controllerSearchAktif.text != "") {
                                             setState(() {
-                                              isSearch = true;
-                                              selectedJabatanFilterAktif = null;
-                                              selectedBanjarFilterAktif = null;
-                                              isFilterAktif = false;
+                                              isFilterAktif = true;
                                             });
-                                            refreshListSearchPrajuruDesaBanjarAktif();
-                                          }else {
-                                            setState(() {
-                                              LoadingAktif = true;
-                                              controllerSearchAktif.text = "";
-                                              isSearch = false;
-                                              refreshListPrajuruBanjarAdatAktif();
-                                            });
+                                            showFilterResultAktif();
                                           }
                                         },
                                       )
@@ -618,7 +526,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                 child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? Expanded(
                                     flex: 1,
                                     child: RefreshIndicator(
-                                        onRefresh: isSearch ? refreshListSearchPrajuruDesaBanjarAktif : isFilterAktif ? showFilterResultAktif : refreshListPrajuruBanjarAdatAktif,
+                                        onRefresh: isFilterAktif ? showFilterResultAktif : refreshListPrajuruBanjarAdatAktif,
                                         child: ListView.builder(
                                             itemCount: prajuruBanjarAdatIDAktif.length,
                                             shrinkWrap: true,
@@ -769,7 +677,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                               )
                                           ),
                                           Container(
-                                            child: Text("Tidak ada Data Prajuru Banjar Adat", style: TextStyle(
+                                            child: Text("Tidak ada Data", style: TextStyle(
                                                 fontFamily: "Poppins",
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
@@ -778,17 +686,9 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                             margin: EdgeInsets.only(top: 10),
                                             padding: EdgeInsets.symmetric(horizontal: 30),
                                           ),
-                                          Container(
-                                            child: Text("Tidak ada data prajuru banjar adat. Anda bisa menambahkannya dengan cara menekan tombol Tambah Data Prajuru dan isi data pada form yang telah disediakan", style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 14,
-                                                color: Colors.black26
-                                            ), textAlign: TextAlign.center),
-                                            padding: EdgeInsets.symmetric(horizontal: 30),
-                                            margin: EdgeInsets.only(top: 10),
-                                          )
                                         ]
-                                    )
+                                    ),
+                                  margin: EdgeInsets.only(top: 40),
                                 )
                             )
                           ]
@@ -812,19 +712,9 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                             onPressed: (){
                                               if(controllerSearchTidakAktif.text != "") {
                                                 setState(() {
-                                                  isSearchTidakAktif = true;
-                                                  isFilterTidakAktif = false;
-                                                  selectedJabatanFilterTidakAktif = null;
-                                                  selectedBanjarFilterTidakAktif = null;
+                                                  isFilterTidakAktif = true;
                                                 });
-                                                refreshListSearchPrajuruBanjarAdatTidakAktif();
-                                              }else {
-                                                setState(() {
-                                                  LoadingTidakAktif = true;
-                                                  controllerSearchTidakAktif.text = "";
-                                                  isSearchTidakAktif = false;
-                                                  refreshListPrajuruBanjarAdatTidakAktif();
-                                                });
+                                                showFilterResultTidakAktif();
                                               }
                                             },
                                           )
@@ -1003,7 +893,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                   child: LoadingTidakAktif ? ListTileShimmer() : availableDataTidakAktif ? Expanded(
                                     flex: 1,
                                     child: RefreshIndicator(
-                                        onRefresh: isSearchTidakAktif ? refreshListSearchPrajuruBanjarAdatTidakAktif : isFilterTidakAktif ? showFilterResultTidakAktif : refreshListPrajuruBanjarAdatTidakAktif,
+                                        onRefresh: isFilterTidakAktif ? showFilterResultTidakAktif : refreshListPrajuruBanjarAdatTidakAktif,
                                         child: ListView.builder(
                                             itemCount: prajuruBanjarAdatIDTidakAktif.length,
                                             shrinkWrap: true,
@@ -1089,30 +979,28 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                         )
                                     ),
                                   ) : Container(
-                                      child: Center(
-                                          child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Container(
-                                                    child: Icon(
-                                                        CupertinoIcons.person_alt,
-                                                        size: 50,
-                                                        color: Colors.black26
-                                                    )
-                                                ),
-                                                Container(
-                                                    child: Text("Tidak ada Data", style: TextStyle(
-                                                        fontFamily: "Poppins",
-                                                        fontSize: 18,
-                                                        fontWeight: FontWeight.w700,
-                                                        color: Colors.black26
-                                                    ), textAlign: TextAlign.center),
-                                                    margin: EdgeInsets.only(top: 10)
+                                      child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                                child: Icon(
+                                                    CupertinoIcons.person_alt,
+                                                    size: 50,
+                                                    color: Colors.black26
                                                 )
-                                              ]
-                                          )
+                                            ),
+                                            Container(
+                                                child: Text("Tidak ada Data", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.black26
+                                                ), textAlign: TextAlign.center),
+                                                margin: EdgeInsets.only(top: 10)
+                                            )
+                                          ]
                                       ),
-                                      alignment: Alignment(0.0, 0.0)
+                                    margin: EdgeInsets.only(top: 40),
                                   ),
                                 )
                               ]

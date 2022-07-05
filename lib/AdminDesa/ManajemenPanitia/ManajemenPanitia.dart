@@ -80,13 +80,12 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
     setState(() {
       LoadingAktif = true;
       isFilterAktif = true;
-      isSearch = false;
-      controllerSearchAktif.text = "";
     });
     var body = jsonEncode({
       "filter_jabatan" : selectedJabatanFilterAktif == null ? null : selectedJabatanFilterAktif,
       "filter_tim" : selectedTimKegiatanFilterAktif == null ? null : selectedTimKegiatanFilterAktif,
       "desa_adat_id" : loginPage.desaId,
+      "search_query" : controllerSearchAktif.text,
       "status" : "aktif"
     });
     http.post(Uri.parse(apiURLShowResult),
@@ -114,6 +113,11 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
           this.periodeMulaiPanitiaAktif.add(data[i]['tanggal_mulai_menjabat']);
           this.periodeAkhirPanitiaAktif.add(data[i]['tanggal_akhir_menjabat']);
         }
+      }else {
+        setState(() {
+          LoadingAktif = false;
+          availableDataAktif = false;
+        });
       }
     });
   }
@@ -122,13 +126,12 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
     setState(() {
       LoadingTidakAktif = true;
       isFilterTidakAktif = true;
-      isSearchTidakAktif = false;
-      controllerSearchTidakAktif.text = "";
     });
     var body = jsonEncode({
       "filter_jabatan" : selectedJabatanFilterTidakAktif == null ? null : selectedJabatanFilterTidakAktif,
       "filter_tim" : selectedTimKegiatanFilterTidakAktif == null ? null : selectedTimKegiatanFilterTidakAktif,
       "desa_adat_id" : loginPage.desaId,
+      "search_query" : controllerSearchTidakAktif.text,
       "status" : "tidak aktif"
     });
     http.post(Uri.parse(apiURLShowResult),
@@ -156,7 +159,13 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
           this.periodeMulaiPanitiaTidakAktif.add(data[i]['tanggal_mulai_menjabat']);
           this.periodeAkhirPanitiaTidakAktif.add(data[i]['tanggal_akhir_menjabat']);
         }
-    }});
+    }else {
+        setState(() {
+          LoadingTidakAktif = false;
+          availableDataTidakAktif = false;
+        });
+      }
+    });
   }
 
   Future getFilterKomponenAktif() async {
@@ -528,12 +537,9 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                   onPressed: (){
                                     if(controllerSearchAktif.text != "") {
                                       setState(() {
-                                        isSearch = true;
-                                        selectedJabatanFilterAktif = null;
-                                        selectedTimKegiatanFilterAktif = null;
-                                        isFilterAktif = false;
+                                        isFilterAktif = true;
                                       });
-                                      refreshListSearchPanitiaAktif();
+                                      showFilterResultAktif();
                                     }
                                   },
                                 )
@@ -650,36 +656,6 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                       ),
                       Container(
                         child: Column(
-                          children: [
-                            if(isSearch == true) Container(
-                              child: FlatButton(
-                                onPressed: (){
-                                  setState(() {
-                                    LoadingAktif = true;
-                                    controllerSearchAktif.text = "";
-                                    isSearch = false;
-                                    refreshListPanitiaAktif();
-                                  });
-                                },
-                                child: Text("Hapus Pencarian", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white
-                                )),
-                                color: HexColor("025393"),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25),
-                                  side: BorderSide(color: HexColor("025393"), width: 2)
-                                ),
-                              ),
-                              margin: EdgeInsets.symmetric(horizontal: 5),
-                            )
-                          ],
-                        )
-                      ),
-                      Container(
-                        child: Column(
                           children: <Widget>[
                             if(isFilterAktif == true) Container(
                               child: FlatButton(
@@ -689,6 +665,7 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                     selectedTimKegiatanFilterAktif = null;
                                     isFilterAktif = false;
                                     LoadingAktif = true;
+                                    controllerSearchAktif.text = "";
                                   });
                                   refreshListPanitiaAktif();
                                 },
@@ -713,7 +690,7 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                         child: LoadingAktif ? ListTileShimmer() : availableDataAktif ? Expanded(
                           flex: 1,
                           child: RefreshIndicator(
-                            onRefresh: isSearch ? refreshListSearchPanitiaAktif : refreshListPanitiaAktif,
+                            onRefresh: isFilterAktif ? showFilterResultAktif : refreshListPanitiaAktif,
                             child: ListView.builder(
                               itemCount: idPanitiaAktif.length,
                               shrinkWrap: true,
@@ -891,7 +868,7 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                 ),
                               ),
                               Container(
-                                child: Text("Tidak ada Data Panitia Kegiatan", style: TextStyle(
+                                child: Text("Tidak ada Data", style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -900,17 +877,9 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                 margin: EdgeInsets.only(top: 10),
                                 padding: EdgeInsets.symmetric(horizontal: 30),
                               ),
-                              Container(
-                                child: Text("Tidak ada data panitia kegiatan. Anda bisa menambahkannya dengan cara menekan tombol Tambah Data Panitia dan isi data pada form yang telah disediakan", style: TextStyle(
-                                    fontFamily: "Poppins",
-                                    fontSize: 14,
-                                    color: Colors.black26
-                                ), textAlign: TextAlign.center),
-                                padding: EdgeInsets.symmetric(horizontal: 30),
-                                margin: EdgeInsets.only(top: 10),
-                              )
                             ],
                           ),
+                          margin: EdgeInsets.only(top: 40),
                         ),
                       )
                     ],
@@ -933,12 +902,9 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                       onPressed: (){
                                         if(controllerSearchTidakAktif.text != "") {
                                           setState(() {
-                                            isSearchTidakAktif = true;
-                                            selectedJabatanFilterTidakAktif = null;
-                                            selectedTimKegiatanFilterTidakAktif = null;
-                                            isFilterAktif = false;
+                                            isFilterAktif = true;
                                           });
-                                          refreshListSearchPanitiaTidakAktif();
+                                          showFilterResultTidakAktif();
                                         }
                                       },
                                     )
@@ -1051,36 +1017,6 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                             margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
                           ),
                           Container(
-                              child: Column(
-                                children: [
-                                  if(isSearchTidakAktif == true) Container(
-                                    child: FlatButton(
-                                      onPressed: (){
-                                        setState(() {
-                                          LoadingTidakAktif = true;
-                                          controllerSearchTidakAktif.text = "";
-                                          isSearchTidakAktif = false;
-                                          refreshListPanitiaTidakAktif();
-                                        });
-                                      },
-                                      child: Text("Hapus Pencarian", style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white
-                                      )),
-                                      color: HexColor("025393"),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(25),
-                                          side: BorderSide(color: HexColor("025393"), width: 2)
-                                      ),
-                                    ),
-                                    margin: EdgeInsets.symmetric(horizontal: 5),
-                                  )
-                                ],
-                              )
-                          ),
-                          Container(
                             child: Column(
                               children: <Widget>[
                                 if(isFilterTidakAktif == true) Container(
@@ -1091,6 +1027,7 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                         selectedTimKegiatanFilterTidakAktif = null;
                                         isFilterTidakAktif = false;
                                         LoadingTidakAktif = true;
+                                        controllerSearchTidakAktif.text = "";
                                       });
                                       refreshListPanitiaTidakAktif();
                                     },
@@ -1115,7 +1052,7 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                             child: LoadingTidakAktif ? ListTileShimmer() : availableDataTidakAktif ? Expanded(
                               flex: 1,
                               child: RefreshIndicator(
-                                onRefresh: isSearchTidakAktif ? refreshListSearchPanitiaTidakAktif : refreshListPanitiaTidakAktif,
+                                onRefresh: isFilterTidakAktif ? showFilterResultTidakAktif : refreshListPanitiaTidakAktif,
                                 child: ListView.builder(
                                   itemCount: idPanitiaTidakAktif.length,
                                   shrinkWrap: true,
@@ -1284,6 +1221,7 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                   ),
                                 ],
                               ),
+                              margin: EdgeInsets.only(top: 30),
                             ),
                           )
                         ]
