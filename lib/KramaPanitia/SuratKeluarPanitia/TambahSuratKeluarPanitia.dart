@@ -52,6 +52,8 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   var apiURLUpTetujonPrajuruDesa = "https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/desa/up";
   var apiURLUpTumusanPrajuruDesa = "https://siradaskripsi.my.id/api/admin/surat/keluar/tumusan/desa/up";
   var apiURLUpLampiran = "https://siradaskripsi.my.id/api/admin/surat/keluar/lampiran/up";
+  var apiURLUpAnggotaPanitia = "https://siradaskripsi.my.id/api/panitia/tetujon/up";
+  var apiURLUpAllAnggotaPanitia = "https://siradaskripsi.my.id/api/panitia/tetujon/up/all";
 
   //list
   List bendesaList = List();
@@ -59,6 +61,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   List panitiaAcaraList = List();
   List sekretarisList = List();
   List ketuaList = List();
+  List anggotaList = List();
 
   //bools
   bool availableBendesa = false;
@@ -70,6 +73,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   bool LoadingKetua = true;
   bool LoadingSekretaris = true;
   bool isVisible = true;
+  bool isVisiblePanitia = true;
 
   //file
   File file;
@@ -119,6 +123,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   bool LoadingPrajuruDesa = true;
   bool LoadingPrajuruBanjar = true;
   bool isSendToKrama = false;
+  bool isSendToSemuaAnggota = false;
 
   List lampiranSurat = [];
   List fileName = [];
@@ -131,6 +136,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
 
   List selectedKelihanAdatTumusan = [];
   List selectedBendesaTumusan = [];
+  List selectedAnggotaPanitia = [];
 
   List pihakLain = [];
   List pihakLainTumusan = [];
@@ -179,6 +185,18 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
       });
       getSekretarisPanitia();
       getKetuaPanitia();
+      getAnggota();
+    }
+  }
+
+  Future getAnggota() async {
+    this.anggotaList = [];
+    var responseAnggota = await http.get(Uri.parse("https://siradaskripsi.my.id/api/panitia/get/anggota/${selectedIdPanitiaAcara}"));
+    if(responseAnggota.statusCode == 200) {
+      var jsonData = json.decode(responseAnggota.body);
+      setState(() {
+        anggotaList = jsonData;
+      });
     }
   }
 
@@ -1498,13 +1516,13 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                           Container(
                               margin: EdgeInsets.symmetric(horizontal: 20),
                               child: MultiSelectDialogField(
-                                title: Text("Pilih Penerima Prajuru Desa Adat"),
+                                title: Text("Prajuru Desa Adat"),
                                 buttonText: Text("Pilih Penerima Prajuru Desa Adat", style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14
                                 )),
                                 buttonIcon: Icon(Icons.expand_more),
-                                searchable: false,
+                                searchable: true,
                                 checkColor: Colors.white,
                                 items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
                                 listType: MultiSelectListType.LIST,
@@ -1525,13 +1543,13 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                           Container(
                               margin: EdgeInsets.symmetric(horizontal: 20),
                               child: MultiSelectDialogField(
-                                title: Text("Pilih Penerima Prajuru Banjar Adat"),
+                                title: Text("Prajuru Banjar Adat"),
                                 buttonText: Text("Pilih Penerima Prajuru Banjar Adat", style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14
                                 )),
                                 buttonIcon: Icon(Icons.expand_more),
-                                searchable: false,
+                                searchable: true,
                                 checkColor: Colors.white,
                                 items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
                                 listType: MultiSelectListType.LIST,
@@ -1610,6 +1628,57 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                           },
                         )
                     ),
+                    Visibility(
+                      visible: isVisiblePanitia,
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Pihak Panitia", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700
+                            )),
+                            margin: EdgeInsets.only(top: 15, left: 20),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            child: MultiSelectDialogField(
+                              title: Text("Pihak Panitia"),
+                              buttonText: Text("Pilh Penerima Pihak Panitia", style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              )),
+                              buttonIcon: Icon(Icons.expand_more),
+                              searchable: true,
+                              checkColor: Colors.white,
+                              items: anggotaList.map((item) => MultiSelectItem(item, "${item['jabatan']} - ${item['nama']}")).toList(),
+                              listType: MultiSelectListType.LIST,
+                              onConfirm: (values) {
+                                selectedAnggotaPanitia = values;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: CheckboxListTile(
+                        title: Text("Kirimkan surat ini ke semua panitia", style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14,
+                            color: Colors.black
+                        )),
+                        value: isSendToSemuaAnggota,
+                        controlAffinity: ListTileControlAffinity.leading,
+                        onChanged: (bool value) {
+                          setState(() {
+                            isSendToSemuaAnggota = value;
+                            isVisiblePanitia = !isVisiblePanitia;
+                          });
+                        },
+                      ),
+                    ),
                     Container(
                       child: Text("7. Tumusan Surat", style: TextStyle(
                           fontFamily: "Poppins",
@@ -1631,13 +1700,13 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                         child: MultiSelectDialogField(
-                          title: Text("Pilih Tumusan Prajuru Desa Adat"),
+                          title: Text("Prajuru Desa Adat"),
                           buttonText: Text("Pilih Tumusan Prajuru Desa Adat", style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 14
                           )),
                           buttonIcon: Icon(Icons.expand_more),
-                          searchable: false,
+                          searchable: true,
                           checkColor: Colors.white,
                           items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
                           listType: MultiSelectListType.LIST,
@@ -1658,13 +1727,13 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                         child: MultiSelectDialogField(
-                          title: Text("Pilih Tumusan Prajuru Banjar Adat"),
+                          title: Text("Prajuru Banjar Adat"),
                           buttonText: Text("Pilih Tumusan Prajuru Banjar Adat", style: TextStyle(
                               fontFamily: "Poppins",
                               fontSize: 14
                           )),
                           buttonIcon: Icon(Icons.expand_more),
-                          searchable: false,
+                          searchable: true,
                           checkColor: Colors.white,
                           items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
                           listType: MultiSelectListType.LIST,
@@ -1785,15 +1854,16 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                 http.post(Uri.parse(apiURLUpSuratKeluarPanitia),
                                     headers: {"Content-Type" : "application/json"},
                                     body: body
-                                ).then((http.Response response) {
+                                ).then((http.Response response) async {
                                   var responseValue = response.statusCode;
                                   print("status upload surat keluar panitia: ${responseValue.toString()}");
                                   if(responseValue == 200) {
                                     var data = json.decode(response.body);
-                                    uploadLampiran(data);
-                                    uploadPrajuruBanjar(data);
-                                    uploadPrajuruDesa(data);
-                                    uploadPihakLain(data);
+                                    await uploadLampiran(data);
+                                    await uploadPrajuruBanjar(data);
+                                    await uploadPrajuruDesa(data);
+                                    await uploadPihakLain(data);
+                                    await uploadPanitiaKegiatan(data);
                                     setState(() {
                                       Loading = false;
                                     });
@@ -1946,6 +2016,39 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
         var response = await requestTumusan.send();
         print("upload tumusan pihak lain status code: ${response.statusCode.toString()}");
       }
+    }
+  }
+
+  Future uploadPanitiaKegiatan(var suratKeluarId) async {
+    Map<String, String> headers = {
+      'Content-Type' : 'multipart/form-data'
+    };
+    if(isSendToSemuaAnggota == false) {
+      if(selectedAnggotaPanitia.isNotEmpty) {
+        for(var i = 0; i < selectedAnggotaPanitia.length; i++) {
+          Map<String, String> body = {
+            "surat_keluar_id" : suratKeluarId.toString(),
+            "panitia_desa_adat_id" : selectedAnggotaPanitia[i]['panitia_desa_adat_id'].toString()
+          };
+          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpAnggotaPanitia))
+                            ..fields.addAll(body)
+                            ..headers.addAll(headers);
+          var response = await request.send();
+          print("upload panitia status code: ${response.statusCode.toString()}");
+        }
+      }else {
+        print("surat tidak dikirim ke panitia");
+      }
+    }else {
+      Map<String, String> body = {
+        "surat_keluar_id" : suratKeluarId.toString(),
+        "kegiatan_panitia_id" : selectedIdPanitiaAcara.toString()
+      };
+      var request = http.MultipartRequest("POST", Uri.parse(apiURLUpAllAnggotaPanitia))
+        ..fields.addAll(body)
+        ..headers.addAll(headers);
+      var response = await request.send();
+      print("upload all panitia status code: ${response.statusCode.toString()}");
     }
   }
 }
