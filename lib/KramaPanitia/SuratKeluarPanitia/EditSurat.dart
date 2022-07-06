@@ -42,6 +42,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
   var apiURLGetTumusanPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/banjar/${editSuratKeluarPanitia.idSuratKeluar}";
   var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${editSuratKeluarPanitia.idSuratKeluar}";
   var apiURLSimpanEdit = "https://siradaskripsi.my.id/api/admin/surat/keluar/panitia/edit/panitia/up";
+  var apiURLShowTetujonPanitia = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/panitia/${editSuratKeluarPanitia.idSuratKeluar}";
 
   //loading indicator
   bool LoadingData = true;
@@ -54,7 +55,9 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
   bool LoadingKetua = true;
   bool LoadingSekretaris = true;
   bool isSendToKrama = false;
+  bool isSendToAllAnggota = false;
   bool isVisible = true;
+  bool isVisiblePanitia = true;
   List<String> arguments = [];
   //selected
   var selectedKodeSurat;
@@ -84,6 +87,8 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
   List ketuaList = List();
   List pihakLain = [];
   List pihakLainTumusan = [];
+  List anggotaList = [];
+  List selectedPanitia = List();
 
   //kodesurat
   var nomorUrutSurat;
@@ -112,6 +117,8 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
   var apiURLUpTumusanPrajuruDesa = "https://siradaskripsi.my.id/api/admin/surat/keluar/tumusan/desa/up";
   var apiURLUpLampiran = "https://siradaskripsi.my.id/api/upload/lampiran";
   var apiURLSaveEditLampiran = "https://siradaskripsi.my.id/api/admin/surat/keluar/lampiran/edit/up";
+  var apiURLUpAllAnggotaPanitia = "https://siradaskripsi.my.id/api/panitia/tetujon/up/all";
+  var apiURLUpAnggotaPanitia = "https://siradaskripsi.my.id/api/panitia/tetujon/up";
 
   final controllerNomorSurat = TextEditingController();
   final controllerLepihan = TextEditingController();
@@ -324,6 +331,34 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
       });
       getSekretarisPanitia();
       getKetuaPanitia();
+      getAnggota();
+    }
+  }
+
+  Future getAnggota() async {
+    var responseAnggota = await http.get(Uri.parse("https://siradaskripsi.my.id/api/panitia/get/anggota/${selectedIdPanitiaAcara}"));
+    print("get anggota list: ${responseAnggota.statusCode.toString()}");
+    if(responseAnggota.statusCode == 200) {
+      var jsonData = json.decode(responseAnggota.body);
+      setState(() {
+        anggotaList = jsonData;
+      });
+      print(anggotaList.length.toString());
+      var responseAnggotaList = await http.get(Uri.parse("https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/panitia/${editSuratKeluarPanitia.idSuratKeluar}"));
+      if(responseAnggotaList.statusCode == 200) {
+        var jsonDataAnggota = json.decode(responseAnggotaList.body);
+        setState(() {
+          selectedPanitia = jsonDataAnggota;
+        });
+        print(selectedPanitia.length.toString());
+        if(anggotaList.length == selectedPanitia.length) {
+          setState(() {
+            isSendToAllAnggota = true;
+            selectedPanitia.clear();
+            isVisiblePanitia = false;
+          });
+        }
+      }
     }
   }
 
@@ -1540,14 +1575,14 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                       Container(
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           child: MultiSelectDialogField(
-                            title: Text("Tambah Penerima Prajuru Desa Adat"),
+                            title: Text("Prajuru Desa Adat"),
                             buttonText: Text("Tambah Penerima Prajuru Desa Adat", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14
                             )),
                             buttonIcon: Icon(Icons.expand_more),
                             initialValue: selectedBendesa,
-                            searchable: false,
+                            searchable: true,
                             selectedColor: HexColor("#025393"),
                             checkColor: Colors.white,
                             items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
@@ -1583,13 +1618,13 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                       Container(
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           child: MultiSelectDialogField(
-                            title: Text("Tambah Penerima Prajuru Banjar Adat"),
+                            title: Text("Prajuru Banjar Adat"),
                             buttonText: Text("Tambah Penerima Prajuru Banjar Adat", style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14
                             )),
                             buttonIcon: Icon(Icons.expand_more),
-                            searchable: false,
+                            searchable: true,
                             selectedColor: HexColor("#025393"),
                             checkColor: Colors.white,
                             items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
@@ -1682,6 +1717,72 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                       },
                     )
                 ),
+                Visibility(
+                  visible: isVisiblePanitia,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.topLeft,
+                        child: Text("Pihak Panitia", style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700
+                        )),
+                        margin: EdgeInsets.only(top: 15, left: 20),
+                      ),
+                      Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          child: MultiSelectDialogField(
+                            title: Text("Pihak Panitia"),
+                            buttonText: Text("Tambah Penerima Pihak Panitia", style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14
+                            )),
+                            buttonIcon: Icon(Icons.expand_more),
+                            searchable: true,
+                            selectedColor: HexColor("#025393"),
+                            checkColor: Colors.white,
+                            items: anggotaList.map((item) => MultiSelectItem(item, "${item['jabatan']} - ${item['nama']}")).toList(),
+                            listType: MultiSelectListType.LIST,
+                            onConfirm: (values) {
+                              setState(() {
+                                selectedPanitia.addAll(values);
+                                values.clear();
+                              });
+                            },
+                          )
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        child: MultiSelectChipDisplay(
+                          items: selectedPanitia.map((e) => MultiSelectItem(e, "${e['jabatan']} - ${e['nama']}")).toList(),
+                          onTap: (value) {
+                            setState(() {
+                              selectedPanitia.remove(value);
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: CheckboxListTile(
+                    title: Text("Kirimkan surat ini ke semua panitia", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        color: Colors.black
+                    )),
+                    value: isSendToAllAnggota,
+                    controlAffinity: ListTileControlAffinity.leading,
+                    onChanged: (bool value) {
+                      setState(() {
+                        isSendToAllAnggota = value;
+                        isVisiblePanitia = !isVisiblePanitia;
+                      });
+                    },
+                  ),
+                ),
                 Container(
                   child: Text("7. Tumusan Surat", style: TextStyle(
                       fontFamily: "Poppins",
@@ -1703,14 +1804,14 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                 Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     child: MultiSelectDialogField(
-                      title: Text("Tambah Tumusan Prajuru Desa Adat"),
+                      title: Text("Prajuru Desa Adat"),
                       buttonText: Text("Tambah Tumusan Prajuru Desa Adat", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14
                       )),
                       buttonIcon: Icon(Icons.expand_more),
                       initialValue: selectedBendesa,
-                      searchable: false,
+                      searchable: true,
                       selectedColor: HexColor("#025393"),
                       checkColor: Colors.white,
                       items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
@@ -1746,13 +1847,13 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                 Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     child: MultiSelectDialogField(
-                      title: Text("Tambah Tumusan Prajuru Banjar Adat"),
+                      title: Text("Prajuru Banjar Adat"),
                       buttonText: Text("Tambah Tumusan Prajuru Banjar Adat", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14
                       )),
                       buttonIcon: Icon(Icons.expand_more),
-                      searchable: false,
+                      searchable: true,
                       selectedColor: HexColor("#025393"),
                       checkColor: Colors.white,
                       items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
@@ -1882,7 +1983,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                               ),
                             )
                         );
-                      }else if(selectedBendesa.isEmpty && selectedKelihanAdat.isEmpty && pihakLain.isEmpty && isSendToKrama == false) {
+                      }else if(selectedBendesa.isEmpty && selectedKelihanAdat.isEmpty && pihakLain.isEmpty && isSendToKrama == false && isSendToAllAnggota == false && selectedPanitia.isEmpty) {
                         ftoast.showToast(
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -1940,6 +2041,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                             await uploadPrajuruBanjar();
                             await uploadPrajuruDesa();
                             await uploadLampiranBerkas();
+                            await uploadPanitia();
                             ftoast.showToast(
                                 child: Container(
                                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -2197,6 +2299,48 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
             print("upload tumusan pihak lain status code: ${response.statusCode.toString()}");
           });
         }
+      }
+    });
+  }
+
+  Future uploadPanitia() async {
+    Map<String, String> body = {
+      "surat_keluar_id" : editSuratKeluarPanitia.idSuratKeluar.toString()
+    };
+    Map<String, String> headers = {
+      'Content-Type' : 'multipart/form-data'
+    };
+    var request_delete = http.MultipartRequest("POST", Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/panitia/delete"))
+        ..fields.addAll(body)
+        ..headers.addAll(headers);
+    await request_delete.send().then((response) async {
+      print("delete tetujon panitia status code: ${response.statusCode.toString()}");
+      if(selectedPanitia.isNotEmpty) {
+        if(isSendToAllAnggota == false) {
+          for(var i = 0; i < selectedPanitia.length; i++) {
+            Map<String, String> body = {
+              "surat_keluar_id" : editSuratKeluarPanitia.idSuratKeluar.toString(),
+              "panitia_desa_adat_id" : selectedPanitia[i]['panitia_desa_adat_id'].toString()
+            };
+            var request = http.MultipartRequest("POST", Uri.parse(apiURLUpAnggotaPanitia))
+                ..fields.addAll(body)
+                ..headers.addAll(headers);
+            var response = await request.send();
+            print("upload panitia status code: ${response.statusCode.toString()}");
+          }
+        }else {
+          Map<String, String> body = {
+            "surat_keluar_id" : editSuratKeluarPanitia.idSuratKeluar.toString(),
+            "kegiatan_panitia_id" : selectedIdPanitiaAcara.toString()
+          };
+          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpAllAnggotaPanitia))
+            ..fields.addAll(body)
+            ..headers.addAll(headers);
+          var response = await request.send();
+          print("upload all panitia status code: ${response.statusCode.toString()}");
+        }
+      }else{
+        print("surat tidak dikirim ke panitia");
       }
     });
   }
