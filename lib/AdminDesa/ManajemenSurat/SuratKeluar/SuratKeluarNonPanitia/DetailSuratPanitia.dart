@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,6 +46,10 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
   var validasiStatusSekretaris;
   FToast ftoast;
 
+  var qrCodeBendesa;
+  var qrCodeSekretaris;
+  var qrCodeKetua;
+
   List tetujonPrajuruDesaList = [];
   List tetujonPrajuruBanjarList = [];
   List tetujonPihakLainList = [];
@@ -75,6 +80,24 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
   //validasi
   var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
   var apiURLShowValidasiStatus = "https://siradaskripsi.my.id/admin/surat/keluar/panitia/validasi/show/${loginPage.kramaId}";
+  var apiURLValidasiSurat = "https://siradaskripsi.my.id/api/admin/surat/keluar/panitia/validasi/prajuru/accept";
+  var apiURLGetQRCode = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/panitia/validasi/qrcode/${detailSuratKeluarPanitiaAdmin.suratKeluarId}";
+
+  getQRCode() async {
+    http.get(Uri.parse(apiURLGetQRCode),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          qrCodeKetua = jsonData['validasi_ketua'];
+          qrCodeSekretaris = jsonData['validasi_sekretaris'];
+          qrCodeBendesa = jsonData['validasi_bendesa'];
+        });
+      }
+    });
+  }
 
   getPanitiaValidasiStatus() async {
     http.get(Uri.parse("https://siradaskripsi.my.id/api/admin/surat/keluar/panitia/get/validasi/${detailSuratKeluarPanitiaAdmin.suratKeluarId}"),
@@ -86,18 +109,14 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
         setState(() {
           validasiStatusKetua = jsonData['validasi_ketua'];
           validasiStatusSekretaris = jsonData['validasi_sekretaris'];
+          if(validasiStatusKetua == null || validasiStatusKetua == "Belum Divalidasi" || validasiStatusKetua == "Ditolak" || validasiStatusSekretaris == null || validasiStatusSekretaris == "Belum Divalidasi" || validasiStatusSekretaris == "Ditolak") {
+            canValidate = false;
+          }else if(validasiStatusKetua == "Tervalidasi" && validasiStatusSekretaris == "Tervalidasi") {
+            canValidate = true;
+          }
         });
       }
     });
-    if(validasiStatusKetua == null || validasiStatusKetua == "Belum Divalidasi" || validasiStatusKetua == "Ditolak" || validasiStatusSekretaris == null || validasiStatusSekretaris == "Belum Divalidasi" || validasiStatusSekretaris == "Ditolak") {
-      setState(() {
-        canValidate = false;
-      });
-    }else if(validasiStatusKetua == "Tervalidasi" && validasiStatusSekretaris == "Tervalidasi") {
-      setState(() {
-        canValidate = true;
-      });
-    }
   }
 
   getValidasiStatus() async {
@@ -375,6 +394,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
     getLampiran();
     getValidasiStatus();
     getPanitiaValidasiStatus();
+    getQRCode();
     ftoast = FToast();
     ftoast.init(this.context);
   }
@@ -620,10 +640,10 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                         padding: EdgeInsets.only(right: 15)
                     ),
                     Container(
-                        child: Stack(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Container(
-                                  alignment: Alignment.topLeft,
                                   child: namaKetua == null ? Container() : Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: <Widget>[
@@ -635,11 +655,21 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                                           ))
                                       ),
                                       Container(
+                                        child: qrCodeKetua == "Belum tervalidasi" ? Container() : Container(
+                                          child: SvgPicture.network(
+                                            "https://storage.siradaskripsi.my.id/file/validasi/${qrCodeKetua}",
+                                            height: 50,
+                                            placeholderBuilder: (context) => CircularProgressIndicator(),
+                                          ),
+                                          margin: EdgeInsets.only(top: 10),
+                                        ),
+                                      ),
+                                      Container(
                                           child: Text(namaKetua, style: TextStyle(
                                               fontFamily: "Times New Roman",
                                               fontSize: 16
                                           )),
-                                          margin: EdgeInsets.only(top: 25)
+                                          margin: EdgeInsets.only(top: 10)
                                       )
                                     ],
                                   ),
@@ -658,11 +688,21 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                                           ))
                                       ),
                                       Container(
+                                        child: qrCodeSekretaris == "Belum tervalidasi" ? Container() : Container(
+                                          child: SvgPicture.network(
+                                            "https://storage.siradaskripsi.my.id/file/validasi/${qrCodeSekretaris}",
+                                            height: 50,
+                                            placeholderBuilder: (context) => CircularProgressIndicator(),
+                                          ),
+                                          margin: EdgeInsets.only(top: 10),
+                                        ),
+                                      ),
+                                      Container(
                                           child: Text(namaSekretaris, style: TextStyle(
                                               fontFamily: "Times New Roman",
                                               fontSize: 16
                                           )),
-                                          margin: EdgeInsets.only(top: 25)
+                                          margin: EdgeInsets.only(top: 10)
                                       )
                                     ],
                                   ),
@@ -684,11 +724,21 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                                 ))
                             ),
                             Container(
+                              child: qrCodeBendesa == "Belum tervalidasi" ? Container() : Container(
+                                child: SvgPicture.network(
+                                  "https://storage.siradaskripsi.my.id/file/validasi/${qrCodeBendesa}",
+                                  height: 50,
+                                  placeholderBuilder: (context) => CircularProgressIndicator(),
+                                ),
+                                margin: EdgeInsets.only(top: 10),
+                              ),
+                            ),
+                            Container(
                                 child: Text(namaBendesa, style: TextStyle(
                                     fontFamily: "Times New Roman",
                                     fontSize: 16
                                 )),
-                                margin: EdgeInsets.only(top: 25)
+                                margin: EdgeInsets.only(top: 10)
                             )
                           ],
                         ),
@@ -733,7 +783,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                       margin: EdgeInsets.only(left: 15, top: 10),
                     ),
                     Container(
-                      child: Divider(
+                      child: tetujonTerlampir.length == 0 ? Container() : Divider(
                           color: Colors.black38
                       ),
                       margin: EdgeInsets.symmetric(horizontal: 15),
@@ -833,7 +883,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                       ),
                     ),
                     Container(
-                      child: status == "Menunggu Respon" ? Container() : canValidate == false ? Container(
+                      child: status == "Menunggu Respon" ? Container() : status == "Telah Dikonfirmasi" ? Container() : canValidate == false ? Container(
                           child: Container(
                             child: Row(
                               children: <Widget>[
@@ -949,7 +999,59 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                                                     fontWeight: FontWeight.w700,
                                                     color: HexColor('#025393')
                                                   )),
-                                                  onPressed: (){},
+                                                  onPressed: (){
+                                                    var body = jsonEncode({
+                                                      "user_id" : loginPage.userId,
+                                                      "prajuru_desa_adat_id" : loginPage.prajuruId,
+                                                      "surat_keluar_id" : detailSuratKeluarPanitiaAdmin.suratKeluarId
+                                                    });
+                                                    http.post(Uri.parse(apiURLValidasiSurat),
+                                                      headers: {"Content-Type" : "application/json"},
+                                                      body: body
+                                                    ).then((http.Response response) {
+                                                      var responseValue = response.statusCode;
+                                                      print("validasi status: ${responseValue.toString()}");
+                                                      if(responseValue == 200) {
+                                                        ftoast.showToast(
+                                                          child: Container(
+                                                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                            decoration: BoxDecoration(
+                                                              borderRadius: BorderRadius.circular(25),
+                                                              color: Colors.green
+                                                            ),
+                                                            child: Row(
+                                                              children: <Widget>[
+                                                                Icon(Icons.done),
+                                                                Container(
+                                                                  margin: EdgeInsets.only(left: 15),
+                                                                  child: SizedBox(
+                                                                    width: MediaQuery.of(this.context).size.width * 0.65,
+                                                                    child: Text("Validasi surat telah berhasil", style: TextStyle(
+                                                                        fontFamily: "Poppins",
+                                                                        fontSize: 14,
+                                                                        fontWeight: FontWeight.w700,
+                                                                        color: Colors.white
+                                                                    )),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          )
+                                                        );
+                                                        getSuratKeluarInfo();
+                                                        getBendesaInfo();
+                                                        getKetuaPanitiaInfo();
+                                                        getSekretarisPanitiaInfo();
+                                                        getTetujon();
+                                                        getTumusan();
+                                                        getHistori();
+                                                        getLampiran();
+                                                        getValidasiStatus();
+                                                        getQRCode();
+                                                        Navigator.of(context).pop();
+                                                      }
+                                                    });
+                                                  },
                                                 ),
                                                 TextButton(
                                                   child: Text("Tidak", style: TextStyle(

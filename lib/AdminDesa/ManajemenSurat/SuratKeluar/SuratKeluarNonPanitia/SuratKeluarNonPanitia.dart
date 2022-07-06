@@ -750,10 +750,17 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: (){
-                                      setState(() {
-                                        detailSuratKeluarNonPanitia.suratKeluarId = TelahDikonfirmasi[index]['surat_keluar_id'];
-                                      });
-                                      Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                      if(TelahDikonfirmasi[index]['tim_kegiatan'] == null) {
+                                        setState(() {
+                                          detailSuratKeluarNonPanitia.suratKeluarId = TelahDikonfirmasi[index]['surat_keluar_id'];
+                                        });
+                                        Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                                      }else {
+                                        setState(() {
+                                          detailSuratKeluarPanitiaAdmin.suratKeluarId = TelahDikonfirmasi[index]['surat_keluar_id'];
+                                        });
+                                        Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaAdmin()));
+                                      }
                                     },
                                     child: Container(
                                       child: Row(
