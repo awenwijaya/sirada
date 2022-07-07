@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:surat/Penduduk/SuratPengumuman/Lampiran.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
@@ -37,6 +38,8 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
   var namaPenyarikan;
   var namaBendesa;
   var kecamatanId;
+  var qrCodeBendesa;
+  var qrCodePenyarikan;
   var status;
   var pihakKrama;
   var validasiStatus;
@@ -53,6 +56,22 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
   var apiURLGetTumusanPrajuruDesa = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/desa/${detailSuratPrajuruKrama.suratKeluarId}";
   var apiURLGetTumusanPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/banjar/${detailSuratPrajuruKrama.suratKeluarId}";
   var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${detailSuratPrajuruKrama.suratKeluarId}";
+  var apiURLGetQrCode = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/validasi/qrcode/${detailSuratPrajuruKrama.suratKeluarId}";
+
+  getQRCode() async {
+    http.get(Uri.parse(apiURLGetQrCode),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          qrCodeBendesa = jsonData['validasi_ketua'];
+          qrCodePenyarikan = jsonData['validasi_penyarikan'];
+        });
+      }
+    });
+  }
 
   getLampiran() async {
     http.get(Uri.parse(apiURLGetLampiran),
@@ -209,6 +228,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
     getPenyarikanInfo();
     getTumusan();
     getLampiran();
+    getQRCode();
   }
 
   @override
@@ -422,30 +442,41 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                           margin: EdgeInsets.only(top: 10, left: 10),
                         ),
                         Container(
-                            child: Stack(
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Container(
-                                      alignment: Alignment.topLeft,
                                       child: namaBendesa == null ? Container() : Column(
                                         crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: <Widget>[
                                           Container(
-                                              child: Text("Bendesa", style: TextStyle(
-                                                  fontFamily: "Times New Roman",
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700
-                                              ))
+                                            child: Text("Bendesa", style: TextStyle(
+                                                fontFamily: "Times New Roman",
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700
+                                            ), textAlign: TextAlign.center),
+                                          ),
+                                          Container(
+                                            child: qrCodeBendesa == "Belum tervalidasi" ? Container() : Container(
+                                              child: SvgPicture.network(
+                                                "https://storage.siradaskripsi.my.id/file/validasi/${qrCodeBendesa}",
+                                                height: 50,
+                                                placeholderBuilder: (context) => CircularProgressIndicator(),
+                                              ),
+                                              margin: EdgeInsets.only(top: 10),
+                                            ),
                                           ),
                                           Container(
                                               child: Text(namaBendesa, style: TextStyle(
                                                   fontFamily: "Times New Roman",
                                                   fontSize: 16
                                               )),
-                                              margin: EdgeInsets.only(top: 25)
+                                              margin: EdgeInsets.only(top: 10)
                                           )
                                         ],
                                       ),
-                                      margin: EdgeInsets.only(left: 10, top: 10)
+                                      margin: EdgeInsets.only(top: 10, left: 10)
                                   ),
                                   Container(
                                       alignment: Alignment.topRight,
@@ -460,15 +491,25 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                               ))
                                           ),
                                           Container(
+                                            child: qrCodePenyarikan == null ? Container() : qrCodePenyarikan == "Belum tervalidasi" ? Container() : Container(
+                                                child: SvgPicture.network(
+                                                  "https://storage.siradaskripsi.my.id/file/validasi/${qrCodePenyarikan}",
+                                                  height: 50,
+                                                  placeholderBuilder: (context) => CircularProgressIndicator(),
+                                                ),
+                                                margin: EdgeInsets.only(top: 10)
+                                            ),
+                                          ),
+                                          Container(
                                               child: Text(namaPenyarikan, style: TextStyle(
                                                   fontFamily: "Times New Roman",
                                                   fontSize: 16
                                               )),
-                                              margin: EdgeInsets.only(top: 25)
+                                              margin: EdgeInsets.only(top: 10)
                                           )
                                         ],
                                       ),
-                                      margin: EdgeInsets.only(right: 10, top: 10)
+                                      margin: EdgeInsets.only(top: 10, right: 10)
                                   ),
                                 ]
                             )

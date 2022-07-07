@@ -38,6 +38,14 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
   bool isSearchSedangDiproses = false;
   bool isSearchTelahDikonfirmasi = false;
   bool isSearchDibatalkan = false;
+  bool isFilterMenungguRespons = false;
+  bool isFilterSedangDiproses = false;
+  bool isFilterTelahDikonfirmasi = false;
+  bool isFilterDibatalkan = false;
+  bool LoadingFilterMenungguRespons = true;
+  bool LoadingFilterSedangDiproses = true;
+  bool LoadingFilterTelahDikonfirmasi = true;
+  bool LoadingFilterDibatalkan = true;
 
   final controllerSearchMenungguRespons = TextEditingController();
   final controllerSearchSedangDiproses = TextEditingController();
@@ -49,6 +57,10 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
   List SedangDiproses = [];
   List TelahDikonfirmasi = [];
   List Dibatalkan = [];
+  List tahunTerbitFilter = List();
+  List kodeSuratFilter = List();
+  var selectedTahunTerbitFilter;
+  var selectedKodeSuratFilter;
 
   Future refreshListSearchMenungguRespons() async {
     setState(() {

@@ -56,7 +56,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
   List tumusanPrajuruBanjarList = [];
   List tumusanPrajuruDesaList = [];
   List tumusanPihakLainList = [];
-
+  List tetujonPanitiaList = [];
   List<String> tetujon = [];
   List<String> tumusan = [];
   List<String> tetujonTerlampir = [];
@@ -76,6 +76,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
   var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${detailSuratKeluarPanitiaAdmin.suratKeluarId}";
   var apiURLShowPanitia = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/panitia/${detailSuratKeluarPanitiaAdmin.suratKeluarId}";
   var apiURLGetHistori = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/histori/${detailSuratKeluarPanitiaAdmin.suratKeluarId}";
+  var apiURLShowTetujonPanitia = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/panitia/${detailSuratKeluarPanitiaAdmin.suratKeluarId}";
 
   //validasi
   var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
@@ -114,6 +115,21 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
           }else if(validasiStatusKetua == "Tervalidasi" && validasiStatusSekretaris == "Tervalidasi") {
             canValidate = true;
           }
+        });
+      }
+    });
+  }
+
+  getTetujonAnggota() async {
+    this.tetujonPanitiaList = [];
+    http.get(Uri.parse(apiURLShowTetujonPanitia),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tetujonPanitiaList = jsonData;
         });
       }
     });
@@ -395,6 +411,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
     getValidasiStatus();
     getPanitiaValidasiStatus();
     getQRCode();
+    getTetujonAnggota();
     ftoast = FToast();
     ftoast.init(this.context);
   }
@@ -510,7 +527,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                     ),
                     Container(
                       alignment: Alignment.topRight,
-                      child: pihakKrama == null ? tetujon.length == 0 ? Text("-", style: TextStyle(
+                      child: pihakKrama == null ? tetujon.length == 0 ? tetujonPanitiaList.isNotEmpty ? Container() : Text("-", style: TextStyle(
                           fontFamily: "Times New Roman",
                           fontSize: 16
                       )) : Column(
@@ -525,7 +542,10 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                             margin: EdgeInsets.only(bottom: 5),
                           ),
                           Container(
-                            child: tetujonTerlampir.isNotEmpty ? Text("(Terlampir)", style: TextStyle(
+                            child: tetujonPanitiaList.isNotEmpty ? Text("(Terlampir)", style: TextStyle(
+                                fontFamily: "Times New Roman",
+                                fontSize: 16
+                            )) : tetujonTerlampir.isNotEmpty ? Text("(Terlampir)", style: TextStyle(
                                 fontFamily: "Times New Roman",
                                 fontSize: 16
                             )) : Container(),
@@ -535,6 +555,14 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                           fontFamily: "Times New Roman",
                           fontSize: 16
                       )),
+                      margin: EdgeInsets.only(right: 15, top: 5),
+                    ),
+                    Container(
+                      alignment: Alignment.topRight,
+                      child: tetujonTerlampir.isEmpty ? tetujonPanitiaList.isNotEmpty ? Text("(Terlampir)", style: TextStyle(
+                          fontFamily: "Times New Roman",
+                          fontSize: 16
+                      )) : Container() : Container(),
                       margin: EdgeInsets.only(right: 15, top: 5),
                     ),
                     Container(
@@ -816,6 +844,38 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                             ),
                             margin: EdgeInsets.only(top: 5),
                           ),
+                        ],
+                      ),
+                      margin: EdgeInsets.only(left: 15),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: tetujonPanitiaList.length == 0 ? Container() : Column(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Katur Majeng Ring :", style: TextStyle(
+                                fontFamily: "Times New Roman",
+                                fontSize: 16
+                            )),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                for(var i = 0; i < tetujonPanitiaList.length; i++) Container(
+                                  child: Text("${i+1}. ${tetujonPanitiaList[i]['jabatan']}  (${tetujonPanitiaList[i]['nama']})", style: TextStyle(
+                                      fontFamily: "Times New Roman",
+                                      fontSize: 16
+                                  )),
+                                  margin: EdgeInsets.only(bottom: 5),
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.only(top: 5),
+                          )
                         ],
                       ),
                       margin: EdgeInsets.only(left: 15),

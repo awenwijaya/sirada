@@ -554,7 +554,7 @@ class _suratKeluarPanitiaKramaPanitiaState extends State<suratKeluarPanitiaKrama
                               return GestureDetector(
                                 onTap: (){
                                   setState(() {
-                                    detailSuratKeluarPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
+                                    detailSuratKeluarPanitia.suratKeluarId = TelahDikonfirmasi[index]['surat_keluar_id'];
                                   });
                                   Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
                                     refreshListDibatalkan();
@@ -689,7 +689,7 @@ class _suratKeluarPanitiaKramaPanitiaState extends State<suratKeluarPanitiaKrama
                               return GestureDetector(
                                 onTap: (){
                                   setState(() {
-                                    detailSuratKeluarPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
+                                    detailSuratKeluarPanitia.suratKeluarId = Dibatalkan[index]['surat_keluar_id'];
                                   });
                                   Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
                                     refreshListDibatalkan();

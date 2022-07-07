@@ -1,3 +1,4 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:surat/Penduduk/SuratPengumuman/Lampiran.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,10 +42,14 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
   var status;
   var validasiStatus;
   var pihakKrama;
+  var qrCodeBendesa;
+  var qrCodeSekretaris;
+  var qrCodeKetua;
   List<String> tumusan = [];
   List tumusanPrajuruBanjarList = [];
   List tumusanPrajuruDesaList = [];
   List tumusanPihakLainList = [];
+  List tetujonPanitiaList = [];
   List lampiran = [];
   var apiURLShowDetailSuratKeluar = "https://siradaskripsi.my.id/api/data/surat/keluar/view/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
   var apiURLShowPrajuru = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
@@ -54,6 +59,8 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
   var apiURLGetTumusanPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/banjar/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
   var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
   bool LoadData = true;
+  var apiURLGetQRCode = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/panitia/validasi/qrcode/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
+  var apiURLShowTetujonPanitia = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/panitia/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
 
   getLampiran() async {
     http.get(Uri.parse(apiURLGetLampiran),
@@ -64,6 +71,37 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
         var jsonData = json.decode(response.body);
         setState(() {
           lampiran = jsonData;
+        });
+      }
+    });
+  }
+
+  getQRCode() async {
+    http.get(Uri.parse(apiURLGetQRCode),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          qrCodeKetua = jsonData['validasi_ketua'];
+          qrCodeSekretaris = jsonData['validasi_sekretaris'];
+          qrCodeBendesa = jsonData['validasi_bendesa'];
+        });
+      }
+    });
+  }
+
+  getTetujonAnggota() async {
+    this.tetujonPanitiaList = [];
+    http.get(Uri.parse(apiURLShowTetujonPanitia),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tetujonPanitiaList = jsonData;
         });
       }
     });
@@ -231,6 +269,8 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
     getSekretarisPanitiaInfo();
     getTumusan();
     getLampiran();
+    getQRCode();
+    getTetujonAnggota();
   }
 
   @override
@@ -351,6 +391,14 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
                       margin: EdgeInsets.only(right: 15, top: 5),
                     ),
                     Container(
+                      alignment: Alignment.topRight,
+                      child: tetujonPanitiaList.isNotEmpty ? Text("(Terlampir)", style: TextStyle(
+                          fontFamily: "Times New Roman",
+                          fontSize: 16
+                      )) : Container(),
+                      margin: EdgeInsets.only(right: 15, top: 5),
+                    ),
+                    Container(
                         child: Column(
                             children: <Widget>[
                               Container(
@@ -453,10 +501,10 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
                         padding: EdgeInsets.only(right: 15)
                     ),
                     Container(
-                        child: Stack(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Container(
-                                  alignment: Alignment.topLeft,
                                   child: namaKetua == null ? Container() : Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: <Widget>[
@@ -468,11 +516,21 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
                                           ))
                                       ),
                                       Container(
+                                        child: qrCodeKetua == "Belum tervalidasi" ? Container() : Container(
+                                          child: SvgPicture.network(
+                                            "https://storage.siradaskripsi.my.id/file/validasi/${qrCodeKetua}",
+                                            height: 50,
+                                            placeholderBuilder: (context) => CircularProgressIndicator(),
+                                          ),
+                                          margin: EdgeInsets.only(top: 10),
+                                        ),
+                                      ),
+                                      Container(
                                           child: Text(namaKetua, style: TextStyle(
                                               fontFamily: "Times New Roman",
                                               fontSize: 16
                                           )),
-                                          margin: EdgeInsets.only(top: 25)
+                                          margin: EdgeInsets.only(top: 10)
                                       )
                                     ],
                                   ),
@@ -491,11 +549,21 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
                                           ))
                                       ),
                                       Container(
+                                        child: qrCodeSekretaris == "Belum tervalidasi" ? Container() : Container(
+                                          child: SvgPicture.network(
+                                            "https://storage.siradaskripsi.my.id/file/validasi/${qrCodeSekretaris}",
+                                            height: 50,
+                                            placeholderBuilder: (context) => CircularProgressIndicator(),
+                                          ),
+                                          margin: EdgeInsets.only(top: 10),
+                                        ),
+                                      ),
+                                      Container(
                                           child: Text(namaSekretaris, style: TextStyle(
                                               fontFamily: "Times New Roman",
                                               fontSize: 16
                                           )),
-                                          margin: EdgeInsets.only(top: 25)
+                                          margin: EdgeInsets.only(top: 10)
                                       )
                                     ],
                                   ),
@@ -517,11 +585,21 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
                                 ))
                             ),
                             Container(
+                              child: qrCodeBendesa == "Belum tervalidasi" ? Container() : Container(
+                                child: SvgPicture.network(
+                                  "https://storage.siradaskripsi.my.id/file/validasi/${qrCodeBendesa}",
+                                  height: 50,
+                                  placeholderBuilder: (context) => CircularProgressIndicator(),
+                                ),
+                                margin: EdgeInsets.only(top: 10),
+                              ),
+                            ),
+                            Container(
                                 child: Text(namaBendesa, style: TextStyle(
                                     fontFamily: "Times New Roman",
                                     fontSize: 16
                                 )),
-                                margin: EdgeInsets.only(top: 25)
+                                margin: EdgeInsets.only(top: 10)
                             )
                           ],
                         ),
@@ -564,6 +642,44 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
                         ],
                       ),
                       margin: EdgeInsets.only(left: 15, top: 10),
+                    ),
+                    Container(
+                      child: tetujonPanitiaList.isNotEmpty ? Divider(
+                        color: Colors.black38,
+                      ) : Container(),
+                      margin: EdgeInsets.symmetric(horizontal: 15),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: tetujonPanitiaList.length == 0 ? Container() : Column(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Text("Katur Majeng Ring :", style: TextStyle(
+                                fontFamily: "Times New Roman",
+                                fontSize: 16
+                            )),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                for(var i = 0; i < tetujonPanitiaList.length; i++) Container(
+                                  child: Text("${i+1}. ${tetujonPanitiaList[i]['jabatan']}  (${tetujonPanitiaList[i]['nama']})", style: TextStyle(
+                                      fontFamily: "Times New Roman",
+                                      fontSize: 16
+                                  )),
+                                  margin: EdgeInsets.only(bottom: 5),
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.only(top: 5),
+                          )
+                        ],
+                      ),
+                      margin: EdgeInsets.only(left: 15),
                     ),
                     Container(
                       child: lampiran.length == 0 ? Container() : Column(
