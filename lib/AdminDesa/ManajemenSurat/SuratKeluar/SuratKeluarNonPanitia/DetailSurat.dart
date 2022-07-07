@@ -1467,7 +1467,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                     ) : Container(),
                   ),
                   Container(
-                      child: Text("Status Surat", style: TextStyle(
+                      child: Text("Histori Surat", style: TextStyle(
                         fontFamily: "Poppins",
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -1481,35 +1481,67 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         for(var i = 0; i < historiSurat.length; i++) TimelineTile(
-                          indicatorStyle: IndicatorStyle(
-                              color: HexColor("#025393"),
+                          indicatorStyle: i+1 < historiSurat.length ? IndicatorStyle(
+                            color: Colors.black,
+                            height: 30,
+                            width: 30
+                          ) : IndicatorStyle(
+                              color: HexColor("#377D71"),
                               height: 30,
-                              width: 30
+                              width: 30,
                           ),
                           isFirst: i == 0 ? true : false,
-                          endChild: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  child: Text(historiSurat[i]['created_at'], style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700
-                                  )),
+                          isLast: i+1 == historiSurat.length ? true : false,
+                          endChild: Row(
+                            children: <Widget>[
+                              Container(
+                                child: Icon(
+                                  historiSurat[i]['histori'].contains('ditambahkan')
+                                      ? Icons.add
+                                      : historiSurat[i]['histori'] == "Surat telah diubah"
+                                      ? Icons.edit
+                                      : historiSurat[i]['histori'].contains('Sedang Diproses')
+                                      ? Icons.add_task_rounded
+                                      : historiSurat[i]['histori'].contains('telah ditandatangani')
+                                      ? Icons.done
+                                      : historiSurat[i]['histori'].contains('ditolak')
+                                      ? Icons.cancel
+                                      : historiSurat[i]['histori'].contains('dibatalkan status tolak validasi')
+                                      ? Icons.cancel : Container(),
+                                  color: i+1 < historiSurat.length ? Colors.black54 : HexColor("377D71")
                                 ),
-                                Container(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['nama']}", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14
-                                  )),
-                                )
-                              ],
-                            ),
-                            margin: EdgeInsets.only(left: 15),
-                          ),
+                                margin: EdgeInsets.only(left: 15),
+                              ),
+                              Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Text(historiSurat[i]['created_at'], style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                        color: i+1 < historiSurat.length ? Colors.black54 : Colors.black
+                                      )),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(right: 10),
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.69 ,
+                                        child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['nama']}", style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            color: i+1 < historiSurat.length ? Colors.black54 : Colors.black
+                                        ), maxLines: 2, softWrap: false, overflow: TextOverflow.ellipsis),
+                                      )
+                                    )
+                                  ],
+                                ),
+                                margin: EdgeInsets.only(left: 15, top: 15),
+                              ),
+                            ],
+                          )
                         )
                       ],
                     ),

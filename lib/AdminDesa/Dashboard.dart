@@ -9,6 +9,7 @@ import 'package:surat/AdminDesa/DetailDesa/DetailDesa.dart';
 import 'package:surat/AdminDesa/ManajemenPanitia/ManajemenPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruBanjarAdat/PrajuruBanjarAdat.dart';
 import 'package:surat/AdminDesa/ManajemenStaff/ManajemenPrajuruDesaAdat/PrajuruDesaAdat.dart';
+import 'package:surat/AdminDesa/ManajemenSurat/PermintaanVerifikasiSuratKeluar.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/SuratKeluarNonPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratMasuk/SuratMasuk.dart';
 import 'package:surat/AdminDesa/NomorSurat/NomorSurat.dart';
@@ -515,6 +516,47 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                 margin: EdgeInsets.only(top: 20, left: 15),
               ),
               Container(
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => suratKeluarNonPanitiaAdmin()));
+                    },
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          child: Image.asset(
+                            'images/email.png',
+                            height: 40,
+                            width: 40,
+                          ),
+                        ),
+                        Container(
+                          child: Text("Surat Keluar", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700
+                          )),
+                          margin: EdgeInsets.only(left: 20),
+                        )
+                      ],
+                    ),
+                  ),
+                  margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  height: 70,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0,3)
+                        )
+                      ]
+                  )
+              ),
+              Container(
                 child: Column(
                   children: <Widget>[
                     Container(
@@ -598,6 +640,47 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                           )
                         ]
                       ),
+                    ),
+                    Container(
+                        child: GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => permintaanVerifikasiSuratKeluarAdmin()));
+                          },
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                child: Image.asset(
+                                  'images/validation.png',
+                                  height: 40,
+                                  width: 40,
+                                ),
+                              ),
+                              Container(
+                                child: Text("Permintaan Verifikasi Surat Keluar", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700
+                                )),
+                                margin: EdgeInsets.only(left: 20),
+                              )
+                            ],
+                          ),
+                        ),
+                        margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        height: 70,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(0,3)
+                              )
+                            ]
+                        )
                     ),
                     Container(
                       child: GestureDetector(

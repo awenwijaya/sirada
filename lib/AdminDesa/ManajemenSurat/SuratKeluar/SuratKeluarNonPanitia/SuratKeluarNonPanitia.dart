@@ -6,7 +6,6 @@ import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/DetailSurat.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/DetailSuratPanitia.dart';
-import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/EditSuratKeluarNonPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/TambahSuratKeluarNonPanitia.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
@@ -21,8 +20,9 @@ class suratKeluarNonPanitiaAdmin extends StatefulWidget {
 class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin> {
   var apiURLGetDataSurat = "https://siradaskripsi.my.id/api/data/admin/surat/non-panitia/${loginPage.desaId}";
   var apiURLSearchSurat = "https://siradaskripsi.my.id/api/data/admin/surat/non-panitia/${loginPage.desaId}/search";
-  var apiURLGetAllSurat = "https://siradaskripsi.my.id/api/data/admin/surat/all/${loginPage.desaId}";
-  var apiURLSearchAllSurat = "https://siradaskripsi.my.id/api/data/admin/surat/all/${loginPage.desaId}/search";
+  var apiURLShowFilterKodeSurat = "https://siradaskripsi.my.id/api/admin/surat/keluar/filter/kode_surat/prajuru";
+  var apiURLShowFilterTahunTerbit = "https://siradaskripsi.my.id/api/admin/surat/keluar/filter/tahun_terbit/prajuru";
+  var apiURLShowFilterResult = "https://siradaskripsi.my.id/api/admin/surat/keluar/filter/result/prajuru";
   var selectedIdSuratKeluar;
 
   //bool
@@ -46,6 +46,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
   bool LoadingFilterSedangDiproses = true;
   bool LoadingFilterTelahDikonfirmasi = true;
   bool LoadingFilterDibatalkan = true;
+  bool LoadingKomponenFilterMenungguRespons = true;
 
   final controllerSearchMenungguRespons = TextEditingController();
   final controllerSearchSedangDiproses = TextEditingController();
@@ -57,10 +58,200 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
   List SedangDiproses = [];
   List TelahDikonfirmasi = [];
   List Dibatalkan = [];
-  List tahunTerbitFilter = List();
-  List kodeSuratFilter = List();
-  var selectedTahunTerbitFilter;
-  var selectedKodeSuratFilter;
+  List tahunTerbitFilterMenungguRespons = List();
+  List tahunTerbitFilterSedangDiproses = List();
+  List tahunTerbitFilterTelahDikonfirmasi = List();
+  List tahunTerbitFilterDibatalkan = List();
+  List kodeSuratFilterMenungguRespons = List();
+  List kodeSuratFilterSedangDiproses = List();
+  List kodeSuratFilterTelahDikonfirmasi = List();
+  List kodeSuratFilterDibatalkan = List();
+
+  var selectedTahunTerbitFilterMenungguRespons;
+  var selectedTahunTerbitFilterSedangDiproses;
+  var selectedTahunTerbitFilterTelahDikonfirmasi;
+  var selectedTahunTerbitFilterDibatalkan;
+  var selectedKodeSuratFilterMenungguRespons;
+  var selectedKodeSuratFilterSedangDiproses;
+  var selectedKodeSuratFilterDibatalkan;
+  var selectedKodeSuratFilterTelahDikonfirmasi;
+
+  Future showFilterTahunTerbitMenungguRespons() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Menunggu Respon"
+    });
+    http.post(Uri.parse(apiURLShowFilterTahunTerbit),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tahunTerbitFilterMenungguRespons = jsonData;
+        });
+      }
+    });
+  }
+
+  Future showFilterKodeSuratMenungguRespons() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Menunggu Respon"
+    });
+    http.post(Uri.parse(apiURLShowFilterKodeSurat),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          kodeSuratFilterMenungguRespons = jsonData;
+        });
+      }
+    });
+  }
+
+  Future showFilterTahunTerbitSedangDiproses() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Sedang Diproses"
+    });
+    http.post(Uri.parse(apiURLShowFilterTahunTerbit),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tahunTerbitFilterSedangDiproses = jsonData;
+        });
+      }
+    });
+  }
+
+  Future showFilterKodeSuratSedangDiproses() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Sedang Diproses"
+    });
+    http.post(Uri.parse(apiURLShowFilterKodeSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          kodeSuratFilterSedangDiproses = jsonData;
+        });
+      }
+    });
+  }
+
+  Future showFilterKodeSuratDibatalkan() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Dibatalkan"
+    });
+    http.post(Uri.parse(apiURLShowFilterKodeSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          kodeSuratFilterDibatalkan = jsonData;
+        });
+      }
+    });
+  }
+
+  Future showFilterKodeSuratTelahDikonfirmasi() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Telah Dikonfirmasi"
+    });
+    http.post(Uri.parse(apiURLShowFilterKodeSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          kodeSuratFilterTelahDikonfirmasi = jsonData;
+        });
+      }
+    });
+  }
+
+  Future showFilterTahunTerbitDibatalkan() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Dibatalkan"
+    });
+    http.post(Uri.parse(apiURLShowFilterTahunTerbit),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tahunTerbitFilterDibatalkan = jsonData;
+        });
+      }
+    });
+  }
+
+  Future showFilterTahunTerbitTelahDikonfirmasi() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Telah Dikonfirmasi"
+    });
+    http.post(Uri.parse(apiURLShowFilterTahunTerbit),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tahunTerbitFilterTelahDikonfirmasi = jsonData;
+        });
+      }
+    });
+  }
+
+  Future showFilterResultMenungguRespons() async {
+    var body = jsonEncode({
+      "search_query" : controllerSearchMenungguRespons.text == "" ? null : controllerSearchMenungguRespons.text,
+      "kode_surat_filter" : selectedKodeSuratFilterMenungguRespons == null ? null : selectedKodeSuratFilterMenungguRespons,
+      "tahun_terbit_filter" : selectedTahunTerbitFilterMenungguRespons == null ? null : selectedTahunTerbitFilterMenungguRespons,
+      "status" : "Menunggu Respon"
+    });
+    http.post(Uri.parse(apiURLShowFilterResult),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          LoadingMenungguRespons = false;
+          availableMenungguRespons = true;
+          MenungguRespons = data;
+        });
+      }else {
+        LoadingMenungguRespons = false;
+        availableMenungguRespons = false;
+      }
+    });
+  }
 
   Future refreshListSearchMenungguRespons() async {
     setState(() {
@@ -102,7 +293,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
       "search_query" : controllerSearchSedangDiproses.text,
       "status" : "Sedang Diproses"
     });
-    http.post(Uri.parse(loginPage.role == "Bendesa" ? apiURLSearchAllSurat : apiURLSearchSurat),
+    http.post(Uri.parse(apiURLSearchSurat),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) async {
@@ -132,7 +323,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
       "search_query" : controllerSearchTelahDikonfirmasi.text,
       "status" : "Telah Dikonfirmasi"
     });
-    http.post(Uri.parse(loginPage.role == "Bendesa" ? apiURLSearchAllSurat : apiURLSearchSurat),
+    http.post(Uri.parse(apiURLSearchSurat),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) async {
@@ -209,7 +400,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
     var body = jsonEncode({
       "status" : "Sedang Diproses"
     });
-    http.post(Uri.parse(loginPage.role == "Bendesa" ? apiURLGetAllSurat : apiURLGetDataSurat),
+    http.post(Uri.parse(apiURLGetDataSurat),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) async {
@@ -233,7 +424,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
     var body = jsonEncode({
       "status" : "Telah Dikonfirmasi"
     });
-    http.post(Uri.parse(loginPage.role == "Bendesa" ? apiURLGetAllSurat : apiURLGetDataSurat),
+    http.post(Uri.parse(apiURLGetDataSurat),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) async {
@@ -257,7 +448,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
     var body = jsonEncode({
       "status" : "Dibatalkan"
     });
-    http.post(Uri.parse(loginPage.role == "Bendesa" ? apiURLGetDataSurat : apiURLGetAllSurat),
+    http.post(Uri.parse(apiURLGetDataSurat),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) async {
@@ -277,6 +468,40 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
     });
   }
 
+  Future getFilterKomponenMenungguRespons() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Menunggu Respon"
+    });
+    http.post(Uri.parse(apiURLShowFilterKodeSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          kodeSuratFilterMenungguRespons = jsonData;
+        });
+      }
+    });
+    http.post(Uri.parse(apiURLShowFilterTahunTerbit),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tahunTerbitFilterMenungguRespons = jsonData;
+        });
+      }
+    });
+    setState(() {
+      LoadingKomponenFilterMenungguRespons = false;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -285,6 +510,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
     refreshListMenungguRespons();
     refreshListSedangDiproses();
     refreshListTelahDikonfirmasi();
+    getFilterKomponenMenungguRespons();
   }
 
   @override
@@ -408,24 +634,14 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                     borderSide: BorderSide(color: HexColor("#025393"))
                                 ),
                                 hintText: "Cari surat keluar...",
-                                suffixIcon: isSearchMenungguRespons ? IconButton(
-                                  icon: Icon(Icons.close),
-                                  onPressed: (){
-                                    setState(() {
-                                      LoadingMenungguRespons = true;
-                                      controllerSearchMenungguRespons.text = "";
-                                      isSearchMenungguRespons = false;
-                                      refreshListMenungguRespons();
-                                    });
-                                  },
-                                ) : IconButton(
+                                suffixIcon: IconButton(
                                   icon: Icon(Icons.search),
                                   onPressed: (){
                                     if(controllerSearchMenungguRespons.text != "") {
                                       setState(() {
-                                        isSearchMenungguRespons = true;
+                                        isFilterMenungguRespons = true;
                                       });
-                                      refreshListSearchMenungguRespons();
+                                      showFilterResultMenungguRespons();
                                     }
                                   },
                                 )
@@ -436,6 +652,103 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                             ),
                           ),
                           margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
+                        ),
+                        Container(
+                          child: LoadingFilterMenungguRespons ? ListTileShimmer() : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Flexible(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(width: 1, color: Colors.black38)
+                                  ),
+                                  child: DropdownButton(
+                                    isExpanded: true,
+                                    hint: Center(
+                                      child: Text("Semua Kode Surat", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                      )),
+                                    ),
+                                    value: selectedKodeSuratFilterMenungguRespons,
+                                    underline: Container(),
+                                    items: kodeSuratFilterMenungguRespons.map((e) {
+                                      return DropdownMenuItem(
+                                        value: e['master_surat_id'],
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Text("${e['kode_nomor_surat']} - ${e['keterangan']}", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    selectedItemBuilder: (BuildContext context) => kodeSuratFilterMenungguRespons.map((e) => Center(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Text(e['kode_nomor_surat'], style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                        )),
+                                      ),
+                                    )).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedKodeSuratFilterMenungguRespons = value;
+                                      });
+                                      showFilterResultMenungguRespons();
+                                    },
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                ),
+                              ),
+                              Flexible(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(width: 1, color: Colors.black38)
+                                  ),
+                                  child: DropdownButton(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedTahunTerbitFilterMenungguRespons = value;
+                                      });
+                                      showFilterResultMenungguRespons();
+                                    },
+                                    value: selectedTahunTerbitFilterMenungguRespons,
+                                    underline: Container(),
+                                    hint: Center(
+                                      child: Text("Semua Tahun Terbit", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                      )),
+                                    ),
+                                    isExpanded: true,
+                                    items: tahunTerbitFilterMenungguRespons.map((e) {
+                                      return DropdownMenuItem(
+                                        value: e['tahun_terbit'],
+                                        child: Text(e['tahun_terbit'], style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                        )),
+                                      );
+                                    }).toList(),
+                                    selectedItemBuilder: (BuildContext context) => tahunTerbitFilterMenungguRespons.map((e) => Center(
+                                      child: Text(e['tahun_terbit'], style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                      )),
+                                    )).toList(),
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                ),
+                              )
+                            ],
+                          ),
+                          margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
                         ),
                         Container(
                           child: LoadingMenungguRespons ? ListTileShimmer() : availableMenungguRespons ? Expanded(
