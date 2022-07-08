@@ -35,8 +35,8 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
   var apiURLSimpanEditSuratKeluar = "https://siradaskripsi.my.id/api/admin/surat/keluar/non-panitia/edit/up";
   var apiURLShowKomponenNomorSurat = "https://siradaskripsi.my.id/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
   var apiURLGetLampiran = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/lampiran/${editSuratKeluarNonPanitia.idSuratKeluar}";
-  var apiURLGetKelihanAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/kelihan_adat";
-  var apiURLGetBendesa = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/bendesa";
+  var apiURLGetKelihanAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/kelihan_adat/${loginPage.desaId}";
+  var apiURLGetBendesa = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/bendesa/${loginPage.desaId}";
   var apiURLGetTetujonPrajuruDesa = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/desa/${editSuratKeluarNonPanitia.idSuratKeluar}";
   var apiURLGetTetujonPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/banjar/${editSuratKeluarNonPanitia.idSuratKeluar}";
   var apiURLGetTetujonPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/pihak-lain/${editSuratKeluarNonPanitia.idSuratKeluar}";
@@ -1282,7 +1282,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                               initialValue: selectedBendesa,
                               searchable: false,
                               checkColor: Colors.white,
-                              items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                              items: prajuruDesaList.map((item) => MultiSelectItem(item, "${item['jabatan']} - ${item['nama']}")).toList(),
                               listType: MultiSelectListType.LIST,
                               onConfirm: (values) {
                                 setState(() {
@@ -1295,7 +1295,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                         Container(
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           child: MultiSelectChipDisplay(
-                            items: selectedBendesa.map((e) => MultiSelectItem(e, "Desa ${e['desadat_nama']} - ${e['nama']}")).toList(),
+                            items: selectedBendesa.map((e) => MultiSelectItem(e, "${e['jabatan']} - ${e['nama']}")).toList(),
                             onTap: (value) {
                               setState(() {
                                 selectedBendesa.remove(value);
@@ -1323,7 +1323,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                               buttonIcon: Icon(Icons.expand_more),
                               searchable: false,
                               checkColor: Colors.white,
-                              items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
+                              items: prajuruBanjarList.map((item) => MultiSelectItem(item, "${item['nama']}")).toList(),
                               listType: MultiSelectListType.LIST,
                               onConfirm: (values) {
                                 setState(() {
@@ -1336,7 +1336,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                         Container(
                             margin: EdgeInsets.symmetric(horizontal: 20),
                             child: MultiSelectChipDisplay(
-                              items: selectedKelihanAdat.map((e) => MultiSelectItem(e, "Banjar ${e['nama_banjar_adat']} - ${e['nama']}")).toList(),
+                              items: selectedKelihanAdat.map((e) => MultiSelectItem(e, "${e['nama']}")).toList(),
                               onTap: (value) {
                                 setState(() {
                                   selectedKelihanAdat.remove(value);
@@ -1445,7 +1445,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                         searchable: false,
                         selectedColor: HexColor("#025393"),
                         checkColor: Colors.white,
-                        items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                        items: prajuruDesaList.map((item) => MultiSelectItem(item, "${item['jabatan']} - ${item['nama']}")).toList(),
                         listType: MultiSelectListType.LIST,
                         onConfirm: (values) {
                           setState(() {
@@ -1458,7 +1458,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     child: MultiSelectChipDisplay(
-                      items: selectedBendesaTumusan.map((e) => MultiSelectItem(e, "Desa ${e['desadat_nama']} - ${e['nama']}")).toList(),
+                      items: selectedBendesaTumusan.map((e) => MultiSelectItem(e, "${e['jabatan']} - ${e['nama']}")).toList(),
                       onTap: (value) {
                         setState(() {
                           selectedBendesaTumusan.remove(value);
@@ -1487,7 +1487,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                         searchable: false,
                         selectedColor: HexColor("#025393"),
                         checkColor: Colors.white,
-                        items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
+                        items: prajuruBanjarList.map((item) => MultiSelectItem(item, "${item['nama']}")).toList(),
                         listType: MultiSelectListType.LIST,
                         onConfirm: (values) {
                           setState(() {
@@ -1500,7 +1500,7 @@ class _editSuratKeluarNonPanitiaState extends State<editSuratKeluarNonPanitia> {
                   Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       child: MultiSelectChipDisplay(
-                        items: selectedKelihanAdatTumusan.map((e) => MultiSelectItem(e, "Banjar ${e['nama_banjar_adat']} - ${e['nama']}")).toList(),
+                        items: selectedKelihanAdatTumusan.map((e) => MultiSelectItem(e, "${e['nama']}")).toList(),
                         onTap: (value) {
                           setState(() {
                             selectedKelihanAdatTumusan.remove(value);

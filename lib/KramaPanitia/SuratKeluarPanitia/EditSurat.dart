@@ -29,8 +29,8 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
   var apiURLShowKodeSurat = "https://siradaskripsi.my.id/api/data/admin/surat/non-panitia/kode/${loginPage.desaId}";
   var apiURLShowKomponenNomorSurat = "https://siradaskripsi.my.id/api/data/admin/surat/nomor_surat/${loginPage.desaId}";
   var apiURLGetDataBendesaAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
-  var apiURLGetKelihanAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/kelihan_adat";
-  var apiURLGetBendesa = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/bendesa";
+  var apiURLGetKelihanAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/kelihan_adat/${loginPage.desaId}";
+  var apiURLGetBendesa = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/bendesa/${loginPage.desaId}";
   var apiURLGetPanitiaAcara = "https://siradaskripsi.my.id/api/panitia/get/${loginPage.kramaId}";
   var apiURLGetPanitia = "https://siradaskripsi.my.id/api/panitia/get";
   var apiURLShowPrajuru = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/prajuru/${editSuratKeluarPanitia.idSuratKeluar}";

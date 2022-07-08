@@ -40,9 +40,9 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
   var apiURLGetDataBendesaAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
   var apiURLUpSuratKeluarPanitia = "https://siradaskripsi.my.id/api/admin/surat/keluar/panitia/up";
   var apiURLGetPanitiaAcara = "https://siradaskripsi.my.id/api/panitia/get/${loginPage.kramaId}";
-  var apiURLGetBendesa = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/bendesa";
+  var apiURLGetBendesa = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/bendesa/${loginPage.desaId}";
   var apiURLGetPanitia = "https://siradaskripsi.my.id/api/panitia/get";
-  var apiURLGetKelihanAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/kelihan_adat";
+  var apiURLGetKelihanAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/kelihan_adat/${loginPage.desaId}";
 
   //url tetujon, tumusan, lampiran
   var apiURLUpTetujonPihakLain = "https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/pihak-lain/up";
@@ -1524,7 +1524,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                                 buttonIcon: Icon(Icons.expand_more),
                                 searchable: true,
                                 checkColor: Colors.white,
-                                items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                                items: prajuruDesaList.map((item) => MultiSelectItem(item, "${item['jabatan']} - ${item['nama']}")).toList(),
                                 listType: MultiSelectListType.LIST,
                                 onConfirm: (values) {
                                   selectedBendesa = values;

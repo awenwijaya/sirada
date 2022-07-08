@@ -32,8 +32,8 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
   var apiURLGetDataBendesaAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru/desa_adat/bendesa/${loginPage.desaId}";
   var apiURLGetDataPenyarikan = "https://siradaskripsi.my.id/api/data/staff/prajuru/desa_adat/penyarikan/${loginPage.desaId}";
   var apiURLUpDataSuratNonPanitia = "https://siradaskripsi.my.id/api/admin/surat/keluar/non-panitia/up";
-  var apiURLGetKelihanAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/kelihan_adat";
-  var apiURLGetBendesa = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/bendesa";
+  var apiURLGetKelihanAdat = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/kelihan_adat/${loginPage.desaId}";
+  var apiURLGetBendesa = "https://siradaskripsi.my.id/api/data/staff/prajuru_desa_adat/bendesa/${loginPage.desaId}";
 
   //url tetujon, tumusan, lampiran
   var apiURLUpTetujonPihakLain = "https://siradaskripsi.my.id/api/admin/surat/keluar/tetujon/pihak-lain/up";
@@ -1282,7 +1282,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                 buttonIcon: Icon(Icons.expand_more),
                                 searchable: false,
                                 checkColor: Colors.white,
-                                items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                                items: prajuruDesaList.map((item) => MultiSelectItem(item, "${item['jabatan']} - ${item['nama']}")).toList(),
                                 listType: MultiSelectListType.LIST,
                                 onConfirm: (values) {
                                   selectedBendesa = values;
@@ -1309,7 +1309,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                 buttonIcon: Icon(Icons.expand_more),
                                 searchable: false,
                                 checkColor: Colors.white,
-                                items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
+                                items: prajuruBanjarList.map((item) => MultiSelectItem(item, "${item['nama']}")).toList(),
                                 listType: MultiSelectListType.LIST,
                                 onConfirm: (values) {
                                   selectedKelihanAdat = values;
@@ -1416,7 +1416,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                         buttonIcon: Icon(Icons.expand_more),
                         searchable: false,
                         checkColor: Colors.white,
-                        items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                        items: prajuruDesaList.map((item) => MultiSelectItem(item, "${item['jabatan']} - ${item['nama']}")).toList(),
                         listType: MultiSelectListType.LIST,
                         onConfirm: (values) {
                           selectedBendesaTumusan = values;
@@ -1443,7 +1443,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                         buttonIcon: Icon(Icons.expand_more),
                         searchable: false,
                         checkColor: Colors.white,
-                        items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
+                        items: prajuruBanjarList.map((item) => MultiSelectItem(item, "${item['nama']}")).toList(),
                         listType: MultiSelectListType.LIST,
                         onConfirm: (values) {
                           selectedKelihanAdatTumusan = values;
