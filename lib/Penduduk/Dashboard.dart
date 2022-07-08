@@ -40,10 +40,10 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
   int current = 0;
   var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
   var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
-  var apiURLGetPengumuman = "https://siradaskripsi.my.id/api/krama/view/surat/highlight/${loginPage.desaId}";
+  var apiURLShowAllPengumuman = "https://siradaskripsi.my.id/api/krama/view/surat/all/${loginPage.desaId}";
 
-  getPengumuman() async {
-    http.get(Uri.parse(apiURLGetPengumuman),
+  Future getAllPengumuman() async {
+    http.get(Uri.parse(apiURLShowAllPengumuman),
       headers: {"Content-Type" : "application/json"},
     ).then((http.Response response) {
       var responseValue = response.statusCode;
@@ -101,7 +101,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
     super.initState();
     getUserInfo();
     getDesaInfo();
-    getPengumuman();
+    getAllPengumuman();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
@@ -334,169 +334,93 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                     margin: EdgeInsets.only(top: 10, left: 15)
                   ),
                   Container(
-                    child: LoadingPengumuman ? ListTileShimmer() : availablePengumuman ? Column(
-                      children: <Widget>[
-                        Container(
-                            child: CarouselSlider(
-                              items: pengumuman.map((i) {
-                                return Builder(
-                                    builder: (BuildContext context) {
-                                      return Container(
-                                        width: MediaQuery.of(context).size.width,
-                                        margin: EdgeInsets.symmetric(horizontal: 5),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                                          color: HexColor("#025393"),
-                                        ),
-                                        child: GestureDetector(
-                                          onTap: (){
-                                            if(i['tim_kegiatan'] == null) {
-                                              setState(() {
-                                                setState(() {
-                                                  detailSuratPrajuruKrama.suratKeluarId = i['surat_keluar_id'];
-                                                });
-                                                Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratPrajuruKrama()));
-                                              });
-                                            }else {
-                                              setState(() {
-                                                detailSuratKeluarPanitiaKrama.suratKeluarId = i['surat_keluar_id'];
-                                              });
-                                              Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaKrama()));
-                                            }
-                                          },
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              Container(
-                                                child: Expanded(
-                                                  flex: 1,
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                                                      color: Colors.white,
-                                                    ),
-                                                    child: Center(
-                                                      child: Image.asset(
-                                                        'images/email.png',
-                                                        height: 50,
-                                                        width: 50,
-                                                      ),
-                                                    ),
-                                                  ),
+                    child: LoadingPengumuman ? ListTileShimmer() : availablePengumuman ? SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      child: RefreshIndicator(
+                        onRefresh: getAllPengumuman,
+                        child: ListView.builder(
+                          itemCount: pengumuman.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: (){
+                                if(pengumuman[index]['tim_kegiatan'] == null) {
+                                  setState(() {
+                                    detailSuratPrajuruKrama.suratKeluarId = pengumuman[index]['surat_keluar_id'];
+                                  });
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratPrajuruKrama()));
+                                }else {
+                                  setState(() {
+                                    detailSuratKeluarPanitiaKrama.suratKeluarId = pengumuman[index]['surat_keluar_id'];
+                                  });
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaKrama()));
+                                }
+                              },
+                              child: Container(
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      child: Image.asset(
+                                        'images/email.png',
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.55,
+                                              child: Text(
+                                                pengumuman[index]['parindikan'].toString(),
+                                                style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: HexColor("025393")
                                                 ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                softWrap: false,
                                               ),
-                                              Container(
-                                                child: Expanded(
-                                                  flex: 3,
-                                                  child: Column(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        child: SizedBox(
-                                                          width: MediaQuery.of(context).size.width * 0.7,
-                                                          child: Text(i['parindikan'], style: TextStyle(
-                                                              fontFamily: "Poppins",
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.w700,
-                                                              color: Colors.white
-                                                          ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false, textAlign: TextAlign.center),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 15),
-                                                      ),
-                                                      Container(
-                                                        child: SizedBox(
-                                                          width: MediaQuery.of(context).size.width * 0.7,
-                                                          child: Text(i['pamahbah_surat'], style: TextStyle(
-                                                              fontFamily: "Poppins",
-                                                              fontSize: 14,
-                                                              color: Colors.white
-                                                          ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false, textAlign: TextAlign.center),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 10),
-                                                      ),
-                                                      Container(
-                                                        child: Text("Tekan untuk informasi lebih lanjut", style: TextStyle(
-                                                            fontFamily: "Poppins",
-                                                            fontSize: 14,
-                                                            fontWeight: FontWeight.w700,
-                                                            color: Colors.white
-                                                        )),
-                                                        margin: EdgeInsets.only(top: 20),
-                                                      )
-                                                    ],
-                                                  )
-                                                ),
-                                              )
-                                            ],
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    }
-                                );
-                              }).toList(),
-                              carouselController: controller,
-                              options: CarouselOptions(
-                                  autoPlay: true,
-                                  enlargeCenterPage: true,
-                                  aspectRatio: 2.0,
-                                  onPageChanged: (index, reason) {
-                                    setState(() {
-                                      current = index;
-                                    });
-                                  }
+                                          Container(
+                                            child: Text(pengumuman[index]['nomor_surat'].toString(), style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14
+                                            )),
+                                          )
+                                        ],
+                                      ),
+                                      margin: EdgeInsets.only(left: 15),
+                                    )
+                                  ],
+                                ),
+                                margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                height: 70,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: Offset(0,3)
+                                      )
+                                    ]
+                                ),
                               ),
-                            ),
-                            margin: EdgeInsets.only(top: 15, bottom: 10)
+                            );
+                          },
                         ),
-                        Container(
-                          alignment: Alignment.center,
-                          child: TextButton(
-                            child: Text("Lihat Pengumuman Lainnya", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: HexColor("#025393")
-                            )),
-                            onPressed: (){
-                              Navigator.push(context, CupertinoPageRoute(builder: (context) => suratPengumumanKrama()));
-                            },
-                          ),
-                        )
-                      ]
-                    ) : Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                              child: Icon(
-                                  CupertinoIcons.mail_solid,
-                                  size: 50,
-                                  color: Colors.black26
-                              )
-                          ),
-                          Container(
-                              child: Text("Tidak ada Pengumuman", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black26
-                              ), textAlign: TextAlign.center),
-                              margin: EdgeInsets.only(top: 10),
-                              padding: EdgeInsets.symmetric(horizontal: 30)
-                          ),
-                          Container(
-                              child: Text("Tidak ada pengumuman untuk saat ini. Anda dapat menunggu hingga pengumuman resmi dikeluarkan oleh Prajuru Desa", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14,
-                                  color: Colors.black26
-                              ), textAlign: TextAlign.center),
-                              padding: EdgeInsets.symmetric(horizontal: 30),
-                              margin: EdgeInsets.only(top: 10)
-                          )
-                        ],
                       ),
-                      margin: EdgeInsets.only(top: 10),
-                    )
+                    ) : Container()
                   ),
                 ]
               )

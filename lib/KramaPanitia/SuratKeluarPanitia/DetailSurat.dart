@@ -695,7 +695,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                 icon: Icon(Icons.add_task_rounded),
                 color: Colors.white
             ) : Container(),
-            status == "Telah Dikonfirmasi" ? Container() : status == "Dibatalkan" ? Container() : IconButton(
+            status == "Telah Dikonfirmasi" ? Container() : status == "Dibatalkan" ? Container() : canValidate == false ? Container() : IconButton(
               onPressed: (){
                 setState(() {
                   editSuratKeluarPanitia.idSuratKeluar = detailSuratKeluarPanitia.suratKeluarId;

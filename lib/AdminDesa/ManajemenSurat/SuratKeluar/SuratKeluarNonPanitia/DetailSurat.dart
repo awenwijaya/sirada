@@ -639,7 +639,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                 icon: Icon(Icons.add_task_rounded),
                 color: HexColor("#025393")
             ) : Container(),
-            status == "Telah Dikonfirmasi" ? Container() : status == "Dibatalkan" ? Container() : IconButton(
+            status == "Telah Dikonfirmasi" ? Container() : status == "Dibatalkan" ? Container() : canValidateOtherPrajuru == false ? Container() : IconButton(
               onPressed: (){
                 setState(() {
                   setState(() {
