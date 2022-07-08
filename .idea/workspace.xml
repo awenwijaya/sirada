@@ -24,9 +24,9 @@
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/PermintaanVerifikasiSuratKeluar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/PermintaanVerifikasiSuratKeluar.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/DetailSurat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/DetailSurat.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/KramaPanitia/Dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/KramaPanitia/Dashboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/DetailSuratPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/DetailSuratPanitia.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/DetailSurat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/DetailSurat.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/PermintaanVerifikasiSuratKeluar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/PermintaanVerifikasiSuratKeluar.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -24,7 +24,7 @@ class _permintaanVerifikasiSuratKeluarPanitiaState extends State<permintaanVerif
 
   Future getListVerifikasiSurat() async {
     http.get(Uri.parse(apiURLShowListVerifikasiSurat),
-      headers: {"Content-Type" : "application/json"}
+        headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       print(response.statusCode.toString());
       if(response.statusCode == 200) {
@@ -84,10 +84,10 @@ class _permintaanVerifikasiSuratKeluarPanitiaState extends State<permintaanVerif
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: (){
-                          setState(() {
-                            detailSuratKeluarPanitia.suratKeluarId = surat[index]['surat_keluar_id'];
-                          });
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia()));
+                          // setState(() {
+                          //   detailSuratKeluarPanitia.suratKeluarId = suratId[index];
+                          // });
+                          // Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia()));
                         },
                         child: Container(
                           child: Row(
@@ -120,7 +120,7 @@ class _permintaanVerifikasiSuratKeluarPanitiaState extends State<permintaanVerif
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.55,
                                         child: Text(
-                                          surat[index]['parindikan'].toString(),
+                                            surat[index]['parindikan'].toString(),
                                           style: TextStyle(
                                             fontFamily: "Poppins",
                                             fontSize: 16,
@@ -135,7 +135,7 @@ class _permintaanVerifikasiSuratKeluarPanitiaState extends State<permintaanVerif
                                     ),
                                     Container(
                                       child: Text(
-                                        surat[index]['nomor_surat'].toString(), style: TextStyle(
+                                          surat[index]['nomor_surat'], style: TextStyle(
                                         fontFamily: "Poppins",
                                         fontSize: 14
                                       )
