@@ -36,8 +36,10 @@ class _permintaanVerifikasiSuratKeluarAdminState extends State<permintaanVerifik
           surat = data;
         });
       }else {
-        LoadingSurat = false;
-        availableSurat = false;
+        setState(() {
+          LoadingSurat = false;
+          availableSurat = false;
+        });
       }
     });
   }

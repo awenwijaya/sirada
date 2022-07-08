@@ -1507,7 +1507,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                       : historiSurat[i]['histori'].contains('ditolak')
                                       ? Icons.cancel
                                       : historiSurat[i]['histori'].contains('dibatalkan status tolak validasi')
-                                      ? Icons.cancel : Container(),
+                                      ? Icons.cancel : Icons.cancel,
                                   color: i+1 < historiSurat.length ? Colors.black54 : HexColor("377D71")
                                 ),
                                 margin: EdgeInsets.only(left: 15),
