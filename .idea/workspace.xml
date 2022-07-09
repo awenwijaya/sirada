@@ -24,7 +24,9 @@
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/compressed_assets/debug/out/assets/flutter_assets/kernel_blob.bin.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/EditSuratKeluarNonPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/EditSuratKeluarNonPanitia.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/TambahSuratKeluarNonPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/TambahSuratKeluarNonPanitia.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/EditSurat.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/EditSurat.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/TambahSuratKeluarPanitia.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

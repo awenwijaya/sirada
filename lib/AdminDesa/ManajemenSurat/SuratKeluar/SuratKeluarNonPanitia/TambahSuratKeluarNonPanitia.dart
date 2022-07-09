@@ -1311,7 +1311,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                 buttonIcon: Icon(Icons.expand_more),
                                 searchable: false,
                                 checkColor: Colors.white,
-                                items: prajuruBanjarList.map((item) => MultiSelectItem(item, "${item['nama']}")).toList(),
+                                items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
                                 listType: MultiSelectListType.LIST,
                                 onConfirm: (values) {
                                   selectedKelihanAdat = values;
@@ -1959,7 +1959,8 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
       for(var i = 0; i < pihakLainTumusan.length; i++) {
         Map<String, String> bodyTumusan = {
           "surat_keluar_id" : suratKeluarId.toString(),
-          "pihak_lain" : pihakLainTumusan[i].toString()
+          "pihak_lain" : pihakLainTumusan[i]['pihak_lain'].toString(),
+          "email_pihak_lain" : pihakLainTumusan[i]['email_pihak_lain']
         };
         var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPihakLain))
           ..fields.addAll(bodyTumusan)

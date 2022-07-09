@@ -133,6 +133,8 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
   final controllerTanggalKegiatanText = TextEditingController();
   final controllerPihakLainTetujon = TextEditingController();
   final controllerPihakLainTumusan = TextEditingController();
+  final controllerPihakLainTetujonEmail = TextEditingController();
+  final controllerPihakLainTumusanEmail = TextEditingController();
   final DateRangePickerController controllerTanggalKegiatan = DateRangePickerController();
 
   getTetujon() async {
@@ -454,10 +456,9 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
       var responseValue = response.statusCode;
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
-        this.pihakLain = [];
-        for(var i = 0; i < jsonData.length; i++) {
-          this.pihakLain.add(jsonData[i]['pihak_lain']);
-        }
+        setState(() {
+          pihakLain = jsonData;
+        });
       }
     });
   }
@@ -469,10 +470,9 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
       var responseValue = response.statusCode;
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
-        this.pihakLainTumusan = [];
-        for(var i = 0; i < jsonData.length; i++) {
-          this.pihakLainTumusan.add(jsonData[i]['pihak_lain']);
-        }
+        setState(() {
+          pihakLainTumusan = jsonData;
+        });
       }
     });
   }
@@ -1585,7 +1585,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                             searchable: true,
                             selectedColor: HexColor("#025393"),
                             checkColor: Colors.white,
-                            items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                            items: prajuruDesaList.map((item) => MultiSelectItem(item, "${item['jabatan']} - ${item['nama']}")).toList(),
                             listType: MultiSelectListType.LIST,
                             onConfirm: (values) {
                               setState(() {
@@ -1598,7 +1598,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),
                         child: MultiSelectChipDisplay(
-                          items: selectedBendesa.map((e) => MultiSelectItem(e, "Desa ${e['desadat_nama']} - ${e['nama']}")).toList(),
+                          items: selectedBendesa.map((e) => MultiSelectItem(e, "${e['jabatan']} - ${e['nama']}")).toList(),
                           onTap: (value) {
                             setState(() {
                               selectedBendesa.remove(value);
@@ -1658,38 +1658,147 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                         margin: EdgeInsets.only(top: 15, left: 20),
                       ),
                       Container(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                          child: TextField(
-                            controller: controllerPihakLainTetujon,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(50.0),
-                                    borderSide: BorderSide(color: HexColor("#025393"))
-                                ),
-                                hintText: "Nama Penerima Pihak Lain",
-                                suffixIcon: IconButton(
-                                  icon: Icon(Icons.add),
-                                  onPressed: (){
-                                    if(controllerPihakLainTetujon.text != "") {
-                                      setState(() {
-                                        pihakLain.add(controllerPihakLainTetujon.text);
-                                      });
-                                    }
-                                  },
-                                )
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Flexible(
+                              child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                                  child: TextField(
+                                    controller: controllerPihakLainTetujon,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(50.0),
+                                            borderSide: BorderSide(color: HexColor("#025393"))
+                                        ),
+                                        hintText: "Nama Pihak Lain"
+                                    ),
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    ),
+                                  )
+                              ),
                             ),
-                            style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 14
-                            ),
+                            Flexible(
+                              child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                                  child: TextField(
+                                    controller: controllerPihakLainTetujonEmail,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(50.0),
+                                            borderSide: BorderSide(color: HexColor("#025393"))
+                                        ),
+                                        hintText: "Email Pihak Lain"
+                                    ),
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14
+                                    ),
+                                  )
+                              ),
+                            )
+                          ],
+                        ),
+                        margin: EdgeInsets.only(right: 10, left: 10),
+                      ),
+                      Container(
+                        child: FlatButton(
+                          onPressed: (){
+                            if(controllerPihakLainTetujon.text != "") {
+                              if(controllerPihakLainTetujonEmail.text != "") {
+                                if(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(controllerPihakLainTetujonEmail.text)) {
+                                  var tetujonPihakLainArray = {'pihak_lain': controllerPihakLainTetujon.text, 'email_pihak_lain': controllerPihakLainTetujonEmail.text == "" ? null : controllerPihakLainTetujonEmail.text};
+                                  setState(() {
+                                    pihakLain.add(tetujonPihakLainArray);
+                                    controllerPihakLainTetujon.text = "";
+                                    controllerPihakLainTetujonEmail.text = "";
+                                  });
+                                }else {
+                                  ftoast.showToast(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(25),
+                                            color: Colors.redAccent
+                                        ),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(Icons.close),
+                                            Container(
+                                              margin: EdgeInsets.only(left: 15),
+                                              child: SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.65,
+                                                child: Text("Silahkan masukkan email yang valid", style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.white
+                                                )),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                  );
+                                }
+                              }else {
+                                var tetujonPihakLainArray = {'pihak_lain': controllerPihakLainTetujon.text, 'email_pihak_lain': controllerPihakLainTetujonEmail.text == "" ? null : controllerPihakLainTetujonEmail.text};
+                                setState(() {
+                                  pihakLain.add(tetujonPihakLainArray);
+                                  controllerPihakLainTetujon.text = "";
+                                  controllerPihakLainTetujonEmail.text = "";
+                                });
+                              }
+                            }else {
+                              ftoast.showToast(
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: Colors.redAccent
+                                    ),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.close),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 15),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.65,
+                                            child: Text("Data nama pihak lain tidak boleh kosong", style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white
+                                            )),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                              );
+                            }
+                          },
+                          child: Text("Tambah Pihak Lain", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white
+                          )),
+                          color: HexColor("025393"),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              side: BorderSide(color: HexColor("025393"), width: 2)
                           ),
                         ),
+                        margin: EdgeInsets.symmetric(horizontal: 5),
                       ),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),
                         child: MultiSelectChipDisplay(
-                          items: pihakLain.map((e) => MultiSelectItem(e, e)).toList(),
+                          items: pihakLain.map((e) => MultiSelectItem(e, "${e['pihak_lain']} (${e['email_pihak_lain'] == null ? "Tidak ada email" : e['email_pihak_lain']})")).toList(),
                           onTap: (value) {
                             setState(() {
                               pihakLain.remove(value);
@@ -1814,7 +1923,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                       searchable: true,
                       selectedColor: HexColor("#025393"),
                       checkColor: Colors.white,
-                      items: prajuruDesaList.map((item) => MultiSelectItem(item, "Desa ${item['desadat_nama']} - ${item['nama']}")).toList(),
+                      items: prajuruDesaList.map((item) => MultiSelectItem(item, "${item['jabatan']} - ${item['nama']}")).toList(),
                       listType: MultiSelectListType.LIST,
                       onConfirm: (values) {
                         setState(() {
@@ -1827,7 +1936,7 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 20),
                   child: MultiSelectChipDisplay(
-                    items: selectedBendesaTumusan.map((e) => MultiSelectItem(e, "Desa ${e['desadat_nama']} - ${e['nama']}")).toList(),
+                    items: selectedBendesaTumusan.map((e) => MultiSelectItem(e, "${e['jabatan']} - ${e['nama']}")).toList(),
                     onTap: (value) {
                       setState(() {
                         selectedBendesaTumusan.remove(value);
@@ -1887,44 +1996,153 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
                   margin: EdgeInsets.only(top: 15, left: 20),
                 ),
                 Container(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                    child: TextField(
-                      controller: controllerPihakLainTumusan,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                              borderSide: BorderSide(color: HexColor("#025393"))
-                          ),
-                          hintText: "Nama Tumusan Pihak Lain",
-                          suffixIcon: IconButton(
-                            icon: Icon(Icons.add),
-                            onPressed: (){
-                              if(controllerPihakLainTumusan.text != "") {
-                                setState(() {
-                                  pihakLainTumusan.add(controllerPihakLainTumusan.text);
-                                });
-                              }
-                            },
-                          )
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Flexible(
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                            child: TextField(
+                              controller: controllerPihakLainTumusan,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    borderSide: BorderSide(color: HexColor("#025393"))
+                                ),
+                                hintText: "Nama Pihak Lain",
+                              ),
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              ),
+                            )
+                        ),
                       ),
-                      style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14
-                      ),
-                    ),
+                      Flexible(
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                            child: TextField(
+                              controller: controllerPihakLainTumusanEmail,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                    borderSide: BorderSide(color: HexColor("#025393"))
+                                ),
+                                hintText: "Email Pihak Lain",
+                              ),
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14
+                              ),
+                            )
+                        ),
+                      )
+                    ],
                   ),
+                  margin: EdgeInsets.only(right: 10, left: 10),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  child: MultiSelectChipDisplay(
-                    items: pihakLainTumusan.map((e) => MultiSelectItem(e, e)).toList(),
-                    onTap: (value) {
-                      setState(() {
-                        pihakLainTumusan.remove(value);
-                      });
+                  child: FlatButton(
+                    onPressed: (){
+                      if(controllerPihakLainTumusan.text != "") {
+                        if(controllerPihakLainTumusanEmail.text != "") {
+                          if(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(controllerPihakLainTumusanEmail.text)) {
+                            var tumusanPihakLainArray = {'pihak_lain' : controllerPihakLainTumusan.text, 'email_pihak_lain' : controllerPihakLainTumusanEmail.text == "" ? null : controllerPihakLainTumusanEmail.text};
+                            setState(() {
+                              pihakLainTumusan.add(tumusanPihakLainArray);
+                              controllerPihakLainTumusan.text = "";
+                              controllerPihakLainTumusanEmail.text = "";
+                            });
+                          }else {
+                            ftoast.showToast(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Colors.redAccent
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.close),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.65,
+                                          child: Text("Silahkan masukkan email yang valid", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white
+                                          )),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                            );
+                          }
+                        }else {
+                          var tumusanPihakLainArray = {'pihak_lain' : controllerPihakLainTumusan.text, 'email_pihak_lain' : controllerPihakLainTumusanEmail.text == "" ? null : controllerPihakLainTumusanEmail.text};
+                          setState(() {
+                            pihakLainTumusan.add(tumusanPihakLainArray);
+                            controllerPihakLainTumusan.text = "";
+                            controllerPihakLainTumusanEmail.text = "";
+                          });
+                        }
+                      }else {
+                        ftoast.showToast(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: Colors.redAccent
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.close),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 15),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width * 0.65,
+                                      child: Text("Data nama pihak lain tidak boleh kosong", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white
+                                      )),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                        );
+                      }
                     },
+                    child: Text("Tambah Pihak Lain", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white
+                    )),
+                    color: HexColor("025393"),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        side: BorderSide(color: HexColor("025393"), width: 2)
+                    ),
                   ),
+                  margin: EdgeInsets.symmetric(horizontal: 5),
+                ),
+                Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: MultiSelectChipDisplay(
+                      items: pihakLainTumusan.map((e) => MultiSelectItem(e, "${e['pihak_lain']} (${e['email_pihak_lain'] == null ? "Tidak ada email" : e['email_pihak_lain']})")).toList(),
+                      onTap: (value) {
+                        setState(() {
+                          pihakLainTumusan.remove(value);
+                        });
+                      },
+                    )
                 ),
                 Container(
                   child: FlatButton(
@@ -2273,7 +2491,8 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
           for(var i = 0; i < pihakLain.length; i++) {
             Map<String, String> body = {
               "surat_keluar_id" : editSuratKeluarPanitia.idSuratKeluar.toString(),
-              "pihak_lain" : pihakLain[i].toString()
+              "pihak_lain" : pihakLain[i]['pihak_lain'].toString(),
+              "email_pihak_lain" : pihakLain[i]['email_pihak_lain']
             };
             var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPihakLain))
               ..fields.addAll(body)
@@ -2290,7 +2509,8 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
         for(var i = 0; i < pihakLainTumusan.length; i++) {
           Map<String, String> bodyTumusan = {
             "surat_keluar_id" : editSuratKeluarPanitia.idSuratKeluar.toString(),
-            "pihak_lain" : pihakLainTumusan[i].toString()
+            "pihak_lain" : pihakLainTumusan[i]['pihak_lain'].toString(),
+            "email_pihak_lain" : pihakLainTumusan[i]['email_pihak_lain']
           };
           var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPihakLain))
             ..fields.addAll(bodyTumusan)
@@ -2315,32 +2535,32 @@ class _editSuratKeluarPanitiaState extends State<editSuratKeluarPanitia> {
         ..headers.addAll(headers);
     await request_delete.send().then((response) async {
       print("delete tetujon panitia status code: ${response.statusCode.toString()}");
-      if(selectedPanitia.isNotEmpty) {
-        if(isSendToAllAnggota == false) {
+      if(isSendToAllAnggota == false) {
+        if(selectedPanitia.isNotEmpty) {
           for(var i = 0; i < selectedPanitia.length; i++) {
             Map<String, String> body = {
               "surat_keluar_id" : editSuratKeluarPanitia.idSuratKeluar.toString(),
               "panitia_desa_adat_id" : selectedPanitia[i]['panitia_desa_adat_id'].toString()
             };
             var request = http.MultipartRequest("POST", Uri.parse(apiURLUpAnggotaPanitia))
-                ..fields.addAll(body)
-                ..headers.addAll(headers);
+              ..fields.addAll(body)
+              ..headers.addAll(headers);
             var response = await request.send();
             print("upload panitia status code: ${response.statusCode.toString()}");
           }
         }else {
-          Map<String, String> body = {
-            "surat_keluar_id" : editSuratKeluarPanitia.idSuratKeluar.toString(),
-            "kegiatan_panitia_id" : selectedIdPanitiaAcara.toString()
-          };
-          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpAllAnggotaPanitia))
-            ..fields.addAll(body)
-            ..headers.addAll(headers);
-          var response = await request.send();
-          print("upload all panitia status code: ${response.statusCode.toString()}");
+          print("surat tidak dikirim ke panitia");
         }
-      }else{
-        print("surat tidak dikirim ke panitia");
+      }else {
+        Map<String, String> body = {
+          "surat_keluar_id" : editSuratKeluarPanitia.idSuratKeluar.toString(),
+          "kegiatan_panitia_id" : selectedIdPanitiaAcara.toString()
+        };
+        var request = http.MultipartRequest("POST", Uri.parse(apiURLUpAllAnggotaPanitia))
+          ..fields.addAll(body)
+          ..headers.addAll(headers);
+        var response = await request.send();
+        print("upload all panitia status code: ${response.statusCode.toString()}");
       }
     });
   }

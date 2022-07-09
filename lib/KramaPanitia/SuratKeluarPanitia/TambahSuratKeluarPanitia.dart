@@ -2227,7 +2227,8 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
       for(var i = 0; i < pihakLainTumusan.length; i++) {
         Map<String, String> bodyTumusan = {
           "surat_keluar_id" : suratKeluarId.toString(),
-          "pihak_lain" : pihakLainTumusan[i].toString()
+          "pihak_lain" : pihakLainTumusan[i]['pihak_lain'].toString(),
+          "email_pihak_lain" : pihakLainTumusan[i]['email_pihak_lain'].toString()
         };
         var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPihakLain))
           ..fields.addAll(bodyTumusan)
