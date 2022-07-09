@@ -123,7 +123,7 @@ class _agendaAcaraPanitiaState extends State<agendaAcaraPanitia> {
                   )
                 ],
               ),
-              margin: EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 15),
+              margin: EdgeInsets.only(top: 10, left: 15, right: 15, bottom: 10),
             ),
             Container(
               child: Expanded(
@@ -142,7 +142,7 @@ class _agendaAcaraPanitiaState extends State<agendaAcaraPanitia> {
                     maxDay: DateTime(2100),
                     initialDay: DateTime.now(),
                     heightPerMinute: 1,
-                    eventArranger: SideEventArranger(),
+                    eventArranger: MergeEventArranger(),
                   ) : agendaAcaraPanitia.selectedView == "Minggu" ? WeekView(
                     showLiveTimeLineInAllDays: true,
                     width: 400,
