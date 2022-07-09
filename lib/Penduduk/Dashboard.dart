@@ -40,11 +40,16 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
   int current = 0;
   var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
   var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
-  var apiURLShowAllPengumuman = "https://siradaskripsi.my.id/api/krama/view/surat/all/${loginPage.desaId}";
+  var apiURLShowAllPengumuman = "https://siradaskripsi.my.id/api/krama/view/surat/all";
 
   Future getAllPengumuman() async {
-    http.get(Uri.parse(apiURLShowAllPengumuman),
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "user_id" : loginPage.userId.toString()
+    });
+    http.post(Uri.parse(apiURLShowAllPengumuman),
       headers: {"Content-Type" : "application/json"},
+      body: body
     ).then((http.Response response) {
       var responseValue = response.statusCode;
       if(responseValue == 200) {
@@ -348,12 +353,16 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                                   setState(() {
                                     detailSuratPrajuruKrama.suratKeluarId = pengumuman[index]['surat_keluar_id'];
                                   });
-                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratPrajuruKrama()));
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratPrajuruKrama())).then((value) {
+                                    getAllPengumuman();
+                                  });
                                 }else {
                                   setState(() {
                                     detailSuratKeluarPanitiaKrama.suratKeluarId = pengumuman[index]['surat_keluar_id'];
                                   });
-                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaKrama()));
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaKrama())).then((value) {
+                                    getAllPengumuman();
+                                  });
                                 }
                               },
                               child: Container(
@@ -380,7 +389,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                                                     fontFamily: "Poppins",
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w700,
-                                                    color: HexColor("025393")
+                                                    color: pengumuman[index]['status'] == "Belum Terbaca" ? HexColor("025393") : Colors.black26
                                                 ),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
@@ -391,7 +400,8 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                                           Container(
                                             child: Text(pengumuman[index]['nomor_surat'].toString(), style: TextStyle(
                                                 fontFamily: "Poppins",
-                                                fontSize: 14
+                                                fontSize: 14,
+                                              color: pengumuman[index]['status'] == "Belum Terbaca" ? Colors.black : Colors.black26
                                             )),
                                           )
                                         ],

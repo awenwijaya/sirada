@@ -33,6 +33,7 @@ class _agendaAcaraPanitiaState extends State<agendaAcaraPanitia> {
             endDate: data['waktu_kegiatan_mulai'] == data['waktu_kegiatan_selesai'] ? DateTime.parse("${data['tanggal_kegiatan_berakhir']}T${data['waktu_kegiatan_selesai']}").add(Duration(hours: 1)) : DateTime.parse("${data['tanggal_kegiatan_berakhir']}T${data['waktu_kegiatan_selesai']}"),
             event: data['parindikan'],
             title: data['tim_kegiatan'] == null ? "${data['parindikan']}" : "${data['parindikan']} (${data['tim_kegiatan']})",
+              description: "Busana: ${data['busana'] == null ? "-" : data['busana']}\nTempat Kegiatan: ${data['tempat_kegiatan'] == null ? "-" : data['tempat_kegiatan']}"
           );
           eventController.add(event);
         }
@@ -132,7 +133,7 @@ class _agendaAcaraPanitiaState extends State<agendaAcaraPanitia> {
                     minMonth: DateTime(1900),
                     maxMonth: DateTime(2100),
                     initialMonth: DateTime.now(),
-                    cellAspectRatio: 1,
+                    cellAspectRatio: 4,
                     startDay: WeekDays.sunday,
                   ) : agendaAcaraPanitia.selectedView == "Hari" ? DayView(
                     showVerticalLine: true,

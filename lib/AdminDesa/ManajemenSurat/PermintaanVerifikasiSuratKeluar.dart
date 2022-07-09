@@ -87,14 +87,14 @@ class _permintaanVerifikasiSuratKeluarAdminState extends State<permintaanVerifik
                         onTap: (){
                           if(surat[index]['tim_kegiatan'] == null) {
                             setState(() {
-                              detailSuratKeluarPanitiaAdmin.suratKeluarId = surat[index]['surat_keluar_id'];
-                            });
-                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaAdmin()));
-                          }else {
-                            setState(() {
                               detailSuratKeluarNonPanitia.suratKeluarId = surat[index]['surat_keluar_id'];
                             });
                             Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                          }else {
+                            setState(() {
+                              detailSuratKeluarPanitiaAdmin.suratKeluarId = surat[index]['surat_keluar_id'];
+                            });
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaAdmin()));
                           }
                         },
                         child: Container(

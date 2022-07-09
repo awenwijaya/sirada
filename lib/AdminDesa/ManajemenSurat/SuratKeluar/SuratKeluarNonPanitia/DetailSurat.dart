@@ -107,13 +107,15 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
       headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       var responseValue = response.statusCode;
+      print("penyarikan validasi status code: ${responseValue.toString()}");
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
         setState(() {
           penyarikanValidasiStatus = jsonData['status'];
         });
+        print(penyarikanValidasiStatus);
         if(loginPage.role == "Bendesa") {
-          if(penyarikanValidasiStatus == null || penyarikanValidasiStatus == "Ditolak" || penyarikanValidasiStatus == "Belum Divalidasi") {
+          if(penyarikanValidasiStatus == "Ditolak" || penyarikanValidasiStatus == "Belum Divalidasi") {
             setState(() {
               canValidate = false;
               canValidateOtherPrajuru = true;
@@ -880,6 +882,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Container(
+                              alignment: Alignment.topLeft,
                                 child: namaBendesa == null ? Container() : Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -892,7 +895,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                       ), textAlign: TextAlign.center),
                                     ),
                                     Container(
-                                      child: qrCodeBendesa == "Belum tervalidasi" ? Container() : Container(
+                                      child: qrCodeBendesa == "Belum tervalidasi" ? Container() : qrCodeBendesa == null ? Container() : Container(
                                         child: SvgPicture.network(
                                           "https://storage.siradaskripsi.my.id/file/validasi/${qrCodeBendesa}",
                                           height: 50,
@@ -910,12 +913,13 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                     )
                                   ],
                                 ),
-                                margin: EdgeInsets.only(top: 10, left: 10)
+                                margin: EdgeInsets.only(left: 10, top: 10)
                             ),
                             Container(
                                 alignment: Alignment.topRight,
                                 child: namaPenyarikan == null ? Container() : Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Container(
                                         child: Text("Penyarikan", style: TextStyle(
@@ -1397,6 +1401,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                                           getHistori();
                                                           getLampiran();
                                                           getValidasiStatus();
+                                                          getQRCode();
                                                           Navigator.of(context).pop(true);
                                                         }
                                                       });

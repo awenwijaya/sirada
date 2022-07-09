@@ -1530,7 +1530,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                                     ),
                                   )
                               );
-                            }else if(selectedKelihanAdat.isEmpty && selectedBendesa.isEmpty && pihakLain.isEmpty) {
+                            }else if(selectedKelihanAdat.isEmpty && selectedBendesa.isEmpty && pihakLain.isEmpty && isSendToKrama == false) {
                               ftoast.showToast(
                                   child: Container(
                                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),

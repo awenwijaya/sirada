@@ -301,6 +301,7 @@ class _agendaSuratKeluarAdminState extends State<agendaSuratKeluarAdmin> {
             endDate: data['waktu_kegiatan_mulai'] == data['waktu_kegiatan_selesai'] ? DateTime.parse("${data['tanggal_kegiatan_berakhir']}T${data['waktu_kegiatan_selesai']}").add(Duration(hours: 1)) : DateTime.parse("${data['tanggal_kegiatan_berakhir']}T${data['waktu_kegiatan_selesai']}"),
             event: data['parindikan'],
             title: data['tim_kegiatan'] == null ? "${data['parindikan']}" : "${data['parindikan']} (${data['tim_kegiatan']})",
+              description: "Busana: ${data['busana'] == null ? "-" : data['busana']}\nTempat Kegiatan: ${data['tempat_kegiatan'] == null ? "-" : data['tempat_kegiatan']}"
           );
           eventControllerSuratKeluar.add(event);
         }

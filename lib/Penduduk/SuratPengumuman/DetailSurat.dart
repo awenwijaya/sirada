@@ -57,6 +57,23 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
   var apiURLGetTumusanPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/banjar/${detailSuratPrajuruKrama.suratKeluarId}";
   var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${detailSuratPrajuruKrama.suratKeluarId}";
   var apiURLGetQrCode = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/validasi/qrcode/${detailSuratPrajuruKrama.suratKeluarId}";
+  var apiURLSetRead = "https://siradaskripsi.my.id/api/krama/view/surat/set-read";
+
+  setReadSurat() async {
+    var body = jsonEncode({
+      "surat_keluar_id" : detailSuratPrajuruKrama.suratKeluarId.toString(),
+      "user_id" : loginPage.userId
+    });
+    http.post(Uri.parse(apiURLSetRead),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        print("set status read krama telah berhasil");
+      }
+    });
+  }
 
   getQRCode() async {
     http.get(Uri.parse(apiURLGetQrCode),
@@ -229,6 +246,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
     getTumusan();
     getLampiran();
     getQRCode();
+    setReadSurat();
   }
 
   @override
