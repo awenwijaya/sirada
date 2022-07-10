@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/DetailSurat.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/DetailSuratPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/TambahSuratKeluarNonPanitia.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:http/http.dart' as http;
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class suratKeluarNonPanitiaAdmin extends StatefulWidget {
   const suratKeluarNonPanitiaAdmin({Key key}) : super(key: key);
@@ -42,11 +44,10 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
   bool isFilterSedangDiproses = false;
   bool isFilterTelahDikonfirmasi = false;
   bool isFilterDibatalkan = false;
-  bool LoadingFilterMenungguRespons = true;
-  bool LoadingFilterSedangDiproses = true;
-  bool LoadingFilterTelahDikonfirmasi = true;
-  bool LoadingFilterDibatalkan = true;
   bool LoadingKomponenFilterMenungguRespons = true;
+  bool LoadingKomponenFilterSedangDiproses = true;
+  bool LoadingKomponenFilterDibatalkan = true;
+  bool LoadingKomponenFilterTelahDikonfirmasi = true;
 
   final controllerSearchMenungguRespons = TextEditingController();
   final controllerSearchSedangDiproses = TextEditingController();
@@ -58,10 +59,6 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
   List SedangDiproses = [];
   List TelahDikonfirmasi = [];
   List Dibatalkan = [];
-  List tahunTerbitFilterMenungguRespons = List();
-  List tahunTerbitFilterSedangDiproses = List();
-  List tahunTerbitFilterTelahDikonfirmasi = List();
-  List tahunTerbitFilterDibatalkan = List();
   List kodeSuratFilterMenungguRespons = List();
   List kodeSuratFilterSedangDiproses = List();
   List kodeSuratFilterTelahDikonfirmasi = List();
@@ -76,62 +73,46 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
   var selectedKodeSuratFilterDibatalkan;
   var selectedKodeSuratFilterTelahDikonfirmasi;
 
-  Future showFilterTahunTerbitMenungguRespons() async {
-    var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId.toString(),
-      "status" : "Menunggu Respon"
-    });
-    http.post(Uri.parse(apiURLShowFilterTahunTerbit),
-      headers: {"Content-Type" : "application/json"},
-      body: body
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          tahunTerbitFilterMenungguRespons = jsonData;
-        });
-      }
-    });
-  }
+  //filter tanggal keluar menunggu respons
+  var selectedFilterTanggalMenungguRespons;
+  String selectedRangeAwalMenungguRespons;
+  String selectedRangeAwalValueMenungguRespons;
+  String selectedRangeAkhirMenungguRespons;
+  String selectedRangeAkhirValueMenungguRespons;
+  DateTime rangeAwalMenungguRespons;
+  DateTime rangeAkhirMenungguRespons;
 
-  Future showFilterKodeSuratMenungguRespons() async {
-    var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId.toString(),
-      "status" : "Menunggu Respon"
-    });
-    http.post(Uri.parse(apiURLShowFilterKodeSurat),
-      headers: {"Content-Type" : "application/json"},
-      body: body
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          kodeSuratFilterMenungguRespons = jsonData;
-        });
-      }
-    });
-  }
+  //filter tanggal keluar sedang diproses
+  var selectedFilterTanggalSedangDiproses;
+  String selectedRangeAwalSedangDiproses;
+  String selectedRangeAwalValueSedangDiproses;
+  String selectedRangeAkhirSedangDiproses;
+  String selectedRangeAkhirValueSedangDiproses;
+  DateTime rangeAwalSedangDiproses;
+  DateTime rangeAkhirSedangDiproses;
 
-  Future showFilterTahunTerbitSedangDiproses() async {
-    var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId.toString(),
-      "status" : "Sedang Diproses"
-    });
-    http.post(Uri.parse(apiURLShowFilterTahunTerbit),
-        headers: {"Content-Type" : "application/json"},
-        body: body
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          tahunTerbitFilterSedangDiproses = jsonData;
-        });
-      }
-    });
-  }
+  //filter tanggal keluar telah dikonfirmasi
+  var selectedFilterTanggalTelahDikonfirmasi;
+  String selectedRangeAwalTelahDikonfirmasi;
+  String selectedRangeAwalValueTelahDikonfirmasi;
+  String selectedRangeAkhirTelahDikonfirmasi;
+  String selectedRangeAkhirValueTelahDikonfirmasi;
+  DateTime rangeAwalTelahDikonfirmasi;
+  DateTime rangeAkhirTelahDikonfirmasi;
+
+  //filter tanggal keluar dibatalkan
+  var selectedFilterTanggalDibatalkan;
+  String selectedRangeAwalDibatalkan;
+  String selectedRangeAwalValueDibatalkan;
+  String selectedRangeAkhirDibatalkan;
+  String selectedRangeAkhirValueDibatalkan;
+  DateTime rangeAwalDibatalkan;
+  DateTime rangeAkhirDibatalkan;
+
+  final DateRangePickerController controllerFilterTanggalMenungguRespon = DateRangePickerController();
+  final DateRangePickerController controllerFilterTanggalSedangDiproses = DateRangePickerController();
+  final DateRangePickerController controllerFilterTanggalDibatalkan = DateRangePickerController();
+  final DateRangePickerController controllerFilterTanggalTelahDikonfirmasi = DateRangePickerController();
 
   Future showFilterKodeSuratSedangDiproses() async {
     var body = jsonEncode({
@@ -190,188 +171,6 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
     });
   }
 
-  Future showFilterTahunTerbitDibatalkan() async {
-    var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId.toString(),
-      "status" : "Dibatalkan"
-    });
-    http.post(Uri.parse(apiURLShowFilterTahunTerbit),
-        headers: {"Content-Type" : "application/json"},
-        body: body
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          tahunTerbitFilterDibatalkan = jsonData;
-        });
-      }
-    });
-  }
-
-  Future showFilterTahunTerbitTelahDikonfirmasi() async {
-    var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId.toString(),
-      "status" : "Telah Dikonfirmasi"
-    });
-    http.post(Uri.parse(apiURLShowFilterTahunTerbit),
-        headers: {"Content-Type" : "application/json"},
-        body: body
-    ).then((http.Response response) {
-      var responseValue = response.statusCode;
-      if(responseValue == 200) {
-        var jsonData = json.decode(response.body);
-        setState(() {
-          tahunTerbitFilterTelahDikonfirmasi = jsonData;
-        });
-      }
-    });
-  }
-
-  Future showFilterResultMenungguRespons() async {
-    var body = jsonEncode({
-      "search_query" : controllerSearchMenungguRespons.text == "" ? null : controllerSearchMenungguRespons.text,
-      "kode_surat_filter" : selectedKodeSuratFilterMenungguRespons == null ? null : selectedKodeSuratFilterMenungguRespons,
-      "tahun_terbit_filter" : selectedTahunTerbitFilterMenungguRespons == null ? null : selectedTahunTerbitFilterMenungguRespons,
-      "status" : "Menunggu Respon"
-    });
-    http.post(Uri.parse(apiURLShowFilterResult),
-      headers: {"Content-Type" : "application/json"},
-      body: body
-    ).then((http.Response response) {
-      if(response.statusCode == 200) {
-        var data = json.decode(response.body);
-        setState(() {
-          LoadingMenungguRespons = false;
-          availableMenungguRespons = true;
-          MenungguRespons = data;
-        });
-      }else {
-        LoadingMenungguRespons = false;
-        availableMenungguRespons = false;
-      }
-    });
-  }
-
-  Future refreshListSearchMenungguRespons() async {
-    setState(() {
-      LoadingMenungguRespons = true;
-      isSearchMenungguRespons = true;
-    });
-    var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId.toString(),
-      "search_query" : controllerSearchMenungguRespons.text,
-      "status" : "Menunggu Respon"
-    });
-    http.post(Uri.parse(apiURLSearchSurat),
-      headers: {"Content-Type" : "application/json"},
-      body: body
-    ).then((http.Response response) async {
-      if(response.statusCode == 200) {
-        var data = json.decode(response.body);
-        setState(() {
-          LoadingMenungguRespons = false;
-          availableMenungguRespons = true;
-          MenungguRespons = data;
-        });
-      }else {
-        setState(() {
-          LoadingMenungguRespons = false;
-          availableMenungguRespons = false;
-        });
-      }
-    });
-  }
-
-  Future refreshListSearchSedangDiproses() async {
-    setState(() {
-      LoadingSedangDiproses = true;
-      isSearchSedangDiproses = true;
-    });
-    var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId.toString(),
-      "search_query" : controllerSearchSedangDiproses.text,
-      "status" : "Sedang Diproses"
-    });
-    http.post(Uri.parse(apiURLSearchSurat),
-        headers: {"Content-Type" : "application/json"},
-        body: body
-    ).then((http.Response response) async {
-      if(response.statusCode == 200) {
-        var data = json.decode(response.body);
-        setState(() {
-          LoadingSedangDiproses = false;
-          availableSedangDiproses = true;
-          SedangDiproses = data;
-        });
-      }else {
-        setState(() {
-          LoadingSedangDiproses = false;
-          availableSedangDiproses = false;
-        });
-      }
-    });
-  }
-
-  Future refreshListSearchTelahDikonfirmasi() async {
-    setState(() {
-      LoadingTelahDikonfirmasi = true;
-      isSearchTelahDikonfirmasi = true;
-    });
-    var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId.toString(),
-      "search_query" : controllerSearchTelahDikonfirmasi.text,
-      "status" : "Telah Dikonfirmasi"
-    });
-    http.post(Uri.parse(apiURLSearchSurat),
-        headers: {"Content-Type" : "application/json"},
-        body: body
-    ).then((http.Response response) async {
-      if(response.statusCode == 200) {
-        var data = json.decode(response.body);
-        setState(() {
-          LoadingTelahDikonfirmasi = false;
-          availableTelahDikonfirmasi = true;
-          TelahDikonfirmasi = data;
-        });
-      }else {
-        setState(() {
-          LoadingTelahDikonfirmasi = false;
-          availableTelahDikonfirmasi = false;
-        });
-      }
-    });
-  }
-
-  Future refreshListSearchDibatalkan() async {
-    setState(() {
-      LoadingDibatalkan = true;
-      isSearchDibatalkan = true;
-    });
-    var body = jsonEncode({
-      "desa_adat_id" : loginPage.desaId.toString(),
-      "search_query" : controllerSearchDibatalkan.text,
-      "status" : "Dibatalkan"
-    });
-    http.post(Uri.parse(apiURLSearchSurat),
-        headers: {"Content-Type" : "application/json"},
-        body: body
-    ).then((http.Response response) async {
-      if(response.statusCode == 200) {
-        var data = json.decode(response.body);
-        setState(() {
-          LoadingDibatalkan = false;
-          availableDibatalkan = true;
-          Dibatalkan = data;
-        });
-      }else {
-        setState(() {
-          LoadingDibatalkan = false;
-          availableDibatalkan = false;
-        });
-      }
-    });
-  }
 
   Future refreshListMenungguRespons() async {
     var body = jsonEncode({
@@ -478,29 +277,211 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
         body: body
     ).then((http.Response response) {
       var responseValue = response.statusCode;
+      print("get filter komponen kode surat: ${responseValue.toString()}");
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
         setState(() {
           kodeSuratFilterMenungguRespons = jsonData;
+          LoadingKomponenFilterMenungguRespons = false;
         });
       }
     });
-    http.post(Uri.parse(apiURLShowFilterTahunTerbit),
+  }
+
+  Future getFilterKomponenSedangDiproses() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Sedang Diproses"
+    });
+    http.post(Uri.parse(apiURLShowFilterKodeSurat),
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) {
       var responseValue = response.statusCode;
+      print("get filter komponen kode surat: ${responseValue.toString()}");
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
         setState(() {
-          tahunTerbitFilterMenungguRespons = jsonData;
+          kodeSuratFilterSedangDiproses = jsonData;
+          LoadingKomponenFilterSedangDiproses = false;
         });
       }
     });
-    setState(() {
-      LoadingKomponenFilterMenungguRespons = false;
+  }
+
+  Future getFilterKomponenTelahDikonfirmasi() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Telah Dikonfirmasi"
+    });
+    http.post(Uri.parse(apiURLShowFilterKodeSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      print("get filter komponen kode surat: ${responseValue.toString()}");
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          kodeSuratFilterTelahDikonfirmasi = jsonData;
+          LoadingKomponenFilterTelahDikonfirmasi = false;
+        });
+      }
     });
   }
+
+  Future getFilterKomponenDibatalkan() async {
+    var body = jsonEncode({
+      "desa_adat_id" : loginPage.desaId.toString(),
+      "status" : "Dibatalkan"
+    });
+    http.post(Uri.parse(apiURLShowFilterKodeSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      print("get filter komponen kode surat: ${responseValue.toString()}");
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          kodeSuratFilterDibatalkan = jsonData;
+          LoadingKomponenFilterDibatalkan = false;
+        });
+      }
+    });
+  }
+
+
+  Future getFilterResultMenungguRespons() async {
+    setState(() {
+      LoadingMenungguRespons = true;
+      isFilterMenungguRespons = true;
+    });
+    var body = jsonEncode({
+      "tanggal_awal" : selectedRangeAwalValueMenungguRespons == null ? null : selectedRangeAwalValueMenungguRespons,
+      "tanggal_akhir" : selectedRangeAkhirValueMenungguRespons == null ? selectedRangeAwalValueMenungguRespons == null ? null : selectedRangeAwalValueMenungguRespons : selectedRangeAkhirValueMenungguRespons,
+      "desa_adat_id" : loginPage.desaId,
+      "search_query" : controllerSearchMenungguRespons.text == "" ? null : controllerSearchMenungguRespons.text,
+      "status" : "Menunggu Respon",
+      "kode_surat_filter" : selectedKodeSuratFilterMenungguRespons == null ? null : selectedKodeSuratFilterMenungguRespons
+    });
+    http.post(Uri.parse(apiURLShowFilterResult),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          LoadingMenungguRespons = false;
+          availableMenungguRespons = true;
+          MenungguRespons = data;
+        });
+      }else {
+        LoadingMenungguRespons = false;
+        availableMenungguRespons = false;
+      }
+    });
+  }
+
+  Future getFilterResultSedangDiproses() async {
+    setState(() {
+      LoadingSedangDiproses = true;
+      isFilterSedangDiproses = true;
+    });
+    var body = jsonEncode({
+      "tanggal_awal" : selectedRangeAwalValueSedangDiproses == null ? null : selectedRangeAwalValueSedangDiproses,
+      "tanggal_akhir" : selectedRangeAkhirValueSedangDiproses == null ? selectedRangeAwalValueSedangDiproses == null ? null : selectedRangeAwalValueSedangDiproses : selectedRangeAkhirValueSedangDiproses,
+      "desa_adat_id" : loginPage.desaId,
+      "search_query" : controllerSearchSedangDiproses.text == "" ? null : controllerSearchSedangDiproses.text,
+      "status" : "Sedang Diproses",
+      "kode_surat_filter" : selectedKodeSuratFilterSedangDiproses == null ? null : selectedKodeSuratFilterSedangDiproses
+    });
+    http.post(Uri.parse(apiURLShowFilterResult),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          LoadingSedangDiproses = false;
+          availableSedangDiproses = true;
+          SedangDiproses = data;
+        });
+      }else {
+        setState(() {
+          LoadingSedangDiproses = false;
+          availableSedangDiproses = false;
+        });
+      }
+    });
+  }
+
+  Future getFilterResultTelahDikonfirmasi() async {
+    setState(() {
+      LoadingTelahDikonfirmasi = true;
+      isFilterTelahDikonfirmasi = true;
+    });
+    var body = jsonEncode({
+      "tanggal_awal" : selectedRangeAwalValueTelahDikonfirmasi == null ? null : selectedRangeAwalValueTelahDikonfirmasi,
+      "tanggal_akhir" : selectedRangeAkhirValueTelahDikonfirmasi == null ? selectedRangeAwalValueTelahDikonfirmasi == null ? null : selectedRangeAwalValueTelahDikonfirmasi : selectedRangeAkhirValueTelahDikonfirmasi,
+      "desa_adat_id" : loginPage.desaId,
+      "search_query" : controllerSearchTelahDikonfirmasi.text == "" ? null : controllerSearchTelahDikonfirmasi.text,
+      "status" : "Telah Dikonfirmasi",
+      "kode_surat_filter" : selectedKodeSuratFilterTelahDikonfirmasi == null ? null : selectedKodeSuratFilterTelahDikonfirmasi
+    });
+    http.post(Uri.parse(apiURLShowFilterResult),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          LoadingTelahDikonfirmasi = false;
+          availableTelahDikonfirmasi = true;
+          TelahDikonfirmasi = data;
+        });
+      }else {
+        setState(() {
+          LoadingTelahDikonfirmasi = false;
+          availableTelahDikonfirmasi = false;
+        });
+      }
+    });
+  }
+
+  Future getFilterResultDibatalkan() async {
+    setState(() {
+      LoadingDibatalkan = true;
+      isFilterDibatalkan = true;
+    });
+    var body = jsonEncode({
+      "tanggal_awal" : selectedRangeAwalValueDibatalkan == null ? null : selectedRangeAwalValueDibatalkan,
+      "tanggal_akhir" : selectedRangeAkhirValueDibatalkan == null ? selectedRangeAwalValueDibatalkan == null ? null : selectedRangeAwalValueDibatalkan : selectedRangeAkhirValueDibatalkan,
+      "desa_adat_id" : loginPage.desaId,
+      "search_query" : controllerSearchDibatalkan.text == "" ? null : controllerSearchDibatalkan.text,
+      "status" : "Dibatalkan",
+      "kode_surat_filter" : selectedKodeSuratFilterDibatalkan == null ? null : selectedKodeSuratFilterDibatalkan
+    });
+    http.post(Uri.parse(apiURLShowFilterResult),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          LoadingDibatalkan = false;
+          availableDibatalkan = true;
+          Dibatalkan = data;
+        });
+      }else {
+        setState(() {
+          LoadingDibatalkan = false;
+          availableDibatalkan = false;
+        });
+      }
+    });
+  }
+
 
   @override
   void initState() {
@@ -511,6 +492,9 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
     refreshListSedangDiproses();
     refreshListTelahDikonfirmasi();
     getFilterKomponenMenungguRespons();
+    getFilterKomponenSedangDiproses();
+    getFilterKomponenTelahDikonfirmasi();
+    getFilterKomponenDibatalkan();
   }
 
   @override
@@ -641,7 +625,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                       setState(() {
                                         isFilterMenungguRespons = true;
                                       });
-                                      showFilterResultMenungguRespons();
+                                      getFilterResultMenungguRespons();
                                     }
                                   },
                                 )
@@ -651,13 +635,80 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                 fontSize: 14
                             ),
                           ),
-                          margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
+                          margin: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
                         ),
                         Container(
-                          child: LoadingFilterMenungguRespons ? ListTileShimmer() : Row(
+                          child: LoadingKomponenFilterMenungguRespons ? ListTileShimmer() : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
+                              Flexible(
+                                child: GestureDetector(
+                                  onTap: (){
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                              title: Text("Pilih Tanggal", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("025393")
+                                              )),
+                                              content: Container(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      height: 250,
+                                                      width: 250,
+                                                      child: SfDateRangePicker(
+                                                        controller: controllerFilterTanggalMenungguRespon,
+                                                        selectionMode: DateRangePickerSelectionMode.range,
+                                                        onSelectionChanged: selectionChangedMenungguRespons,
+                                                        allowViewNavigation: true,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text("OK", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontWeight: FontWeight.w700,
+                                                      color: HexColor("025393")
+                                                  )),
+                                                  onPressed: (){
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                )
+                                              ]
+                                          );
+                                        }
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(width: 1, color: Colors.black38)
+                                    ),
+                                    child: Center(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Text(selectedFilterTanggalMenungguRespons == null ? "Semua Tanggal Keluar" : selectedFilterTanggalMenungguRespons, style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          color: selectedFilterTanggalMenungguRespons == null ? Colors.black54 : Colors.black
+                                        ), maxLines: 1, softWrap: false, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                               Flexible(
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -699,62 +750,57 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                       setState(() {
                                         selectedKodeSuratFilterMenungguRespons = value;
                                       });
-                                      showFilterResultMenungguRespons();
+                                      getFilterResultMenungguRespons();
                                     },
                                   ),
                                   margin: EdgeInsets.symmetric(horizontal: 5),
                                 ),
                               ),
-                              Flexible(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    border: Border.all(width: 1, color: Colors.black38)
-                                  ),
-                                  child: DropdownButton(
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedTahunTerbitFilterMenungguRespons = value;
-                                      });
-                                      showFilterResultMenungguRespons();
-                                    },
-                                    value: selectedTahunTerbitFilterMenungguRespons,
-                                    underline: Container(),
-                                    hint: Center(
-                                      child: Text("Semua Tahun Terbit", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                      )),
-                                    ),
-                                    isExpanded: true,
-                                    items: tahunTerbitFilterMenungguRespons.map((e) {
-                                      return DropdownMenuItem(
-                                        value: e['tahun_terbit'],
-                                        child: Text(e['tahun_terbit'], style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14
-                                        )),
-                                      );
-                                    }).toList(),
-                                    selectedItemBuilder: (BuildContext context) => tahunTerbitFilterMenungguRespons.map((e) => Center(
-                                      child: Text(e['tahun_terbit'], style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                      )),
-                                    )).toList(),
-                                  ),
-                                  margin: EdgeInsets.symmetric(horizontal: 5),
-                                ),
-                              )
                             ],
                           ),
                           margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
                         ),
                         Container(
+                          child: Column(
+                            children: <Widget>[
+                              if(isFilterMenungguRespons == true) Container(
+                                child: FlatButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      isFilterMenungguRespons = false;
+                                      LoadingMenungguRespons = true;
+                                      selectedRangeAwalValueMenungguRespons = null;
+                                      selectedRangeAwalMenungguRespons = null;
+                                      selectedRangeAkhirMenungguRespons = null;
+                                      selectedRangeAkhirValueMenungguRespons = null;
+                                      selectedKodeSuratFilterMenungguRespons = null;
+                                      controllerSearchMenungguRespons.text = "";
+                                      selectedFilterTanggalMenungguRespons = null;
+                                    });
+                                    refreshListMenungguRespons();
+                                  },
+                                  child: Text("Hapus Filter", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white
+                                  )),
+                                  color: HexColor("025393"),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                    side: BorderSide(color: HexColor("025393"), width: 2)
+                                  ),
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
                           child: LoadingMenungguRespons ? ListTileShimmer() : availableMenungguRespons ? Expanded(
                               flex: 1,
                               child: RefreshIndicator(
-                                onRefresh: isSearchMenungguRespons ? refreshListSearchMenungguRespons : refreshListMenungguRespons,
+                                onRefresh: isFilterMenungguRespons ? getFilterResultMenungguRespons : refreshListMenungguRespons,
                                 child: ListView.builder(
                                   itemCount: MenungguRespons.length,
                                   shrinkWrap: true,
@@ -879,24 +925,14 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                     borderSide: BorderSide(color: HexColor("#025393"))
                                 ),
                                 hintText: "Cari surat keluar...",
-                                suffixIcon: isSearchSedangDiproses ? IconButton(
-                                  icon: Icon(Icons.close),
-                                  onPressed: (){
-                                    setState(() {
-                                      LoadingSedangDiproses = true;
-                                      controllerSearchSedangDiproses.text = "";
-                                      isSearchSedangDiproses = false;
-                                      refreshListSedangDiproses();
-                                    });
-                                  },
-                                ) : IconButton(
+                                suffixIcon: IconButton(
                                   icon: Icon(Icons.search),
                                   onPressed: (){
                                     if(controllerSearchSedangDiproses.text != "") {
                                       setState(() {
-                                        isSearchSedangDiproses = true;
+                                        isFilterSedangDiproses = true;
                                       });
-                                      refreshListSearchSedangDiproses();
+                                      getFilterResultSedangDiproses();
                                     }
                                   },
                                 )
@@ -909,10 +945,169 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                           margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
                         ),
                         Container(
+                          child: LoadingKomponenFilterSedangDiproses ? ListTileShimmer() : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Flexible(
+                                child: GestureDetector(
+                                  onTap: (){
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                              title: Text("Pilih Tanggal", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("025393")
+                                              )),
+                                              content: Container(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      height: 250,
+                                                      width: 250,
+                                                      child: SfDateRangePicker(
+                                                        controller: controllerFilterTanggalSedangDiproses,
+                                                        selectionMode: DateRangePickerSelectionMode.range,
+                                                        onSelectionChanged: selectionChangedMenungguRespons,
+                                                        allowViewNavigation: true,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text("OK", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontWeight: FontWeight.w700,
+                                                      color: HexColor("025393")
+                                                  )),
+                                                  onPressed: (){
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                )
+                                              ]
+                                          );
+                                        }
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(width: 1, color: Colors.black38)
+                                    ),
+                                    child: Center(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Text(selectedFilterTanggalSedangDiproses == null ? "Semua Tanggal Keluar" : selectedFilterTanggalSedangDiproses, style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            color: selectedFilterTanggalSedangDiproses == null ? Colors.black54 : Colors.black
+                                        ), maxLines: 1, softWrap: false, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(width: 1, color: Colors.black38)
+                                  ),
+                                  child: DropdownButton(
+                                    isExpanded: true,
+                                    hint: Center(
+                                      child: Text("Semua Kode Surat", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      )),
+                                    ),
+                                    value: selectedKodeSuratFilterSedangDiproses,
+                                    underline: Container(),
+                                    items: kodeSuratFilterSedangDiproses.map((e) {
+                                      return DropdownMenuItem(
+                                        value: e['master_surat_id'],
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Text("${e['kode_nomor_surat']} - ${e['keterangan']}", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    selectedItemBuilder: (BuildContext context) => kodeSuratFilterSedangDiproses.map((e) => Center(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Text(e['kode_nomor_surat'], style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
+                                        )),
+                                      ),
+                                    )).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedKodeSuratFilterSedangDiproses = value;
+                                      });
+                                      getFilterResultSedangDiproses();
+                                    },
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                ),
+                              ),
+                            ],
+                          ),
+                          margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                        ),
+                        Container(
+                          child: Column(
+                            children: <Widget>[
+                              if(isFilterSedangDiproses == true) Container(
+                                child: FlatButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      isFilterSedangDiproses = false;
+                                      LoadingSedangDiproses = true;
+                                      selectedRangeAwalValueSedangDiproses = null;
+                                      selectedRangeAwalSedangDiproses = null;
+                                      selectedRangeAkhirSedangDiproses = null;
+                                      selectedRangeAkhirValueSedangDiproses = null;
+                                      selectedKodeSuratFilterSedangDiproses = null;
+                                      controllerSearchSedangDiproses.text = "";
+                                      selectedFilterTanggalSedangDiproses = null;
+                                    });
+                                    refreshListSedangDiproses();
+                                  },
+                                  child: Text("Hapus Filter", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white
+                                  )),
+                                  color: HexColor("025393"),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                      side: BorderSide(color: HexColor("025393"), width: 2)
+                                  ),
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
                           child: LoadingSedangDiproses ? ListTileShimmer() : availableSedangDiproses ? Expanded(
                             flex: 1,
                             child: RefreshIndicator(
-                              onRefresh: isSearchSedangDiproses ? refreshListSearchSedangDiproses : refreshListSedangDiproses,
+                              onRefresh: isFilterSedangDiproses ? getFilterResultSedangDiproses : refreshListSedangDiproses,
                               child: ListView.builder(
                                 itemCount: SedangDiproses.length,
                                 shrinkWrap: true,
@@ -1035,24 +1230,14 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                     borderSide: BorderSide(color: HexColor("#025393"))
                                 ),
                                 hintText: "Cari surat keluar...",
-                                suffixIcon: isSearchTelahDikonfirmasi ? IconButton(
-                                  icon: Icon(Icons.close),
-                                  onPressed: (){
-                                    setState(() {
-                                      LoadingTelahDikonfirmasi = true;
-                                      controllerSearchTelahDikonfirmasi.text = "";
-                                      isSearchTelahDikonfirmasi = false;
-                                      refreshListTelahDikonfirmasi();
-                                    });
-                                  },
-                                ) : IconButton(
+                                suffixIcon: IconButton(
                                   icon: Icon(Icons.search),
                                   onPressed: (){
                                     if(controllerSearchTelahDikonfirmasi.text != "") {
                                       setState(() {
-                                        isSearchTelahDikonfirmasi = true;
+                                        isFilterTelahDikonfirmasi = true;
                                       });
-                                      refreshListSearchTelahDikonfirmasi();
+                                      getFilterResultTelahDikonfirmasi();
                                     }
                                   },
                                 )
@@ -1065,10 +1250,169 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                           margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
                         ),
                         Container(
+                          child: LoadingKomponenFilterTelahDikonfirmasi ? ListTileShimmer() : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Flexible(
+                                child: GestureDetector(
+                                  onTap: (){
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                              title: Text("Pilih Tanggal", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("025393")
+                                              )),
+                                              content: Container(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      height: 250,
+                                                      width: 250,
+                                                      child: SfDateRangePicker(
+                                                        controller: controllerFilterTanggalTelahDikonfirmasi,
+                                                        selectionMode: DateRangePickerSelectionMode.range,
+                                                        onSelectionChanged: selectionChangedTelahDikonfirmasi,
+                                                        allowViewNavigation: true,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text("OK", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontWeight: FontWeight.w700,
+                                                      color: HexColor("025393")
+                                                  )),
+                                                  onPressed: (){
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                )
+                                              ]
+                                          );
+                                        }
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(width: 1, color: Colors.black38)
+                                    ),
+                                    child: Center(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Text(selectedFilterTanggalTelahDikonfirmasi == null ? "Semua Tanggal Keluar" : selectedFilterTanggalTelahDikonfirmasi, style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            color: selectedFilterTanggalTelahDikonfirmasi == null ? Colors.black54 : Colors.black
+                                        ), maxLines: 1, softWrap: false, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(width: 1, color: Colors.black38)
+                                  ),
+                                  child: DropdownButton(
+                                    isExpanded: true,
+                                    hint: Center(
+                                      child: Text("Semua Kode Surat", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      )),
+                                    ),
+                                    value: selectedKodeSuratFilterTelahDikonfirmasi,
+                                    underline: Container(),
+                                    items: kodeSuratFilterTelahDikonfirmasi.map((e) {
+                                      return DropdownMenuItem(
+                                        value: e['master_surat_id'],
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Text("${e['kode_nomor_surat']} - ${e['keterangan']}", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    selectedItemBuilder: (BuildContext context) => kodeSuratFilterTelahDikonfirmasi.map((e) => Center(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Text(e['kode_nomor_surat'], style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
+                                        )),
+                                      ),
+                                    )).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedKodeSuratFilterTelahDikonfirmasi = value;
+                                      });
+                                      getFilterResultTelahDikonfirmasi();
+                                    },
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                ),
+                              ),
+                            ],
+                          ),
+                          margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                        ),
+                        Container(
+                          child: Column(
+                            children: <Widget>[
+                              if(isFilterTelahDikonfirmasi == true) Container(
+                                child: FlatButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      isFilterTelahDikonfirmasi = false;
+                                      LoadingTelahDikonfirmasi = true;
+                                      selectedRangeAwalValueTelahDikonfirmasi = null;
+                                      selectedRangeAwalTelahDikonfirmasi = null;
+                                      selectedRangeAkhirTelahDikonfirmasi = null;
+                                      selectedRangeAkhirValueTelahDikonfirmasi = null;
+                                      selectedKodeSuratFilterTelahDikonfirmasi = null;
+                                      controllerSearchTelahDikonfirmasi.text = "";
+                                      selectedFilterTanggalTelahDikonfirmasi = null;
+                                    });
+                                    refreshListTelahDikonfirmasi();
+                                  },
+                                  child: Text("Hapus Filter", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white
+                                  )),
+                                  color: HexColor("025393"),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                      side: BorderSide(color: HexColor("025393"), width: 2)
+                                  ),
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
                           child: LoadingTelahDikonfirmasi ? ListTileShimmer() : availableTelahDikonfirmasi ? Expanded(
                             flex: 1,
                             child: RefreshIndicator(
-                              onRefresh: isSearchTelahDikonfirmasi ? refreshListSearchTelahDikonfirmasi : refreshListTelahDikonfirmasi,
+                              onRefresh: isFilterTelahDikonfirmasi ? getFilterResultTelahDikonfirmasi : refreshListTelahDikonfirmasi,
                               child: ListView.builder(
                                 itemCount: TelahDikonfirmasi.length,
                                 shrinkWrap: true,
@@ -1191,24 +1535,14 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                     borderSide: BorderSide(color: HexColor("#025393"))
                                 ),
                                 hintText: "Cari surat keluar...",
-                                suffixIcon: isSearchDibatalkan ? IconButton(
-                                  icon: Icon(Icons.close),
-                                  onPressed: (){
-                                    setState(() {
-                                      LoadingDibatalkan = true;
-                                      controllerSearchDibatalkan.text = "";
-                                      isSearchDibatalkan = false;
-                                      refreshListDibatalkan();
-                                    });
-                                  },
-                                ) : IconButton(
+                                suffixIcon: IconButton(
                                   icon: Icon(Icons.search),
                                   onPressed: (){
                                     if(controllerSearchDibatalkan.text != "") {
                                       setState(() {
-                                        isSearchDibatalkan = true;
+                                        isFilterDibatalkan = true;
                                       });
-                                      refreshListSearchDibatalkan();
+                                      getFilterResultDibatalkan();
                                     }
                                   },
                                 )
@@ -1221,10 +1555,169 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                           margin: EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
                         ),
                         Container(
+                          child: LoadingKomponenFilterDibatalkan ? ListTileShimmer() : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Flexible(
+                                child: GestureDetector(
+                                  onTap: (){
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                              title: Text("Pilih Tanggal", style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: HexColor("025393")
+                                              )),
+                                              content: Container(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      height: 250,
+                                                      width: 250,
+                                                      child: SfDateRangePicker(
+                                                        controller: controllerFilterTanggalDibatalkan,
+                                                        selectionMode: DateRangePickerSelectionMode.range,
+                                                        onSelectionChanged: selectionChangedDibatalkan,
+                                                        allowViewNavigation: true,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text("OK", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontWeight: FontWeight.w700,
+                                                      color: HexColor("025393")
+                                                  )),
+                                                  onPressed: (){
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                )
+                                              ]
+                                          );
+                                        }
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(width: 1, color: Colors.black38)
+                                    ),
+                                    child: Center(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Text(selectedFilterTanggalDibatalkan == null ? "Semua Tanggal Keluar" : selectedFilterTanggalDibatalkan, style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14,
+                                            color: selectedFilterTanggalDibatalkan == null ? Colors.black54 : Colors.black
+                                        ), maxLines: 1, softWrap: false, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(width: 1, color: Colors.black38)
+                                  ),
+                                  child: DropdownButton(
+                                    isExpanded: true,
+                                    hint: Center(
+                                      child: Text("Semua Kode Surat", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14
+                                      )),
+                                    ),
+                                    value: selectedKodeSuratFilterDibatalkan,
+                                    underline: Container(),
+                                    items: kodeSuratFilterDibatalkan.map((e) {
+                                      return DropdownMenuItem(
+                                        value: e['master_surat_id'],
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Text("${e['kode_nomor_surat']} - ${e['keterangan']}", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    selectedItemBuilder: (BuildContext context) => kodeSuratFilterDibatalkan.map((e) => Center(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: Text(e['kode_nomor_surat'], style: TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 14
+                                        )),
+                                      ),
+                                    )).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedKodeSuratFilterDibatalkan = value;
+                                      });
+                                      getFilterResultDibatalkan();
+                                    },
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                ),
+                              ),
+                            ],
+                          ),
+                          margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                        ),
+                        Container(
+                          child: Column(
+                            children: <Widget>[
+                              if(isFilterDibatalkan == true) Container(
+                                child: FlatButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      isFilterDibatalkan = false;
+                                      LoadingDibatalkan = true;
+                                      selectedRangeAwalValueDibatalkan = null;
+                                      selectedRangeAwalDibatalkan = null;
+                                      selectedRangeAkhirDibatalkan = null;
+                                      selectedRangeAkhirValueDibatalkan = null;
+                                      selectedKodeSuratFilterDibatalkan = null;
+                                      controllerSearchDibatalkan.text = "";
+                                      selectedFilterTanggalDibatalkan = null;
+                                    });
+                                    refreshListDibatalkan();
+                                  },
+                                  child: Text("Hapus Filter", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white
+                                  )),
+                                  color: HexColor("025393"),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                      side: BorderSide(color: HexColor("025393"), width: 2)
+                                  ),
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
                           child: LoadingDibatalkan ? ListTileShimmer() : availableDibatalkan ? Expanded(
                             flex: 1,
                             child: RefreshIndicator(
-                              onRefresh: isSearchDibatalkan ? refreshListSearchDibatalkan : refreshListDibatalkan,
+                              onRefresh: isFilterDibatalkan ? getFilterResultDibatalkan : refreshListDibatalkan,
                               child: ListView.builder(
                                 itemCount: Dibatalkan.length,
                                 itemBuilder: (context, index) {
@@ -1345,4 +1838,49 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
       )
     );
   }
+
+  void selectionChangedMenungguRespons(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      selectedRangeAwalMenungguRespons = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
+      selectedRangeAwalValueMenungguRespons = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
+      selectedRangeAkhirMenungguRespons = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedRangeAkhirValueMenungguRespons = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedFilterTanggalMenungguRespons = selectedRangeAkhirValueMenungguRespons == null ? "$selectedRangeAwalMenungguRespons" : "$selectedRangeAwalMenungguRespons - $selectedRangeAkhirMenungguRespons";
+    });
+    getFilterResultMenungguRespons();
+  }
+
+  void selectionChangedSedangDiproses(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      selectedRangeAwalSedangDiproses = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
+      selectedRangeAwalValueSedangDiproses = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
+      selectedRangeAkhirSedangDiproses = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedRangeAkhirValueSedangDiproses = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedFilterTanggalSedangDiproses = selectedRangeAkhirValueSedangDiproses == null ? "$selectedRangeAwalSedangDiproses" : "$selectedRangeAwalSedangDiproses - $selectedRangeAkhirSedangDiproses";
+    });
+    getFilterResultSedangDiproses();
+  }
+
+  void selectionChangedTelahDikonfirmasi(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      selectedRangeAwalTelahDikonfirmasi = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
+      selectedRangeAwalValueTelahDikonfirmasi = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
+      selectedRangeAkhirTelahDikonfirmasi = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedRangeAkhirValueTelahDikonfirmasi = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedFilterTanggalTelahDikonfirmasi = selectedRangeAkhirValueTelahDikonfirmasi == null ? "$selectedRangeAwalTelahDikonfirmasi" : "$selectedRangeAwalTelahDikonfirmasi - $selectedRangeAkhirTelahDikonfirmasi";
+    });
+    getFilterResultTelahDikonfirmasi();
+  }
+
+  void selectionChangedDibatalkan(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      selectedRangeAwalDibatalkan = DateFormat("dd-MMM-yyyy").format(args.value.startDate).toString();
+      selectedRangeAwalValueDibatalkan = DateFormat("yyyy-MM-dd").format(args.value.startDate).toString();
+      selectedRangeAkhirDibatalkan = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedRangeAkhirValueDibatalkan = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
+      selectedFilterTanggalDibatalkan = selectedRangeAkhirValueDibatalkan == null ? "$selectedRangeAwalDibatalkan" : "$selectedRangeAwalDibatalkan - $selectedRangeAkhirDibatalkan";
+    });
+    getFilterResultDibatalkan();
+  }
+
 }

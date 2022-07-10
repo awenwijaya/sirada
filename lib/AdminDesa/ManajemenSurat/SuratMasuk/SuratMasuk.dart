@@ -48,6 +48,7 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
   String selectedRangeAwalValue;
   String selectedRangeAkhir;
   String selectedRangeAkhirValue;
+  String selectedTanggalFilter;
   DateTime rangeAwal;
   DateTime rangeAkhir;
   bool LoadingFilter = true;
@@ -359,78 +360,77 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                         },
                       ),
                       margin: EdgeInsets.symmetric(horizontal: 5),
+                    ),
+                    GestureDetector(
+                      onTap: (){
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                  title: Text("Pilih Tanggal", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: HexColor("025393")
+                                  )),
+                                  content: Container(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Container(
+                                          height: 250,
+                                          width: 250,
+                                          child: SfDateRangePicker(
+                                            controller: controllerFilterTanggal,
+                                            selectionMode: DateRangePickerSelectionMode.range,
+                                            onSelectionChanged: selectionChanged,
+                                            allowViewNavigation: true,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text("OK", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontWeight: FontWeight.w700,
+                                          color: HexColor("025393")
+                                      )),
+                                      onPressed: (){
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  ]
+                              );
+                            }
+                        );
+                      },
+                      child: Container(
+                        width: 150,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(width: 1, color: Colors.black38)
+                        ),
+                        child: Center(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Text(selectedTanggalFilter == null ? "Semua Tanggal Masuk" : selectedTanggalFilter, style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14,
+                              color: selectedTanggalFilter == null ? Colors.black54 : Colors.black
+                            ), maxLines: 1, softWrap: false, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+                          ),
+                        ),
+                      ),
                     )
                   ],
                 ),
               ),
-              margin: EdgeInsets.only(left: 20, right: 20),
-            ),
-            Container(
-              child: GestureDetector(
-                onTap: (){
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Pilih Tanggal", style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: HexColor("025393")
-                        )),
-                        content: Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Container(
-                                height: 250,
-                                width: 250,
-                                child: SfDateRangePicker(
-                                  controller: controllerFilterTanggal,
-                                  selectionMode: DateRangePickerSelectionMode.range,
-                                  onSelectionChanged: selectionChanged,
-                                  allowViewNavigation: true,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text("OK", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontWeight: FontWeight.w700,
-                              color: HexColor("025393")
-                            )),
-                            onPressed: (){
-                              Navigator.of(context).pop();
-                            },
-                          )
-                        ]
-                      );
-                    }
-                  );
-                },
-                child: TextField(
-                  enabled: false,
-                  controller: controllerFilterTanggalMasuk,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                        borderSide: BorderSide(color: HexColor("#025393"))
-                    ),
-                    hintText: "Semua Tanggal Masuk",
-                  ),
-                  style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-                margin: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
+              margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
             ),
             Container(
               child: Column(
@@ -450,6 +450,7 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
                           isFilter = false;
                           controllerFilterTanggalMasuk.text = "";
                           controllerSearch.text = "";
+                          selectedTanggalFilter = null;
                         });
                         refreshListSuratMasuk();
                       },
@@ -780,6 +781,7 @@ class _suratMasukAdminState extends State<suratMasukAdmin> {
       selectedRangeAkhir = DateFormat("dd-MMM-yyyy").format(args.value.endDate ?? args.value.startDate).toString();
       selectedRangeAkhirValue = DateFormat("yyyy-MM-dd").format(args.value.endDate ?? args.value.startDate).toString();
       controllerFilterTanggalMasuk.text = selectedRangeAkhirValue == null ? "$selectedRangeAwal" : "$selectedRangeAwal - $selectedRangeAkhir";
+      selectedTanggalFilter = selectedRangeAkhirValue == null ? "$selectedRangeAwal" : "$selectedRangeAwal - $selectedRangeAkhir";
     });
     showFilterResult();
   }
