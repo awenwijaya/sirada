@@ -325,7 +325,7 @@ class _agendaSuratKeluarAdminState extends State<agendaSuratKeluarAdmin> {
         minMonth: DateTime(1900),
         maxMonth: DateTime(2100),
         initialMonth: DateTime.now(),
-        cellAspectRatio: 1,
+        cellAspectRatio: 4,
         startDay: WeekDays.sunday,
       ) : agendaAcaraAdmin.selectedViewSuratKeluar == "Hari" ? DayView(
         showVerticalLine: true,
@@ -334,7 +334,7 @@ class _agendaSuratKeluarAdminState extends State<agendaSuratKeluarAdmin> {
         maxDay: DateTime(2100),
         initialDay: DateTime.now(),
         heightPerMinute: 1,
-        eventArranger: SideEventArranger(),
+        eventArranger: MergeEventArranger(),
       ) : agendaAcaraAdmin.selectedViewSuratKeluar == "Minggu" ? WeekView(
         showLiveTimeLineInAllDays: true,
         width: 400,

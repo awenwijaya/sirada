@@ -36,10 +36,6 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
   bool availableSedangDiproses = false;
   bool availableTelahDikonfirmasi = false;
   bool availableDibatalkan = false;
-  bool isSearchMenungguRespons = false;
-  bool isSearchSedangDiproses = false;
-  bool isSearchTelahDikonfirmasi = false;
-  bool isSearchDibatalkan = false;
   bool isFilterMenungguRespons = false;
   bool isFilterSedangDiproses = false;
   bool isFilterTelahDikonfirmasi = false;
@@ -64,10 +60,6 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
   List kodeSuratFilterTelahDikonfirmasi = List();
   List kodeSuratFilterDibatalkan = List();
 
-  var selectedTahunTerbitFilterMenungguRespons;
-  var selectedTahunTerbitFilterSedangDiproses;
-  var selectedTahunTerbitFilterTelahDikonfirmasi;
-  var selectedTahunTerbitFilterDibatalkan;
   var selectedKodeSuratFilterMenungguRespons;
   var selectedKodeSuratFilterSedangDiproses;
   var selectedKodeSuratFilterDibatalkan;
@@ -718,10 +710,13 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                   child: DropdownButton(
                                     isExpanded: true,
                                     hint: Center(
-                                      child: Text("Semua Kode Surat", style: TextStyle(
-                                        fontFamily: "Poppins",
-                                        fontSize: 14
-                                      )),
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Text("Semua Kode Surat", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14
+                                          ), maxLines: 1, softWrap: false, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+                                        )
                                     ),
                                     value: selectedKodeSuratFilterMenungguRespons,
                                     underline: Container(),
@@ -974,7 +969,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                                       child: SfDateRangePicker(
                                                         controller: controllerFilterTanggalSedangDiproses,
                                                         selectionMode: DateRangePickerSelectionMode.range,
-                                                        onSelectionChanged: selectionChangedMenungguRespons,
+                                                        onSelectionChanged: selectionChangedSedangDiproses,
                                                         allowViewNavigation: true,
                                                       ),
                                                     )

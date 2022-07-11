@@ -25,8 +25,9 @@
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/app/intermediates/merged_assets/debug/out/flutter_assets/kernel_blob.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/AgendaAcara/AgendaAcara.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/AgendaAcara/AgendaAcara.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/SuratKeluarNonPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratKeluar/SuratKeluarNonPanitia/SuratKeluarNonPanitia.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratMasuk/SuratMasuk.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AdminDesa/ManajemenSurat/SuratMasuk/SuratMasuk.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/SuratKeluarPanitia.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/KramaPanitia/SuratKeluarPanitia/SuratKeluarPanitia.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
