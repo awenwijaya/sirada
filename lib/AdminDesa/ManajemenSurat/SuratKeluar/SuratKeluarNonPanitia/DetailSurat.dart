@@ -200,9 +200,6 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
         setState(() {
           tetujonPrajuruDesaList = jsonData;
         });
-        for(var i = 0; i < tetujonPrajuruDesaList.length; i++) {
-          tetujon.add("Desa ${tetujonPrajuruDesaList[i]['desadat_nama']} (${tetujonPrajuruDesaList[i]['nama']})");
-        }
       }
     });
     await http.get(Uri.parse(apiURLGetTetujonPrajuruBanjar),
@@ -215,9 +212,6 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
         setState(() {
           tetujonPrajuruBanjarList = jsonData;
         });
-        for(var i = 0; i < tetujonPrajuruBanjarList.length; i++) {
-          tetujon.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} (${tetujonPrajuruBanjarList[i]['nama']})");
-        }
       }
     });
     await http.get(Uri.parse(apiURLGetTetujonPihakLain),
@@ -229,18 +223,38 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
         setState(() {
           tetujonPihakLainList = jsonData;
         });
-        for(var i = 0; i < tetujonPihakLainList.length; i++) {
-          tetujon.add("${tetujonPihakLainList[i]['pihak_lain']}");
-        }
       }
     });
-    print(tetujon.length.toString());
-    if(tetujon.length > 2) {
-      for(var i = 0; i <= 1; i++) {
-        tetujonTerlampir.add(tetujon[i]);
-        tetujon.remove(tetujon[i]);
-        print(tetujonTerlampir[i].toString());
+    for(var i = 0; i < tetujonPihakLainList.length; i++) {
+      tetujonTerlampir.add("${tetujonPihakLainList[i]['pihak_lain']}");
+    }
+    for(var i = 0; i < tetujonPrajuruBanjarList.length; i++) {
+      tetujonTerlampir.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} (${tetujonPrajuruBanjarList[i]['nama']})");
+    }
+    for(var i = 0; i < tetujonPrajuruDesaList.length; i++) {
+      tetujonTerlampir.add("Desa ${tetujonPrajuruDesaList[i]['desadat_nama']} (${tetujonPrajuruDesaList[i]['nama']})");
+    }
+    if(tetujonTerlampir.length > 2) {
+      for(var i = 0; i < 2; i++) {
+        setState(() {
+          tetujon.add(tetujonTerlampir[i]);
+          tetujonTerlampir.removeAt(i);
+        });
       }
+    }else {
+     if(tetujonTerlampir.length == 1) {
+       setState(() {
+         tetujon.add(tetujonTerlampir[0]);
+         tetujonTerlampir.removeAt(0);
+       });
+     }else {
+       setState(() {
+         tetujon.add(tetujonTerlampir[0]);
+         tetujon.add(tetujonTerlampir[1]);
+         tetujonTerlampir.removeAt(0);
+         tetujonTerlampir.removeAt(1);
+       });
+     }
     }
   }
 

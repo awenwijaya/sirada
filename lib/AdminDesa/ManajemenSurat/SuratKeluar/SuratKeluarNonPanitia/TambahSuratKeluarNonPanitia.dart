@@ -1276,13 +1276,13 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                           Container(
                               margin: EdgeInsets.symmetric(horizontal: 20),
                               child: MultiSelectDialogField(
-                                title: Text("Pilih Penerima Prajuru Desa Adat"),
+                                title: Text("Prajuru Desa Adat"),
                                 buttonText: Text("Pilih Penerima Prajuru Desa Adat", style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14
                                 )),
                                 buttonIcon: Icon(Icons.expand_more),
-                                searchable: false,
+                                searchable: true,
                                 checkColor: Colors.white,
                                 items: prajuruDesaList.map((item) => MultiSelectItem(item, "${item['jabatan']} - ${item['nama']}")).toList(),
                                 listType: MultiSelectListType.LIST,
@@ -1303,13 +1303,13 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                           Container(
                               margin: EdgeInsets.symmetric(horizontal: 20),
                               child: MultiSelectDialogField(
-                                title: Text("Pilih Penerima Prajuru Banjar Adat"),
+                                title: Text("Prajuru Banjar Adat"),
                                 buttonText: Text("Pilih Penerima Prajuru Banjar Adat", style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14
                                 )),
                                 buttonIcon: Icon(Icons.expand_more),
-                                searchable: false,
+                                searchable: true,
                                 checkColor: Colors.white,
                                 items: prajuruBanjarList.map((item) => MultiSelectItem(item, "Banjar ${item['nama_banjar_adat']} - ${item['nama']}")).toList(),
                                 listType: MultiSelectListType.LIST,
@@ -1518,13 +1518,13 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                       child: MultiSelectDialogField(
-                        title: Text("Pilih Tumusan Prajuru Desa Adat"),
+                        title: Text("Prajuru Desa Adat"),
                         buttonText: Text("Pilih Tumusan Prajuru Desa Adat", style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14
                         )),
                         buttonIcon: Icon(Icons.expand_more),
-                        searchable: false,
+                        searchable: true,
                         checkColor: Colors.white,
                         items: prajuruDesaList.map((item) => MultiSelectItem(item, "${item['jabatan']} - ${item['nama']}")).toList(),
                         listType: MultiSelectListType.LIST,
@@ -1545,13 +1545,13 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                       child: MultiSelectDialogField(
-                        title: Text("Pilih Tumusan Prajuru Banjar Adat"),
+                        title: Text("Prajuru Banjar Adat"),
                         buttonText: Text("Pilih Tumusan Prajuru Banjar Adat", style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14
                         )),
                         buttonIcon: Icon(Icons.expand_more),
-                        searchable: false,
+                        searchable: true,
                         checkColor: Colors.white,
                         items: prajuruBanjarList.map((item) => MultiSelectItem(item, "${item['nama']}")).toList(),
                         listType: MultiSelectListType.LIST,
@@ -1868,107 +1868,110 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
   }
 
   Future uploadPrajuruBanjar(var suratKeluarId) async {
-    Map<String, String> headers = {
-      'Content-Type' : 'multipart/form-data'
-    };
+    var list = [];
+    var listTumusan = [];
     if(isSendToKrama == false) {
       if(selectedKelihanAdat.isNotEmpty) {
         for(var i = 0; i < selectedKelihanAdat.length; i++) {
-          Map<String, String> body = {
-            "surat_keluar_id" : suratKeluarId.toString(),
-            "prajuru_banjar_adat_id" : selectedKelihanAdat[i]['prajuru_banjar_adat_id'].toString()
-          };
-          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruBanjar))
-            ..fields.addAll(body)
-            ..headers.addAll(headers);
-          var response = await request.send();
-          print("upload tetujon prajuru banjar status code: ${response.statusCode.toString()}");
+          setState(() {
+            var prajuruBanjarArray = {'prajuru_banjar_adat_id' : selectedKelihanAdat[i]['prajuru_banjar_adat_id'].toString(), 'surat_keluar_id' : suratKeluarId.toString()};
+            list.add(prajuruBanjarArray);
+          });
         }
+        var body = jsonEncode(list);
+        http.post(Uri.parse(apiURLUpTetujonPrajuruBanjar),
+          headers: {"Content-Type" : "application/json"},
+          body: body
+        ).then((http.Response response) {
+          print("respons status: ${response.statusCode}");
+        });
       }
     }
     if(selectedKelihanAdatTumusan.isNotEmpty) {
       for(var i = 0; i < selectedKelihanAdatTumusan.length; i++) {
-        Map<String, String> bodyTumusan = {
-          "surat_keluar_id" : suratKeluarId.toString(),
-          "prajuru_banjar_adat_id" : selectedKelihanAdatTumusan[i]['prajuru_banjar_adat_id'].toString()
-        };
-        var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPrajuruBanjar))
-          ..fields.addAll(bodyTumusan)
-          ..headers.addAll(headers);
-        var response = await requestTumusan.send();
-        print("upload tumusan prajuru banjar status code: ${response.statusCode.toString()}");
+        setState(() {
+          var prajuruBanjarAdatTumusan = {'prajuru_banjar_adat_id': selectedKelihanAdatTumusan[i]['prajuru_banjar_adat_id'].toString(), 'surat_keluar_id' : suratKeluarId.toString()};
+          listTumusan.add(prajuruBanjarAdatTumusan);
+        });
       }
+      var body = jsonEncode(listTumusan);
+      http.post(Uri.parse(apiURLUpTumusanPrajuruBanjar),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+      ).then((http.Response response) {
+        print("respons status tumusan : ${response.statusCode}");
+      });
     }
   }
 
   Future uploadPrajuruDesa(var suratKeluarId) async {
-    Map<String, String> headers = {
-      'Content-Type' : 'multipart/form-data'
-    };
+    var list = [];
+    var listTumusan = [];
     if(isSendToKrama == false) {
       if(selectedBendesa.isNotEmpty) {
         for(var i = 0; i < selectedBendesa.length; i++) {
-          Map<String, String> body = {
-            "surat_keluar_id" : suratKeluarId.toString(),
-            "prajuru_desa_adat_id" : selectedBendesa[i]['prajuru_desa_adat_id'].toString()
-          };
-          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPrajuruDesa))
-            ..fields.addAll(body)
-            ..headers.addAll(headers);
-          var response = await request.send();
-          print("upload tetujon prajuru desa status code: ${response.statusCode.toString()}");
-        }
+          setState(() {
+            var prajuruDesaArray = {'prajuru_desa_adat_id' : selectedBendesa[i]['prajuru_desa_adat_id'].toString(), 'surat_keluar_id' : suratKeluarId.toString()};
+            list.add(prajuruDesaArray);
+          });
+      }
+        var body = jsonEncode(list);
+        http.post(Uri.parse(apiURLUpTetujonPrajuruDesa),
+          headers: {"Content-Type" : "application/json"},
+          body: body
+        ).then((http.Response response) {
+          print("respons status prajuru desa adat: ${response.statusCode}");
+        });
       }
     }
     if(selectedBendesaTumusan.isNotEmpty) {
       for(var i = 0; i < selectedBendesaTumusan.length; i++) {
-        Map<String, String> bodyTumusan = {
-          "surat_keluar_id" : suratKeluarId.toString(),
-          "prajuru_desa_adat_id" : selectedBendesaTumusan[i]['prajuru_desa_adat_id'].toString()
-        };
-        var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPrajuruDesa))
-          ..fields.addAll(bodyTumusan)
-          ..headers.addAll(headers);
-        var response = await requestTumusan.send();
-        print("upload tumusan prajuru desa status code: ${response.statusCode.toString()}");
+
       }
+      var body = jsonEncode(listTumusan);
+      http.post(Uri.parse(apiURLUpTumusanPrajuruDesa),
+          headers: {"Content-Type" : "application/json"},
+          body: body
+      ).then((http.Response response) {
+        print("respons status prajuru desa adat tumusan: ${response.statusCode}");
+      });
     }
   }
 
   Future uploadPihakLain(var suratKeluarId) async {
-    Map<String, String> headers = {
-      'Content-Type' : 'multipart/form-data'
-    };
+    var list = [];
+    var listTumusan = [];
     if(isSendToKrama == false) {
       if(pihakLain.isNotEmpty) {
         for(var i = 0; i < pihakLain.length; i++) {
-          Map<String, String> body = {
-            "surat_keluar_id" : suratKeluarId.toString(),
-            "pihak_lain" : pihakLain[i]['pihak_lain'].toString(),
-            "email_pihak_lain" : pihakLain[i]['email_pihak_lain']
-          };
-          var request = http.MultipartRequest("POST", Uri.parse(apiURLUpTetujonPihakLain))
-            ..fields.addAll(body)
-            ..headers.addAll(headers);
-          var response = await request.send();
-          print("upload tetujon pihak lain status code: ${response.statusCode.toString()}");
+          setState(() {
+            var pihakLainArray = {'surat_keluar_id' : suratKeluarId.toString(), 'pihak_lain' : pihakLain[i]['pihak_lain'].toString(), 'email_pihak_lain' : pihakLain[i]['email_pihak_lain']};
+            list.add(pihakLainArray);
+          });
         }
+        var body = jsonEncode(list);
+        http.post(Uri.parse(apiURLUpTetujonPihakLain),
+          headers: {"Content-Type" : "application/json"},
+          body: body
+        ).then((http.Response response) {
+          print("respons pihak lain status : ${response.statusCode}");
+        });
       }
     }
     if(pihakLainTumusan.isNotEmpty) {
       for(var i = 0; i < pihakLainTumusan.length; i++) {
-        Map<String, String> bodyTumusan = {
-          "surat_keluar_id" : suratKeluarId.toString(),
-          "pihak_lain" : pihakLainTumusan[i]['pihak_lain'].toString(),
-          "email_pihak_lain" : pihakLainTumusan[i]['email_pihak_lain']
-        };
-        var requestTumusan = http.MultipartRequest("POST", Uri.parse(apiURLUpTumusanPihakLain))
-          ..fields.addAll(bodyTumusan)
-          ..headers.addAll(headers);
-        var response = await requestTumusan.send();
-        print("upload tumusan pihak lain status code: ${response.statusCode.toString()}");
+        setState(() {
+          var pihakLainArray = {'surat_keluar_id' : suratKeluarId.toString(), 'pihak_lain' : pihakLainTumusan[i]['pihak_lain'].toString(), 'email_pihak_lain' : pihakLainTumusan[i]['email_pihak_lain']};
+          listTumusan.add(pihakLainArray);
+        });
       }
+      var body = jsonEncode(listTumusan);
+      await http.post(Uri.parse(apiURLUpTumusanPihakLain),
+          headers: {"Content-Type" : "application/json"},
+          body: body
+      ).then((http.Response response) {
+        print("respons pihak lain tembusan status: ${response.statusCode}");
+      });
     }
   }
-
 }
