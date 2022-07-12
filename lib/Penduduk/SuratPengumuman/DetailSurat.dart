@@ -13,6 +13,7 @@ import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class detailSuratPrajuruKrama extends StatefulWidget {
   static var suratKeluarId;
+  static var status;
   const detailSuratPrajuruKrama({Key key}) : super(key: key);
 
   @override
@@ -183,7 +184,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
           tumusanPrajuruDesaList = jsonData;
         });
         for(var i = 0; i < tumusanPrajuruDesaList.length; i++) {
-          tumusan.add("Desa ${tumusanPrajuruDesaList[i]['desadat_nama']} (${tumusanPrajuruDesaList[i]['nama']})");
+          tumusan.add("${tumusanPrajuruDesaList[i]['jabatan']} (${tumusanPrajuruDesaList[i]['nama']})");
         }
       }
     });
@@ -246,7 +247,9 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
     getTumusan();
     getLampiran();
     getQRCode();
-    setReadSurat();
+    if(detailSuratPrajuruKrama.status == "Belum Terbaca") {
+      setReadSurat();
+    }
   }
 
   @override

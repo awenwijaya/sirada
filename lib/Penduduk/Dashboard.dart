@@ -712,6 +712,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                                           if(pengumuman[index]['tim_kegiatan'] == null) {
                                             setState(() {
                                               detailSuratPrajuruKrama.suratKeluarId = pengumuman[index]['surat_keluar_id'];
+                                              detailSuratPrajuruKrama.status = pengumuman[index]['status'];
                                             });
                                             Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratPrajuruKrama())).then((value) {
                                               getAllPengumuman();
@@ -730,7 +731,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                                             children: <Widget>[
                                               Container(
                                                 child: Image.asset(
-                                                  'images/email.png',
+                                                  pengumuman[index]['status'] == "Belum Terbaca" ? "images/letter-closed.png" : "images/letter-open.png",
                                                   height: 40,
                                                   width: 40,
                                                 ),

@@ -232,7 +232,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
       tetujonTerlampir.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} (${tetujonPrajuruBanjarList[i]['nama']})");
     }
     for(var i = 0; i < tetujonPrajuruDesaList.length; i++) {
-      tetujonTerlampir.add("Desa ${tetujonPrajuruDesaList[i]['desadat_nama']} (${tetujonPrajuruDesaList[i]['nama']})");
+      tetujonTerlampir.add("${tetujonPrajuruDesaList[i]['jabatan']} (${tetujonPrajuruDesaList[i]['nama']})");
     }
     if(tetujonTerlampir.length > 2) {
       for(var i = 0; i < 2; i++) {
@@ -270,7 +270,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
           tumusanPrajuruDesaList = jsonData;
         });
         for(var i = 0; i < tumusanPrajuruDesaList.length; i++) {
-          tumusan.add("Desa ${tumusanPrajuruDesaList[i]['desadat_nama']} (${tumusanPrajuruDesaList[i]['nama']})");
+          tumusan.add("${tumusanPrajuruDesaList[i]['jabatan']} (${tumusanPrajuruDesaList[i]['nama']})");
         }
       }
     });

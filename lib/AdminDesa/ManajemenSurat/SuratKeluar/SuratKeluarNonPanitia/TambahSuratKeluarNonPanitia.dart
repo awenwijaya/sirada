@@ -1926,7 +1926,10 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
     }
     if(selectedBendesaTumusan.isNotEmpty) {
       for(var i = 0; i < selectedBendesaTumusan.length; i++) {
-
+        setState(() {
+          var prajuruDesaArray = {'prajuru_desa_adat_id' : selectedBendesaTumusan[i]['prajuru_desa_adat_id'].toString(), 'surat_keluar_id' : suratKeluarId.toString()};
+          listTumusan.add(prajuruDesaArray);
+        });
       }
       var body = jsonEncode(listTumusan);
       http.post(Uri.parse(apiURLUpTumusanPrajuruDesa),

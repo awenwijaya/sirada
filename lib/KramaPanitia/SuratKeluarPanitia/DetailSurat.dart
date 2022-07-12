@@ -206,7 +206,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           tetujonPrajuruDesaList = jsonData;
         });
         for(var i = 0; i < tetujonPrajuruDesaList.length; i++) {
-          tetujon.add("Desa ${tetujonPrajuruDesaList[i]['desadat_nama']} (${tetujonPrajuruDesaList[i]['nama']})");
+          tetujonTerlampir.add("${tetujonPrajuruDesaList[i]['jabatan']} (${tetujonPrajuruDesaList[i]['nama']})");
         }
       }
     });
@@ -221,7 +221,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           tetujonPrajuruBanjarList = jsonData;
         });
         for(var i = 0; i < tetujonPrajuruBanjarList.length; i++) {
-          tetujon.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} (${tetujonPrajuruBanjarList[i]['nama']})");
+          tetujonTerlampir.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} (${tetujonPrajuruBanjarList[i]['nama']})");
         }
       }
     });
@@ -235,16 +235,30 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           tetujonPihakLainList = jsonData;
         });
         for(var i = 0; i < tetujonPihakLainList.length; i++) {
-          tetujon.add("${tetujonPihakLainList[i]['pihak_lain']}");
+          tetujonTerlampir.add("${tetujonPihakLainList[i]['pihak_lain']}");
         }
       }
     });
-    print(tetujon.length.toString());
-    if(tetujon.length > 2) {
+    if(tetujonTerlampir.length > 2) {
       for(var i = 0; i < 2; i++) {
-        tetujonTerlampir.add(tetujon[i]);
-        tetujon.remove(tetujon[i]);
-        print(tetujonTerlampir[i].toString());
+        setState(() {
+          tetujon.add(tetujonTerlampir[i]);
+          tetujonTerlampir.removeAt(i);
+        });
+      }
+    }else {
+      if(tetujonTerlampir.length == 1) {
+        setState(() {
+          tetujon.add(tetujonTerlampir[0]);
+          tetujonTerlampir.removeAt(0);
+        });
+      }else {
+        setState(() {
+          tetujon.add(tetujonTerlampir[0]);
+          tetujon.add(tetujonTerlampir[1]);
+          tetujonTerlampir.removeAt(0);
+          tetujonTerlampir.removeAt(1);
+        });
       }
     }
   }
@@ -276,7 +290,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
           tumusanPrajuruDesaList = jsonData;
         });
         for(var i = 0; i < tumusanPrajuruDesaList.length; i++) {
-          tumusan.add("Desa ${tumusanPrajuruDesaList[i]['desadat_nama']} (${tumusanPrajuruDesaList[i]['nama']})");
+          tumusan.add("${tumusanPrajuruDesaList[i]['jabatan']} (${tumusanPrajuruDesaList[i]['nama']})");
         }
       }
     });

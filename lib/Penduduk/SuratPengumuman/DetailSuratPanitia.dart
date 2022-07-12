@@ -12,6 +12,7 @@ import 'dart:convert';
 
 class detailSuratKeluarPanitiaKrama extends StatefulWidget {
   static var suratKeluarId;
+  static var status;
   const detailSuratKeluarPanitiaKrama({Key key}) : super(key: key);
 
   @override
@@ -61,6 +62,7 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
   bool LoadData = true;
   var apiURLGetQRCode = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/panitia/validasi/qrcode/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
   var apiURLShowTetujonPanitia = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/panitia/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
+  var apiURLSetRead = "https://siradaskripsi.my.id/api/krama/view/surat/set-read";
 
   getLampiran() async {
     http.get(Uri.parse(apiURLGetLampiran),
@@ -72,6 +74,22 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
         setState(() {
           lampiran = jsonData;
         });
+      }
+    });
+  }
+
+  setReadSurat() async {
+    var body = jsonEncode({
+      "surat_keluar_id" : detailSuratKeluarPanitiaKrama.suratKeluarId.toString(),
+      "user_id" : loginPage.userId
+    });
+    http.post(Uri.parse(apiURLSetRead),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        print("set status read krama telah berhasil");
       }
     });
   }
@@ -271,6 +289,9 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
     getLampiran();
     getQRCode();
     getTetujonAnggota();
+    if(detailSuratKeluarPanitiaKrama.status == "Belum Terbaca") {
+      setReadSurat();
+    }
   }
 
   @override

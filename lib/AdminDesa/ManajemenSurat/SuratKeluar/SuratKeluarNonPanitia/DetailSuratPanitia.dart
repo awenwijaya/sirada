@@ -195,7 +195,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
           tetujonPrajuruDesaList = jsonData;
         });
         for(var i = 0; i < tetujonPrajuruDesaList.length; i++) {
-          tetujonTerlampir.add("Desa ${tetujonPrajuruDesaList[i]['desadat_nama']} (${tetujonPrajuruDesaList[i]['nama']})");
+          tetujonTerlampir.add("${tetujonPrajuruDesaList[i]['jabatan']} (${tetujonPrajuruDesaList[i]['nama']})");
         }
       }
     });
@@ -263,7 +263,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
           tumusanPrajuruDesaList = jsonData;
         });
         for(var i = 0; i < tumusanPrajuruDesaList.length; i++) {
-          tumusan.add("Desa ${tumusanPrajuruDesaList[i]['desadat_nama']} - ${tumusanPrajuruDesaList[i]['nama']}");
+          tumusan.add("${tumusanPrajuruDesaList[i]['jabatan']} - ${tumusanPrajuruDesaList[i]['nama']}");
         }
       }
     });
