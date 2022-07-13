@@ -134,7 +134,7 @@ class _agendaAcaraKramaState extends State<agendaAcaraKrama> {
                     minMonth: DateTime(1900),
                     maxMonth: DateTime(2100),
                     initialMonth: DateTime.now(),
-                    cellAspectRatio: 1,
+                    cellAspectRatio: 0.9,
                     startDay: WeekDays.sunday,
                   ) : agendaAcaraKrama.selectedView == "Hari" ? DayView(
                     showVerticalLine: true,

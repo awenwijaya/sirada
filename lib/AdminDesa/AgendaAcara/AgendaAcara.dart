@@ -253,7 +253,7 @@ class _agendaSuratMasukAdminState extends State<agendaSuratMasukAdmin> {
         minMonth: DateTime(1900),
         maxMonth: DateTime(2100),
         initialMonth: DateTime.now(),
-        cellAspectRatio: 1,
+        cellAspectRatio: 0.9,
         startDay: WeekDays.sunday,
       ) : agendaAcaraAdmin.selectedViewSuratMasuk == "Hari" ? DayView(
         showVerticalLine: true,
@@ -325,7 +325,7 @@ class _agendaSuratKeluarAdminState extends State<agendaSuratKeluarAdmin> {
         minMonth: DateTime(1900),
         maxMonth: DateTime(2100),
         initialMonth: DateTime.now(),
-        cellAspectRatio: 1,
+        cellAspectRatio: 0.9,
         startDay: WeekDays.sunday,
       ) : agendaAcaraAdmin.selectedViewSuratKeluar == "Hari" ? DayView(
         showVerticalLine: true,

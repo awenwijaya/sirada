@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,7 +59,6 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   List tumusanPrajuruBanjarList = [];
   List tumusanPrajuruDesaList = [];
   List tumusanPihakLainList = [];
-
   List<String> tetujon = [];
   List<String> tumusan = [];
   List<String> tetujonTerlampir = [];
@@ -1499,7 +1499,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        for(var i = 0; i < historiSurat.length; i++) TimelineTile(
+                        for(int i = 0; i < historiSurat.length; i++) TimelineTile(
                           indicatorStyle: i+1 < historiSurat.length ? IndicatorStyle(
                             color: Colors.black,
                             height: 30,
@@ -1537,7 +1537,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Container(
-                                      child: Text(historiSurat[i]['created_at'], style: TextStyle(
+                                      child: Text(DateFormat("dd-MMM-yyyy, hh:mm").format(DateTime.parse(historiSurat[i]['created_at'])).toString(), style: TextStyle(
                                           fontFamily: "Poppins",
                                           fontSize: 14,
                                           fontWeight: FontWeight.w700,
@@ -1548,7 +1548,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                       padding: EdgeInsets.only(right: 10),
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.69 ,
-                                        child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['nama']}", style: TextStyle(
+                                        child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['jabatan']} ${historiSurat[i]['nama']}", style: TextStyle(
                                             fontFamily: "Poppins",
                                             fontSize: 14,
                                             color: i+1 < historiSurat.length ? Colors.black54 : Colors.black

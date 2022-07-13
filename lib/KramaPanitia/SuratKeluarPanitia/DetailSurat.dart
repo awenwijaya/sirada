@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:surat/KramaPanitia/SuratKeluarPanitia/EditSurat.dart';
 import 'package:surat/KramaPanitia/SuratKeluarPanitia/ViewLampiran.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
@@ -1671,7 +1672,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Container(
-                                        child: Text(historiSurat[i]['created_at'], style: TextStyle(
+                                        child: Text(DateFormat("dd-MMM-yyyy, hh:mm").format(DateTime.parse(historiSurat[i]['created_at'])).toString(), style: TextStyle(
                                             fontFamily: "Poppins",
                                             fontSize: 14,
                                             fontWeight: FontWeight.w700,
@@ -1682,7 +1683,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                           padding: EdgeInsets.only(right: 10),
                                           child: SizedBox(
                                             width: MediaQuery.of(context).size.width * 0.69 ,
-                                            child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['nama']}", style: TextStyle(
+                                            child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['jabatan']} ${historiSurat[i]['nama']}", style: TextStyle(
                                                 fontFamily: "Poppins",
                                                 fontSize: 14,
                                                 color: i+1 < historiSurat.length ? Colors.black54 : Colors.black

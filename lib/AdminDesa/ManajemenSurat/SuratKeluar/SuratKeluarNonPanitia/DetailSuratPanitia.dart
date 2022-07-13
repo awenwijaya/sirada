@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -228,7 +229,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
         }
       }
     });
-    if(tetujonTerlampir.length > 2) {
+    if(tetujonTerlampir.length > 2 || tetujonTerlampir.length == 2) {
       for(var i = 0; i < 2; i++) {
         setState(() {
           tetujon.add(tetujonTerlampir[i]);
@@ -1234,7 +1235,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Container(
-                                        child: Text(historiSurat[i]['created_at'], style: TextStyle(
+                                        child: Text(DateFormat("dd-MMM-yyyy, hh:mm").format(DateTime.parse(historiSurat[i]['created_at'])).toString(), style: TextStyle(
                                             fontFamily: "Poppins",
                                             fontSize: 14,
                                             fontWeight: FontWeight.w700,
@@ -1245,7 +1246,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                                           padding: EdgeInsets.only(right: 10),
                                           child: SizedBox(
                                             width: MediaQuery.of(context).size.width * 0.69 ,
-                                            child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['nama']}", style: TextStyle(
+                                            child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['jabatan']} ${historiSurat[i]['nama']}", style: TextStyle(
                                                 fontFamily: "Poppins",
                                                 fontSize: 14,
                                                 color: i+1 < historiSurat.length ? Colors.black54 : Colors.black

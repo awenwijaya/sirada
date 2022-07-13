@@ -133,7 +133,7 @@ class _agendaAcaraPanitiaState extends State<agendaAcaraPanitia> {
                     minMonth: DateTime(1900),
                     maxMonth: DateTime(2100),
                     initialMonth: DateTime.now(),
-                    cellAspectRatio: 1,
+                    cellAspectRatio: 0.9,
                     startDay: WeekDays.sunday,
                   ) : agendaAcaraPanitia.selectedView == "Hari" ? DayView(
                     showVerticalLine: true,
