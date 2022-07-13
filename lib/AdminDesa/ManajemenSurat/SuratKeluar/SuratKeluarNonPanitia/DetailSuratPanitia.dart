@@ -239,14 +239,14 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
       if(tetujonTerlampir.length == 1) {
         setState(() {
           tetujon.add(tetujonTerlampir[0]);
+          tetujon.add(tetujonTerlampir[1]);
           tetujonTerlampir.removeAt(0);
+          tetujonTerlampir.removeAt(1);
         });
       }else {
         setState(() {
           tetujon.add(tetujonTerlampir[0]);
-          tetujon.add(tetujonTerlampir[1]);
           tetujonTerlampir.removeAt(0);
-          tetujonTerlampir.removeAt(1);
         });
       }
     }
@@ -969,34 +969,32 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
                                   ),
                                 ),
                                 Container(
-                                  child: Flexible(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(
-                                            child: SizedBox(
-                                              width: MediaQuery.of(context).size.width * 0.7,
-                                              child: Text("Tidak dapat melanjutkan validasi surat", style: TextStyle(
-                                                  fontFamily: "Poppins",
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black
-                                              )),
-                                            )
-                                        ),
-                                        Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Container(
                                           child: SizedBox(
                                             width: MediaQuery.of(context).size.width * 0.7,
-                                            child: Text("Anda sementara tidak dapat melakukan validasi surat karena panitia kegiatan belum atau menolak validasi surat ini.", style: TextStyle(
+                                            child: Text("Tidak dapat melanjutkan validasi surat", style: TextStyle(
                                                 fontFamily: "Poppins",
                                                 fontSize: 14,
+                                                fontWeight: FontWeight.bold,
                                                 color: Colors.black
                                             )),
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                          )
+                                      ),
+                                      Container(
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context).size.width * 0.7,
+                                          child: Text("Anda sementara tidak dapat melakukan validasi surat karena panitia kegiatan belum atau menolak validasi surat ini.", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                              color: Colors.black
+                                          )),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                   margin: EdgeInsets.only(left: 15),
                                 )
