@@ -250,29 +250,11 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
         body: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              title: Row(
-                children: <Widget>[
-                  Text("SiRada", style: TextStyle(
-                    fontFamily: "Poppins",
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white
-                  )),
-                  Container(
-                    child: Text("PANITIA", style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.w700,
-                      color: HexColor("#025393"),
-                      fontSize: 14
-                    )),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      color: Colors.white
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    margin: EdgeInsets.only(left: 10),
-                  )
-                ],
-              ),
+              title: Text("SiRada", style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white
+              )),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.person_outline_rounded),

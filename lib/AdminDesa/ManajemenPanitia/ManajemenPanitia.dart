@@ -6,6 +6,7 @@ import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:surat/AdminDesa/ManajemenPanitia/DetailPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenPanitia/EditPanitia.dart';
 import 'package:surat/AdminDesa/ManajemenPanitia/TambahPanitia.dart';
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
@@ -696,7 +697,12 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 return GestureDetector(
-                                  onTap: (){},
+                                  onTap: (){
+                                    setState(() {
+                                      detailPanitiaDesaAdmin.panitiaId = idPanitiaAktif[index];
+                                    });
+                                    Navigator.push(context, CupertinoPageRoute(builder: (context) => detailPanitiaDesaAdmin()));
+                                  },
                                   child: Container(
                                     child: Stack(
                                       children: <Widget>[
@@ -1058,7 +1064,12 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                                   shrinkWrap: true,
                                   itemBuilder: (context, index) {
                                     return GestureDetector(
-                                      onTap: (){},
+                                      onTap: (){
+                                        setState(() {
+                                          detailPanitiaDesaAdmin.panitiaId = idPanitiaTidakAktif[index];
+                                        });
+                                        Navigator.push(context, CupertinoPageRoute(builder: (context) => detailPanitiaDesaAdmin()));
+                                      },
                                       child: Container(
                                         child: Stack(
                                           children: <Widget>[

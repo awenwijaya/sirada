@@ -120,29 +120,11 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Row(
-            children: <Widget>[
-              Text("SiRada", style: TextStyle(
-                fontFamily: "Poppins",
-                fontWeight: FontWeight.w700,
-                color: HexColor("#025393")
-              )),
-              Container(
-                child: Text("ADMIN", style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  fontSize: 14
-                )),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: HexColor("#025393")
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                margin: EdgeInsets.only(left: 10),
-              )
-            ],
-          ),
+          title: Text("SiRada", style: TextStyle(
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w700,
+              color: HexColor("#025393")
+          )),
           backgroundColor: Colors.white,
           actions: <Widget>[
             IconButton(
