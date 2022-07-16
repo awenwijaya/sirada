@@ -1519,7 +1519,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                               margin: EdgeInsets.symmetric(horizontal: 20),
                               child: MultiSelectDialogField(
                                 title: Text("Prajuru Desa Adat"),
-                                buttonText: Text("Pilih Penerima Prajuru Desa Adat", style: TextStyle(
+                                buttonText: Text("Pilih Tetujon Prajuru Desa Adat", style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14
                                 )),
@@ -1546,7 +1546,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                               margin: EdgeInsets.symmetric(horizontal: 20),
                               child: MultiSelectDialogField(
                                 title: Text("Prajuru Banjar Adat"),
-                                buttonText: Text("Pilih Penerima Prajuru Banjar Adat", style: TextStyle(
+                                buttonText: Text("Pilih Tetujon Prajuru Banjar Adat", style: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: 14
                                 )),
@@ -1755,7 +1755,7 @@ class _tambahSuratKeluarPanitiaState extends State<tambahSuratKeluarPanitia> {
                             margin: EdgeInsets.symmetric(horizontal: 20),
                             child: MultiSelectDialogField(
                               title: Text("Pihak Panitia"),
-                              buttonText: Text("Pilh Penerima Pihak Panitia", style: TextStyle(
+                              buttonText: Text("Pilh Tetujon Pihak Panitia", style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
                               )),

@@ -29,9 +29,11 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
   var profilePicture;
   var nama;
   var namaDesa;
+  var countBelumDivalidasi = 0;
   var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
   var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
   var apiURLGetDataSurat = "https://siradaskripsi.my.id/api/data/admin/surat/panitia/${loginPage.kramaId}";
+  var apiURLCountBelumDivalidasi = "https://siradaskripsi.my.id/api/data/admin/surat/validasi/panitia/count/${loginPage.kramaId}";
 
   //list
   List MenungguRespons = [];
@@ -154,6 +156,19 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
     });
   }
 
+  getCountBelumDivalidasi() async {
+    http.get(Uri.parse(apiURLCountBelumDivalidasi),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          countBelumDivalidasi = data;
+        });
+      }
+    });
+  }
+
   getDesaInfo() async {
     http.get(Uri.parse(apiURLGetDetailDesaById),
         headers: {"Content-Type" : "application/json"}
@@ -177,6 +192,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
     super.initState();
     getUserInfo();
     getDesaInfo();
+    getCountBelumDivalidasi();
     refreshListDibatalkan();
     refreshListMenungguRespons();
     refreshListSedangDiproses();
@@ -477,25 +493,52 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                         onTap: (){
                           Navigator.push(context, CupertinoPageRoute(builder: (context) => permintaanVerifikasiSuratKeluarPanitia()));
                         },
-                        child: Row(
+                        child: Stack(
                           children: <Widget>[
                             Container(
-                              child: Image.asset(
-                                'images/validation.png',
-                                height: 40,
-                                width: 40,
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: Image.asset(
+                                      'images/validation.png',
+                                      height: 40,
+                                      width: 40,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Text("Permintaan Verifikasi Surat", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700
+                                    )),
+                                    margin: EdgeInsets.only(left: 20),
+                                  )
+                                ],
                               ),
                             ),
                             Container(
-                              child: Text("Permintaan Verifikasi Surat Keluar", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700
-                              )),
-                              margin: EdgeInsets.only(left: 20),
+                              alignment: Alignment.centerRight,
+                              child: countBelumDivalidasi == 0 ? Container() : Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(50)
+                                ),
+                                constraints: BoxConstraints(
+                                    minWidth: 12,
+                                    minHeight: 12
+                                ),
+                                child: Text(countBelumDivalidasi.toString(), style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold
+                                )),
+                              ),
                             )
-                          ],
-                        ),
+                          ]
+                        )
                       ),
                       margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                       padding: EdgeInsets.symmetric(horizontal: 20),

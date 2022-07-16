@@ -915,7 +915,7 @@ class pilihDataPanitia extends StatefulWidget {
 }
 
 class _pilihDataPanitiaState extends State<pilihDataPanitia> {
-  var apiURLGetDataPenduduk = "https://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}";
+  var apiURLGetDataPenduduk = "https://siradaskripsi.my.id/api/data/penduduk/desa_adat/non-bendesa/${loginPage.desaId}";
   var apiURLSearch = "https://siradaskripsi.my.id/api/data/penduduk/desa_adat/${loginPage.desaId}/search";
   var nikPenduduk = [];
   var namaPenduduk = [];

@@ -33,12 +33,15 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
   bool LoadingProses = false;
   bool availableDataTidakAktif = false;
   bool availableDataAktif = false;
+  DateTime sekarang = DateTime.now();
+  DateTime periodeAkhirPrajuru;
   var selectedIdPrajuruBanjarAdat;
   var selectedIdPenduduk;
   var apiURLShowListPrajuruBanjarAdatAktif = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/aktif/${loginPage.desaId}";
   var apiURLShowListPrajuruBanjarAdatTidakAktif =  "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/tidak_aktif/${loginPage.desaId}";
   var apiURLDeletePrajuruBanjarAdat = "https://siradaskripsi.my.id/api/admin/prajuru/banjar_adat/delete";
   var apiURLSetPrajuruBanjarTidakAktif = "https://siradaskripsi.my.id/api/admin/prajuru/banjar_adat/set_tidak_aktif";
+  var apiURLSetPrajuruBanjarAktif = "https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/set_aktif";
   var apiURLGetNamaBanjarFilter = "https://siradaskripsi.my.id/api/data/admin/prajuru_banjar_adat/filter/show_nama_banjar";
   var apiURLGetJabatanFilter = "https://siradaskripsi.my.id/api/data/admin/prajuru_banjar_adat/filter/show_jabatan";
   var apiURLShowFilterResult = "https://siradaskripsi.my.id/api/data/admin/prajuru_banjar_adat/filter/show_result";
@@ -956,6 +959,37 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                                                                     ]
                                                                 )
                                                             ),
+                                                            Container(
+                                                              alignment: Alignment.centerRight,
+                                                              child: PopupMenuButton<int>(
+                                                                onSelected: (item) {
+                                                                  onSelected(context, item);
+                                                                  selectedIdPrajuruBanjarAdat = prajuruBanjarAdatIDTidakAktif[index];
+                                                                },
+                                                                itemBuilder: (context) => [
+                                                                  PopupMenuItem<int>(
+                                                                    value: 3,
+                                                                    child: Row(
+                                                                      children: <Widget>[
+                                                                        Container(
+                                                                          child: Icon(
+                                                                            Icons.done,
+                                                                            color: HexColor("025393")
+                                                                          ),
+                                                                        ),
+                                                                        Container(
+                                                                          child: Text("Atur Menjadi Aktif", style: TextStyle(
+                                                                            fontFamily: "Poppins",
+                                                                            fontSize: 14
+                                                                          )),
+                                                                          margin: EdgeInsets.only(left: 10),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            )
                                                           ]
                                                       ),
                                                       margin: EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -1040,6 +1074,8 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
         Navigator.push(context, CupertinoPageRoute(builder: (context) => editPrajuruBanjarAdatAdmin())).then((value) {
           refreshListPrajuruBanjarAdatAktif();
           refreshListPrajuruBanjarAdatTidakAktif();
+          getFilterKomponenAktif();
+          getFilterKomponenTidakAktif();
         });
         break;
 
@@ -1075,7 +1111,7 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                         margin: EdgeInsets.only(top: 10)
                     ),
                     Container(
-                      child: Text("Apakah Anda yakin ingin menonaktifkan prajuru ini? Setelah prajuru di non-aktifkan maka ia akan kehilangan hak akses login dan tindakan ini tidak dapat dikembalikan", style: TextStyle(
+                      child: Text("Apakah Anda yakin ingin menonaktifkan Prajuru ini? Setelah Prajuru di non-aktifkan maka ia akan kehilangan hak akses login", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14
                       ), textAlign: TextAlign.center),
@@ -1107,6 +1143,8 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                         controllerSearchTidakAktif.text = "";
                         refreshListPrajuruBanjarAdatAktif();
                         refreshListPrajuruBanjarAdatTidakAktif();
+                        getFilterKomponenAktif();
+                        getFilterKomponenTidakAktif();
                         ftoast.showToast(
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -1157,6 +1195,153 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
           }
         );
         break;
+
+      case 3:
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(40.0))
+              ),
+              content: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      child: Image.asset(
+                        'images/question.png',
+                        height: 50,
+                        width: 50,
+                      ),
+                    ),
+                    Container(
+                      child: Text("Atur Prajuru Menjadi Aktif", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: HexColor("025393")
+                      ), textAlign: TextAlign.center),
+                      margin: EdgeInsets.only(top: 10),
+                    ),
+                    Container(
+                      child: Text("Apakah Anda yakin ingin mengaktifkan kembali Prajuru ini? Setelah Prajuru di aktifkan maka ia akan mendapatkan kembali hak akses login", style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 14
+                      ), textAlign: TextAlign.center),
+                      margin: EdgeInsets.only(top: 10),
+                    )
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () async {
+                    Uri uri = Uri.parse("https://siradaskripsi.my.id/api/data/staff/prajuru_banjar_adat/periode_akhir/$selectedIdPrajuruBanjarAdat");
+                    final response = await http.get(uri);
+                    if(response.statusCode == 200) {
+                      var data = json.decode(response.body);
+                      setState(() {
+                        periodeAkhirPrajuru = DateTime.parse(data['tanggal_akhir_menjabat']);
+                        print(periodeAkhirPrajuru.toString());
+                      });
+                      if(periodeAkhirPrajuru.isBefore(sekarang)) {
+                        ftoast.showToast(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: Colors.redAccent
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(Icons.close),
+                                Container(
+                                  margin: EdgeInsets.only(left: 15),
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.65,
+                                    child: Text("Tidak dapat mengaktifkan kembali Prajuru karena periode menjabat telah berakhir", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white
+                                    )),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          toastDuration: Duration(seconds: 3)
+                        );
+                      }else {
+                        var body = jsonEncode({
+                          "prajuru_banjar_adat_id" : selectedIdPrajuruBanjarAdat
+                        });
+                        http.post(Uri.parse(apiURLSetPrajuruBanjarAktif),
+                          headers: {"Content-Type" : "application/json"},
+                          body: body
+                        ).then((http.Response response) {
+                          if(response.statusCode == 200) {
+                            ftoast.showToast(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: Colors.green
+                                ),
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.done),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 15),
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.65,
+                                        child: Text("Prajuru Banjar Adat berhasil diaktifkan kembali", style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white
+                                        )),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              toastDuration: Duration(seconds: 3)
+                            );
+                          }
+                        });
+                        refreshListPrajuruBanjarAdatAktif();
+                        refreshListPrajuruBanjarAdatTidakAktif();
+                        getFilterKomponenAktif();
+                        getFilterKomponenTidakAktif();
+                        Navigator.of(context).pop();
+                      }
+                    }
+                  },
+                  child: Text("Ya", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("025393")
+                  )),
+                ),
+                TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Tidak", style: TextStyle(
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w700,
+                    color: HexColor("025393")
+                  )),
+                )
+              ],
+            );
+          }
+        );
     }
   }
 }

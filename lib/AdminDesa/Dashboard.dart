@@ -34,9 +34,24 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var profilePicture;
   var namaAdmin;
   var namaDesa;
+  var countBelumDivalidasi = 0;
   var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
   var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
   var apiURLRemoveFCMToken = "https://siradaskripsi.my.id/api/autentikasi/login/token/remove";
+  var apiURLCountBelumDivalidasi = "https://siradaskripsi.my.id/api/data/admin/surat/validasi/prajuru/count/${loginPage.prajuruId}";
+
+  getCountBelumDivalidasi() async {
+    http.get(Uri.parse(apiURLCountBelumDivalidasi),
+      headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          countBelumDivalidasi = data;
+        });
+      }
+    });
+  }
 
   getUserInfo() async {
     http.get(Uri.parse(apiURLGetDataUser),
@@ -77,6 +92,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
     super.initState();
     getUserInfo();
     getDesaInfo();
+    getCountBelumDivalidasi();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
@@ -516,45 +532,141 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                 margin: EdgeInsets.only(top: 20, left: 15),
               ),
               Container(
-                  child: GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => permintaanVerifikasiSuratKeluarAdmin()));
-                    },
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          child: Image.asset(
-                            'images/validation.png',
-                            height: 40,
-                            width: 40,
-                          ),
-                        ),
-                        Container(
-                          child: Text("Permintaan Verifikasi Surat Keluar", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700
-                          )),
-                          margin: EdgeInsets.only(left: 20),
+                child: loginPage.role == "Bendesa" ? Container(
+                    child: GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => permintaanVerifikasiSuratKeluarAdmin()));
+                        },
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: Image.asset(
+                                      'images/validation.png',
+                                      height: 40,
+                                      width: 40,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Text("Permintaan Verifikasi Surat", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700
+                                    )),
+                                    margin: EdgeInsets.only(left: 20),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: countBelumDivalidasi == 0 ? Container() : Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(50)
+                                ),
+                                constraints: BoxConstraints(
+                                    minWidth: 12,
+                                    minHeight: 12
+                                ),
+                                child: Text(countBelumDivalidasi.toString(), style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold
+                                )),
+                              ),
+                            )
+                          ],
                         )
-                      ],
                     ),
-                  ),
-                  margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  height: 70,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0,3)
+                    margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    height: 70,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0,3)
+                          )
+                        ]
+                    )
+                ) : loginPage.role == "Penyarikan" ? Container(
+                    child: GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => permintaanVerifikasiSuratKeluarAdmin()));
+                        },
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: Image.asset(
+                                      'images/validation.png',
+                                      height: 40,
+                                      width: 40,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Text("Permintaan Verifikasi Surat", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700
+                                    )),
+                                    margin: EdgeInsets.only(left: 20),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(50)
+                                ),
+                                constraints: BoxConstraints(
+                                    minWidth: 12,
+                                    minHeight: 12
+                                ),
+                                child: Text("12", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold
+                                )),
+                              ),
+                            )
+                          ],
                         )
-                      ]
-                  )
+                    ),
+                    margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    height: 70,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0,3)
+                          )
+                        ]
+                    )
+                ) : Container(),
               ),
               Container(
                   child: GestureDetector(

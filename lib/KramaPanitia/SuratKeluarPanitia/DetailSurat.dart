@@ -240,6 +240,20 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
         }
       }
     });
+    await http.get(Uri.parse(apiURLShowTetujonPanitia),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tetujonPanitiaList = jsonData;
+        });
+        for(var i = 0; i < tetujonPihakLainList.length; i++) {
+          tetujonTerlampir.add("${tetujonPanitiaList[i]['jabatan']}  (${tetujonPanitiaList[i]['nama']})");
+        }
+      }
+    });
     if(tetujonTerlampir.length > 2) {
       for(var i = 0; i < 2; i++) {
         setState(() {
@@ -431,34 +445,25 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
     });
   }
 
-  refreshInfoSurat() async {
-    getSuratKeluarInfo();
-    getBendesaInfo();
-    getKetuaPanitiaInfo();
-    getSekretarisPanitiaInfo();
-    getTetujon();
-    getTumusan();
-    getHistori();
-    getLampiran();
-    getValidasiStatus();
-    getTetujonAnggota();
+  getDetailSurat() async {
+    await getSuratKeluarInfo();
+    await getBendesaInfo();
+    await getKetuaPanitiaInfo();
+    await getSekretarisPanitiaInfo();
+    await getTetujon();
+    await getTumusan();
+    await getHistori();
+    await getLampiran();
+    await getValidasiStatus();
+    await getQRCode();
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getSuratKeluarInfo();
-    getBendesaInfo();
-    getKetuaPanitiaInfo();
-    getSekretarisPanitiaInfo();
-    getTetujon();
-    getTumusan();
-    getHistori();
-    getLampiran();
-    getValidasiStatus();
-    getQRCode();
-    getTetujonAnggota();
+    getDetailSurat();
+    // getTetujonAnggota();
     ftoast = FToast();
     ftoast.init(this.context);
   }
@@ -717,7 +722,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                 });
                 Navigator.push(context, CupertinoPageRoute(builder: (context) => editSuratKeluarPanitia())).then((value) {
                   if(value == true) {
-                    refreshInfoSurat();
+                    getDetailSurat();
                   }
                 });
               },
@@ -776,6 +781,15 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                         ), textAlign: TextAlign.center),
                                         margin: EdgeInsets.only(top: 5),
                                         padding: EdgeInsets.symmetric(horizontal: 10)
+                                    ),
+                                    Container(
+                                      child: timKegiatan == null ? Container() : Text("$timKegiatan".toUpperCase(), style: TextStyle(
+                                          fontFamily: "Times New Roman",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700
+                                      ), textAlign: TextAlign.center),
+                                      margin: EdgeInsets.only(top: 5),
+                                      padding: EdgeInsets.symmetric(horizontal: 10),
                                     ),
                                     Container(
                                         child: Text("${alamat}${kontakWa1 == null ? "" : ", $kontakWa1"}${kontakWa2 == null ? "" : ",$kontakWa2"}", style: TextStyle(
@@ -843,14 +857,6 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                         fontFamily: "Times New Roman",
                         fontSize: 16
                       )),
-                      margin: EdgeInsets.only(right: 15, top: 5),
-                    ),
-                    Container(
-                      alignment: Alignment.topRight,
-                      child: tetujonTerlampir.isEmpty ? tetujonPanitiaList.isNotEmpty ? Text("(Terlampir)", style: TextStyle(
-                          fontFamily: "Times New Roman",
-                          fontSize: 16
-                      )) : Container() : Container(),
                       margin: EdgeInsets.only(right: 15, top: 5),
                     ),
                     Container(
@@ -1139,38 +1145,38 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                       ),
                       margin: EdgeInsets.only(left: 15),
                     ),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: tetujonPanitiaList.length == 0 ? Container() : Column(
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Text("Katur Majeng Ring :", style: TextStyle(
-                              fontFamily: "Times New Roman",
-                              fontSize: 16
-                            )),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                for(var i = 0; i < tetujonPanitiaList.length; i++) Container(
-                                  child: Text("${i+1}. ${tetujonPanitiaList[i]['jabatan']}  (${tetujonPanitiaList[i]['nama']})", style: TextStyle(
-                                    fontFamily: "Times New Roman",
-                                    fontSize: 16
-                                  )),
-                                  margin: EdgeInsets.only(bottom: 5),
-                                )
-                              ],
-                            ),
-                            margin: EdgeInsets.only(top: 5),
-                          )
-                        ],
-                      ),
-                      margin: EdgeInsets.only(left: 15),
-                    ),
+                    // Container(
+                    //   alignment: Alignment.topLeft,
+                    //   child: tetujonPanitiaList.length == 0 ? Container() : Column(
+                    //     children: <Widget>[
+                    //       Container(
+                    //         alignment: Alignment.topLeft,
+                    //         child: Text("Katur Majeng Ring :", style: TextStyle(
+                    //           fontFamily: "Times New Roman",
+                    //           fontSize: 16
+                    //         )),
+                    //       ),
+                    //       Container(
+                    //         alignment: Alignment.topLeft,
+                    //         child: Column(
+                    //           mainAxisAlignment: MainAxisAlignment.start,
+                    //           crossAxisAlignment: CrossAxisAlignment.start,
+                    //           children: <Widget>[
+                    //             for(var i = 0; i < tetujonPanitiaList.length; i++) Container(
+                    //               child: Text("${i+1}. ${tetujonPanitiaList[i]['jabatan']}  (${tetujonPanitiaList[i]['nama']})", style: TextStyle(
+                    //                 fontFamily: "Times New Roman",
+                    //                 fontSize: 16
+                    //               )),
+                    //               margin: EdgeInsets.only(bottom: 5),
+                    //             )
+                    //           ],
+                    //         ),
+                    //         margin: EdgeInsets.only(top: 5),
+                    //       )
+                    //     ],
+                    //   ),
+                    //   margin: EdgeInsets.only(left: 15),
+                    // ),
                     Container(
                       child: lampiran.length == 0 ? Container() : Column(
                         children: <Widget>[
@@ -1257,7 +1263,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                       Container(
                                           child: SizedBox(
                                             width: MediaQuery.of(context).size.width * 0.7,
-                                            child: Text("Tidak dapat melanjutkan validasi surat", style: TextStyle(
+                                            child: Text("Tidak dapat melanjutkan verifikasi surat", style: TextStyle(
                                                 fontFamily: "Poppins",
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
@@ -1268,7 +1274,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                       Container(
                                         child: SizedBox(
                                           width: MediaQuery.of(context).size.width * 0.7,
-                                          child: Text("Anda sementara tidak dapat melakukan validasi surat karena sekretaris panitia belum atau menolak validasi surat ini.", style: TextStyle(
+                                          child: Text("Anda sementara tidak dapat melakukan verifikasi surat karena sekretaris panitia belum atau menolak verifikasi surat ini.", style: TextStyle(
                                               fontFamily: "Poppins",
                                               fontSize: 14,
                                               color: Colors.black
@@ -1328,7 +1334,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                                       ),
                                                     ),
                                                     Container(
-                                                      child: Text("Validasi Surat", style: TextStyle(
+                                                      child: Text("Verifikasi Surat", style: TextStyle(
                                                           fontFamily: "Poppins",
                                                           fontSize: 16,
                                                           fontWeight: FontWeight.w700,
@@ -1337,7 +1343,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                                       margin: EdgeInsets.only(top: 10),
                                                     ),
                                                     Container(
-                                                      child: Text("Apakah Anda yakin ingin melakukan validasi terhadap surat ini?", style: TextStyle(
+                                                      child: Text("Apakah Anda yakin ingin melakukan verifikasi terhadap surat ini?", style: TextStyle(
                                                           fontFamily: "Poppins",
                                                           fontSize: 14
                                                       ), textAlign: TextAlign.center),
@@ -1394,16 +1400,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                                         );
                                                       }
                                                     });
-                                                    getSuratKeluarInfo();
-                                                    getBendesaInfo();
-                                                    getKetuaPanitiaInfo();
-                                                    getSekretarisPanitiaInfo();
-                                                    getTetujon();
-                                                    getTumusan();
-                                                    getHistori();
-                                                    getLampiran();
-                                                    getValidasiStatus();
-                                                    getQRCode();
+                                                    getDetailSurat();
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
@@ -1422,7 +1419,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                           }
                                       );
                                     },
-                                    child: Text("Validasi Surat", style: TextStyle(
+                                    child: Text("Verifikasi Surat", style: TextStyle(
                                       fontFamily: "Poppins",
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,
@@ -1440,15 +1437,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                   child: FlatButton(
                                     onPressed: (){
                                       Navigator.push(context, CupertinoPageRoute(builder: (context) => tolakSuratPanitia())).then((value) {
-                                        getSuratKeluarInfo();
-                                        getBendesaInfo();
-                                        getKetuaPanitiaInfo();
-                                        getSekretarisPanitiaInfo();
-                                        getTetujon();
-                                        getTumusan();
-                                        getHistori();
-                                        getLampiran();
-                                        getValidasiStatus();
+                                        getDetailSurat();
                                       });
                                     },
                                     child: Text("Tolak Surat", style: TextStyle(
@@ -1573,15 +1562,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                                       ),
                                                     )
                                                   );
-                                                  getSuratKeluarInfo();
-                                                  getBendesaInfo();
-                                                  getKetuaPanitiaInfo();
-                                                  getSekretarisPanitiaInfo();
-                                                  getTetujon();
-                                                  getTumusan();
-                                                  getHistori();
-                                                  getLampiran();
-                                                  getValidasiStatus();
+                                                  getDetailSurat();
                                                   Navigator.of(context).pop(true);
                                                 }
                                               });
@@ -1738,7 +1719,7 @@ class _tolakSuratPanitiaState extends State<tolakSuratPanitia> {
   Widget build(BuildContext context) {
     return Loading ? loading() : Scaffold(
       appBar: AppBar(
-        title: Text("Tolak Validasi Surat", style: TextStyle(
+        title: Text("Tolak Verifikasi Surat", style: TextStyle(
           fontFamily: "Poppins",
           fontWeight: FontWeight.w700,
           color: Colors.white
@@ -1888,7 +1869,7 @@ class _tolakSuratPanitiaState extends State<tolakSuratPanitia> {
                         );
                       }
                     },
-                    child: Text("Tolak Validasi Surat", style: TextStyle(
+                    child: Text("Tolak Verifikasi Surat", style: TextStyle(
                         fontFamily: "Poppins",
                         fontSize: 14,
                         fontWeight: FontWeight.w700,

@@ -327,7 +327,7 @@ class _manajemenPanitiaDesaAdatAdminState extends State<manajemenPanitiaDesaAdat
                     margin: EdgeInsets.only(left: 15),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.65,
-                      child: Text("Tidak bisa mengaktifkan kembali panitia karena periode menjabat telah berakhir", style: TextStyle(
+                      child: Text("Tidak dapat mengaktifkan kembali panitia karena periode menjabat telah berakhir", style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: 14,
                           fontWeight: FontWeight.w700,

@@ -390,20 +390,24 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
     });
   }
 
+  getDetailSurat() async {
+    await getSuratKeluarInfo();
+    await getBendesaInfo();
+    await getPenyarikanInfo();
+    await getTetujon();
+    await getTumusan();
+    await getHistori();
+    await getLampiran();
+    await getValidasiStatus();
+    await getPenyarikanValidasiStatus();
+    await getQRCode();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getSuratKeluarInfo();
-    getBendesaInfo();
-    getPenyarikanInfo();
-    getTetujon();
-    getTumusan();
-    getHistori();
-    getLampiran();
-    getValidasiStatus();
-    getPenyarikanValidasiStatus();
-    getQRCode();
+    getDetailSurat();
     ftoast = FToast();
     ftoast.init(this.context);
   }
@@ -1128,7 +1132,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                     Container(
                                         child: SizedBox(
                                           width: MediaQuery.of(context).size.width * 0.7,
-                                          child: Text("Tidak dapat melanjutkan validasi surat", style: TextStyle(
+                                          child: Text("Tidak dapat melanjutkan verifikasi surat", style: TextStyle(
                                               fontFamily: "Poppins",
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
@@ -1139,7 +1143,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                     Container(
                                       child: SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.7,
-                                        child: Text("Anda sementara tidak dapat melakukan validasi surat karena Penyarikan belum atau menolak validasi surat ini.", style: TextStyle(
+                                        child: Text("Anda sementara tidak dapat melakukan verifikasi surat karena Penyarikan belum atau menolak verifikasi surat ini.", style: TextStyle(
                                             fontFamily: "Poppins",
                                             fontSize: 14,
                                             color: Colors.black
@@ -1261,13 +1265,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                                           ),
                                                         )
                                                     );
-                                                    getSuratKeluarInfo();
-                                                    getBendesaInfo();
-                                                    getPenyarikanInfo();
-                                                    getTetujon();
-                                                    getTumusan();
-                                                    getHistori();
-                                                    getLampiran();
+                                                    getDetailSurat();
                                                     Navigator.of(context).pop(true);
                                                   }
                                                 });
@@ -1343,7 +1341,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                                         ),
                                                       ),
                                                       Container(
-                                                        child: Text("Validasi Surat", style: TextStyle(
+                                                        child: Text("Verifikasi Surat", style: TextStyle(
                                                             fontFamily: "Poppins",
                                                             fontSize: 16,
                                                             fontWeight: FontWeight.w700,
@@ -1352,7 +1350,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                                         margin: EdgeInsets.only(top: 10),
                                                       ),
                                                       Container(
-                                                        child: Text("Apakah Anda yakin ingin melakukan validasi terhadap surat ini?", style: TextStyle(
+                                                        child: Text("Apakah Anda yakin ingin melakukan verifikasi terhadap surat ini?", style: TextStyle(
                                                             fontFamily: "Poppins",
                                                             fontSize: 14
                                                         ), textAlign: TextAlign.center),
@@ -1395,7 +1393,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                                                       margin: EdgeInsets.only(left: 15),
                                                                       child: SizedBox(
                                                                         width: MediaQuery.of(context).size.width * 0.65,
-                                                                        child: Text("Validasi surat telah berhasil", style: TextStyle(
+                                                                        child: Text("Verifikasi surat telah berhasil", style: TextStyle(
                                                                             fontFamily: "Poppins",
                                                                             fontSize: 14,
                                                                             fontWeight: FontWeight.w700,
@@ -1407,15 +1405,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                                                 ),
                                                               )
                                                           );
-                                                          getSuratKeluarInfo();
-                                                          getBendesaInfo();
-                                                          getPenyarikanInfo();
-                                                          getTetujon();
-                                                          getTumusan();
-                                                          getHistori();
-                                                          getLampiran();
-                                                          getValidasiStatus();
-                                                          getQRCode();
+                                                          getDetailSurat();
                                                           Navigator.of(context).pop(true);
                                                         }
                                                       });
@@ -1434,7 +1424,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                             }
                                         );
                                       },
-                                      child: Text("Validasi Surat", style: TextStyle(
+                                      child: Text("Verifikasi Surat", style: TextStyle(
                                           fontFamily: "Poppins",
                                           fontSize: 14,
                                           fontWeight: FontWeight.w700,
@@ -1452,14 +1442,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                                     child: FlatButton(
                                       onPressed: (){
                                         Navigator.push(context, CupertinoPageRoute(builder: (context) => tolakValidasiSuratAdmin())).then((value) async {
-                                          getSuratKeluarInfo();
-                                          getBendesaInfo();
-                                          getPenyarikanInfo();
-                                          getTetujon();
-                                          getTumusan();
-                                          getHistori();
-                                          getLampiran();
-                                          getValidasiStatus();
+                                          getDetailSurat();
                                         });
                                       },
                                       child: Text("Tolak Surat", style: TextStyle(
@@ -1603,7 +1586,7 @@ class _tolakValidasiSuratAdminState extends State<tolakValidasiSuratAdmin> {
     return MaterialApp(
       home: Loading ? loading() : Scaffold(
         appBar: AppBar(
-          title: Text("Tolak Validasi Surat", style: TextStyle(
+          title: Text("Tolak Verifikasi Surat", style: TextStyle(
             fontFamily: "Poppins",
             fontWeight: FontWeight.w700,
             color: HexColor("#025393"),
@@ -1753,7 +1736,7 @@ class _tolakValidasiSuratAdminState extends State<tolakValidasiSuratAdmin> {
                         );
                       }
                     },
-                    child: Text("Tolak Validasi Surat", style: TextStyle(
+                    child: Text("Tolak Verifikasi Surat", style: TextStyle(
                       fontFamily: "Poppins",
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
