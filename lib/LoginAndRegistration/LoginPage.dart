@@ -748,23 +748,23 @@ class _loginPageState extends State<loginPage> {
                 ),
                 margin: EdgeInsets.only(top: 30),
               ),
-              Container(
-                child: TextButton(
-                  child: Text(
-                    "Lupa Password",
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 14,
-                      color: HexColor("#025393"),
-                      fontWeight: FontWeight.w700
-                    ),
-                  ),
-                  onPressed: (){
-                    Navigator.push(context, CupertinoPageRoute(builder: (context) => lupaPasswordPage()));
-                  },
-                ),
-                margin: EdgeInsets.only(top: 20),
-              )
+              // Container(
+              //   child: TextButton(
+              //     child: Text(
+              //       "Lupa Password",
+              //       style: TextStyle(
+              //         fontFamily: "Poppins",
+              //         fontSize: 14,
+              //         color: HexColor("#025393"),
+              //         fontWeight: FontWeight.w700
+              //       ),
+              //     ),
+              //     onPressed: (){
+              //       Navigator.push(context, CupertinoPageRoute(builder: (context) => lupaPasswordPage()));
+              //     },
+              //   ),
+              //   margin: EdgeInsets.only(top: 20),
+              // )
             ],
           ),
         )

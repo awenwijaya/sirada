@@ -804,6 +804,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                       onTap: (){
                                         setState(() {
                                           detailSuratKeluarNonPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
+                                          detailSuratKeluarNonPanitia.isTetujon = false;
                                         });
                                         Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
                                       },
@@ -1112,11 +1113,13 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                       if(SedangDiproses[index]['tim_kegiatan'] == null) {
                                         setState(() {
                                           detailSuratKeluarNonPanitia.suratKeluarId = SedangDiproses[index]['surat_keluar_id'];
+                                          detailSuratKeluarNonPanitia.isTetujon = false;
                                         });
                                         Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
                                       }else {
                                         setState(() {
                                           detailSuratKeluarPanitiaAdmin.suratKeluarId = SedangDiproses[index]['surat_keluar_id'];
+                                          detailSuratKeluarPanitiaAdmin.isTetujon = false;
                                         });
                                         Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaAdmin()));
                                       }
@@ -1417,11 +1420,13 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                       if(TelahDikonfirmasi[index]['tim_kegiatan'] == null) {
                                         setState(() {
                                           detailSuratKeluarNonPanitia.suratKeluarId = TelahDikonfirmasi[index]['surat_keluar_id'];
+                                          detailSuratKeluarNonPanitia.isTetujon = false;
                                         });
                                         Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
                                       }else {
                                         setState(() {
                                           detailSuratKeluarPanitiaAdmin.suratKeluarId = TelahDikonfirmasi[index]['surat_keluar_id'];
+                                          detailSuratKeluarPanitiaAdmin.isTetujon = false;
                                         });
                                         Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaAdmin()));
                                       }
@@ -1720,6 +1725,7 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                     onTap: (){
                                       setState(() {
                                         detailSuratKeluarNonPanitia.suratKeluarId = Dibatalkan[index]['surat_keluar_id'];
+                                        detailSuratKeluarNonPanitia.isTetujon = false;
                                       });
                                       Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
                                     },

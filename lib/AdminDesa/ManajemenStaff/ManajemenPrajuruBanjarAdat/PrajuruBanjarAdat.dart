@@ -1312,13 +1312,13 @@ class _prajuruBanjarAdatAdminState extends State<prajuruBanjarAdatAdmin> {
                               ),
                               toastDuration: Duration(seconds: 3)
                             );
+                            refreshListPrajuruBanjarAdatAktif();
+                            refreshListPrajuruBanjarAdatTidakAktif();
+                            getFilterKomponenAktif();
+                            getFilterKomponenTidakAktif();
+                            Navigator.of(context).pop();
                           }
                         });
-                        refreshListPrajuruBanjarAdatAktif();
-                        refreshListPrajuruBanjarAdatTidakAktif();
-                        getFilterKomponenAktif();
-                        getFilterKomponenTidakAktif();
-                        Navigator.of(context).pop();
                       }
                     }
                   },

@@ -14,6 +14,7 @@ import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class detailSuratKeluarPanitiaAdmin extends StatefulWidget {
   static var suratKeluarId;
+  static bool isTetujon = false;
   const detailSuratKeluarPanitiaAdmin({Key key}) : super(key: key);
 
   @override
@@ -245,7 +246,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
         }
       }
     });
-    if(tetujonTerlampir.length > 2 || tetujonTerlampir.length == 2) {
+    if(tetujonTerlampir.length >= 2) {
       for(var i = 0; i < 2; i++) {
         setState(() {
           tetujon.add(tetujonTerlampir[i]);
@@ -254,13 +255,6 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
       }
     }else {
       if(tetujonTerlampir.length == 1) {
-        setState(() {
-          tetujon.add(tetujonTerlampir[0]);
-          tetujon.add(tetujonTerlampir[1]);
-          tetujonTerlampir.removeAt(0);
-          tetujonTerlampir.removeAt(1);
-        });
-      }else {
         setState(() {
           tetujon.add(tetujonTerlampir[0]);
           tetujonTerlampir.removeAt(0);
