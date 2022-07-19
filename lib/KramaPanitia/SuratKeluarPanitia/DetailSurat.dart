@@ -16,6 +16,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class detailSuratKeluarPanitia extends StatefulWidget {
   static var suratKeluarId;
   static var panitiaId;
+  static bool isTetujon = false;
   const detailSuratKeluarPanitia({Key key}) : super(key: key);
 
   @override

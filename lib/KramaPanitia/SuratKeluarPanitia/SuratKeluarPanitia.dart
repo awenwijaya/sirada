@@ -856,6 +856,7 @@ class _suratKeluarPanitiaKramaPanitiaState extends State<suratKeluarPanitiaKrama
                               return GestureDetector(
                                 onTap: (){
                                   setState(() {
+                                    detailSuratKeluarPanitia.isTetujon = true;
                                     detailSuratKeluarPanitia.suratKeluarId = MenungguRespons[index]['surat_keluar_id'];
                                   });
                                   Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
@@ -1211,6 +1212,7 @@ class _suratKeluarPanitiaKramaPanitiaState extends State<suratKeluarPanitiaKrama
                               return GestureDetector(
                                 onTap: (){
                                   setState(() {
+                                    detailSuratKeluarPanitia.isTetujon = true;
                                     detailSuratKeluarPanitia.suratKeluarId = SedangDiproses[index]['surat_keluar_id'];
                                   });
                                   Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
@@ -1566,6 +1568,7 @@ class _suratKeluarPanitiaKramaPanitiaState extends State<suratKeluarPanitiaKrama
                               return GestureDetector(
                                 onTap: (){
                                   setState(() {
+                                    detailSuratKeluarPanitia.isTetujon = true;
                                     detailSuratKeluarPanitia.suratKeluarId = TelahDikonfirmasi[index]['surat_keluar_id'];
                                   });
                                   Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
@@ -1921,6 +1924,7 @@ class _suratKeluarPanitiaKramaPanitiaState extends State<suratKeluarPanitiaKrama
                               return GestureDetector(
                                 onTap: (){
                                   setState(() {
+                                    detailSuratKeluarPanitia.isTetujon = true;
                                     detailSuratKeluarPanitia.suratKeluarId = Dibatalkan[index]['surat_keluar_id'];
                                   });
                                   Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {

@@ -414,11 +414,13 @@ class _permintaanVerifikasiSuratKeluarAdminState extends State<permintaanVerifik
                           if(surat[index]['tim_kegiatan'] == null) {
                             setState(() {
                               detailSuratKeluarNonPanitia.suratKeluarId = surat[index]['surat_keluar_id'];
+                              detailSuratKeluarNonPanitia.isTetujon = false;
                             });
                             Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
                           }else {
                             setState(() {
                               detailSuratKeluarPanitiaAdmin.suratKeluarId = surat[index]['surat_keluar_id'];
+                              detailSuratKeluarPanitiaAdmin.isTetujon = false;
                             });
                             Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaAdmin()));
                           }

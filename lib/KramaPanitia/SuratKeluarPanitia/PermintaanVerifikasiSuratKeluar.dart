@@ -409,6 +409,7 @@ class _permintaanVerifikasiSuratKeluarPanitiaState extends State<permintaanVerif
                       return GestureDetector(
                         onTap: (){
                           setState(() {
+                            detailSuratKeluarPanitia.isTetujon = true;
                             detailSuratKeluarPanitia.suratKeluarId = surat[index]['surat_keluar_id'];
                           });
                           Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia()));
