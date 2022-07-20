@@ -14,6 +14,7 @@ import 'package:surat/LoginAndRegistration/LoginPage.dart';
 class detailSuratPrajuruKrama extends StatefulWidget {
   static var suratKeluarId;
   static var status;
+  static bool isTetujon = false;
   const detailSuratPrajuruKrama({Key key}) : super(key: key);
 
   @override
@@ -50,6 +51,11 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
   List tumusanPrajuruDesaList = [];
   List tumusanPihakLainList = [];
   List<String> tumusan = [];
+  List<String> tetujon = [];
+  List<String> tetujonTerlampir = [];
+  List tetujonPrajuruDesaList = [];
+  List tetujonPrajuruBanjarList = [];
+  List tetujonPihakLainList = [];
   bool LoadData = true;
   var apiURLGetLampiran = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/lampiran/${detailSuratPrajuruKrama.suratKeluarId}";
   var apiURLShowDetailSuratKeluar = "https://siradaskripsi.my.id/api/data/surat/keluar/view/${detailSuratPrajuruKrama.suratKeluarId}";
@@ -59,6 +65,79 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
   var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${detailSuratPrajuruKrama.suratKeluarId}";
   var apiURLGetQrCode = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/validasi/qrcode/${detailSuratPrajuruKrama.suratKeluarId}";
   var apiURLSetRead = "https://siradaskripsi.my.id/api/krama/view/surat/set-read";
+  var apiURLGetTetujonPrajuruDesa = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/desa/${detailSuratPrajuruKrama.suratKeluarId}";
+  var apiURLGetTetujonPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/banjar/${detailSuratPrajuruKrama.suratKeluarId}";
+  var apiURLGetTetujonPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/pihak-lain/${detailSuratPrajuruKrama.suratKeluarId}";
+
+  getTetujon() async {
+    this.tetujon = [];
+    this.tetujonTerlampir = [];
+    await http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tetujonPrajuruDesaList = jsonData;
+        });
+        for(var i = 0; i < tetujonPrajuruDesaList.length; i++) {
+          tetujonTerlampir.add("${tetujonPrajuruDesaList[i]['jabatan']} (${tetujonPrajuruDesaList[i]['nama']})");
+        }
+      }
+    });
+    await http.get(Uri.parse(apiURLGetTetujonPrajuruBanjar),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      print(responseValue.toString());
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tetujonPrajuruBanjarList = jsonData;
+        });
+        for(var i = 0; i < tetujonPrajuruBanjarList.length; i++) {
+          tetujonTerlampir.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} (${tetujonPrajuruBanjarList[i]['nama']})");
+        }
+      }
+    });
+    await http.get(Uri.parse(apiURLGetTetujonPihakLain),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tetujonPihakLainList = jsonData;
+        });
+        for(var i = 0; i < tetujonPihakLainList.length; i++) {
+          tetujonTerlampir.add("${tetujonPihakLainList[i]['pihak_lain']}");
+        }
+      }
+    });
+    if(tetujonTerlampir.length > 2) {
+      for(var i = 0; i < 2; i++) {
+        setState(() {
+          tetujon.add(tetujonTerlampir[i]);
+          tetujonTerlampir.removeAt(i);
+        });
+      }
+    }else {
+      if(tetujonTerlampir.length == 1) {
+        setState(() {
+          tetujon.add(tetujonTerlampir[0]);
+          tetujonTerlampir.removeAt(0);
+        });
+      }else {
+        setState(() {
+          tetujon.add(tetujonTerlampir[0]);
+          tetujon.add(tetujonTerlampir[1]);
+          tetujonTerlampir.removeAt(0);
+          tetujonTerlampir.removeAt(1);
+        });
+      }
+    }
+  }
 
   setReadSurat() async {
     var body = jsonEncode({
@@ -250,6 +329,9 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
     if(detailSuratPrajuruKrama.status == "Belum Terbaca") {
       setReadSurat();
     }
+    if(detailSuratPrajuruKrama.isTetujon == true) {
+      getTetujon();
+    }
   }
 
   @override
@@ -364,10 +446,28 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                         ),
                         Container(
                           alignment: Alignment.topRight,
-                          child: Text(pihakKrama, style: TextStyle(
+                          child: detailSuratPrajuruKrama.isTetujon == false ? Text(pihakKrama, style: TextStyle(
                               fontFamily: "Times New Roman",
                               fontSize: 16
-                          )),
+                          )) : Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              for(var i = 0; i < tetujon.length; i++) Container(
+                                child: Text("${i+1}. ${tetujon[i].toString()}", textAlign: TextAlign.right, style: TextStyle(
+                                    fontFamily: "Times New Roman",
+                                    fontSize: 16
+                                )),
+                                margin: EdgeInsets.only(bottom: 5),
+                              ),
+                              Container(
+                                child: tetujonTerlampir.isNotEmpty ? Text("(Terlampir)", style: TextStyle(
+                                    fontFamily: "Times New Roman",
+                                    fontSize: 16
+                                )) : Container(),
+                              ),
+                            ],
+                          ),
                           margin: EdgeInsets.only(right: 15, top: 5),
                         ),
                         Container(
@@ -578,6 +678,38 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                               color: Colors.black38
                           ),
                           margin: EdgeInsets.symmetric(horizontal: 15),
+                        ),
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: tetujonTerlampir.length == 0 ? Container() : Column(
+                            children: <Widget>[
+                              Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text("Tetujon Surat (Terlampir) :", style: TextStyle(
+                                      fontFamily: "Times New Roman",
+                                      fontSize: 16
+                                  ))
+                              ),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    for(var i = 0; i < tetujonTerlampir.length; i++) Container(
+                                      child: Text("${i+1}. ${tetujonTerlampir[i].toString()}", style: TextStyle(
+                                          fontFamily: "Times New Roman",
+                                          fontSize: 16
+                                      )),
+                                      margin: EdgeInsets.only(bottom: 5),
+                                    )
+                                  ],
+                                ),
+                                margin: EdgeInsets.only(top: 5),
+                              ),
+                            ],
+                          ),
+                          margin: EdgeInsets.only(left: 15),
                         ),
                         Container(
                           child: lampiran.length == 0 ? Container() : Column(

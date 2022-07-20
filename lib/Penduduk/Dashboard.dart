@@ -9,6 +9,7 @@ import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'package:surat/Penduduk/AgendaAcara/AgendaAcara.dart';
 import 'package:surat/Penduduk/DetailDesa/DetailDesa.dart';
 import 'package:surat/Penduduk/Profile/UserProfile.dart';
+import 'package:surat/Penduduk/SuratDiterima/SuratDiterima.dart';
 import 'package:surat/Penduduk/SuratPengumuman/DetailSurat.dart';
 import 'package:surat/Penduduk/SuratPengumuman/DetailSuratPanitia.dart';
 import 'package:surat/Penduduk/SuratPengumuman/SuratPengumuman.dart';
@@ -45,8 +46,11 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
   var apiURLShowAllPengumuman = "https://siradaskripsi.my.id/api/krama/view/surat/all";
   var apiURLShowFilter = "https://siradaskripsi.my.id/api/admin/surat/keluar/filter/tahun_terbit/krama";
   var apiURLShowFilterResult = "https://siradaskripsi.my.id/api/krama/surat/filter/result";
+  var apiURLShowPrajuruBanjarAdatId = "https://siradaskripsi.my.id/api/data/staff/prajuru/banjar/get/${loginPage.kramaId}";
   var selectedBulan;
   var selectedTahun;
+  var prajuruId;
+
   List bulan = [
     {
       "value" : 1,
@@ -117,6 +121,20 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
             this.tahun.add(jsonData[i]['tahun_terbit']);
           }
         });
+      }
+    });
+  }
+
+  Future getPrajuruBanjarAdatInfo() async {
+    http.get(Uri.parse(apiURLShowPrajuruBanjarAdatId),
+      headers: {"Content-Type" : "application/json"},
+    ).then((http.Response response) {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          prajuruId = data['prajuru_banjar_adat_id'];
+        });
+        print(prajuruId.toString());
       }
     });
   }
@@ -222,6 +240,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
     getDesaInfo();
     getAllPengumuman();
     showFilterTahunTerbit();
+    getPrajuruBanjarAdatInfo();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
@@ -417,6 +436,52 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
               SliverToBoxAdapter(
                   child: Column(
                       children: <Widget>[
+                        Container(
+                          child: prajuruId == null ? Container() : Container(
+                            child: GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  suratDiterimaPrajuruBanjar.prajuruId = prajuruId;
+                                });
+                                Navigator.push(context, CupertinoPageRoute(builder: (context) => suratDiterimaPrajuruBanjar()));
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: Image.asset(
+                                      'images/penerima.png',
+                                      height: 40,
+                                      width: 40,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Text("Surat Diterima", style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700
+                                    )),
+                                    margin: EdgeInsets.only(left: 20),
+                                  )
+                                ],
+                              ),
+                            ),
+                              margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              height: 70,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: Offset(0,3)
+                                    )
+                                  ]
+                              )
+                          )
+                        ),
                         Container(
                             child: Text("Desa Anda", style: TextStyle(
                                 fontFamily: "Poppins",
