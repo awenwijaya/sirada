@@ -432,7 +432,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                 color: HexColor("#025393")
             )),
           actions: <Widget>[
-            canValidateOtherPrajuru == false ? Container() : status == "Sedang Diproses" ? validasiStatus == "Belum Divalidasi" ? penyarikanValidasiStatus == "Belum Divalidasi" ? IconButton(
+            detailSuratKeluarNonPanitia.isTetujon == true ? Container() : canValidateOtherPrajuru == false ? Container() : status == "Sedang Diproses" ? validasiStatus == "Belum Divalidasi" ? penyarikanValidasiStatus == "Belum Divalidasi" ? IconButton(
                 onPressed: (){
                   showDialog(
                       context: context,
@@ -660,7 +660,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                 icon: Icon(Icons.add_task_rounded),
                 color: HexColor("#025393")
             ) : Container(),
-            status == "Telah Dikonfirmasi" ? Container() : status == "Dibatalkan" ? Container() : canValidateOtherPrajuru == false ? Container() : IconButton(
+            detailSuratKeluarNonPanitia.isTetujon == true ? Container() : status == "Telah Dikonfirmasi" ? Container() : status == "Dibatalkan" ? Container() : canValidateOtherPrajuru == false ? Container() : IconButton(
               onPressed: (){
                 setState(() {
                   setState(() {
@@ -1115,7 +1115,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                     ),
                   ),
                   Container(
-                    child: status == "Menunggu Respon" ? Container() : status == "Dibatalkan" ? Container() : canValidateOtherPrajuru == false ? Container() : canValidate == false ? Container(
+                    child: detailSuratKeluarNonPanitia.isTetujon == true ? Container() : status == "Menunggu Respon" ? Container() : status == "Dibatalkan" ? Container() : canValidateOtherPrajuru == false ? Container() : canValidate == false ? Container(
                         child: Container(
                           child: Row(
                             children: <Widget>[
@@ -1470,85 +1470,91 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                     ) : Container(),
                   ),
                   Container(
-                      child: Text("Histori Surat", style: TextStyle(
-                        fontFamily: "Poppins",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      )),
-                      alignment: Alignment.topLeft,
-                      margin: EdgeInsets.only(top: 15, left: 25)
-                  ),
-                  Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: detailSuratKeluarNonPanitia.isTetujon == true ? Container() :Column(
                       children: <Widget>[
-                        for(int i = 0; i < historiSurat.length; i++) TimelineTile(
-                          indicatorStyle: i+1 < historiSurat.length ? IndicatorStyle(
-                            color: Colors.black,
-                            height: 30,
-                            width: 30
-                          ) : IndicatorStyle(
-                              color: HexColor("#377D71"),
-                              height: 30,
-                              width: 30,
-                          ),
-                          isFirst: i == 0 ? true : false,
-                          isLast: i+1 == historiSurat.length ? true : false,
-                          endChild: Row(
+                        Container(
+                            child: Text("Histori Surat", style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                            )),
+                            alignment: Alignment.topLeft,
+                            margin: EdgeInsets.only(top: 15, left: 25)
+                        ),
+                        Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Container(
-                                child: Icon(
-                                  historiSurat[i]['histori'].contains('ditambahkan')
-                                      ? Icons.add
-                                      : historiSurat[i]['histori'] == "Surat telah diubah"
-                                      ? Icons.edit
-                                      : historiSurat[i]['histori'].contains('Sedang Diproses')
-                                      ? Icons.add_task_rounded
-                                      : historiSurat[i]['histori'].contains('telah ditandatangani')
-                                      ? Icons.done
-                                      : historiSurat[i]['histori'].contains('ditolak')
-                                      ? Icons.cancel
-                                      : historiSurat[i]['histori'].contains('dibatalkan status tolak validasi')
-                                      ? Icons.cancel : Icons.cancel,
-                                  color: i+1 < historiSurat.length ? Colors.black54 : HexColor("377D71")
-                                ),
-                                margin: EdgeInsets.only(left: 15),
-                              ),
-                              Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Container(
-                                      child: Text(DateFormat("dd-MMM-yyyy, hh:mm").format(DateTime.parse(historiSurat[i]['created_at'])).toString(), style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w700,
-                                        color: i+1 < historiSurat.length ? Colors.black54 : Colors.black
-                                      )),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: SizedBox(
-                                        width: MediaQuery.of(context).size.width * 0.69 ,
-                                        child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['jabatan']} ${historiSurat[i]['nama']}", style: TextStyle(
-                                            fontFamily: "Poppins",
-                                            fontSize: 14,
-                                            color: i+1 < historiSurat.length ? Colors.black54 : Colors.black
-                                        ), maxLines: 2, softWrap: false, overflow: TextOverflow.ellipsis),
-                                      )
-                                    )
-                                  ],
-                                ),
-                                margin: EdgeInsets.only(left: 15, top: 15),
-                              ),
+                              for(int i = 0; i < historiSurat.length; i++) TimelineTile(
+                                  indicatorStyle: i+1 < historiSurat.length ? IndicatorStyle(
+                                      color: Colors.black,
+                                      height: 30,
+                                      width: 30
+                                  ) : IndicatorStyle(
+                                    color: HexColor("#377D71"),
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                                  isFirst: i == 0 ? true : false,
+                                  isLast: i+1 == historiSurat.length ? true : false,
+                                  endChild: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Icon(
+                                            historiSurat[i]['histori'].contains('ditambahkan')
+                                                ? Icons.add
+                                                : historiSurat[i]['histori'] == "Surat telah diubah"
+                                                ? Icons.edit
+                                                : historiSurat[i]['histori'].contains('Sedang Diproses')
+                                                ? Icons.add_task_rounded
+                                                : historiSurat[i]['histori'].contains('telah ditandatangani')
+                                                ? Icons.done
+                                                : historiSurat[i]['histori'].contains('ditolak')
+                                                ? Icons.cancel
+                                                : historiSurat[i]['histori'].contains('dibatalkan status tolak validasi')
+                                                ? Icons.cancel : Icons.cancel,
+                                            color: i+1 < historiSurat.length ? Colors.black54 : HexColor("377D71")
+                                        ),
+                                        margin: EdgeInsets.only(left: 15),
+                                      ),
+                                      Container(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Container(
+                                              child: Text(DateFormat("dd-MMM-yyyy, hh:mm").format(DateTime.parse(historiSurat[i]['created_at'])).toString(), style: TextStyle(
+                                                  fontFamily: "Poppins",
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: i+1 < historiSurat.length ? Colors.black54 : Colors.black
+                                              )),
+                                            ),
+                                            Container(
+                                                padding: EdgeInsets.only(right: 10),
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context).size.width * 0.69 ,
+                                                  child: Text("${historiSurat[i]['histori']} oleh ${historiSurat[i]['jabatan']} ${historiSurat[i]['nama']}", style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 14,
+                                                      color: i+1 < historiSurat.length ? Colors.black54 : Colors.black
+                                                  ), maxLines: 2, softWrap: false, overflow: TextOverflow.ellipsis),
+                                                )
+                                            )
+                                          ],
+                                        ),
+                                        margin: EdgeInsets.only(left: 15, top: 15),
+                                      ),
+                                    ],
+                                  )
+                              )
                             ],
-                          )
+                          ),
+                          margin: EdgeInsets.only(top: 10, bottom: 10, left: 15),
                         )
                       ],
                     ),
-                    margin: EdgeInsets.only(top: 10, bottom: 10, left: 15),
                   )
                 ],
               ),
