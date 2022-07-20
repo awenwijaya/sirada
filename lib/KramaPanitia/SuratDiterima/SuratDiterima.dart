@@ -329,7 +329,7 @@ class _suratDiterimaPanitiaState extends State<suratDiterimaPanitia> {
               child: LoadingSurat ? ListTileShimmer() : availableSurat ? Expanded(
                 flex: 1,
                 child: RefreshIndicator(
-                  onRefresh: refreshListSuratDiterima,
+                  onRefresh: isFilter ? getFilterResult : refreshListSuratDiterima,
                   child: ListView.builder(
                     itemCount: suratDiterima.length,
                     itemBuilder: (context, index) {
