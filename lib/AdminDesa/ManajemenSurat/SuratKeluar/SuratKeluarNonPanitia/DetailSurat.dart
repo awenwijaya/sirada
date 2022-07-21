@@ -78,7 +78,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   var apiURLGetTumusanPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/banjar/${detailSuratKeluarNonPanitia.suratKeluarId}";
   var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${detailSuratKeluarNonPanitia.suratKeluarId}";
   var apiURLGetHistori = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/histori/${detailSuratKeluarNonPanitia.suratKeluarId}";
-
+  var apiURLSetReadSurat = "https://siradaskripsi.my.id/api/surat/tetujon/prajuru-desa/set-read";
   //validasi
   var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
   var apiURLShowValidasiStatus = "https://siradaskripsi.my.id/api/admin/surat/keluar/prajuru/validasi/show/${loginPage.prajuruId}";
@@ -404,11 +404,29 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
     await getQRCode();
   }
 
+  Future setReadSuratDiterima() async {
+    var body = jsonEncode({
+      "surat_keluar_id" : detailSuratKeluarNonPanitia.suratKeluarId,
+      "prajuru_desa_adat_id" : loginPage.prajuruId
+    });
+    http.post(Uri.parse(apiURLSetReadSurat),
+      headers: {"Content-Type" : "application/json"},
+      body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        print("surat set read berhasil!");
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getDetailSurat();
+    if(detailSuratKeluarNonPanitia.isTetujon == true) {
+      setReadSuratDiterima();
+    }
     ftoast = FToast();
     ftoast.init(this.context);
   }
@@ -423,7 +441,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
             icon: Icon(Icons.arrow_back),
             color: HexColor("#025393"),
             onPressed: (){
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
             },
           ),
             title: Text(parindikan == null ? "" : parindikan, style: TextStyle(

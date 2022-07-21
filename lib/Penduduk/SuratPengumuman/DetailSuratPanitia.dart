@@ -1,4 +1,5 @@
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:surat/Penduduk/SuratDiterima/SuratDiterima.dart';
 import 'package:surat/Penduduk/SuratPengumuman/Lampiran.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +14,7 @@ import 'dart:convert';
 class detailSuratKeluarPanitiaKrama extends StatefulWidget {
   static var suratKeluarId;
   static var status;
+  static bool isTetujon = false;
   const detailSuratKeluarPanitiaKrama({Key key}) : super(key: key);
 
   @override
@@ -52,6 +54,11 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
   List tumusanPihakLainList = [];
   List tetujonPanitiaList = [];
   List lampiran = [];
+  List<String> tetujon = [];
+  List<String> tetujonTerlampir = [];
+  List tetujonPrajuruDesaList = [];
+  List tetujonPrajuruBanjarList = [];
+  List tetujonPihakLainList = [];
   var apiURLShowDetailSuratKeluar = "https://siradaskripsi.my.id/api/data/surat/keluar/view/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
   var apiURLShowPrajuru = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/prajuru/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
   var apiURLGetLampiran = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/lampiran/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
@@ -59,10 +66,14 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
   var apiURLGetTumusanPrajuruDesa = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/desa/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
   var apiURLGetTumusanPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/prajuru/banjar/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
   var apiURLGetTumusanPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tumusan/pihak-lain/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
+  var apiURLGetTetujonPrajuruDesa = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/desa/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
+  var apiURLGetTetujonPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/banjar/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
+  var apiURLGetTetujonPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/pihak-lain/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
   bool LoadData = true;
   var apiURLGetQRCode = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/panitia/validasi/qrcode/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
   var apiURLShowTetujonPanitia = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/panitia/${detailSuratKeluarPanitiaKrama.suratKeluarId}";
   var apiURLSetRead = "https://siradaskripsi.my.id/api/krama/view/surat/set-read";
+  var apiURLSetReadPrajuruBanjar = "https://siradaskripsi.my.id/api/surat/tetujon/prajuru-banjar/set-read";
 
   getLampiran() async {
     http.get(Uri.parse(apiURLGetLampiran),
@@ -94,6 +105,21 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
     });
   }
 
+  Future setReadSuratDiterima() async {
+    var body = jsonEncode({
+      "surat_keluar_id" : detailSuratKeluarPanitiaKrama.suratKeluarId.toString(),
+      "prajuru_banjar_adat_id" : suratDiterimaPrajuruBanjar.prajuruId
+    });
+    http.post(Uri.parse(apiURLSetReadPrajuruBanjar),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        print("surat set read berhasil!");
+      }
+    });
+  }
+
   getQRCode() async {
     http.get(Uri.parse(apiURLGetQRCode),
         headers: {"Content-Type" : "application/json"}
@@ -108,6 +134,76 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
         });
       }
     });
+  }
+
+  getTetujon() async {
+    this.tetujon = [];
+    this.tetujonTerlampir = [];
+    await http.get(Uri.parse(apiURLGetTetujonPrajuruDesa),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tetujonPrajuruDesaList = jsonData;
+        });
+        for(var i = 0; i < tetujonPrajuruDesaList.length; i++) {
+          tetujonTerlampir.add("${tetujonPrajuruDesaList[i]['jabatan']} (${tetujonPrajuruDesaList[i]['nama']})");
+        }
+      }
+    });
+    await http.get(Uri.parse(apiURLGetTetujonPrajuruBanjar),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      print(responseValue.toString());
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tetujonPrajuruBanjarList = jsonData;
+        });
+        for(var i = 0; i < tetujonPrajuruBanjarList.length; i++) {
+          tetujonTerlampir.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} (${tetujonPrajuruBanjarList[i]['nama']})");
+        }
+      }
+    });
+    await http.get(Uri.parse(apiURLGetTetujonPihakLain),
+        headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      var responseValue = response.statusCode;
+      if(responseValue == 200) {
+        var jsonData = json.decode(response.body);
+        setState(() {
+          tetujonPihakLainList = jsonData;
+        });
+        for(var i = 0; i < tetujonPihakLainList.length; i++) {
+          tetujonTerlampir.add("${tetujonPihakLainList[i]['pihak_lain']}");
+        }
+      }
+    });
+    if(tetujonTerlampir.length > 2) {
+      for(var i = 0; i < 2; i++) {
+        setState(() {
+          tetujon.add(tetujonTerlampir[i]);
+          tetujonTerlampir.removeAt(i);
+        });
+      }
+    }else {
+      if(tetujonTerlampir.length == 1) {
+        setState(() {
+          tetujon.add(tetujonTerlampir[0]);
+          tetujonTerlampir.removeAt(0);
+        });
+      }else {
+        setState(() {
+          tetujon.add(tetujonTerlampir[0]);
+          tetujon.add(tetujonTerlampir[1]);
+          tetujonTerlampir.removeAt(0);
+          tetujonTerlampir.removeAt(1);
+        });
+      }
+    }
   }
 
   getTetujonAnggota() async {
@@ -289,8 +385,12 @@ class _detailSuratKeluarPanitiaKramaState extends State<detailSuratKeluarPanitia
     getLampiran();
     getQRCode();
     getTetujonAnggota();
-    if(detailSuratKeluarPanitiaKrama.status == "Belum Terbaca") {
+    if(detailSuratKeluarPanitiaKrama.status == "Belum Terbaca" && detailSuratKeluarPanitiaKrama.isTetujon == false) {
       setReadSurat();
+    }
+    if(detailSuratKeluarPanitiaKrama.isTetujon == true) {
+      setReadSuratDiterima();
+      getTetujon();
     }
   }
 

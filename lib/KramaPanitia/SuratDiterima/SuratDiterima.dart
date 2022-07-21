@@ -339,14 +339,20 @@ class _suratDiterimaPanitiaState extends State<suratDiterimaPanitia> {
                             detailSuratKeluarPanitia.suratKeluarId = suratDiterima[index]['surat_keluar_id'];
                             detailSuratKeluarPanitia.isTetujon = true;
                           });
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia()));
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia())).then((value) {
+                            if(isFilter == true) {
+                              getFilterResult();
+                            }else {
+                              refreshListSuratDiterima();
+                            }
+                          });
                         },
                         child: Container(
                           child: Row(
                             children: <Widget>[
                               Container(
                                 child: Image.asset(
-                                  'images/email.png',
+                                  suratDiterima[index]['read_at'] == null ? "images/letter-closed.png" : "images/letter-open.png",
                                   height: 40,
                                   width: 40,
                                 ),
@@ -363,7 +369,7 @@ class _suratDiterimaPanitiaState extends State<suratDiterimaPanitia> {
                                             fontFamily: "Poppins",
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700,
-                                            color: HexColor("025393")
+                                            color: suratDiterima[index]['read_at'] == null ? HexColor("025393") : Colors.black26
                                         ), maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           softWrap: false,
@@ -373,7 +379,8 @@ class _suratDiterimaPanitiaState extends State<suratDiterimaPanitia> {
                                     Container(
                                       child: Text(suratDiterima[index]['nomor_surat'].toString(), style: TextStyle(
                                           fontFamily: "Poppins",
-                                          fontSize: 14
+                                          fontSize: 14,
+                                          color: suratDiterima[index]['read_at'] == null ? Colors.black : Colors.black26
                                       )),
                                     )
                                   ],

@@ -8,6 +8,7 @@ import 'package:surat/LoginAndRegistration/LoginPage.dart';
 import 'dart:convert';
 
 import 'package:surat/Penduduk/SuratPengumuman/DetailSurat.dart';
+import 'package:surat/Penduduk/SuratPengumuman/DetailSuratPanitia.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class suratDiterimaPrajuruBanjar extends StatefulWidget {
@@ -336,18 +337,38 @@ class _suratDiterimaPrajuruBanjarState extends State<suratDiterimaPrajuruBanjar>
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: (){
-                          setState(() {
-                            detailSuratPrajuruKrama.isTetujon = true;
-                            detailSuratPrajuruKrama.suratKeluarId = suratDiterima[index]['surat_keluar_id'];
-                          });
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratPrajuruKrama()));
+                          if(suratDiterima[index]['tim_kegiatan'] == null) {
+                            setState(() {
+                              detailSuratPrajuruKrama.isTetujon = true;
+                              detailSuratPrajuruKrama.suratKeluarId = suratDiterima[index]['surat_keluar_id'];
+                            });
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratPrajuruKrama())).then((value) {
+                              if(isFilter == true) {
+                                getFilterResult();
+                              }else {
+                                refreshListSuratDiterima();
+                              }
+                            });
+                          }else {
+                            setState(() {
+                              detailSuratKeluarPanitiaKrama.suratKeluarId = suratDiterima[index]['surat_keluar_id'];
+                              detailSuratKeluarPanitiaKrama.isTetujon = true;
+                            });
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaKrama())).then((value) {
+                              if(isFilter == true) {
+                                getFilterResult();
+                              }else {
+                                refreshListSuratDiterima();
+                              }
+                            });
+                          }
                         },
                         child: Container(
                           child: Row(
                             children: <Widget>[
                               Container(
                                 child: Image.asset(
-                                  'images/email.png',
+                                  suratDiterima[index]['read_at'] == null ? "images/letter-closed.png" : "images/letter-open.png",
                                   height: 40,
                                   width: 40,
                                 ),
@@ -364,7 +385,7 @@ class _suratDiterimaPrajuruBanjarState extends State<suratDiterimaPrajuruBanjar>
                                           fontFamily: "Poppins",
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700,
-                                          color: HexColor("025393")
+                                          color: suratDiterima[index]['read_at'] == null ? HexColor("025393") : Colors.black26
                                         ), maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           softWrap: false,
@@ -374,7 +395,8 @@ class _suratDiterimaPrajuruBanjarState extends State<suratDiterimaPrajuruBanjar>
                                     Container(
                                       child: Text(suratDiterima[index]['nomor_surat'].toString(), style: TextStyle(
                                           fontFamily: "Poppins",
-                                          fontSize: 14
+                                          fontSize: 14,
+                                          color: suratDiterima[index]['read_at'] == null ? Colors.black : Colors.black26
                                       )),
                                     )
                                   ],

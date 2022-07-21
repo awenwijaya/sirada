@@ -10,6 +10,7 @@ import 'package:flutter_shimmer/flutter_shimmer.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat/LoginAndRegistration/LoginPage.dart';
+import 'package:surat/Penduduk/SuratDiterima/SuratDiterima.dart';
 
 class detailSuratPrajuruKrama extends StatefulWidget {
   static var suratKeluarId;
@@ -68,6 +69,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
   var apiURLGetTetujonPrajuruDesa = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/desa/${detailSuratPrajuruKrama.suratKeluarId}";
   var apiURLGetTetujonPrajuruBanjar = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/prajuru/banjar/${detailSuratPrajuruKrama.suratKeluarId}";
   var apiURLGetTetujonPihakLain = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/pihak-lain/${detailSuratPrajuruKrama.suratKeluarId}";
+  var apiURLSetReadPrajuruBanjar = "https://siradaskripsi.my.id/api/surat/tetujon/prajuru-banjar/set-read";
 
   getTetujon() async {
     this.tetujon = [];
@@ -137,6 +139,21 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
         });
       }
     }
+  }
+
+  Future setReadSuratDiterima() async {
+    var body = jsonEncode({
+      "surat_keluar_id" : detailSuratPrajuruKrama.suratKeluarId.toString(),
+      "prajuru_banjar_adat_id" : suratDiterimaPrajuruBanjar.prajuruId
+    });
+    http.post(Uri.parse(apiURLSetReadPrajuruBanjar),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        print("surat set read berhasil!");
+      }
+    });
   }
 
   setReadSurat() async {
@@ -326,11 +343,12 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
     getTumusan();
     getLampiran();
     getQRCode();
-    if(detailSuratPrajuruKrama.status == "Belum Terbaca") {
+    if(detailSuratPrajuruKrama.status == "Belum Terbaca" && detailSuratPrajuruKrama.isTetujon == false) {
       setReadSurat();
     }
     if(detailSuratPrajuruKrama.isTetujon == true) {
       getTetujon();
+      setReadSuratDiterima();
     }
   }
 

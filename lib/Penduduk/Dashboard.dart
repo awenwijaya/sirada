@@ -778,6 +778,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                                             setState(() {
                                               detailSuratPrajuruKrama.suratKeluarId = pengumuman[index]['surat_keluar_id'];
                                               detailSuratPrajuruKrama.status = pengumuman[index]['status'];
+                                              detailSuratPrajuruKrama.isTetujon = false;
                                             });
                                             Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratPrajuruKrama())).then((value) {
                                               getAllPengumuman();
@@ -785,6 +786,8 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                                           }else {
                                             setState(() {
                                               detailSuratKeluarPanitiaKrama.suratKeluarId = pengumuman[index]['surat_keluar_id'];
+                                              detailSuratKeluarPanitiaKrama.status = pengumuman[index]['status'];
+                                              detailSuratKeluarPanitiaKrama.isTetujon = false;
                                             });
                                             Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaKrama())).then((value) {
                                               getAllPengumuman();

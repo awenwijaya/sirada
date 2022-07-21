@@ -341,13 +341,25 @@ class _suratDiterimaAdminState extends State<suratDiterimaAdmin> {
                               detailSuratKeluarNonPanitia.isTetujon = true;
                               detailSuratKeluarNonPanitia.suratKeluarId = suratDiterima[index]['surat_keluar_id'];
                             });
-                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia()));
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarNonPanitia())).then((value) {
+                              if(isFilter == true) {
+                                getFilterResult();
+                              }else {
+                                refreshListSuratDiterima();
+                              }
+                            });
                           }else {
                             setState(() {
                               detailSuratKeluarPanitiaAdmin.isTetujon = true;
                               detailSuratKeluarPanitiaAdmin.suratKeluarId = suratDiterima[index]['surat_keluar_id'];
                             });
-                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaAdmin()));
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitiaAdmin())).then((value) {
+                              if(isFilter == true) {
+                                getFilterResult();
+                              }else {
+                                refreshListSuratDiterima();
+                              }
+                            });
                           }
                         },
                         child: Container(
@@ -355,7 +367,7 @@ class _suratDiterimaAdminState extends State<suratDiterimaAdmin> {
                             children: <Widget>[
                               Container(
                                 child: Image.asset(
-                                  'images/email.png',
+                                  suratDiterima[index]['read_at'] == null ? "images/letter-closed.png" : "images/letter-open.png",
                                   height: 40,
                                   width: 40,
                                 ),
@@ -372,7 +384,7 @@ class _suratDiterimaAdminState extends State<suratDiterimaAdmin> {
                                           fontFamily: "Poppins",
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700,
-                                          color: HexColor("025393")
+                                          color: suratDiterima[index]['read_at'] == null ? HexColor("025393") : Colors.black26
                                         ), maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           softWrap: false,
@@ -382,7 +394,8 @@ class _suratDiterimaAdminState extends State<suratDiterimaAdmin> {
                                     Container(
                                       child: Text(suratDiterima[index]['nomor_surat'].toString(), style: TextStyle(
                                           fontFamily: "Poppins",
-                                          fontSize: 14
+                                          fontSize: 14,
+                                        color: suratDiterima[index]['read_at'] == null ? Colors.black : Colors.black26
                                       )),
                                     )
                                   ],

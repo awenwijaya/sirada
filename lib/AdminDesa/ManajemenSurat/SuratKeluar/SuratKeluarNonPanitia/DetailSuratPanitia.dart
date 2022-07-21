@@ -80,7 +80,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
   var apiURLShowPanitia = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/panitia/${detailSuratKeluarPanitiaAdmin.suratKeluarId}";
   var apiURLGetHistori = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/histori/${detailSuratKeluarPanitiaAdmin.suratKeluarId}";
   var apiURLShowTetujonPanitia = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/panitia/${detailSuratKeluarPanitiaAdmin.suratKeluarId}";
-
+  var apiURLSetReadSurat = "https://siradaskripsi.my.id/api/surat/tetujon/prajuru-desa/set-read";
   //validasi
   var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
   var apiURLShowValidasiStatus = "https://siradaskripsi.my.id/api/admin/surat/keluar/prajuru/validasi/show/${loginPage.prajuruId}";
@@ -315,6 +315,21 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
     });
   }
 
+  Future setReadSuratDiterima() async {
+    var body = jsonEncode({
+      "surat_keluar_id" : detailSuratKeluarPanitiaAdmin.suratKeluarId,
+      "prajuru_desa_adat_id" : loginPage.prajuruId
+    });
+    http.post(Uri.parse(apiURLSetReadSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        print("surat set read berhasil!");
+      }
+    });
+  }
+
   getKetuaPanitiaInfo() async {
     var body = jsonEncode({
       "jabatan" : "Ketua Panitia"
@@ -441,6 +456,9 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
     // TODO: implement initState
     super.initState();
     getDetailSurat();
+    if(detailSuratKeluarPanitiaAdmin.isTetujon == true) {
+      setReadSuratDiterima();
+    }
     // getTetujonAnggota();
     ftoast = FToast();
     ftoast.init(this.context);
@@ -456,7 +474,7 @@ class _detailSuratKeluarPanitiaAdminState extends State<detailSuratKeluarPanitia
             icon: Icon(Icons.arrow_back),
             color: HexColor("#025393"),
             onPressed: (){
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
             },
           ),
           title: Text(parindikan == null ? "" : parindikan, style: TextStyle(

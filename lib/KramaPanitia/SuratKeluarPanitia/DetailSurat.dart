@@ -84,7 +84,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
   var apiURLGetHistori = "https://siradaskripsi.my.id/api/data/admin/surat/keluar/histori/${detailSuratKeluarPanitia.suratKeluarId}";
   var apiURLSendNotifikasi = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses/notifikasi/panitia/${detailSuratKeluarPanitia.suratKeluarId}";
   var apiURLShowTetujonPanitia = "https://siradaskripsi.my.id/api/data/surat/keluar/tetujon/panitia/${detailSuratKeluarPanitia.suratKeluarId}";
-
+  var apiURLSetReadSurat = "https://siradaskripsi.my.id/api/surat/tetujon/panitia/set-read";
   //validasi
   var apiURLSetSedangDiproses = "https://siradaskripsi.my.id/api/admin/surat/keluar/set/sedang-diproses";
   var apiURLShowValidasiStatus = "https://siradaskripsi.my.id/api/admin/surat/keluar/panitia/validasi/show/${loginPage.kramaId}";
@@ -446,6 +446,21 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
     });
   }
 
+  Future setReadSuratDiterima() async {
+    var body = jsonEncode({
+      "surat_keluar_id" : detailSuratKeluarPanitia.suratKeluarId,
+      "krama_mipil_id" : loginPage.kramaId
+    });
+    http.post(Uri.parse(apiURLSetReadSurat),
+        headers: {"Content-Type" : "application/json"},
+        body: body
+    ).then((http.Response response) async {
+      if(response.statusCode == 200) {
+        print("surat set read berhasil!");
+      }
+    });
+  }
+
   getDetailSurat() async {
     await getSuratKeluarInfo();
     await getBendesaInfo();
@@ -464,6 +479,9 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
     // TODO: implement initState
     super.initState();
     getDetailSurat();
+    if(detailSuratKeluarPanitia.isTetujon == true) {
+      setReadSuratDiterima();
+    }
     // getTetujonAnggota();
     ftoast = FToast();
     ftoast.init(this.context);
