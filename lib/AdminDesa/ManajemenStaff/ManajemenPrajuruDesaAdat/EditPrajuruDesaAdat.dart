@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:surat/shared/LoadingAnimation/loading.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:surat/LoginAndRegistration/LoginPage.dart';
 
 class editPrajuruDesaAdatAdmin extends StatefulWidget {
   static var idPegawai;
@@ -502,7 +503,8 @@ class _editPrajuruDesaAdatAdminState extends State<editPrajuruDesaAdatAdmin> {
                           'penduduk_id' : selectedIdPenduduk,
                           'email' : controllerEmail.text,
                           'role' : selectedRole,
-                          "sk_prajuru" : namaFile
+                          "sk_prajuru" : namaFile,
+                          "desa_adat_id" : loginPage.desaId
                         });
                         http.post(Uri.parse(apiURLSimpanPrajuruDesaAdat),
                             headers : {"Content-Type" : "application/json"},

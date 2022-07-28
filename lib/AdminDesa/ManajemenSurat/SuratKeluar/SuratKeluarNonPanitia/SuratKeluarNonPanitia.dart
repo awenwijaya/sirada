@@ -893,15 +893,6 @@ class _suratKeluarNonPanitiaAdminState extends State<suratKeluarNonPanitiaAdmin>
                                       margin: EdgeInsets.only(top: 10),
                                       padding: EdgeInsets.symmetric(horizontal: 30)
                                   ),
-                                  Container(
-                                      child: Text("Tidak ada data surat. Anda bisa menambahkannya dengan cara menekan tombol Tambah Data Surat dan isi data surat pada form yang telah disediakan", style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: 14,
-                                          color: Colors.black26
-                                      ), textAlign: TextAlign.center),
-                                      padding: EdgeInsets.symmetric(horizontal: 30),
-                                      margin: EdgeInsets.only(top: 10)
-                                  )
                                 ],
                               )
                           ),

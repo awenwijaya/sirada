@@ -848,6 +848,7 @@ class _tambahSuratKeluarNonPanitiaAdminState extends State<tambahSuratKeluarNonP
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                               child: TextField(
+                                  controller: controllerBusanaKegiatan,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(50.0),

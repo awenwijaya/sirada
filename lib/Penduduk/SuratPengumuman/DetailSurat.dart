@@ -699,35 +699,107 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                         ),
                         Container(
                           alignment: Alignment.topLeft,
-                          child: tetujonTerlampir.length == 0 ? Container() : Column(
-                            children: <Widget>[
-                              Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Text("Tetujon Surat (Terlampir) :", style: TextStyle(
-                                      fontFamily: "Times New Roman",
-                                      fontSize: 16
-                                  ))
-                              ),
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    for(var i = 0; i < tetujonTerlampir.length; i++) Container(
-                                      child: Text("${i+1}. ${tetujonTerlampir[i].toString()}", style: TextStyle(
-                                          fontFamily: "Times New Roman",
-                                          fontSize: 16
-                                      )),
-                                      margin: EdgeInsets.only(bottom: 5),
-                                    )
-                                  ],
+                          child: tetujonTerlampir.length == 0 ? Container() : Container(
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Container(
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: NetworkImage('https://storage.siradaskripsi.my.id/img/logo-desa/${logoDesa}'),
+                                                    fit: BoxFit.fill
+                                                )
+                                            ),
+                                            margin: EdgeInsets.only(left: 20)
+                                        ),
+                                        Container(
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.82,
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Container(
+                                                    height: 65,
+                                                    child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/${aksaraDesa}'),
+                                                    margin: EdgeInsets.only(top: 10, left: 10),
+                                                  ),
+                                                  Container(
+                                                      child: Text("DESA ADAT ${namaDesa}".toUpperCase(), style: TextStyle(
+                                                          fontFamily: "Times New Roman",
+                                                          fontSize: 18,
+                                                          fontWeight: FontWeight.w700
+                                                      ))
+                                                  ),
+                                                  Container(
+                                                      child: Text("KECAMATAN ${namaKecamatan} ${namaKabupaten}".toUpperCase(), style: TextStyle(
+                                                          fontFamily: "Times New Roman",
+                                                          fontSize: 16,
+                                                          fontWeight: FontWeight.w700
+                                                      ), textAlign: TextAlign.center),
+                                                      margin: EdgeInsets.only(top: 5),
+                                                      padding: EdgeInsets.symmetric(horizontal: 10)
+                                                  ),
+                                                  Container(
+                                                      child: Text("${alamat}${kontakWa1 == null ? "" : ", $kontakWa1"}${kontakWa2 == null ? "" : ",$kontakWa2"}", style: TextStyle(
+                                                          fontFamily: "Times New Roman",
+                                                          fontSize: 16
+                                                      ), textAlign: TextAlign.center),
+                                                      margin: EdgeInsets.only(top: 5),
+                                                      padding: EdgeInsets.symmetric(horizontal: 10)
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                        )
+                                      ]
+                                  ),
                                 ),
-                                margin: EdgeInsets.only(top: 5),
-                              ),
-                            ],
-                          ),
-                          margin: EdgeInsets.only(left: 15),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(width: 2.0, color: Colors.black)
+                                      )
+                                  ),
+                                  margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+                                ),
+                                Container(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                          alignment: Alignment.topLeft,
+                                          child: Text("Katur Majeng Ring:", style: TextStyle(
+                                              fontFamily: "Times New Roman",
+                                              fontSize: 16
+                                          ))
+                                      ),
+                                      Container(
+                                        alignment: Alignment.topLeft,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            for(var i = 0; i < tetujonTerlampir.length; i++) Container(
+                                              child: Text("${i+1}. ${tetujonTerlampir[i].toString()}", style: TextStyle(
+                                                  fontFamily: "Times New Roman",
+                                                  fontSize: 16
+                                              )),
+                                              margin: EdgeInsets.only(bottom: 5),
+                                            )
+                                          ],
+                                        ),
+                                        margin: EdgeInsets.only(top: 5),
+                                      ),
+                                    ],
+                                  ),
+                                  margin: EdgeInsets.only(left: 15, top: 10),
+                                )
+                              ],
+                            ),
+                          )
                         ),
                         Container(
                           child: lampiran.length == 0 ? Container() : Column(

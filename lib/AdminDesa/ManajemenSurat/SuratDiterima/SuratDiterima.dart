@@ -29,7 +29,7 @@ class _suratDiterimaAdminState extends State<suratDiterimaAdmin> {
   var apiURLShowFilterResult = "https://siradaskripsi.my.id/api/surat/tetujon/prajuru-desa/filter/result";
   final controllerSearch = TextEditingController();
   final DateRangePickerController controllerFilterTanggal = DateRangePickerController();
-  List timKegiatanFilter = [];
+  List timKegiatanFilter = List();
   var selectedTimKegiatanFilter;
 
   //filter tanggal keluar
@@ -80,6 +80,7 @@ class _suratDiterimaAdminState extends State<suratDiterimaAdmin> {
       print("get filter komponen status : ${response.statusCode.toString()}");
       if(response.statusCode == 200) {
         var jsonData = json.decode(response.body);
+        print(jsonData);
         setState(() {
           timKegiatanFilter = jsonData;
           LoadingFilter = false;

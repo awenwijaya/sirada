@@ -180,6 +180,7 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
       headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       var responseValue = response.statusCode;
+      print("get histori status code: ${response.statusCode.toString()}");
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
         setState(() {
@@ -201,6 +202,9 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
         setState(() {
           tetujonPrajuruDesaList = jsonData;
         });
+        for(var i = 0; i < tetujonPrajuruDesaList.length; i++) {
+          tetujonTerlampir.add("${tetujonPrajuruDesaList[i]['jabatan']} (${tetujonPrajuruDesaList[i]['nama']})");
+        }
       }
     });
     await http.get(Uri.parse(apiURLGetTetujonPrajuruBanjar),
@@ -213,6 +217,9 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
         setState(() {
           tetujonPrajuruBanjarList = jsonData;
         });
+        for(var i = 0; i < tetujonPrajuruBanjarList.length; i++) {
+          tetujonTerlampir.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} (${tetujonPrajuruBanjarList[i]['nama']})");
+        }
       }
     });
     await http.get(Uri.parse(apiURLGetTetujonPihakLain),
@@ -224,17 +231,11 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
         setState(() {
           tetujonPihakLainList = jsonData;
         });
+        for(var i = 0; i < tetujonPihakLainList.length; i++) {
+          tetujonTerlampir.add("${tetujonPihakLainList[i]['pihak_lain']}");
+        }
       }
     });
-    for(var i = 0; i < tetujonPihakLainList.length; i++) {
-      tetujonTerlampir.add("${tetujonPihakLainList[i]['pihak_lain']}");
-    }
-    for(var i = 0; i < tetujonPrajuruBanjarList.length; i++) {
-      tetujonTerlampir.add("Banjar ${tetujonPrajuruBanjarList[i]['nama_banjar_adat']} (${tetujonPrajuruBanjarList[i]['nama']})");
-    }
-    for(var i = 0; i < tetujonPrajuruDesaList.length; i++) {
-      tetujonTerlampir.add("${tetujonPrajuruDesaList[i]['jabatan']} (${tetujonPrajuruDesaList[i]['nama']})");
-    }
     if(tetujonTerlampir.length > 2) {
       for(var i = 0; i < 2; i++) {
         setState(() {
@@ -363,11 +364,13 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
         headers: {"Content-Type" : "application/json"},
         body: body
     ).then((http.Response response) {
+      print("status get bendesa: ${response.statusCode.toString()}");
       if(response.statusCode == 200) {
         var jsonData = response.body;
         var parsedJson = json.decode(jsonData);
         setState(() {
           namaBendesa = parsedJson['nama'];
+          print(namaBendesa.toString());
         });
       }
     });
@@ -391,17 +394,17 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
     });
   }
 
-  getDetailSurat() async {
-    await getSuratKeluarInfo();
-    await getBendesaInfo();
-    await getPenyarikanInfo();
-    await getTetujon();
-    await getTumusan();
-    await getHistori();
-    await getLampiran();
-    await getValidasiStatus();
-    await getPenyarikanValidasiStatus();
-    await getQRCode();
+  getDetailSurat() {
+    getSuratKeluarInfo();
+    getBendesaInfo();
+    getPenyarikanInfo();
+    getTetujon();
+    getTumusan();
+    getHistori();
+    getLampiran();
+    getValidasiStatus();
+    getPenyarikanValidasiStatus();
+    getQRCode();
   }
 
   Future setReadSuratDiterima() async {
@@ -423,7 +426,16 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDetailSurat();
+    getSuratKeluarInfo();
+    getBendesaInfo();
+    getPenyarikanInfo();
+    getTetujon();
+    getTumusan();
+    getHistori();
+    getLampiran();
+    getValidasiStatus();
+    getPenyarikanValidasiStatus();
+    getQRCode();
     if(detailSuratKeluarNonPanitia.isTetujon == true) {
       setReadSuratDiterima();
     }
@@ -1035,35 +1047,107 @@ class _detailSuratKeluarNonPanitiaState extends State<detailSuratKeluarNonPaniti
                   ),
                   Container(
                     alignment: Alignment.topLeft,
-                    child: tetujonTerlampir.length == 0 ? Container() : Column(
-                      children: <Widget>[
-                        Container(
-                            alignment: Alignment.topLeft,
-                            child: Text("Tetujon Surat (Terlampir) :", style: TextStyle(
-                                fontFamily: "Times New Roman",
-                                fontSize: 16
-                            ))
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              for(var i = 0; i < tetujonTerlampir.length; i++) Container(
-                                child: Text("${i+1}. ${tetujonTerlampir[i].toString()}", style: TextStyle(
-                                    fontFamily: "Times New Roman",
-                                    fontSize: 16
-                                )),
-                                margin: EdgeInsets.only(bottom: 5),
-                              )
-                            ],
+                    child: tetujonTerlampir.length == 0 ? Container() : Container(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                      width: 50,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: NetworkImage('https://storage.siradaskripsi.my.id/img/logo-desa/${logoDesa}'),
+                                              fit: BoxFit.fill
+                                          )
+                                      ),
+                                      margin: EdgeInsets.only(left: 20)
+                                  ),
+                                  Container(
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.82,
+                                        child: Column(
+                                          children: <Widget>[
+                                            Container(
+                                              height: 65,
+                                              child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/${aksaraDesa}'),
+                                              margin: EdgeInsets.only(top: 10, left: 10),
+                                            ),
+                                            Container(
+                                                child: Text("DESA ADAT ${namaDesa}".toUpperCase(), style: TextStyle(
+                                                    fontFamily: "Times New Roman",
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w700
+                                                ))
+                                            ),
+                                            Container(
+                                                child: Text("KECAMATAN ${namaKecamatan} ${namaKabupaten}".toUpperCase(), style: TextStyle(
+                                                    fontFamily: "Times New Roman",
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700
+                                                ), textAlign: TextAlign.center),
+                                                margin: EdgeInsets.only(top: 5),
+                                                padding: EdgeInsets.symmetric(horizontal: 10)
+                                            ),
+                                            Container(
+                                                child: Text("${alamat}${kontakWa1 == null ? "" : ", $kontakWa1"}${kontakWa2 == null ? "" : ",$kontakWa2"}", style: TextStyle(
+                                                    fontFamily: "Times New Roman",
+                                                    fontSize: 16
+                                                ), textAlign: TextAlign.center),
+                                                margin: EdgeInsets.only(top: 5),
+                                                padding: EdgeInsets.symmetric(horizontal: 10)
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                  )
+                                ]
+                            ),
                           ),
-                          margin: EdgeInsets.only(top: 5),
-                        ),
-                      ],
-                    ),
-                    margin: EdgeInsets.only(left: 15),
+                          Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(width: 2.0, color: Colors.black)
+                                )
+                            ),
+                            margin: EdgeInsets.only(top: 10, left: 15, right: 15),
+                          ),
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                    alignment: Alignment.topLeft,
+                                    child: Text("Katur Majeng Ring:", style: TextStyle(
+                                        fontFamily: "Times New Roman",
+                                        fontSize: 16
+                                    ))
+                                ),
+                                Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      for(var i = 0; i < tetujonTerlampir.length; i++) Container(
+                                        child: Text("${i+1}. ${tetujonTerlampir[i].toString()}", style: TextStyle(
+                                            fontFamily: "Times New Roman",
+                                            fontSize: 16
+                                        )),
+                                        margin: EdgeInsets.only(bottom: 5),
+                                      )
+                                    ],
+                                  ),
+                                  margin: EdgeInsets.only(top: 5),
+                                ),
+                              ],
+                            ),
+                            margin: EdgeInsets.only(left: 15, top: 10),
+                          )
+                        ],
+                      ),
+                    )
                   ),
                   Container(
                     child: lampiran.length == 0 ? Container() : Column(

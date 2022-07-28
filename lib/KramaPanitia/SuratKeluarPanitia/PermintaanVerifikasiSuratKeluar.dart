@@ -282,7 +282,7 @@ class _permintaanVerifikasiSuratKeluarPanitiaState extends State<permintaanVerif
                             value: e['status'],
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width,
-                              child: Text(e['status'], style: TextStyle(
+                              child: Text(e['status'].toString(), style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 14
                               ), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false),
@@ -292,7 +292,7 @@ class _permintaanVerifikasiSuratKeluarPanitiaState extends State<permintaanVerif
                         selectedItemBuilder: (BuildContext context) => statusFilter.map((e) => Center(
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            child: Text(e['status'], style: TextStyle(
+                            child: Text(e['status'].toString(), style: TextStyle(
                                 fontFamily: "Poppins",
                                 fontSize: 14
                             )),
@@ -409,7 +409,7 @@ class _permintaanVerifikasiSuratKeluarPanitiaState extends State<permintaanVerif
                       return GestureDetector(
                         onTap: (){
                           setState(() {
-                            detailSuratKeluarPanitia.isTetujon = true;
+                            detailSuratKeluarPanitia.isTetujon = false;
                             detailSuratKeluarPanitia.suratKeluarId = surat[index]['surat_keluar_id'];
                           });
                           Navigator.push(context, CupertinoPageRoute(builder: (context) => detailSuratKeluarPanitia()));
@@ -430,7 +430,7 @@ class _permintaanVerifikasiSuratKeluarPanitiaState extends State<permintaanVerif
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Container(
-                                      child: Text(surat[index]['status'], style: TextStyle(
+                                      child: Text(surat[index]['status'].toString(), style: TextStyle(
                                         fontFamily: "Poppins",
                                         fontWeight: FontWeight.w700,
                                         color: Colors.white
