@@ -40,6 +40,7 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
   final CarouselController controller = CarouselController();
   final controllerSearch = TextEditingController();
   int current = 0;
+  var countSuratDiterima = 0;
   var apiURLRemoveFCMToken = "https://siradaskripsi.my.id/api/autentikasi/login/token/remove";
   var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
   var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
@@ -135,6 +136,16 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
           prajuruId = data['prajuru_banjar_adat_id'];
         });
         print(prajuruId.toString());
+        http.get(Uri.parse("https://siradaskripsi.my.id/api/data/admin/surat/prajuru-banjar/count/${prajuruId}"),
+          headers: {"Content-Type" : "application/json"}
+        ).then((http.Response response) {
+          if(response.statusCode == 200) {
+            var data = json.decode(response.body);
+            setState(() {
+              countSuratDiterima = data;
+            });
+          }
+        });
       }
     });
   }
@@ -445,25 +456,48 @@ class _dashboardPendudukState extends State<dashboardPenduduk> {
                                 });
                                 Navigator.push(context, CupertinoPageRoute(builder: (context) => suratDiterimaPrajuruBanjar()));
                               },
-                              child: Row(
+                              child: Stack(
                                 children: <Widget>[
                                   Container(
-                                    child: Image.asset(
-                                      'images/penerima.png',
-                                      height: 40,
-                                      width: 40,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          child: Image.asset(
+                                            'images/penerima.png',
+                                            height: 40,
+                                            width: 40,
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Text("Surat Diterima", style: TextStyle(
+                                              fontFamily: "Poppins",
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700
+                                          )),
+                                          margin: EdgeInsets.only(left: 20),
+                                        )
+                                      ],
                                     ),
+                                    alignment: Alignment.centerLeft,
                                   ),
                                   Container(
-                                    child: Text("Surat Diterima", style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700
-                                    )),
-                                    margin: EdgeInsets.only(left: 20),
+                                    alignment: Alignment.centerRight,
+                                    child: countSuratDiterima == 0 ? Container() : Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                      decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle
+                                      ),
+                                      child: Text(countSuratDiterima.toString(), style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold
+                                      )),
+                                    ),
                                   )
                                 ],
-                              ),
+                              )
                             ),
                               margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                               padding: EdgeInsets.symmetric(horizontal: 20),

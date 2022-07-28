@@ -31,10 +31,12 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
   var nama;
   var namaDesa;
   var countBelumDivalidasi = 0;
+  var countSuratDiterima = 0;
   var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
   var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
   var apiURLGetDataSurat = "https://siradaskripsi.my.id/api/data/admin/surat/panitia/${loginPage.kramaId}";
   var apiURLCountBelumDivalidasi = "https://siradaskripsi.my.id/api/data/admin/surat/validasi/panitia/count/${loginPage.kramaId}";
+  var apiURLCountSuratDiterima = "https://siradaskripsi.my.id/api/data/admin/surat/panitia/count/${loginPage.kramaId}";
 
   //list
   List MenungguRespons = [];
@@ -51,6 +53,19 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
   bool availableSedangDiproses = false;
   bool availableTelahDikonfirmasi = false;
   bool availableDibatalkan = false;
+
+  Future getCountSuratDiterima() async {
+    http.get(Uri.parse(apiURLCountSuratDiterima),
+      headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          countSuratDiterima = data;
+        });
+      }
+    });
+  }
 
   Future refreshListMenungguRespons() async {
     var body = jsonEncode({
@@ -194,6 +209,7 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
     getUserInfo();
     getDesaInfo();
     getCountBelumDivalidasi();
+    getCountSuratDiterima();
     refreshListDibatalkan();
     refreshListMenungguRespons();
     refreshListSedangDiproses();
@@ -476,25 +492,48 @@ class _dashboardKramaPanitiaState extends State<dashboardKramaPanitia> {
                         onTap: (){
                           Navigator.push(context, CupertinoPageRoute(builder: (context) => suratDiterimaPanitia()));
                         },
-                        child: Row(
+                        child: Stack(
                           children: <Widget>[
                             Container(
-                              child: Image.asset(
-                                'images/penerima.png',
-                                height: 40,
-                                width: 40,
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: Image.asset(
+                                      'images/penerima.png',
+                                      height: 40,
+                                      width: 40,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Text("Surat Diterima", style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700
+                                    )),
+                                    margin: EdgeInsets.only(left: 20),
+                                  )
+                                ],
                               ),
                             ),
                             Container(
-                              child: Text("Surat Diterima", style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700
-                              )),
-                              margin: EdgeInsets.only(left: 20),
+                              alignment: Alignment.centerRight,
+                              child: countSuratDiterima == 0 ? Container() : Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle
+                                ),
+                                child: Text(countSuratDiterima.toString(), style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold
+                                )),
+                              ),
                             )
                           ],
-                        ),
+                        )
                       ),
                       margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                       padding: EdgeInsets.symmetric(horizontal: 20),

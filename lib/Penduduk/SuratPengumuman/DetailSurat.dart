@@ -405,7 +405,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                           Container(
                                             height: 65,
                                             child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/${aksaraDesa}'),
-                                            margin: EdgeInsets.only(top: 10, left: 10),
+                                            margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                                           ),
                                           Container(
                                               child: Text("DESA ADAT ${namaDesa}".toUpperCase(), style: TextStyle(
@@ -452,7 +452,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                 fontFamily: "Times New Roman",
                                 fontSize: 16
                             )),
-                            margin: EdgeInsets.only(right: 15, top: 15)
+                            margin: EdgeInsets.only(right: 25, top: 15)
                         ),
                         Container(
                             alignment: Alignment.topRight,
@@ -460,7 +460,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                 fontFamily: "Times New Roman",
                                 fontSize: 16
                             ), textAlign: TextAlign.center),
-                            margin: EdgeInsets.only(top: 10, right: 15)
+                            margin: EdgeInsets.only(top: 10, right: 25)
                         ),
                         Container(
                           alignment: Alignment.topRight,
@@ -486,7 +486,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                               ),
                             ],
                           ),
-                          margin: EdgeInsets.only(right: 15, top: 5),
+                          margin: EdgeInsets.only(right: 25, top: 5),
                         ),
                         Container(
                             child: Column(
@@ -517,7 +517,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                   ),
                                 ]
                             ),
-                            margin: EdgeInsets.only(left: 15, top: 10)
+                            margin: EdgeInsets.only(left: 25, top: 10)
                         ),
                         Container(
                           child: Column(
@@ -536,7 +536,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700
                                   )),
-                                  margin: EdgeInsets.only(top: 10, left: 15)
+                                  margin: EdgeInsets.only(top: 10, left: 25)
                               ),
                             ],
                           ),
@@ -547,7 +547,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                 fontFamily: "Times New Roman",
                                 fontSize: 16
                             ), textAlign: TextAlign.justify),
-                            padding: EdgeInsets.only(left: 15, right: 15)
+                            padding: EdgeInsets.only(left: 25, right: 25)
                         ),
                         Container(
                             alignment: Alignment.topLeft,
@@ -555,7 +555,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                 fontFamily: "Times New Roman",
                                 fontSize: 16
                             ), textAlign: TextAlign.justify),
-                            padding: EdgeInsets.only(left: 15, right: 15)
+                            padding: EdgeInsets.only(left: 25, right: 25)
                         ),
                         Container(
                             alignment: Alignment.topLeft,
@@ -563,7 +563,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                 fontFamily: "Times New Roman",
                                 fontSize: 16
                             ), textAlign: TextAlign.justify),
-                            padding: EdgeInsets.only(left: 15, right: 15)
+                            padding: EdgeInsets.only(left: 25, right: 25)
                         ),
                         Container(
                             alignment: Alignment.topLeft,
@@ -572,13 +572,13 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700
                             )),
-                            margin: EdgeInsets.only(top: 5, left: 15)
+                            margin: EdgeInsets.only(top: 5, left: 25)
                         ),
                         Container(
                           alignment: Alignment.topLeft,
                           height: 50,
                           child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/om-santih,santih,santih-om.png'),
-                          margin: EdgeInsets.only(top: 10, left: 10),
+                          margin: EdgeInsets.only(top: 10, left: 20, right: 25),
                         ),
                         Container(
                             child: Row(
@@ -615,7 +615,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                           )
                                         ],
                                       ),
-                                      margin: EdgeInsets.only(top: 10, left: 10)
+                                      margin: EdgeInsets.only(top: 10, left: 25)
                                   ),
                                   Container(
                                       alignment: Alignment.topRight,
@@ -648,7 +648,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                           )
                                         ],
                                       ),
-                                      margin: EdgeInsets.only(top: 10, right: 10)
+                                      margin: EdgeInsets.only(top: 10, right: 25)
                                   ),
                                 ]
                             )
@@ -689,7 +689,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                 )
                               ],
                             ),
-                            margin: EdgeInsets.only(left: 15, top: 10)
+                            margin: EdgeInsets.only(left: 25, top: 10)
                         ),
                         Container(
                           child: Divider(
@@ -725,7 +725,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                                   Container(
                                                     height: 65,
                                                     child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/${aksaraDesa}'),
-                                                    margin: EdgeInsets.only(top: 10, left: 10),
+                                                    margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                                                   ),
                                                   Container(
                                                       child: Text("DESA ADAT ${namaDesa}".toUpperCase(), style: TextStyle(
@@ -795,7 +795,7 @@ class _detailSuratPrajuruKramaState extends State<detailSuratPrajuruKrama> {
                                       ),
                                     ],
                                   ),
-                                  margin: EdgeInsets.only(left: 15, top: 10),
+                                  margin: EdgeInsets.only(left: 25, right: 25, top: 10),
                                 )
                               ],
                             ),

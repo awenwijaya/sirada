@@ -36,10 +36,12 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
   var namaAdmin;
   var namaDesa;
   var countBelumDivalidasi = 0;
+  var countSuratDiterima = 0;
   var apiURLGetDataUser = "https://siradaskripsi.my.id/api/data/userdata/${loginPage.userId}";
   var apiURLGetDetailDesaById = "https://siradaskripsi.my.id/api/data/userdata/desa/${loginPage.desaId}";
   var apiURLRemoveFCMToken = "https://siradaskripsi.my.id/api/autentikasi/login/token/remove";
   var apiURLCountBelumDivalidasi = "https://siradaskripsi.my.id/api/data/admin/surat/validasi/prajuru/count/${loginPage.prajuruId}";
+  var apiURLCountSuratDiterima = "http://siradaskripsi.my.id/api/data/admin/surat/prajuru/count/${loginPage.prajuruId}";
 
   getCountBelumDivalidasi() async {
     http.get(Uri.parse(apiURLCountBelumDivalidasi),
@@ -49,6 +51,19 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
         var data = json.decode(response.body);
         setState(() {
           countBelumDivalidasi = data;
+        });
+      }
+    });
+  }
+
+  getCountSuratDiterima() async {
+    http.get(Uri.parse(apiURLCountSuratDiterima),
+      headers: {"Content-Type" : "application/json"}
+    ).then((http.Response response) {
+      if(response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          countSuratDiterima = data;
         });
       }
     });
@@ -94,6 +109,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
     getUserInfo();
     getDesaInfo();
     getCountBelumDivalidasi();
+    getCountSuratDiterima();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
@@ -550,11 +566,7 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                 decoration: BoxDecoration(
                                     color: Colors.red,
-                                    borderRadius: BorderRadius.circular(50)
-                                ),
-                                constraints: BoxConstraints(
-                                    minWidth: 12,
-                                    minHeight: 12
+                                    shape: BoxShape.circle
                                 ),
                                 child: Text(countBelumDivalidasi.toString(), style: TextStyle(
                                     fontFamily: "Poppins",
@@ -656,25 +668,48 @@ class _dashboardAdminDesaState extends State<dashboardAdminDesa> {
                     onTap: (){
                       Navigator.push(context, CupertinoPageRoute(builder: (context) => suratDiterimaAdmin()));
                     },
-                    child: Row(
+                    child: Stack(
                       children: <Widget>[
                         Container(
-                          child: Image.asset(
-                            'images/penerima.png',
-                            height: 40,
-                            width: 40,
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                child: Image.asset(
+                                  'images/penerima.png',
+                                  height: 40,
+                                  width: 40,
+                                ),
+                              ),
+                              Container(
+                                child: Text("Surat Diterima", style: TextStyle(
+                                    fontFamily: "Poppins",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700
+                                )),
+                                margin: EdgeInsets.only(left: 20),
+                              )
+                            ],
                           ),
                         ),
                         Container(
-                          child: Text("Surat Diterima", style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700
-                          )),
-                          margin: EdgeInsets.only(left: 20),
+                          alignment: Alignment.centerRight,
+                          child: countSuratDiterima == 0 ? Container() : Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle
+                            ),
+                            child: Text(countSuratDiterima.toString(), style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold
+                            )),
+                          ),
                         )
                       ],
-                    ),
+                    )
                   ),
                   margin: EdgeInsets.only(top: 10, left: 20, right: 20),
                   padding: EdgeInsets.symmetric(horizontal: 20),

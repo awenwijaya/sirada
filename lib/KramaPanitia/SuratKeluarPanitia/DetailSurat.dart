@@ -202,6 +202,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       var responseValue = response.statusCode;
+      print("get tetujon prajuru desa status code: ${response.statusCode.toString()}");
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
         setState(() {
@@ -216,7 +217,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       var responseValue = response.statusCode;
-      print(responseValue.toString());
+      print("get tetujon prajuru banjar status code: ${response.statusCode.toString()}");
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
         setState(() {
@@ -231,6 +232,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       var responseValue = response.statusCode;
+      print("get tetujon pihak lain status code: ${response.statusCode.toString()}");
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
         setState(() {
@@ -245,6 +247,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
         headers: {"Content-Type" : "application/json"}
     ).then((http.Response response) {
       var responseValue = response.statusCode;
+      print("get tetujon panitia status code: ${response.statusCode.toString()}");
       if(responseValue == 200) {
         var jsonData = json.decode(response.body);
         setState(() {
@@ -783,7 +786,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                     Container(
                                       height: 65,
                                       child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/${aksaraDesa}'),
-                                      margin: EdgeInsets.only(top: 10, left: 10),
+                                      margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                                     ),
                                     Container(
                                         child: Text("DESA ADAT ${namaDesa}".toUpperCase(), style: TextStyle(
@@ -839,7 +842,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                             fontFamily: "Times New Roman",
                             fontSize: 16
                         )),
-                        margin: EdgeInsets.only(right: 15, top: 15)
+                        margin: EdgeInsets.only(right: 25, top: 15)
                     ),
                     Container(
                         alignment: Alignment.topRight,
@@ -847,7 +850,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                             fontFamily: "Times New Roman",
                             fontSize: 16
                         ), textAlign: TextAlign.center),
-                        margin: EdgeInsets.only(top: 5, right: 15)
+                        margin: EdgeInsets.only(top: 5, right: 25)
                     ),
                     Container(
                       alignment: Alignment.topRight,
@@ -876,7 +879,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                         fontFamily: "Times New Roman",
                         fontSize: 16
                       )),
-                      margin: EdgeInsets.only(right: 15, top: 5),
+                      margin: EdgeInsets.only(right: 25, top: 5),
                     ),
                     Container(
                         child: Column(
@@ -907,7 +910,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                               ),
                             ]
                         ),
-                        margin: EdgeInsets.only(left: 15, top: 10)
+                        margin: EdgeInsets.only(left: 25, top: 10)
                     ),
                     Container(
                       child: Column(
@@ -937,7 +940,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                             fontFamily: "Times New Roman",
                             fontSize: 16
                         ), textAlign: TextAlign.justify),
-                        padding: EdgeInsets.only(left: 15, right: 15)
+                        padding: EdgeInsets.only(left: 15, right: 25)
                     ),
                     Container(
                         alignment: Alignment.topLeft,
@@ -945,7 +948,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                             fontFamily: "Times New Roman",
                             fontSize: 16
                         ), textAlign: TextAlign.justify),
-                        padding: EdgeInsets.only(left: 15, right: 15)
+                        padding: EdgeInsets.only(left: 15, right: 25)
                     ),
                     Container(
                         alignment: Alignment.topLeft,
@@ -953,7 +956,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                             fontFamily: "Times New Roman",
                             fontSize: 16
                         ), textAlign: TextAlign.justify),
-                        padding: EdgeInsets.only(left: 15, right: 15)
+                        padding: EdgeInsets.only(left: 15, right: 25)
                     ),
                     Container(
                         alignment: Alignment.topLeft,
@@ -962,7 +965,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                             fontSize: 16,
                             fontWeight: FontWeight.w700
                         )),
-                        margin: EdgeInsets.only(top: 5, left: 15)
+                        margin: EdgeInsets.only(top: 5, left: 25)
                     ),
                     Container(
                       alignment: Alignment.topLeft,
@@ -977,7 +980,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                             fontSize: 16,
                             fontWeight: FontWeight.w700
                         )),
-                        margin: EdgeInsets.only(top: 10, bottom: 10, left: 15),
+                        margin: EdgeInsets.only(top: 10, bottom: 10, left: 25),
                         padding: EdgeInsets.only(right: 15)
                     ),
                     Container(
@@ -1015,7 +1018,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                       )
                                     ],
                                   ),
-                                  margin: EdgeInsets.only(left: 10, top: 10)
+                                  margin: EdgeInsets.only(left: 25, top: 10)
                               ),
                               Container(
                                   alignment: Alignment.topRight,
@@ -1048,7 +1051,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                       )
                                     ],
                                   ),
-                                  margin: EdgeInsets.only(right: 10, top: 10)
+                                  margin: EdgeInsets.only(right: 25, top: 10)
                               )
                             ]
                         )
@@ -1122,7 +1125,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                           )
                         ],
                       ),
-                      margin: EdgeInsets.only(left: 15, top: 10),
+                      margin: EdgeInsets.only(left: 25, top: 10),
                     ),
                     Container(
                       child: tetujonPanitiaList.isNotEmpty ? Divider(
@@ -1160,7 +1163,7 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                               Container(
                                                 height: 65,
                                                 child: Image.network('https://storage.siradaskripsi.my.id/img/aksara-bali/${aksaraDesa}'),
-                                                margin: EdgeInsets.only(top: 10, left: 10),
+                                                margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                                               ),
                                               Container(
                                                   child: Text("DESA ADAT ${namaDesa}".toUpperCase(), style: TextStyle(
@@ -1239,44 +1242,12 @@ class _detailSuratKeluarPanitiaState extends State<detailSuratKeluarPanitia> {
                                     ),
                                   ],
                                 ),
-                              margin: EdgeInsets.only(left: 15, top: 10),
+                              margin: EdgeInsets.only(left: 25, top: 10, right: 25),
                              )
                           ],
                         )
                       )
                     ),
-                    // Container(
-                    //   alignment: Alignment.topLeft,
-                    //   child: tetujonPanitiaList.length == 0 ? Container() : Column(
-                    //     children: <Widget>[
-                    //       Container(
-                    //         alignment: Alignment.topLeft,
-                    //         child: Text("Katur Majeng Ring :", style: TextStyle(
-                    //           fontFamily: "Times New Roman",
-                    //           fontSize: 16
-                    //         )),
-                    //       ),
-                    //       Container(
-                    //         alignment: Alignment.topLeft,
-                    //         child: Column(
-                    //           mainAxisAlignment: MainAxisAlignment.start,
-                    //           crossAxisAlignment: CrossAxisAlignment.start,
-                    //           children: <Widget>[
-                    //             for(var i = 0; i < tetujonPanitiaList.length; i++) Container(
-                    //               child: Text("${i+1}. ${tetujonPanitiaList[i]['jabatan']}  (${tetujonPanitiaList[i]['nama']})", style: TextStyle(
-                    //                 fontFamily: "Times New Roman",
-                    //                 fontSize: 16
-                    //               )),
-                    //               margin: EdgeInsets.only(bottom: 5),
-                    //             )
-                    //           ],
-                    //         ),
-                    //         margin: EdgeInsets.only(top: 5),
-                    //       )
-                    //     ],
-                    //   ),
-                    //   margin: EdgeInsets.only(left: 15),
-                    // ),
                     Container(
                       child: lampiran.length == 0 ? Container() : Column(
                         children: <Widget>[
