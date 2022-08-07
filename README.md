@@ -1,16 +1,14 @@
-# surat
+# SiRada Android
 
-A new Flutter project.
+SiRada Android adalah sebuah aplikasi yang memungkinkan bagi pegawai Desa Adat (Prajuru Desa Adat) dalam mengelola data surat, mengarsipkan data surat, dan mengelola data master. Pegawai Desa Adat dapat mengelola data surat masuk serta data surat keluar dari aplikasi. Surat yang telah dibuat dapat langsung diterima oleh penerima sesaat setelah surat diverifikasi. SiRada Android juga memungkinkan bagi penduduk Desa Adat yang terdaftar untuk melihat pengumuman yang telah dibuat.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Fitur
+- Surat Masuk
+- Surat Keluar
+- Manajemen Master Prajuru
+- Manajemen Master Panitia
+- Manajemen Surat Masuk
+- Manajemen Surat Keluar
+- Agenda Acara
+- Filter & Search
+- Surat Pengumuman
