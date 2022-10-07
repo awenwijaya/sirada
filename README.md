@@ -13,7 +13,7 @@ SiRada Android adalah sebuah aplikasi yang memungkinkan bagi pegawai Desa Adat (
 - Filter & Search
 - Surat Pengumuman
 
-#Tampilan
+# Tampilan
 1. Halaman Dashboard
 ![Screenshot_1659003804](https://user-images.githubusercontent.com/61014772/194482542-8298a8cd-fbee-42dd-83c2-6f1f8ab86a2d.png)
 2. Halaman Detail Surat
